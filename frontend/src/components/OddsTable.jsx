@@ -1206,8 +1206,8 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             </tr>
                           ));
 
-                          // Backend generates FunBet (5% markup) - just display all API bookmakers
-                          return bookmakerRows;
+                          // Return FunBet first (with star), then all other bookmakers
+                          return funbetRow ? [funbetRow, ...bookmakerRows] : bookmakerRows;
                         })()}
                       </tbody>
                     </table>
