@@ -1190,7 +1190,7 @@ const LiveOdds = () => {
                                 <td className="py-2 px-4 text-gray-400 text-sm">{bookmaker.title}</td>
                                 <td className="py-2 px-4 text-center">
                                   <span className={`text-sm ${
-                                    isHomeBest ? 'bg-amber-400/60 text-[#2E004F] px-2 py-0.5 rounded font-semibold' : 'text-gray-300 font-normal'
+                                    isHomeBest ? 'bg-amber-400/80 text-[#2E004F] px-3 py-1 rounded font-bold shadow-sm' : 'text-gray-300 font-normal'
                                   }`}>
                                     {homeOdds ? homeOdds.toFixed(2) : '-'}
                                   </span>
@@ -1198,7 +1198,7 @@ const LiveOdds = () => {
                                 {showThreeOutcomes && (
                                   <td className="py-2 px-4 text-center">
                                     <span className={`text-sm ${
-                                      isDrawBest ? 'bg-amber-400/60 text-[#2E004F] px-2 py-0.5 rounded font-semibold' : 'text-gray-300 font-normal'
+                                      isDrawBest ? 'bg-amber-400/80 text-[#2E004F] px-3 py-1 rounded font-bold shadow-sm' : 'text-gray-300 font-normal'
                                     }`}>
                                       {drawOdds ? drawOdds.toFixed(2) : '-'}
                                     </span>
@@ -1206,7 +1206,7 @@ const LiveOdds = () => {
                                 )}
                                 <td className="py-2 px-4 text-center">
                                   <span className={`text-sm ${
-                                    isAwayBest ? 'bg-amber-400/60 text-[#2E004F] px-2 py-0.5 rounded font-semibold' : 'text-gray-300 font-normal'
+                                    isAwayBest ? 'bg-amber-400/80 text-[#2E004F] px-3 py-1 rounded font-bold shadow-sm' : 'text-gray-300 font-normal'
                                   }`}>
                                     {awayOdds ? awayOdds.toFixed(2) : '-'}
                                   </span>
