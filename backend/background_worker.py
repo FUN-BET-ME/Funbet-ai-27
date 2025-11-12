@@ -81,6 +81,8 @@ class OddsWorker:
         self.db = None
         self.odds_api_key = os.environ.get('ODDS_API_KEY')
         self.scheduler = AsyncIOScheduler()
+        self.api_calls_today = 0
+        self.api_calls_total = 0
         
     async def connect_db(self):
         """Connect to MongoDB"""
