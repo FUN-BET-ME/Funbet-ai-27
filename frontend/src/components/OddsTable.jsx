@@ -793,15 +793,10 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           const displayedBookmakers = isExpanded ? prioritySorted : prioritySorted.slice(0, 4);
                           
                           // Separate FunBet to always show first with special styling
-                          const funbetBookmaker = displayedBookmakers.find(b => b.key === 'funbet');
-                          const otherBookmakers = displayedBookmakers.filter(b => b.key !== 'funbet');
+                          const funbetBookmaker = displayedBookmakers.find(b => b && b.key === 'funbet');
                           
-                          // Debug log
-                          if (funbetBookmaker) {
-                            console.log('FunBet found:', funbetBookmaker.title);
-                            console.log('Other bookmakers count:', otherBookmakers.length);
-                            console.log('FunBet in others?', otherBookmakers.some(b => b.key === 'funbet'));
-                          }
+                          // CRITICAL: Filter out FunBet from other bookmakers to prevent duplicate display
+                          const otherBookmakers = displayedBookmakers.filter(b => b && b.key && b.key !== 'funbet');
                           
                           // Determine if sport allows draws
                           const sportAllowsDraws = !match.sport_title?.toLowerCase().includes('baseball') && 
