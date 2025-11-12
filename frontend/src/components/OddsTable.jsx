@@ -1092,11 +1092,54 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             </tr>
                           );
 
-                          const bookmakerRows = displayedBookmakers.map((bookmaker, idx) => (
+                          // Render FunBet row first (special styling with star)
+                          const funbetRow = funbetBookmaker ? (
+                            <tr
+                              key="funbet-top"
+                              className="border-b-2 border-[#FFD700] bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10"
+                            >
+                              <td className="py-3 px-4 text-sm font-bold text-[#FFD700]">
+                                ⭐ {funbetBookmaker.title}
+                              </td>
+                              {outcomeNames.map((name) => {
+                                let outcome = null;
+                                
+                                if (name === match.home_team) {
+                                  outcome = funbetBookmaker.markets[0].outcomes.find(o => 
+                                    o.name && match.home_team && 
+                                    o.name.trim().toLowerCase() === match.home_team.trim().toLowerCase()
+                                  );
+                                } else if (name === match.away_team) {
+                                  outcome = funbetBookmaker.markets[0].outcomes.find(o => 
+                                    o.name && match.away_team && 
+                                    o.name.trim().toLowerCase() === match.away_team.trim().toLowerCase()
+                                  );
+                                } else if (name === 'Draw') {
+                                  outcome = funbetBookmaker.markets[0].outcomes.find(o => 
+                                    o.name && (
+                                      o.name.toLowerCase().includes('draw') ||
+                                      o.name.toLowerCase().includes('tie')
+                                    )
+                                  );
+                                }
+                                
+                                return (
+                                  <td key={name} className="py-2 px-2 sm:py-3 sm:px-4 text-center">
+                                    <span className="inline-block px-2 py-1 sm:px-3 sm:py-1.5 rounded sm:rounded-lg font-bold text-sm sm:text-base bg-[#FFD700] text-[#2E004F]">
+                                      {outcome ? outcome.price.toFixed(2) : '-'}
+                                    </span>
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          ) : null;
+                          
+                          // Render all other bookmakers
+                          const bookmakerRows = otherBookmakers.map((bookmaker, idx) => (
                             <tr
                               key={bookmaker.key}
                               className={`${
-                                idx !== displayedBookmakers.length - 1
+                                idx !== otherBookmakers.length - 1
                                   ? 'border-b border-[#2E004F]/20'
                                   : ''
                               } hover:bg-white/5 transition-colors`}
