@@ -871,60 +871,7 @@ const LiveOdds = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {/* FunBet.ME - Premium row with best odds */}
-                          {(
-                          <tr className="border-b-2 border-[#FFD700] bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10">
-                            <td className="py-4 px-4">
-                              <a 
-                                href="https://funbet.me" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                              >
-                                <span className="text-[#FFD700] text-2xl">⭐</span>
-                                <span className="text-[#FFD700] font-bold text-lg">FunBet.ME</span>
-                              </a>
-                            </td>
-                            <td className="py-4 px-4 text-center">
-                              <a 
-                                href="https://funbet.me" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="inline-block"
-                              >
-                                <span className="bg-[#FFD700] text-[#2E004F] px-5 py-2 rounded-lg font-black text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg">
-                                  {funbetHomeOdds || '-'}
-                                </span>
-                              </a>
-                            </td>
-                            {showThreeOutcomes && (
-                              <td className="py-4 px-4 text-center">
-                                <a 
-                                  href="https://funbet.me" 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="inline-block"
-                                >
-                                  <span className="bg-[#FFD700] text-[#2E004F] px-5 py-2 rounded-lg font-black text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg">
-                                    {funbetDrawOdds || '-'}
-                                  </span>
-                                </a>
-                              </td>
-                            )}
-                            <td className="py-4 px-4 text-center">
-                              <a 
-                                href="https://funbet.me" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="inline-block"
-                              >
-                                <span className="bg-[#FFD700] text-[#2E004F] px-5 py-2 rounded-lg font-black text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg">
-                                  {funbetAwayOdds || '-'}
-                                </span>
-                              </a>
-                            </td>
-                          </tr>
-                          )}
+                          {/* FunBet.ME row is now provided by the backend API and rendered via OddsTable component */}
                           
                           {/* FunBet.ME Boost & Standard rows - HIDDEN FOR PUBLIC (shown only in admin) */}
                           {false && (() => {
