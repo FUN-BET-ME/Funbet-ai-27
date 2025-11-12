@@ -118,14 +118,19 @@ class OddsWorker:
             
             all_matches = []
             
-            # Fetch football
-            for league in FOOTBALL_LEAGUES:
+            # First, fetch all upcoming matches (works across all sports)
+            upcoming_matches = await self.fetch_odds_for_sport('upcoming')
+            all_matches.extend(upcoming_matches)
+            logger.info(f"✅ Fetched {len(upcoming_matches)} upcoming matches")
+            
+            # Then fetch specific leagues that might not be in upcoming
+            for league in FOOTBALL_LEAGUES[:5]:  # Limit to top 5 to avoid rate limits
                 matches = await self.fetch_odds_for_sport(league)
                 all_matches.extend(matches)
                 await asyncio.sleep(0.5)  # Rate limiting
             
             # Fetch cricket
-            for league in CRICKET_LEAGUES:
+            for league in CRICKET_LEAGUES[:3]:  # Limit to top 3
                 matches = await self.fetch_odds_for_sport(league)
                 all_matches.extend(matches)
                 await asyncio.sleep(0.5)
