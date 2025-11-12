@@ -631,11 +631,13 @@ const LiveOdds = () => {
                 const isExpanded = expandedMatches[matchId];
                 const displayedBookmakers = isExpanded ? sortedBookmakers : sortedBookmakers.slice(0, 4);
                 
-                // Get best odds from displayed bookmakers for highlighting
-                const homeDisplayBest = getBestOdds(displayedBookmakers, 0);
-                const awayDisplayBest = getBestOdds(displayedBookmakers, 1);
-                const drawDisplayBest = displayedBookmakers[0]?.markets?.[0]?.outcomes?.length > 2 
-                  ? getBestOdds(displayedBookmakers, 2) 
+                // Get best odds from displayed bookmakers EXCLUDING FunBet for highlighting
+                // FunBet is always 5% higher, so we highlight the best market odds among real bookmakers
+                const nonFunbetBookmakers = displayedBookmakers.filter(b => b.key !== 'funbet');
+                const homeDisplayBest = getBestOdds(nonFunbetBookmakers, 0);
+                const awayDisplayBest = getBestOdds(nonFunbetBookmakers, 1);
+                const drawDisplayBest = nonFunbetBookmakers[0]?.markets?.[0]?.outcomes?.length > 2 
+                  ? getBestOdds(nonFunbetBookmakers, 2) 
                   : null;
 
                 return (
