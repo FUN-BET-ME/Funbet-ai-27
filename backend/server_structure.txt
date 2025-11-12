@@ -1,0 +1,100 @@
+from fastapi import FastAPI, APIRouter, Request, Response, HTTPException, status
+from dotenv import load_dotenv
+from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
+from motor.motor_asyncio import AsyncIOMotorClient
+import os
+import logging
+from pathlib import Path
+from pydantic import BaseModel, Field, ConfigDict
+from typing import List, Optional
+import uuid
+from datetime import datetime, timezone, timedelta
+import httpx
+import time
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.triggers.cron import CronTrigger
+import asyncio
+
+# Import auth module
+from auth import (
+    User, UserInDB, UserCreate, UserLogin, Token, UserSession,
+    get_password_hash, verify_password, create_access_token,
+    get_current_user, require_auth, validate_google_session
+)
+
+# Import AI predictions module
+from ai_predictions import generate_ai_predictions
+
+# Import Digitain API module
+from digitain_api import fetch_live_events, fetch_prematch_events, convert_to_odds_api_format
+
+# Import CricketData.org API module
+from cricketdata_api import get_cricket_live_scores, get_cricket_recent_results
+
+# Import Cricket Odds Integration (Odds + Scores)
+from cricket_odds_integration import get_complete_cricket_data, fetch_cricket_odds
+
+
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
+
+# MongoDB connection
+mongo_url = os.environ['MONGO_URL']
+client = AsyncIOMotorClient(mongo_url)
+db = client[os.environ['DB_NAME']]
+
+# Collections
+historical_odds_collection = db['historical_odds']
+users_collection = db['users']
+user_sessions_collection = db['user_sessions']
+
+# FunBet IQ Prediction System Collections
+predictions_collection = db['funbet_predictions']  # Store all predictions with outcomes
+team_stats_collection = db['funbet_team_stats']  # Team performance & IQ points
+funbet_iq_collection = db['funbet_iq_points']  # Self-learning IQ adjustments
+team_logos_collection = db['team_logos']  # One-time fetch, cache forever
+
+# Create the main app without a prefix
+app = FastAPI()
+
+# Add Gzip compression middleware - Reduces response size by ~70%
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+# Create a router with the /api prefix
+api_router = APIRouter(prefix="/api")
+
+# In-memory cache with 5-minute expiration
+cache_store = {}
+CACHE_DURATION = 300  # 5 minutes in seconds
+CRICKET_CACHE_DURATION = 1800  # 30 minutes for cricket (less volatile)
+SCORES_CACHE_DURATION = 60  # 1 minute for live scores
+
+def get_from_cache(key, is_scores=False, is_cricket=False):
+    """Get data from cache if not expired"""
+    if key in cache_store:
+        data, timestamp = cache_store[key]
+        if is_scores:
+            cache_duration = SCORES_CACHE_DURATION
+        elif is_cricket:
+            cache_duration = CRICKET_CACHE_DURATION
+        else:
+            cache_duration = CACHE_DURATION
+            
+        if time.time() - timestamp < cache_duration:
+            return data
+        else:
+            # Remove expired cache
+            del cache_store[key]
+    return None
+
+def set_cache(key, data):
+    """Store data in cache with current timestamp"""
+    cache_store[key] = (data, time.time())
+
+
+# ============================================
+# PREDICTION ARCHIVE FUNCTIONS (MongoDB)
+# ============================================
+
