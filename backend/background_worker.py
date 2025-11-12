@@ -13,7 +13,13 @@ from apscheduler.triggers.cron import CronTrigger
 import httpx
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 from funbet_odds_generator import add_funbet_odds_to_matches
+
+# Load environment variables
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
 
 logger = logging.getLogger(__name__)
 
