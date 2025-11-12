@@ -118,46 +118,38 @@ class OddsWorker:
             return []
     
     async def update_odds_job(self):
-        """Update odds every 5 minutes"""
+        """
+        Update odds every 5 minutes - EFFICIENT VERSION
+        Uses ONLY 1 API call to get all upcoming matches across all sports
+        """
         try:
-            logger.info("🔄 Starting odds update...")
+            logger.info("🔄 Starting odds update (EFFICIENT - 1 API call)...")
             
-            all_matches = []
+            # SINGLE API CALL - Gets ALL upcoming matches across ALL sports
+            all_matches = await self.fetch_odds_for_sport('upcoming')
             
-            # First, fetch all upcoming matches (works across all sports)
-            upcoming_matches = await self.fetch_odds_for_sport('upcoming')
-            all_matches.extend(upcoming_matches)
-            logger.info(f"✅ Fetched {len(upcoming_matches)} upcoming matches")
+            if not all_matches:
+                logger.warning("⚠️ No matches fetched from upcoming endpoint")
+                return
             
-            # Then fetch specific leagues that might not be in upcoming
-            for league in FOOTBALL_LEAGUES[:5]:  # Limit to top 5 to avoid rate limits
-                matches = await self.fetch_odds_for_sport(league)
-                all_matches.extend(matches)
-                await asyncio.sleep(0.5)  # Rate limiting
+            logger.info(f"✅ Fetched {len(all_matches)} matches in 1 API call")
             
-            # Fetch cricket
-            for league in CRICKET_LEAGUES[:3]:  # Limit to top 3
-                matches = await self.fetch_odds_for_sport(league)
-                all_matches.extend(matches)
-                await asyncio.sleep(0.5)
-            
-            # Add FunBet odds (5% markup)
+            # Add FunBet odds (5% markup above market best)
             all_matches = add_funbet_odds_to_matches(all_matches)
             
             # Store in database
-            if all_matches:
-                # Clear existing cache and insert new
-                await self.db.odds_cache.delete_many({})
-                
-                # Prepare documents
-                for match in all_matches:
-                    match['updated_at'] = datetime.now(timezone.utc).isoformat()
-                
-                await self.db.odds_cache.insert_many(all_matches)
-                
-                logger.info(f"✅ Updated {len(all_matches)} matches in database")
-            else:
-                logger.warning("⚠️ No matches fetched")
+            # Clear existing cache and insert fresh data
+            await self.db.odds_cache.delete_many({})
+            
+            # Prepare documents with metadata
+            for match in all_matches:
+                match['updated_at'] = datetime.now(timezone.utc).isoformat()
+                match['fetched_at'] = datetime.now(timezone.utc).isoformat()
+            
+            await self.db.odds_cache.insert_many(all_matches)
+            
+            logger.info(f"✅ Database updated with {len(all_matches)} matches")
+            logger.info(f"📊 API Efficiency: 1 call for {len(all_matches)} matches")
                 
         except Exception as e:
             logger.error(f"❌ Error in odds update job: {e}")
