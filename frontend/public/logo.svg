@@ -1,0 +1,29 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Purple Background -->
+  <rect width="512" height="512" fill="#2E004F"/>
+  
+  <!-- Gold Upward Trending Graph -->
+  <g transform="translate(100, 256)">
+    <!-- Graph Line -->
+    <polyline 
+      points="0,100 80,60 160,20 240,-40 312,-100" 
+      fill="none" 
+      stroke="#FFD700" 
+      stroke-width="12" 
+      stroke-linecap="round" 
+      stroke-linejoin="round"
+    />
+    
+    <!-- Graph Points/Nodes -->
+    <circle cx="0" cy="100" r="10" fill="#FFD700"/>
+    <circle cx="80" cy="60" r="10" fill="#FFD700"/>
+    <circle cx="160" cy="20" r="10" fill="#FFD700"/>
+    <circle cx="240" cy="-40" r="10" fill="#FFD700"/>
+    <circle cx="312" cy="-100" r="12" fill="#FFD700"/>
+    
+    <!-- Arrow pointing up at the end -->
+    <g transform="translate(312, -100)">
+      <polygon points="0,-20 -12,0 12,0" fill="#FFD700"/>
+    </g>
+  </g>
+</svg>

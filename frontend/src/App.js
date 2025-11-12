@@ -1,38 +1,55 @@
-import React, { Suspense, lazy } from 'react';
-import '@/App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ToastProvider } from '@/context/ToastContext';
-import ErrorBoundary from '@/components/ErrorBoundary';
-import { Loader2 } from 'lucide-react';
-
-// Lazy load components for code splitting
-const StatusDashboard = lazy(() => import('@/components/StatusDashboard'));
-
-// Loading fallback component
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800" data-testid="loading-fallback">
-    <div className="text-center">
-      <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
-      <p className="text-gray-600 dark:text-gray-400">Loading...</p>
-    </div>
-  </div>
-);
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import FootballOdds from "./pages/FootballOdds";
+import CricketOdds from "./pages/CricketOdds";
+import NFLOdds from "./pages/NFLOdds";
+import GolfOdds from "./pages/GolfOdds";
+import OtherSportsOdds from "./pages/OtherSportsOdds";
+import LiveOdds from "./pages/LiveOdds";
+import MatchDetail from "./pages/MatchDetail";
+import Predictions from "./pages/Predictions";
+import PredictionHistory from "./pages/PredictionHistory";
+import Stats from "./pages/Stats";
+import News from "./pages/News";
+import ResponsiblePlay from "./pages/ResponsiblePlay";
+import About from "./pages/About";
+import AdminStats from "./pages/AdminStats";
+import MatchPrediction from "./pages/MatchPrediction";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { FavoritesProvider } from "./contexts/FavoritesContext";
 
 function App() {
   return (
-    <ErrorBoundary>
-      <ToastProvider>
-        <div className="App" data-testid="app-root">
+    <ThemeProvider>
+      <FavoritesProvider>
+        <div className="App">
           <BrowserRouter>
-            <Suspense fallback={<LoadingFallback />}>
-              <Routes>
-                <Route path="/" element={<StatusDashboard />} />
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-        </div>
-      </ToastProvider>
-    </ErrorBoundary>
+            <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/football-odds" element={<FootballOdds />} />
+            <Route path="/cricket-odds" element={<CricketOdds />} />
+            <Route path="/nfl-odds" element={<NFLOdds />} />
+            <Route path="/golf-odds" element={<GolfOdds />} />
+            <Route path="/other-sports-odds" element={<OtherSportsOdds />} />
+            <Route path="/live-odds" element={<LiveOdds />} />
+            <Route path="/match/:matchId" element={<MatchDetail />} />
+            <Route path="/prediction/:matchId" element={<MatchPrediction />} />
+            <Route path="/predictions" element={<Predictions />} />
+            <Route path="/prediction-history" element={<PredictionHistory />} />
+            <Route path="/stats" element={<Stats />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/responsible-play" element={<ResponsiblePlay />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/admin/stats" element={<AdminStats />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </div>
+      </FavoritesProvider>
+    </ThemeProvider>
   );
 }
 

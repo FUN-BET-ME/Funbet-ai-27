@@ -1,0 +1,1438 @@
+[
+  {
+    "id": "11858298",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-11T15:00:00+00:00",
+    "home_team": "Nottingham Forest",
+    "away_team": "Manchester Utd",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Nottingham Forest",
+                "price": 3.8
+              },
+              {
+                "name": "Draw",
+                "price": 3.55
+              },
+              {
+                "name": "Manchester Utd",
+                "price": 2.12
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Nottingham Forest",
+        "score": "0"
+      },
+      {
+        "name": "Manchester Utd",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096884+00:00"
+  },
+  {
+    "id": "11858306",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-08T17:30:00+00:00",
+    "home_team": "Sunderland",
+    "away_team": "Arsenal L",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Sunderland",
+                "price": 7.3
+              },
+              {
+                "name": "Draw",
+                "price": 4.9
+              },
+              {
+                "name": "Arsenal L",
+                "price": 1.39
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Sunderland",
+        "score": "0"
+      },
+      {
+        "name": "Arsenal L",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096892+00:00"
+  },
+  {
+    "id": "11713569",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-11T20:00:00+00:00",
+    "home_team": "Bayern Munich",
+    "away_team": "Bayer Leverkusen",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Draw",
+                "price": 7.3
+              },
+              {
+                "name": "Bayer Leverkusen",
+                "price": 11.6
+              },
+              {
+                "name": "Bayern Munich",
+                "price": 1.1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Bayern Munich",
+        "score": "0"
+      },
+      {
+        "name": "Bayer Leverkusen",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096898+00:00"
+  },
+  {
+    "id": "12154148",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-10T13:45:00+00:00",
+    "home_team": "Alice Pesci",
+    "away_team": "Anca Alexia Todoni",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Alice Pesci",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Anca Alexia Todoni",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Alice Pesci",
+        "score": "0"
+      },
+      {
+        "name": "Anca Alexia Todoni",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096906+00:00"
+  },
+  {
+    "id": "12202430",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T14:00:00+00:00",
+    "home_team": "Kutaisi U16",
+    "away_team": "Maameer",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Kutaisi U16",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Maameer",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Kutaisi U16",
+        "score": "0"
+      },
+      {
+        "name": "Maameer",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096912+00:00"
+  },
+  {
+    "id": "12107812",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T14:24:33.973000+00:00",
+    "home_team": "Nairobi City Stars",
+    "away_team": "Nistru Otaci",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Nairobi City Stars",
+                "price": 2.3
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Nistru Otaci",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Nairobi City Stars",
+        "score": "0"
+      },
+      {
+        "name": "Nistru Otaci",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096917+00:00"
+  },
+  {
+    "id": "12107819",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T14:24:44.237000+00:00",
+    "home_team": "HB Koge",
+    "away_team": "Africa Sports",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "HB Koge",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Africa Sports",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "HB Koge",
+        "score": "0"
+      },
+      {
+        "name": "Africa Sports",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096923+00:00"
+  },
+  {
+    "id": "12107822",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T14:24:45.140000+00:00",
+    "home_team": "Buriram Utd",
+    "away_team": "Al Nassriya",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Buriram Utd",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Al Nassriya",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Buriram Utd",
+        "score": "0"
+      },
+      {
+        "name": "Al Nassriya",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096929+00:00"
+  },
+  {
+    "id": "12109756",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T18:00:00+00:00",
+    "home_team": "Chicago Bears",
+    "away_team": "New York Giants",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 1.4
+              },
+              {
+                "name": "Draw",
+                "price": 95.0
+              },
+              {
+                "name": "New York Giants",
+                "price": 2.7
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Chicago Bears",
+        "score": "0"
+      },
+      {
+        "name": "New York Giants",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096934+00:00"
+  },
+  {
+    "id": "12107835",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T14:25:22.350000+00:00",
+    "home_team": "Real Banjul",
+    "away_team": "ENPPI",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Real Banjul",
+                "price": 3.1
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "ENPPI",
+                "price": 4.8
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Real Banjul",
+        "score": "0"
+      },
+      {
+        "name": "ENPPI",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096940+00:00"
+  },
+  {
+    "id": "12107836",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T14:25:32+00:00",
+    "home_team": "GAMTEL",
+    "away_team": "AS Tefana",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "AS Tefana",
+                "price": 4.0
+              },
+              {
+                "name": "GAMTEL",
+                "price": 2.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "GAMTEL",
+        "score": "0"
+      },
+      {
+        "name": "AS Tefana",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096946+00:00"
+  },
+  {
+    "id": "12107839",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T14:25:33.390000+00:00",
+    "home_team": "Lokomotiva Zagreb",
+    "away_team": "the match was interrupted at ({0}) minutes when the score was ({1})",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Lokomotiva Zagreb",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "the match was interrupted at ({0}) minutes when the score was ({1})",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Lokomotiva Zagreb",
+        "score": "0"
+      },
+      {
+        "name": "the match was interrupted at ({0}) minutes when the score was ({1})",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096951+00:00"
+  },
+  {
+    "id": "12208283",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T17:45:00+00:00",
+    "home_team": "AEK",
+    "away_team": "Shamrock Rovers",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "AEK",
+                "price": 1.12
+              },
+              {
+                "name": "Draw",
+                "price": 8.6
+              },
+              {
+                "name": "Shamrock Rovers",
+                "price": 19.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "AEK",
+        "score": "0"
+      },
+      {
+        "name": "Shamrock Rovers",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096957+00:00"
+  },
+  {
+    "id": "12202512",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T14:00:00+00:00",
+    "home_team": "",
+    "away_team": "",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "",
+        "score": "0"
+      },
+      {
+        "name": "",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096963+00:00"
+  },
+  {
+    "id": "12202527",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T19:00:00+00:00",
+    "home_team": "North",
+    "away_team": "Machi Asuka",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "North",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Machi Asuka",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "North",
+        "score": "0"
+      },
+      {
+        "name": "Machi Asuka",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096968+00:00"
+  },
+  {
+    "id": "12202604",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T19:00:00+00:00",
+    "home_team": "Pylaias(W)",
+    "away_team": "Madgoat",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Pylaias(W)",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Madgoat",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Pylaias(W)",
+        "score": "0"
+      },
+      {
+        "name": "Madgoat",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096973+00:00"
+  },
+  {
+    "id": "12146666",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T19:00:00+00:00",
+    "home_team": "Atletico Mineiro",
+    "away_team": "Sport Recife",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Atletico Mineiro",
+                "price": 2.25
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Sport Recife",
+                "price": 3.45
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Atletico Mineiro",
+        "score": "0"
+      },
+      {
+        "name": "Sport Recife",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096979+00:00"
+  },
+  {
+    "id": "11725835",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-12T13:43:00+00:00",
+    "home_team": "10.Dec",
+    "away_team": "ATM U21",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "10.Dec",
+                "price": 2.58
+              },
+              {
+                "name": "Draw",
+                "price": 3.35
+              },
+              {
+                "name": "ATM U21",
+                "price": 2.58
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "10.Dec",
+        "score": "0"
+      },
+      {
+        "name": "ATM U21",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096985+00:00"
+  },
+  {
+    "id": "12044460",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-07T08:44:00+00:00",
+    "home_team": "Ararat Armenia",
+    "away_team": "Kisa 1-\u0439 \u0442\u0430\u0439\u043c",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Ararat Armenia",
+                "price": 2.01
+              },
+              {
+                "name": "Draw",
+                "price": 1.79
+              },
+              {
+                "name": "Kisa 1-\u0439 \u0442\u0430\u0439\u043c",
+                "price": 1.87
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Ararat Armenia",
+        "score": "0"
+      },
+      {
+        "name": "Kisa 1-\u0439 \u0442\u0430\u0439\u043c",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096991+00:00"
+  },
+  {
+    "id": "12197030",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T14:00:00+00:00",
+    "home_team": "Olsztyn(W)",
+    "away_team": "MIT Cardinals",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Olsztyn(W)",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "MIT Cardinals",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Olsztyn(W)",
+        "score": "0"
+      },
+      {
+        "name": "MIT Cardinals",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.096996+00:00"
+  },
+  {
+    "id": "12102574",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-10T11:02:00+00:00",
+    "home_team": "Canterbury(W)",
+    "away_team": "Fratta U20",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Canterbury(W)",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 2.0
+              },
+              {
+                "name": "Fratta U20",
+                "price": 2.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Canterbury(W)",
+        "score": "0"
+      },
+      {
+        "name": "Fratta U20",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097003+00:00"
+  },
+  {
+    "id": "11816931",
+    "sport_key": "sport_2",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T18:00:00+00:00",
+    "home_team": "Chiasso",
+    "away_team": "Esperance",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Chiasso",
+                "price": 12.9
+              },
+              {
+                "name": "Draw",
+                "price": 2.98
+              },
+              {
+                "name": "Esperance",
+                "price": 1.41
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Chiasso",
+        "score": "0"
+      },
+      {
+        "name": "Esperance",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097009+00:00"
+  },
+  {
+    "id": "12207185",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T16:00:00+00:00",
+    "home_team": "Dabba Al Fujairah(Corners)",
+    "away_team": "Gabala(Y/C)",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Dabba Al Fujairah(Corners)",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 2.0
+              },
+              {
+                "name": "Gabala(Y/C)",
+                "price": 2.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Dabba Al Fujairah(Corners)",
+        "score": "0"
+      },
+      {
+        "name": "Gabala(Y/C)",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097014+00:00"
+  },
+  {
+    "id": "12095217",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T07:07:59.853000+00:00",
+    "home_team": "Antwerp",
+    "away_team": "Spartak Trnava",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Antwerp",
+                "price": 2.09
+              },
+              {
+                "name": "Draw",
+                "price": 3.22
+              },
+              {
+                "name": "Spartak Trnava",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Antwerp",
+        "score": "0"
+      },
+      {
+        "name": "Spartak Trnava",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097020+00:00"
+  },
+  {
+    "id": "12095224",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T07:08:11.147000+00:00",
+    "home_team": "Newtowne",
+    "away_team": "Murata",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Newtowne",
+                "price": 1.01
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Murata",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Newtowne",
+        "score": "0"
+      },
+      {
+        "name": "Murata",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097036+00:00"
+  },
+  {
+    "id": "12095225",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T07:08:17.850000+00:00",
+    "home_team": "AS Khroub",
+    "away_team": "Kaizer Chiefs",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "AS Khroub",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Kaizer Chiefs",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "AS Khroub",
+        "score": "0"
+      },
+      {
+        "name": "Kaizer Chiefs",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097042+00:00"
+  },
+  {
+    "id": "12095232",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T07:08:27.497000+00:00",
+    "home_team": "Bunyodkor Tashkent",
+    "away_team": "Xelaju MC",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Bunyodkor Tashkent",
+                "price": 1.01
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Xelaju MC",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Bunyodkor Tashkent",
+        "score": "0"
+      },
+      {
+        "name": "Xelaju MC",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097046+00:00"
+  },
+  {
+    "id": "12095234",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-09T07:08:28.573000+00:00",
+    "home_team": "KR Reykjavik",
+    "away_team": "CD Aguila",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "KR Reykjavik",
+                "price": 1.01
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "CD Aguila",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "KR Reykjavik",
+        "score": "0"
+      },
+      {
+        "name": "CD Aguila",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097052+00:00"
+  },
+  {
+    "id": "12155233",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-08T19:00:00+00:00",
+    "home_team": "Mladost Prelog",
+    "away_team": "Donchanka(W)",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Donchanka(W)",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Mladost Prelog",
+        "score": "0"
+      },
+      {
+        "name": "Donchanka(W)",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097057+00:00"
+  },
+  {
+    "id": "12155259",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-08T19:00:00+00:00",
+    "home_team": "Real Bradu",
+    "away_team": "NSV Lions",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Real Bradu",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "NSV Lions",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Real Bradu",
+        "score": "0"
+      },
+      {
+        "name": "NSV Lions",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097062+00:00"
+  },
+  {
+    "id": "10954178",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-08T03:00:00+00:00",
+    "home_team": "Golden State Warriors",
+    "away_team": "Denver Nuggets",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Golden State Warriors",
+                "price": 5.65
+              },
+              {
+                "name": "Draw",
+                "price": 5.9
+              },
+              {
+                "name": "Denver Nuggets",
+                "price": 1.3
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Golden State Warriors",
+        "score": "0"
+      },
+      {
+        "name": "Denver Nuggets",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097069+00:00"
+  },
+  {
+    "id": "12198038",
+    "sport_key": "sport_0",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T19:00:00+00:00",
+    "home_team": "Frederik Schoop",
+    "away_team": "Jana Fett",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Frederik Schoop",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Jana Fett",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Frederik Schoop",
+        "score": "0"
+      },
+      {
+        "name": "Jana Fett",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:39.097075+00:00"
+  }
+]

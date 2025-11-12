@@ -1,0 +1,980 @@
+[
+  {
+    "id": "12093909",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-04T06:17:00+00:00",
+    "home_team": "Fratta U20",
+    "away_team": "KuzGTU Kemerova",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Fratta U20",
+                "price": 1.85
+              },
+              {
+                "name": "Draw",
+                "price": 28.0
+              },
+              {
+                "name": "KuzGTU Kemerova",
+                "price": 1.85
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Fratta U20",
+        "score": "0"
+      },
+      {
+        "name": "KuzGTU Kemerova",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837679+00:00"
+  },
+  {
+    "id": "12209818",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-06T12:50:00+00:00",
+    "home_team": "Skyhawks",
+    "away_team": "Heavy Hammers",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Skyhawks",
+                "price": 1.63
+              },
+              {
+                "name": "Draw",
+                "price": 6.7
+              },
+              {
+                "name": "Heavy Hammers",
+                "price": 2.85
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Skyhawks",
+        "score": "0"
+      },
+      {
+        "name": "Heavy Hammers",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837693+00:00"
+  },
+  {
+    "id": "12144288",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-05T09:04:00+00:00",
+    "home_team": "Aalborg",
+    "away_team": "33 Legion Kovrov U17",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Aalborg",
+                "price": 2.24
+              },
+              {
+                "name": "Draw",
+                "price": 4.4
+              },
+              {
+                "name": "33 Legion Kovrov U17",
+                "price": 2.24
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Aalborg",
+        "score": "0"
+      },
+      {
+        "name": "33 Legion Kovrov U17",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837702+00:00"
+  },
+  {
+    "id": "11877853",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-10-30T15:57:00+00:00",
+    "home_team": "K.Irving, C.Anthony, K.Durant(points)(USA)",
+    "away_team": "M Delaney,R Brockhoff,E Randolph(Points)(Lokomotiv Kuban)",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "K.Irving, C.Anthony, K.Durant(points)(USA)",
+                "price": 1.3
+              },
+              {
+                "name": "Draw",
+                "price": 15.0
+              },
+              {
+                "name": "M Delaney,R Brockhoff,E Randolph(Points)(Lokomotiv Kuban)",
+                "price": 3.6
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "K.Irving, C.Anthony, K.Durant(points)(USA)",
+        "score": "0"
+      },
+      {
+        "name": "M Delaney,R Brockhoff,E Randolph(Points)(Lokomotiv Kuban)",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837710+00:00"
+  },
+  {
+    "id": "12043966",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-03T08:29:00+00:00",
+    "home_team": "Ararat Moscow",
+    "away_team": "ATM U21",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Ararat Moscow",
+                "price": 7.0
+              },
+              {
+                "name": "Draw",
+                "price": 5.0
+              },
+              {
+                "name": "ATM U21",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Ararat Moscow",
+        "score": "0"
+      },
+      {
+        "name": "ATM U21",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837717+00:00"
+  },
+  {
+    "id": "11918506",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-10-31T13:33:00+00:00",
+    "home_team": "All-Stars East",
+    "away_team": "Arizona Hotshots",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "All-Stars East",
+                "price": 1.17
+              },
+              {
+                "name": "Arizona Hotshots",
+                "price": 6.5
+              },
+              {
+                "name": "Draw",
+                "price": 10.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "All-Stars East",
+        "score": "0"
+      },
+      {
+        "name": "Arizona Hotshots",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837722+00:00"
+  },
+  {
+    "id": "12047962",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-03T11:00:00+00:00",
+    "home_team": "Hafia",
+    "away_team": "OPS",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Hafia",
+                "price": 1.3
+              },
+              {
+                "name": "Draw",
+                "price": 6.45
+              },
+              {
+                "name": "OPS",
+                "price": 6.5
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Hafia",
+        "score": "0"
+      },
+      {
+        "name": "OPS",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837727+00:00"
+  },
+  {
+    "id": "11993926",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-02T13:00:00+00:00",
+    "home_team": "Gladiators",
+    "away_team": "Wild Vikings",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Gladiators",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 7.2
+              },
+              {
+                "name": "Wild Vikings",
+                "price": 2.1
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Gladiators",
+        "score": "0"
+      },
+      {
+        "name": "Wild Vikings",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837734+00:00"
+  },
+  {
+    "id": "12048009",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-03T10:00:00+00:00",
+    "home_team": "Gvardeets",
+    "away_team": "Oper\u00e1rio",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Gvardeets",
+                "price": 2.3
+              },
+              {
+                "name": "Draw",
+                "price": 1.6
+              },
+              {
+                "name": "Oper\u00e1rio",
+                "price": 2.5
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Gvardeets",
+        "score": "0"
+      },
+      {
+        "name": "Oper\u00e1rio",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837739+00:00"
+  },
+  {
+    "id": "11011111",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-04T11:45:00+00:00",
+    "home_team": "Huddersfield Town",
+    "away_team": "Manchester City",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Draw",
+                "price": 19.5
+              },
+              {
+                "name": "Manchester City",
+                "price": 75.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Huddersfield Town",
+        "score": "0"
+      },
+      {
+        "name": "Manchester City",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837744+00:00"
+  },
+  {
+    "id": "12042330",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-03T07:27:00+00:00",
+    "home_team": "Utrera",
+    "away_team": "Centro Gallego FC U20",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Utrera",
+                "price": 5.7
+              },
+              {
+                "name": "Draw",
+                "price": 3.25
+              },
+              {
+                "name": "Centro Gallego FC U20",
+                "price": 1.59
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Utrera",
+        "score": "0"
+      },
+      {
+        "name": "Centro Gallego FC U20",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837750+00:00"
+  },
+  {
+    "id": "12208409",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-06T12:30:00+00:00",
+    "home_team": "Hertha am.",
+    "away_team": "Eintracht am.",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Hertha am.",
+                "price": 2.15
+              },
+              {
+                "name": "Draw",
+                "price": 5.3
+              },
+              {
+                "name": "Eintracht am.",
+                "price": 2.15
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Hertha am.",
+        "score": "0"
+      },
+      {
+        "name": "Eintracht am.",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837758+00:00"
+  },
+  {
+    "id": "12059779",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-03T20:00:00+00:00",
+    "home_team": "Toshiba",
+    "away_team": "Academic Plovdiv",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Toshiba",
+                "price": 2.0
+              },
+              {
+                "name": "Draw",
+                "price": 3.0
+              },
+              {
+                "name": "Academic Plovdiv",
+                "price": 4.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Toshiba",
+        "score": "0"
+      },
+      {
+        "name": "Academic Plovdiv",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837763+00:00"
+  },
+  {
+    "id": "12038696",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-05T14:27:00+00:00",
+    "home_team": "Esperance",
+    "away_team": "Mara",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Esperance",
+                "price": 14.7
+              },
+              {
+                "name": "Draw",
+                "price": 2.92
+              },
+              {
+                "name": "Mara",
+                "price": 1.41
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Esperance",
+        "score": "0"
+      },
+      {
+        "name": "Mara",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837767+00:00"
+  },
+  {
+    "id": "11816931",
+    "sport_key": "sport_2",
+    "sport_title": "Unknown",
+    "commence_time": "2025-11-06T18:00:00+00:00",
+    "home_team": "Chiasso",
+    "away_team": "Esperance",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Chiasso",
+                "price": 12.9
+              },
+              {
+                "name": "Draw",
+                "price": 2.98
+              },
+              {
+                "name": "Esperance",
+                "price": 1.41
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Chiasso",
+        "score": "0"
+      },
+      {
+        "name": "Esperance",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837774+00:00"
+  },
+  {
+    "id": "11766744",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-10-28T14:00:40.187000+00:00",
+    "home_team": "Undefined",
+    "away_team": "Undefined1",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Undefined",
+                "price": 3.0
+              },
+              {
+                "name": "Undefined1",
+                "price": 1.44
+              },
+              {
+                "name": "Draw",
+                "price": 13.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Undefined",
+        "score": "0"
+      },
+      {
+        "name": "Undefined1",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837779+00:00"
+  },
+  {
+    "id": "12145225",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-05T08:24:00+00:00",
+    "home_team": "11 Oktomvri Prilep",
+    "away_team": "11 Deportivo",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Draw",
+                "price": 2.81
+              },
+              {
+                "name": "11 Deportivo",
+                "price": 1.4
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "11 Oktomvri Prilep",
+        "score": "0"
+      },
+      {
+        "name": "11 Deportivo",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837785+00:00"
+  },
+  {
+    "id": "12199407",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-06T08:54:42.130000+00:00",
+    "home_team": "Undefined",
+    "away_team": "Undefined1",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Undefined",
+                "price": 2.06
+              },
+              {
+                "name": "Draw",
+                "price": 11.8
+              },
+              {
+                "name": "Undefined1",
+                "price": 1.83
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Undefined",
+        "score": "0"
+      },
+      {
+        "name": "Undefined1",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837790+00:00"
+  },
+  {
+    "id": "12207134",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-06T11:30:00+00:00",
+    "home_team": "Werder am.",
+    "away_team": "Hamburger am.",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Werder am.",
+                "price": 2.05
+              },
+              {
+                "name": "Draw",
+                "price": 5.6
+              },
+              {
+                "name": "Hamburger am.",
+                "price": 2.25
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Werder am.",
+        "score": "0"
+      },
+      {
+        "name": "Hamburger am.",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837794+00:00"
+  },
+  {
+    "id": "12095275",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-04T07:10:00+00:00",
+    "home_team": "Electric FC",
+    "away_team": "Reno Tahoe Liberty (w)",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Electric FC",
+                "price": 2.24
+              },
+              {
+                "name": "Draw",
+                "price": 13.6
+              },
+              {
+                "name": "Reno Tahoe Liberty (w)",
+                "price": 1.67
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Electric FC",
+        "score": "0"
+      },
+      {
+        "name": "Reno Tahoe Liberty (w)",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837799+00:00"
+  },
+  {
+    "id": "12097366",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-04T08:00:00+00:00",
+    "home_team": "11",
+    "away_team": "22",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "11",
+                "price": 1.27
+              },
+              {
+                "name": "Draw",
+                "price": 4.25
+              },
+              {
+                "name": "22",
+                "price": 21.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "11",
+        "score": "0"
+      },
+      {
+        "name": "22",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837806+00:00"
+  },
+  {
+    "id": "12045265",
+    "sport_key": "soccer_epl",
+    "sport_title": "Football",
+    "commence_time": "2025-11-03T09:03:00+00:00",
+    "home_team": "Ural Asbest",
+    "away_team": "\u0422\u043e\u0441\u043d\u043e(\u0434\u043e16)",
+    "bookmakers": [
+      {
+        "key": "digitain",
+        "title": "Digitain",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Draw",
+                "price": 2.46
+              },
+              {
+                "name": "\u0422\u043e\u0441\u043d\u043e(\u0434\u043e16)",
+                "price": 3.15
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "completed": false,
+    "scores": [
+      {
+        "name": "Ural Asbest",
+        "score": "0"
+      },
+      {
+        "name": "\u0422\u043e\u0441\u043d\u043e(\u0434\u043e16)",
+        "score": "0"
+      }
+    ],
+    "last_update": "2025-11-06T13:00:38.837811+00:00"
+  }
+]

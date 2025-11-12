@@ -1,0 +1,10 @@
+# robots.txt for FunBet.AI
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemaps
+Sitemap: https://funbet.ai/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

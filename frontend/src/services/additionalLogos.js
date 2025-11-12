@@ -1,0 +1,262 @@
+// Additional Team Logos for Major European Leagues
+// To be merged into teamLogos.js
+
+export const additionalFootballLogos = {
+  // ENGLAND - Championship (2nd Division) - Top Teams
+  'Leeds United': 'https://upload.wikimedia.org/wikipedia/en/5/54/Leeds_United_F.C._logo.svg',
+  'Sheffield Wednesday': 'https://upload.wikimedia.org/wikipedia/en/8/88/Sheffield_Wednesday_badge.svg',
+  'Ipswich Town': 'https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg',
+  'West Bromwich Albion': 'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
+  'West Brom': 'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
+  'Coventry City': 'https://upload.wikimedia.org/wikipedia/en/9/94/Coventry_City_FC_logo.svg',
+  'Plymouth Argyle': 'https://upload.wikimedia.org/wikipedia/en/a/a8/Plymouth_Argyle_F.C._logo.svg',
+  'Bristol City': 'https://upload.wikimedia.org/wikipedia/en/f/f5/Bristol_City_crest.svg',
+  'Millwall': 'https://upload.wikimedia.org/wikipedia/en/7/74/Millwall_F.C._logo.svg',
+  'Hull City': 'https://upload.wikimedia.org/wikipedia/en/5/54/Hull_City_A.F.C._logo.svg',
+  'Preston North End': 'https://upload.wikimedia.org/wikipedia/en/8/82/Preston_North_End_FC.svg',
+  'Huddersfield Town': 'https://upload.wikimedia.org/wikipedia/en/7/7d/Huddersfield_Town_A.F.C._logo.svg',
+  'Blackburn Rovers': 'https://upload.wikimedia.org/wikipedia/en/0/0f/Blackburn_Rovers.svg',
+  'Portsmouth': 'https://upload.wikimedia.org/wikipedia/en/3/38/Portsmouth_FC_logo.svg',
+  'Oxford United': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Oxford_United_FC_logo.svg',
+  
+  // SPAIN - Segunda División
+  'Levante': 'https://upload.wikimedia.org/wikipedia/en/7/7b/Levante_Uni%C3%B3n_Deportiva%2C_S.A.D._logo.svg',
+  'Real Zaragoza': 'https://upload.wikimedia.org/wikipedia/en/f/f5/Real_Zaragoza_logo.svg',
+  'Sporting Gijón': 'https://upload.wikimedia.org/wikipedia/en/b/b6/Real_Sporting_de_Gij%C3%B3n_logo.svg',
+  'Real Oviedo': 'https://upload.wikimedia.org/wikipedia/en/c/c8/Real_Oviedo_logo.svg',
+  'Eibar': 'https://upload.wikimedia.org/wikipedia/en/8/8d/SD_Eibar_logo.svg',
+  'Racing Santander': 'https://upload.wikimedia.org/wikipedia/en/5/52/Racing_de_Santander_logo.svg',
+  'Málaga': 'https://upload.wikimedia.org/wikipedia/en/1/1e/M%C3%A1laga_CF_logo.svg',
+  'Elche': 'https://upload.wikimedia.org/wikipedia/en/2/2e/Elche_CF_logo.svg',
+  'Elche CF': 'https://upload.wikimedia.org/wikipedia/en/2/2e/Elche_CF_logo.svg',
+  'Tenerife': 'https://upload.wikimedia.org/wikipedia/en/4/4e/CD_Tenerife_logo.svg',
+  
+  // GERMANY - Bundesliga (Complete)
+  'Bayern Munich': 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg',
+  'Borussia Dortmund': 'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg',
+  'RB Leipzig': 'https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg',
+  'Bayer Leverkusen': 'https://upload.wikimedia.org/wikipedia/en/5/59/Bayer_04_Leverkusen_logo.svg',
+  'Union Berlin': 'https://upload.wikimedia.org/wikipedia/commons/4/44/FC_Union_Berlin_Logo.svg',
+  'Freiburg': 'https://upload.wikimedia.org/wikipedia/en/c/c2/SC_Freiburg_logo.svg',
+  'Eintracht Frankfurt': 'https://upload.wikimedia.org/wikipedia/commons/0/04/Eintracht_Frankfurt_Logo.svg',
+  'Wolfsburg': 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Logo-VfL-Wolfsburg.svg',
+  'Mainz': 'https://upload.wikimedia.org/wikipedia/commons/9/9e/FSV_Mainz_05_Logo.svg',
+  'Borussia Mönchengladbach': 'https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_M%C3%B6nchengladbach_logo.svg',
+  'Borussia Monchengladbach': 'https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_M%C3%B6nchengladbach_logo.svg',
+  'Hoffenheim': 'https://upload.wikimedia.org/wikipedia/commons/e/e7/TSG_1899_Hoffenheim_logo.svg',
+  'Augsburg': 'https://upload.wikimedia.org/wikipedia/en/a/a4/FC_Augsburg_logo.svg',
+  'Stuttgart': 'https://upload.wikimedia.org/wikipedia/commons/e/eb/VfB_Stuttgart_1893_Logo.svg',
+  'Werder Bremen': 'https://upload.wikimedia.org/wikipedia/commons/b/be/SV-Werder-Bremen-Logo.svg',
+  'Bochum': 'https://upload.wikimedia.org/wikipedia/commons/7/7b/VfL_Bochum_logo.svg',
+  'Heidenheim': 'https://upload.wikimedia.org/wikipedia/commons/3/37/FC_Heidenheim_1846_logo.svg',
+  'Darmstadt': 'https://upload.wikimedia.org/wikipedia/commons/b/b8/SV_Darmstadt_98.svg',
+  
+  // GERMANY - 2. Bundesliga
+  'Hamburg': 'https://upload.wikimedia.org/wikipedia/commons/6/66/HSV-Logo.svg',
+  'Hamburger SV': 'https://upload.wikimedia.org/wikipedia/commons/6/66/HSV-Logo.svg',
+  'FC St. Pauli': 'https://upload.wikimedia.org/wikipedia/commons/e/e1/FC_St._Pauli_logo.svg',
+  'Hannover 96': 'https://upload.wikimedia.org/wikipedia/commons/c/cd/Hannover_96_Logo.svg',
+  'Schalke 04': 'https://upload.wikimedia.org/wikipedia/commons/6/6d/FC_Schalke_04_Logo.svg',
+  'Hertha BSC': 'https://upload.wikimedia.org/wikipedia/commons/8/81/Hertha_BSC_Logo_2012.svg',
+  'Fortuna Düsseldorf': 'https://upload.wikimedia.org/wikipedia/commons/9/94/Fortuna_D%C3%BCsseldorf.svg',
+  'Nurnberg': 'https://upload.wikimedia.org/wikipedia/commons/f/fa/1-_FC_N%C3%BCrnberg_logo.svg',
+  'Kaiserslautern': 'https://upload.wikimedia.org/wikipedia/commons/0/0f/1._FC_Kaiserslautern_logo.svg',
+  'Karlsruhe': 'https://upload.wikimedia.org/wikipedia/en/b/b7/Karlsruher_SC_Logo.svg',
+  
+  // ITALY - Serie B
+  'Parma': 'https://upload.wikimedia.org/wikipedia/en/3/3b/Parma_Calcio_1913_logo.svg',
+  'Cremonese': 'https://upload.wikimedia.org/wikipedia/en/d/d0/US_Cremonese_logo.svg',
+  'Bari': 'https://upload.wikimedia.org/wikipedia/en/3/34/SSC_Bari_logo.svg',
+  'Venezia': 'https://upload.wikimedia.org/wikipedia/en/9/9f/Venezia_FC_logo.svg',
+  'Sampdoria': 'https://upload.wikimedia.org/wikipedia/en/9/9f/UC_Sampdoria_logo.svg',
+  'Palermo': 'https://upload.wikimedia.org/wikipedia/commons/2/29/Palermo_FC_logo.svg',
+  'Brescia': 'https://upload.wikimedia.org/wikipedia/en/b/b7/Brescia_Calcio_logo.svg',
+  'Como': 'https://upload.wikimedia.org/wikipedia/commons/2/2c/Como_1907.svg',
+  'Spezia': 'https://upload.wikimedia.org/wikipedia/en/e/e5/Spezia_Calcio_logo.svg',
+  'Cittadella': 'https://upload.wikimedia.org/wikipedia/commons/3/38/AS_Cittadella_logo.svg',
+  'Modena': 'https://upload.wikimedia.org/wikipedia/en/7/71/Modena_FC_2018_logo.svg',
+  
+  // FRANCE - Ligue 2
+  'Guingamp': 'https://upload.wikimedia.org/wikipedia/en/7/70/En_Avant_Guingamp_logo.svg',
+  'Auxerre': 'https://upload.wikimedia.org/wikipedia/en/f/f0/AJ_Auxerre_logo.svg',
+  'Grenoble': 'https://upload.wikimedia.org/wikipedia/en/8/8e/Grenoble_Foot_38_logo.svg',
+  'Caen': 'https://upload.wikimedia.org/wikipedia/en/c/cf/Stade_Malherbe_Caen.svg',
+  'Angers': 'https://upload.wikimedia.org/wikipedia/en/3/30/Angers_SCO_logo.svg',
+  'Amiens': 'https://upload.wikimedia.org/wikipedia/commons/7/77/Logo_Amiens_SC_%282023%29.svg',
+  'Troyes': 'https://upload.wikimedia.org/wikipedia/en/3/34/ES_Troyes_AC_logo.svg',
+  'Rodez': 'https://upload.wikimedia.org/wikipedia/en/3/3e/Rodez_AF_logo.svg',
+  'Pau FC': 'https://upload.wikimedia.org/wikipedia/en/f/f3/Pau_FC_logo.svg',
+  
+  // NETHERLANDS - Eredivisie (Complete)
+  'PSV': 'https://upload.wikimedia.org/wikipedia/en/0/05/PSV_Eindhoven.svg',
+  'Ajax': 'https://upload.wikimedia.org/wikipedia/en/7/79/Ajax_Amsterdam.svg',
+  'Feyenoord': 'https://upload.wikimedia.org/wikipedia/en/f/f8/Feyenoord_logo.svg',
+  'AZ': 'https://upload.wikimedia.org/wikipedia/en/4/47/AZ_Alkmaar_logo.svg',
+  'AZ Alkmaar': 'https://upload.wikimedia.org/wikipedia/en/4/47/AZ_Alkmaar_logo.svg',
+  'Twente': 'https://upload.wikimedia.org/wikipedia/en/e/e3/FC_Twente.svg',
+  'FC Twente': 'https://upload.wikimedia.org/wikipedia/en/e/e3/FC_Twente.svg',
+  'FC Utrecht': 'https://upload.wikimedia.org/wikipedia/commons/e/e9/FC_Utrecht.svg',
+  'Go Ahead Eagles': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Go_Ahead_Eagles_logo.svg',
+  'Heerenveen': 'https://upload.wikimedia.org/wikipedia/commons/4/4b/SC_Heerenveen_logo.svg',
+  'Sparta Rotterdam': 'https://upload.wikimedia.org/wikipedia/en/7/70/Sparta_Rotterdam_logo.svg',
+  'Vitesse': 'https://upload.wikimedia.org/wikipedia/en/f/f4/SBV_Vitesse_logo.svg',
+  'Fortuna Sittard': 'https://upload.wikimedia.org/wikipedia/en/e/e7/Fortuna_Sittard_logo.svg',
+  
+  // PORTUGAL - Primeira Liga (Complete)
+  'Porto': 'https://upload.wikimedia.org/wikipedia/en/f/f1/FC_Porto.svg',
+  'FC Porto': 'https://upload.wikimedia.org/wikipedia/en/f/f1/FC_Porto.svg',
+  'Benfica': 'https://upload.wikimedia.org/wikipedia/en/a/a2/SL_Benfica_logo.svg',
+  'Sporting CP': 'https://upload.wikimedia.org/wikipedia/en/3/3e/Sporting_Clube_de_Portugal_%28Logo%29.svg',
+  'Sporting Lisbon': 'https://upload.wikimedia.org/wikipedia/en/3/3e/Sporting_Clube_de_Portugal_%28Logo%29.svg',
+  'Sporting': 'https://upload.wikimedia.org/wikipedia/en/3/3e/Sporting_Clube_de_Portugal_%28Logo%29.svg',
+  'Braga': 'https://upload.wikimedia.org/wikipedia/en/7/79/S.C._Braga_logo.svg',
+  'SC Braga': 'https://upload.wikimedia.org/wikipedia/en/7/79/S.C._Braga_logo.svg',
+  'Vitória Guimarães': 'https://upload.wikimedia.org/wikipedia/en/c/cd/Vitoria_Guimaraes.svg',
+  'Vitoria Guimaraes': 'https://upload.wikimedia.org/wikipedia/en/c/cd/Vitoria_Guimaraes.svg',
+  'Boavista': 'https://upload.wikimedia.org/wikipedia/en/6/6d/Boavista_FC_logo.svg',
+  'Rio Ave': 'https://upload.wikimedia.org/wikipedia/en/e/e3/Rio_Ave_FC_logo.svg',
+  'Famalicão': 'https://upload.wikimedia.org/wikipedia/en/2/22/FC_Famalic%C3%A3o_logo.svg',
+  'Gil Vicente': 'https://upload.wikimedia.org/wikipedia/en/5/5b/Gil_Vicente_F.C._logo.svg',
+  'Casa Pia': 'https://upload.wikimedia.org/wikipedia/en/1/18/Casa_Pia_AC_logo.svg',
+  
+  // BELGIUM - Pro League
+  'Club Brugge': 'https://upload.wikimedia.org/wikipedia/en/d/d0/Club_Brugge_KV_logo.svg',
+  'Anderlecht': 'https://upload.wikimedia.org/wikipedia/en/e/e8/RSC_Anderlecht_logo.svg',
+  'RSC Anderlecht': 'https://upload.wikimedia.org/wikipedia/en/e/e8/RSC_Anderlecht_logo.svg',
+  'Union Saint-Gilloise': 'https://upload.wikimedia.org/wikipedia/en/e/ea/Royale_Union_Saint-Gilloise_logo.svg',
+  'Royal Antwerp': 'https://upload.wikimedia.org/wikipedia/en/c/cb/Royal_Antwerp_FC_logo.svg',
+  'Genk': 'https://upload.wikimedia.org/wikipedia/en/8/89/KRC_Genk_logo.svg',
+  'KRC Genk': 'https://upload.wikimedia.org/wikipedia/en/8/89/KRC_Genk_logo.svg',
+  'Standard Liège': 'https://upload.wikimedia.org/wikipedia/en/3/32/Standard_Li%C3%A8ge_logo.svg',
+  'Standard Liege': 'https://upload.wikimedia.org/wikipedia/en/3/32/Standard_Li%C3%A8ge_logo.svg',
+  'Gent': 'https://upload.wikimedia.org/wikipedia/en/a/ae/KAA_Gent_logo.svg',
+  'KAA Gent': 'https://upload.wikimedia.org/wikipedia/en/a/ae/KAA_Gent_logo.svg',
+  
+  // TURKEY - Süper Lig
+  'Galatasaray': 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/570.png',
+  'Fenerbahçe': 'https://upload.wikimedia.org/wikipedia/en/8/86/Fenerbah%C3%A7e_SK_Logo.svg',
+  'Fenerbahce': 'https://upload.wikimedia.org/wikipedia/en/8/86/Fenerbah%C3%A7e_SK_Logo.svg',
+  'Beşiktaş': 'https://upload.wikimedia.org/wikipedia/commons/8/86/Be%C5%9Fikta%C5%9F_J.K._logo.svg',
+  'Besiktas': 'https://upload.wikimedia.org/wikipedia/commons/8/86/Be%C5%9Fikta%C5%9F_J.K._logo.svg',
+  'Trabzonspor': 'https://upload.wikimedia.org/wikipedia/en/9/97/Trabzonspor_logo.svg',
+  'Başakşehir': 'https://upload.wikimedia.org/wikipedia/en/5/56/%C4%B0stanbul_Ba%C5%9Fak%C5%9Fehir_logo.svg',
+  'Basaksehir': 'https://upload.wikimedia.org/wikipedia/en/5/56/%C4%B0stanbul_Ba%C5%9Fak%C5%9Fehir_logo.svg',
+  'Sivasspor': 'https://upload.wikimedia.org/wikipedia/en/f/f4/Sivasspor_Logo.svg',
+  'Alanyaspor': 'https://upload.wikimedia.org/wikipedia/en/5/5a/Alanyaspor_logo.svg',
+  'Kayserispor': 'https://upload.wikimedia.org/wikipedia/en/3/32/Kayserispor_logo.svg',
+  
+  // SCOTLAND - Premiership
+  'Celtic': 'https://upload.wikimedia.org/wikipedia/en/3/35/Celtic_FC.svg',
+  'Rangers': 'https://upload.wikimedia.org/wikipedia/en/4/43/Rangers_FC.svg',
+  'Aberdeen': 'https://upload.wikimedia.org/wikipedia/en/d/d3/Aberdeen_FC_logo.svg',
+  'Hearts': 'https://upload.wikimedia.org/wikipedia/en/f/f7/Heart_of_Midlothian_FC_logo.svg',
+  'Heart of Midlothian': 'https://upload.wikimedia.org/wikipedia/en/f/f7/Heart_of_Midlothian_FC_logo.svg',
+  'Hibernian': 'https://upload.wikimedia.org/wikipedia/en/8/89/Hibernian_FC_logo.svg',
+  'Dundee United': 'https://upload.wikimedia.org/wikipedia/en/b/ba/Dundee_United_FC_logo.svg',
+  'St Mirren': 'https://upload.wikimedia.org/wikipedia/en/4/44/St._Mirren_F.C._logo.svg',
+  'Motherwell': 'https://upload.wikimedia.org/wikipedia/en/4/43/Motherwell_F.C._logo.svg',
+  
+  // GREECE - Super League
+  'Olympiacos': 'https://upload.wikimedia.org/wikipedia/en/e/e2/Olympiacos_FC_logo.svg',
+  'Panathinaikos': 'https://upload.wikimedia.org/wikipedia/en/7/74/Panathinaikos_FC_logo.svg',
+  'AEK Athens': 'https://upload.wikimedia.org/wikipedia/en/5/53/AEK_Athens_F.C._logo.svg',
+  'PAOK': 'https://upload.wikimedia.org/wikipedia/en/1/1f/PAOK_FC_logo.svg',
+  
+  // RUSSIA - Premier League
+  'Zenit St Petersburg': 'https://upload.wikimedia.org/wikipedia/en/4/43/FC_Zenit_Saint_Petersburg_logo.svg',
+  'Zenit': 'https://upload.wikimedia.org/wikipedia/en/4/43/FC_Zenit_Saint_Petersburg_logo.svg',
+  'Spartak Moscow': 'https://upload.wikimedia.org/wikipedia/en/5/5a/FC_Spartak_Moscow_logo.svg',
+  'Lokomotiv Moscow': 'https://upload.wikimedia.org/wikipedia/en/a/aa/FC_Lokomotiv_Moscow_logo.svg',
+  'CSKA Moscow': 'https://upload.wikimedia.org/wikipedia/en/e/e8/PFC_CSKA_Moscow.svg',
+  'Dynamo Moscow': 'https://upload.wikimedia.org/wikipedia/commons/3/37/Dynamo_Moscow_logo.svg',
+  'Krasnodar': 'https://upload.wikimedia.org/wikipedia/en/a/aa/FC_Krasnodar_logo.svg',
+  
+  // AUSTRIA - Bundesliga
+  'Red Bull Salzburg': 'https://upload.wikimedia.org/wikipedia/en/7/77/FC_Red_Bull_Salzburg_logo.svg',
+  'Salzburg': 'https://upload.wikimedia.org/wikipedia/en/7/77/FC_Red_Bull_Salzburg_logo.svg',
+  'Sturm Graz': 'https://upload.wikimedia.org/wikipedia/commons/c/cd/SK_Sturm_Graz_Logo.svg',
+  'Rapid Wien': 'https://upload.wikimedia.org/wikipedia/en/d/d7/SK_Rapid_Wien_Logo.svg',
+  'Rapid Vienna': 'https://upload.wikimedia.org/wikipedia/en/d/d7/SK_Rapid_Wien_Logo.svg',
+  'Austria Wien': 'https://upload.wikimedia.org/wikipedia/commons/6/6c/FK_Austria_Wien_logo.svg',
+  'Austria Vienna': 'https://upload.wikimedia.org/wikipedia/commons/6/6c/FK_Austria_Wien_logo.svg',
+  'LASK': 'https://upload.wikimedia.org/wikipedia/en/d/d3/LASK_Linz_logo.svg',
+  
+  // SWITZERLAND - Super League
+  'Young Boys': 'https://upload.wikimedia.org/wikipedia/en/c/c6/BSC_Young_Boys_logo.svg',
+  'Basel': 'https://upload.wikimedia.org/wikipedia/en/9/92/FC_Basel_logo.svg',
+  'FC Basel': 'https://upload.wikimedia.org/wikipedia/en/9/92/FC_Basel_logo.svg',
+  'Zürich': 'https://upload.wikimedia.org/wikipedia/en/2/29/FC_Z%C3%BCrich_logo.svg',
+  'Zurich': 'https://upload.wikimedia.org/wikipedia/en/2/29/FC_Z%C3%BCrich_logo.svg',
+  'Servette': 'https://upload.wikimedia.org/wikipedia/en/e/e4/Servette_FC_logo.svg',
+  'Lugano': 'https://upload.wikimedia.org/wikipedia/en/4/4e/FC_Lugano_logo.svg',
+  'St. Gallen': 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_St._Gallen_logo.svg',
+  
+  // DENMARK - Superliga
+  'FC Copenhagen': 'https://upload.wikimedia.org/wikipedia/en/7/7a/FC_Copenhagen_logo.svg',
+  'Copenhagen': 'https://upload.wikimedia.org/wikipedia/en/7/7a/FC_Copenhagen_logo.svg',
+  'Brøndby': 'https://upload.wikimedia.org/wikipedia/en/6/62/Brondby_IF_logo.svg',
+  'Brondby': 'https://upload.wikimedia.org/wikipedia/en/6/62/Brondby_IF_logo.svg',
+  'FC Midtjylland': 'https://upload.wikimedia.org/wikipedia/en/0/04/FC_Midtjylland_logo.svg',
+  'Midtjylland': 'https://upload.wikimedia.org/wikipedia/en/0/04/FC_Midtjylland_logo.svg',
+  'Nordsjælland': 'https://upload.wikimedia.org/wikipedia/en/4/44/FC_Nordsj%C3%A6lland_logo.svg',
+  'Nordsjaelland': 'https://upload.wikimedia.org/wikipedia/en/4/44/FC_Nordsj%C3%A6lland_logo.svg',
+  
+  // POLAND - Ekstraklasa
+  'Legia Warsaw': 'https://upload.wikimedia.org/wikipedia/en/a/a5/Legia_Warszawa.svg',
+  'Lech Poznań': 'https://upload.wikimedia.org/wikipedia/en/b/b5/Lech_Pozna%C5%84.svg',
+  'Lech Poznan': 'https://upload.wikimedia.org/wikipedia/en/b/b5/Lech_Pozna%C5%84.svg',
+  'Wisła Kraków': 'https://upload.wikimedia.org/wikipedia/en/c/c8/Wis%C5%82a_Krak%C3%B3w_logo.svg',
+  'Wisla Krakow': 'https://upload.wikimedia.org/wikipedia/en/c/c8/Wis%C5%82a_Krak%C3%B3w_logo.svg',
+  'Raków Częstochowa': 'https://upload.wikimedia.org/wikipedia/en/3/30/Raków_Częstochowa_logo.svg',
+  'Rakow Czestochowa': 'https://upload.wikimedia.org/wikipedia/en/3/30/Raków_Częstochowa_logo.svg',
+  
+  // CZECH REPUBLIC - First League
+  'Slavia Prague': 'https://upload.wikimedia.org/wikipedia/en/d/d1/SK_Slavia_Praha_logo.svg',
+  'Sparta Prague': 'https://upload.wikimedia.org/wikipedia/en/5/51/AC_Sparta_Prague_logo.svg',
+  'Viktoria Plzeň': 'https://upload.wikimedia.org/wikipedia/en/9/90/FC_Viktoria_Plzeň_logo.svg',
+  'Viktoria Plzen': 'https://upload.wikimedia.org/wikipedia/en/9/90/FC_Viktoria_Plzeň_logo.svg',
+  
+  // UKRAINE - Premier League
+  'Shakhtar Donetsk': 'https://upload.wikimedia.org/wikipedia/en/a/a1/FC_Shakhtar_Donetsk.svg',
+  'Dynamo Kyiv': 'https://upload.wikimedia.org/wikipedia/commons/2/23/FC_Dynamo_Kyiv_logo.svg',
+  'Dynamo Kiev': 'https://upload.wikimedia.org/wikipedia/commons/2/23/FC_Dynamo_Kyiv_logo.svg',
+  
+  // SERBIA - SuperLiga
+  'Red Star Belgrade': 'https://upload.wikimedia.org/wikipedia/en/e/e2/FK_Crvena_Zvezda_logo.svg',
+  'Partizan': 'https://upload.wikimedia.org/wikipedia/en/8/8c/FK_Partizan_logo.svg',
+  'Partizan Belgrade': 'https://upload.wikimedia.org/wikipedia/en/8/8c/FK_Partizan_logo.svg',
+  
+  // CROATIA - HNL
+  'Dinamo Zagreb': 'https://upload.wikimedia.org/wikipedia/en/5/55/GNK_Dinamo_Zagreb_logo.svg',
+  'Hajduk Split': 'https://upload.wikimedia.org/wikipedia/en/3/30/HNK_Hajduk_Split_logo.svg',
+  'Rijeka': 'https://upload.wikimedia.org/wikipedia/en/e/ed/HNK_Rijeka_logo.svg',
+  
+  // NORWAY - Eliteserien
+  'Molde': 'https://upload.wikimedia.org/wikipedia/en/3/3c/Molde_FK_logo.svg',
+  'Rosenborg': 'https://upload.wikimedia.org/wikipedia/en/d/de/Rosenborg_BK_logo.svg',
+  'Bodø/Glimt': 'https://upload.wikimedia.org/wikipedia/en/f/f8/FK_Bod%C3%B8_Glimt_logo.svg',
+  'Bodo/Glimt': 'https://upload.wikimedia.org/wikipedia/en/f/f8/FK_Bod%C3%B8_Glimt_logo.svg',
+  
+  // SWEDEN - Allsvenskan
+  'Malmö FF': 'https://upload.wikimedia.org/wikipedia/en/e/ef/Malm%C3%B6_FF_logo.svg',
+  'Malmo FF': 'https://upload.wikimedia.org/wikipedia/en/e/ef/Malm%C3%B6_FF_logo.svg',
+  'AIK': 'https://upload.wikimedia.org/wikipedia/en/5/5d/AIK_logo.svg',
+  'Djurgården': 'https://upload.wikimedia.org/wikipedia/en/9/9c/Djurg%C3%A5rdens_IF_logo.svg',
+  'Djurgarden': 'https://upload.wikimedia.org/wikipedia/en/9/9c/Djurg%C3%A5rdens_IF_logo.svg',
+  'Hammarby': 'https://upload.wikimedia.org/wikipedia/en/e/e7/Hammarby_IF_logo.svg',
+  
+  // KAZAKHSTAN
+  'FC Kairat': 'https://tmssl.akamaized.net/images/wappen/head/32115.png',
+  'Kairat Almaty': 'https://tmssl.akamaized.net/images/wappen/head/32115.png',
+  
+  // ROMANIA - Liga I
+  'FCSB': 'https://upload.wikimedia.org/wikipedia/en/5/58/FCSB_logo.svg',
+  'CFR Cluj': 'https://upload.wikimedia.org/wikipedia/en/e/ee/CFR_Cluj_logo.svg',
+  'Rapid București': 'https://upload.wikimedia.org/wikipedia/en/7/77/FC_Rapid_București_logo.svg',
+  'Rapid Bucuresti': 'https://upload.wikimedia.org/wikipedia/en/7/77/FC_Rapid_București_logo.svg',
+  
+  // BULGARIA - First League
+  'Ludogorets': 'https://upload.wikimedia.org/wikipedia/en/3/3e/PFC_Ludogorets_Razgrad_logo.svg',
+  'CSKA Sofia': 'https://upload.wikimedia.org/wikipedia/en/5/51/PFC_CSKA_Sofia_logo.svg',
+  'Levski Sofia': 'https://upload.wikimedia.org/wikipedia/en/7/76/PFC_Levski_Sofia_logo.svg',
+};
