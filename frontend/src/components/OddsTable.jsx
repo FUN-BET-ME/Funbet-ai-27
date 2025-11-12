@@ -767,9 +767,12 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             return b.totalOdds - a.totalOdds;
                           });
 
-                          // Check if expanded
-                          const isExpanded = expandedMatches[matchId];
-                          const displayedBookmakers = isExpanded ? sortedBookmakers : sortedBookmakers.slice(0, 4);
+                          // Show ALL bookmakers (no slicing)
+                          const displayedBookmakers = sortedBookmakers;
+                          
+                          // Separate FunBet to always show first with special styling
+                          const funbetBookmaker = displayedBookmakers.find(b => b.key === 'funbet');
+                          const otherBookmakers = displayedBookmakers.filter(b => b.key !== 'funbet');
                           
                           // Determine if sport allows draws
                           const sportAllowsDraws = !match.sport_title?.toLowerCase().includes('baseball') && 
