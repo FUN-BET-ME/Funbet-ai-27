@@ -108,9 +108,18 @@ class OddsWorker:
                     timeout=15.0
                 )
                 
+                # Track API usage
+                self.api_calls_today += 1
+                self.api_calls_total += 1
+                
                 if response.status_code == 200:
                     data = response.json()
-                    logger.info(f"✅ Fetched {len(data)} matches for {sport_key}")
+                    
+                    # Log remaining quota from response headers
+                    remaining = response.headers.get('x-requests-remaining', 'unknown')
+                    used = response.headers.get('x-requests-used', 'unknown')
+                    
+                    logger.info(f"✅ Fetched {len(data)} matches | API calls today: {self.api_calls_today} | Remaining: {remaining}")
                     return data
                 else:
                     logger.warning(f"⚠️ {sport_key} returned status {response.status_code}")
