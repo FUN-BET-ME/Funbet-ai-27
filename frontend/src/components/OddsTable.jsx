@@ -873,16 +873,11 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             }
                           }
 
-                          // Calculate FunBet.ME odds (5% better than market best)
-                          const funbetSuperBoostOdds = {};
-                          outcomeNames.forEach(name => {
-                            if (bestOdds[name]) {
-                              funbetSuperBoostOdds[name] = (bestOdds[name] * 1.05).toFixed(2);
-                            }
-                          });
-
-                          // FunBet.ME row first
-                          const funbetSuperBoostRow = (
+                          // Backend now generates FunBet odds - no need for frontend calculation
+                          // The FunBet bookmaker will appear naturally in the bookmakerRows from API
+                          
+                          // Render all bookmakers from API (including FunBet from backend)
+                          const bookmakerRows = match.bookmakers?.map((bookmaker) => (
                             <tr key="funbet-super-boost" className="border-b-2 border-[#FFD700] bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10">
                               <td className="py-3 px-4 text-sm font-semibold text-white">
                                 <a 
