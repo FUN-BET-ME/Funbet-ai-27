@@ -13,11 +13,11 @@ class Settings(BaseSettings):
     debug: bool = False
     
     # Database
-    mongo_url: str = os.environ['MONGO_URL']
-    db_name: str = os.environ['DB_NAME']
+    mongo_url: str
+    db_name: str
     
     # CORS
-    cors_origins: list = os.environ.get('CORS_ORIGINS', '*').split(',')
+    cors_origins: str = "*"
     
     # Rate Limiting
     rate_limit_per_minute: int = 60
@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     
     class Config:
         case_sensitive = False
+    
+    @property
+    def cors_origins_list(self) -> list:
+        return self.cors_origins.split(',')
 
 @lru_cache()
 def get_settings() -> Settings:
