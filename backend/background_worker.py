@@ -199,24 +199,26 @@ class OddsWorker:
             logger.error(f"❌ Error cleaning old data: {e}")
     
     def start(self):
-        """Start the background worker"""
-        logger.info("🚀 Starting FunBet.ai background worker...")
+        """Start the background worker - EFFICIENT VERSION"""
+        logger.info("🚀 Starting FunBet.ai background worker (EFFICIENT MODE)...")
+        logger.info("📊 API Efficiency: 1 call per update = 12/hour = 288/day")
+        logger.info("💰 100K credits = 347+ days of operation")
         
-        # Job 1: Update odds every 5 minutes
+        # Job 1: Update odds every 5 minutes (12 calls/hour = 288/day)
         self.scheduler.add_job(
             self.update_odds_job,
             trigger=IntervalTrigger(minutes=5),
             id='update_odds',
-            name='Update odds every 5 minutes',
+            name='Update odds every 5 minutes (1 API call)',
             replace_existing=True
         )
         
-        # Job 2: Add day 8 data daily at GMT 00:00
+        # Job 2: Daily refresh at GMT 00:00 to maintain rolling window
         self.scheduler.add_job(
             self.add_day_8_job,
             trigger=CronTrigger(hour=0, minute=0, timezone='UTC'),
-            id='add_day_8',
-            name='Add day 8 data at GMT 00:00',
+            id='daily_refresh',
+            name='Daily refresh at GMT 00:00',
             replace_existing=True
         )
         
@@ -233,7 +235,8 @@ class OddsWorker:
         asyncio.create_task(self.update_odds_job())
         
         self.scheduler.start()
-        logger.info("✅ Background worker started with 3 jobs")
+        logger.info("✅ Background worker started - 3 jobs scheduled")
+        logger.info("🎯 Expected usage: ~290 API calls/day")
     
     def stop(self):
         """Stop the background worker"""
