@@ -768,7 +768,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           });
 
                           // Priority bookmakers to always show in top 4
-                          const priorityBookmakers = ['funbet', 'betfair', 'onexbet', 'bet365', 'williamhill'];
+                          const priorityBookmakers = ['funbet', 'onexbet', 'betfair_sb_uk', 'betfair_ex_uk', 'bet365', 'williamhill', 'pinnacle'];
                           
                           // Sort bookmakers: Priority first, then by best odds
                           const prioritySorted = sortedBookmakers.sort((a, b) => {
