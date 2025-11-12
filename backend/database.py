@@ -1,3 +1,4 @@
+"""Database connection and management"""
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import settings
 import logging
@@ -21,12 +22,28 @@ async def connect_to_mongo():
         db_instance.db = db_instance.client[settings.db_name]
         
         # Create indexes for performance
-        await db_instance.db.status_checks.create_index("timestamp", name="timestamp_idx")
-        await db_instance.db.status_checks.create_index("client_name", name="client_name_idx")
-        await db_instance.db.status_checks.create_index(
-            [("timestamp", -1)], 
-            name="timestamp_desc_idx"
+        # Users
+        await db_instance.db.users.create_index("email", unique=True, name="email_idx")
+        
+        # Odds cache
+        await db_instance.db.odds_cache.create_index("commence_time", name="commence_time_idx")
+        await db_instance.db.odds_cache.create_index("sport_key", name="sport_key_idx")
+        await db_instance.db.odds_cache.create_index(
+            [("commence_time", 1), ("sport_key", 1)], 
+            name="commence_sport_idx"
         )
+        
+        # Historical odds
+        await db_instance.db.historical_odds.create_index("match_id", unique=True, name="match_id_idx")
+        await db_instance.db.historical_odds.create_index("commence_time", name="hist_commence_idx")
+        
+        # Predictions
+        await db_instance.db.funbet_predictions.create_index("match_id", name="pred_match_idx")
+        await db_instance.db.funbet_predictions.create_index("prediction_timestamp", name="pred_time_idx")
+        
+        # Prediction archive
+        await db_instance.db.prediction_archive.create_index("match_id", unique=True, name="arch_match_idx")
+        await db_instance.db.prediction_archive.create_index("result_verified", name="arch_verified_idx")
         
         logger.info("Successfully connected to MongoDB and created indexes")
     except Exception as e:
