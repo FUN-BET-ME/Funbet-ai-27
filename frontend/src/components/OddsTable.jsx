@@ -1155,14 +1155,9 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             </tr>
                           ));
 
-                          // Return rows based on showAllRows prop
-                          // Public users: Only Super Boost
-                          // Admin: All 3 rows
-                          if (showAllRows) {
-                            return [funbetSuperBoostRow, funbetBoostRow, funbetStandardRow, ...bookmakerRows];
-                          } else {
-                            return [funbetSuperBoostRow, ...bookmakerRows];
-                          }
+                          // Return only bookmaker rows from API (includes backend-generated FunBet)
+                          // Backend now generates FunBet with 5% markup - no need for frontend calculation
+                          return bookmakerRows;
                         })()}
                       </tbody>
                     </table>
