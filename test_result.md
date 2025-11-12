@@ -1378,7 +1378,7 @@ agent_communication:
     message: "🧪 COMPREHENSIVE FRONTEND TESTING COMPLETED - PRIORITY 1 SUCCESS, PRIORITY 2 ISSUE FOUND
     
     **TESTING ENVIRONMENT:**
-    - Frontend URL: https://sport-selector.preview.emergentagent.com/live-odds
+    - Frontend URL: https://funbet-odds.preview.emergentagent.com/live-odds
     - Viewport: 1920x800 (desktop view)
     - Navigation: Successfully accessed odds interface via home page sport tiles
     
@@ -1606,7 +1606,7 @@ agent_communication:
     **TESTING SUMMARY:**
     📊 Overall Results: 12/12 tests passed (100% success rate)
     ⏱️  Total Testing Time: ~30 seconds
-    🌐 Base URL: https://sport-selector.preview.emergentagent.com/api
+    🌐 Base URL: https://funbet-odds.preview.emergentagent.com/api
     
     **PRIORITY 1: DIGITAIN API INTEGRATION (CRITICAL) ✅**
     
