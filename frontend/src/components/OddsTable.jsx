@@ -767,8 +767,30 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             return b.totalOdds - a.totalOdds;
                           });
 
-                          // Show ALL bookmakers (no slicing)
-                          const displayedBookmakers = sortedBookmakers;
+                          // Priority bookmakers to always show in top 4
+                          const priorityBookmakers = ['funbet', 'betfair', 'onexbet', 'bet365', 'williamhill'];
+                          
+                          // Sort bookmakers: Priority first, then by best odds
+                          const prioritySorted = sortedBookmakers.sort((a, b) => {
+                            const aPriority = priorityBookmakers.indexOf(a.key);
+                            const bPriority = priorityBookmakers.indexOf(b.key);
+                            
+                            // If both are priority, sort by position in priority list
+                            if (aPriority !== -1 && bPriority !== -1) {
+                              return aPriority - bPriority;
+                            }
+                            
+                            // Priority bookmakers come first
+                            if (aPriority !== -1) return -1;
+                            if (bPriority !== -1) return 1;
+                            
+                            // Otherwise sort by total odds
+                            return b.totalOdds - a.totalOdds;
+                          });
+                          
+                          // Check if expanded
+                          const isExpanded = expandedMatches[matchId];
+                          const displayedBookmakers = isExpanded ? prioritySorted : prioritySorted.slice(0, 4);
                           
                           // Separate FunBet to always show first with special styling
                           const funbetBookmaker = displayedBookmakers.find(b => b.key === 'funbet');
