@@ -244,6 +244,89 @@ async def get_cricket_matches(
         raise HTTPException(status_code=500, detail=str(e))
 
 # ==========================================
+# LEGACY ENDPOINTS (for frontend compatibility)
+# ==========================================
+
+@api_router.get("/odds/all-cached")
+async def get_all_cached_odds(
+    limit: int = Query(100, ge=1, le=500),
+    skip: int = Query(0, ge=0),
+    sport: str = Query(None)
+):
+    """Legacy endpoint - Get all cached odds (for frontend compatibility)"""
+    try:
+        now = datetime.now(timezone.utc)
+        
+        query = {}
+        
+        # Filter by sport if provided
+        if sport:
+            if sport == 'soccer':
+                query['sport_key'] = {'$regex': '^soccer_', '$options': 'i'}
+            elif sport == 'cricket':
+                query['sport_key'] = {'$regex': '^cricket_', '$options': 'i'}
+            else:
+                query['sport_key'] = {'$regex': f'^{sport}_', '$options': 'i'}
+        
+        # Get all matches
+        matches = await db_instance.db.odds_cache.find(query, {'_id': 0}) \
+            .sort('commence_time', 1) \
+            .skip(skip) \
+            .limit(limit) \
+            .to_list(length=limit)
+        
+        logger.info(f"✅ all-cached: Returned {len(matches)} matches")
+        return matches
+        
+    except Exception as e:
+        logger.error(f"Error fetching all-cached: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/odds/football/priority")
+async def get_football_priority_legacy():
+    """Legacy endpoint - Get priority football matches"""
+    try:
+        now = datetime.now(timezone.utc)
+        fourteen_days = now + timedelta(days=14)
+        
+        matches = await db_instance.db.odds_cache.find({
+            'sport_key': {'$regex': '^soccer_', '$options': 'i'},
+            'commence_time': {
+                '$gte': now.isoformat(),
+                '$lte': fourteen_days.isoformat()
+            }
+        }, {'_id': 0}).sort('commence_time', 1).to_list(length=100)
+        
+        logger.info(f"✅ football/priority: Returned {len(matches)} matches")
+        return matches
+        
+    except Exception as e:
+        logger.error(f"Error fetching football priority: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/odds/cricket/priority")
+async def get_cricket_priority_legacy():
+    """Legacy endpoint - Get priority cricket matches"""
+    try:
+        now = datetime.now(timezone.utc)
+        fourteen_days = now + timedelta(days=14)
+        
+        matches = await db_instance.db.odds_cache.find({
+            'sport_key': {'$regex': '^cricket_', '$options': 'i'},
+            'commence_time': {
+                '$gte': now.isoformat(),
+                '$lte': fourteen_days.isoformat()
+            }
+        }, {'_id': 0}).sort('commence_time', 1).to_list(length=100)
+        
+        logger.info(f"✅ cricket/priority: Returned {len(matches)} matches")
+        return matches
+        
+    except Exception as e:
+        logger.error(f"Error fetching cricket priority: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ==========================================
 # PREDICTIONS & STATS
 # ==========================================
 
