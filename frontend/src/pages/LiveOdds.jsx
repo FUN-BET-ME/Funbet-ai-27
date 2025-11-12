@@ -1078,8 +1078,84 @@ const LiveOdds = () => {
                             );
                           })()}
                           
-                          {/* Other bookmakers */}
-                          {displayedBookmakers.map((bookmaker) => {
+                          {/* FunBet.ME row (from backend API) - Render first with special styling */}
+                          {(() => {
+                            const funbetBookmaker = displayedBookmakers.find(b => b.key === 'funbet');
+                            if (!funbetBookmaker) return null;
+                            
+                            const outcomes = funbetBookmaker.markets?.[0]?.outcomes || [];
+                            const homeOutcome = outcomes.find(o => 
+                              o.name && homeTeam && 
+                              o.name.trim().toLowerCase() === homeTeam.trim().toLowerCase()
+                            );
+                            const awayOutcome = outcomes.find(o => 
+                              o.name && awayTeam && 
+                              o.name.trim().toLowerCase() === awayTeam.trim().toLowerCase()
+                            );
+                            const drawOutcome = outcomes.find(o => 
+                              o.name && (
+                                o.name.toLowerCase().includes('draw') || 
+                                o.name.toLowerCase().includes('tie')
+                              )
+                            );
+                            
+                            return (
+                              <tr className="border-b-2 border-[#FFD700] bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10">
+                                <td className="py-4 px-4">
+                                  <a 
+                                    href="https://funbet.me" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                                  >
+                                    <span className="text-[#FFD700] text-2xl">⭐</span>
+                                    <span className="text-[#FFD700] font-bold text-lg">{funbetBookmaker.title}</span>
+                                  </a>
+                                </td>
+                                <td className="py-4 px-4 text-center">
+                                  <a 
+                                    href="https://funbet.me" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="inline-block"
+                                  >
+                                    <span className="bg-[#FFD700] text-[#2E004F] px-5 py-2 rounded-lg font-black text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg">
+                                      {homeOutcome ? homeOutcome.price.toFixed(2) : '-'}
+                                    </span>
+                                  </a>
+                                </td>
+                                {showThreeOutcomes && (
+                                  <td className="py-4 px-4 text-center">
+                                    <a 
+                                      href="https://funbet.me" 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="inline-block"
+                                    >
+                                      <span className="bg-[#FFD700] text-[#2E004F] px-5 py-2 rounded-lg font-black text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg">
+                                        {drawOutcome ? drawOutcome.price.toFixed(2) : '-'}
+                                      </span>
+                                    </a>
+                                  </td>
+                                )}
+                                <td className="py-4 px-4 text-center">
+                                  <a 
+                                    href="https://funbet.me" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="inline-block"
+                                  >
+                                    <span className="bg-[#FFD700] text-[#2E004F] px-5 py-2 rounded-lg font-black text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg">
+                                      {awayOutcome ? awayOutcome.price.toFixed(2) : '-'}
+                                    </span>
+                                  </a>
+                                </td>
+                              </tr>
+                            );
+                          })()}
+                          
+                          {/* Other bookmakers (excluding FunBet) */}
+                          {displayedBookmakers.filter(b => b.key !== 'funbet').map((bookmaker) => {
                             const outcomes = bookmaker.markets?.[0]?.outcomes || [];
                             
                             // Match outcomes by team name, not array index
