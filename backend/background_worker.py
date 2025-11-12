@@ -155,20 +155,22 @@ class OddsWorker:
             logger.error(f"❌ Error in odds update job: {e}")
     
     async def add_day_8_job(self):
-        """Add day 8 data daily at GMT 00:00 (rolling 15-day window)"""
+        """
+        Add day 8 data daily at GMT 00:00 (rolling 15-day window)
+        Note: The 'upcoming' endpoint automatically gives us ~15 days
+        This job just ensures we refresh at midnight to capture new day 8 data
+        """
         try:
-            logger.info("📅 Running day 8 data addition (GMT 00:00)...")
+            logger.info("📅 Daily refresh at GMT 00:00 (rolling window update)...")
             
-            # This job ensures we always have 15 days of data
-            # When called, it fetches data for day 8 specifically
-            # The odds_update_job handles the full refresh
-            
+            # The 'upcoming' endpoint automatically handles the rolling window
+            # This midnight refresh ensures we capture any new matches for day 8
             await self.update_odds_job()
             
-            logger.info("✅ Day 8 data added successfully")
+            logger.info("✅ Daily refresh complete - 15-day window maintained")
             
         except Exception as e:
-            logger.error(f"❌ Error in day 8 job: {e}")
+            logger.error(f"❌ Error in daily refresh job: {e}")
     
     async def cleanup_old_data(self):
         """Clean up matches older than 2 days"""
