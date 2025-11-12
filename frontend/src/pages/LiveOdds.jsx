@@ -634,10 +634,10 @@ const LiveOdds = () => {
                 // Get best odds from displayed bookmakers EXCLUDING FunBet for highlighting
                 // FunBet is always 5% higher, so we highlight the best market odds among real bookmakers
                 const nonFunbetBookmakers = displayedBookmakers.filter(b => b.key !== 'funbet');
-                const homeDisplayBest = getBestOdds(nonFunbetBookmakers, 0);
-                const awayDisplayBest = getBestOdds(nonFunbetBookmakers, 1);
-                const drawDisplayBest = nonFunbetBookmakers[0]?.markets?.[0]?.outcomes?.length > 2 
-                  ? getBestOdds(nonFunbetBookmakers, 2) 
+                const homeDisplayBest = getBestOdds(nonFunbetBookmakers, 0, homeTeam, awayTeam);
+                const awayDisplayBest = getBestOdds(nonFunbetBookmakers, 1, homeTeam, awayTeam);
+                const drawDisplayBest = showThreeOutcomes
+                  ? getBestOdds(nonFunbetBookmakers, 2, homeTeam, awayTeam) 
                   : null;
 
                 return (
