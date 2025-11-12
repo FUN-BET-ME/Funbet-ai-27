@@ -276,7 +276,9 @@ async def get_all_cached_odds(
             .to_list(length=limit)
         
         logger.info(f"✅ all-cached: Returned {len(matches)} matches")
-        return matches
+        
+        # Return in format frontend expects: {matches: [...]}
+        return {"matches": matches}
         
     except Exception as e:
         logger.error(f"Error fetching all-cached: {e}")
