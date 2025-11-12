@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     class Config:
         case_sensitive = False
         env_file = ".env"
+        extra = "allow"  # Allow extra env variables
     
     @property
     def cors_origins_list(self) -> list:
