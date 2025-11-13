@@ -315,7 +315,14 @@ const LiveOdds = () => {
   // Load data when manually refreshed
   useEffect(() => {
     if (refreshKey > 0) { // Skip initial render
-      fetchAllOdds(false, filter);
+      if (timeFilter === 'recent-results') {
+        fetchHistoricalOdds().then(data => {
+          setAllOdds(data);
+          setLoading(false);
+        });
+      } else {
+        fetchAllOdds(false, filter);
+      }
     }
   }, [refreshKey]);
 
