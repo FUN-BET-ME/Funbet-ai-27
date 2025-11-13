@@ -633,10 +633,15 @@ const Predictions = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {aiPredictions.map((prediction, index) => (
+                {aiPredictions.map((prediction, index) => {
+                  // Determine the sport filter for navigation
+                  const sportFilter = prediction.sport_key?.includes('soccer') ? 'football' : 
+                                     prediction.sport_key?.includes('cricket') ? 'cricket' : 'all';
+                  
+                  return (
                   <Link 
                     key={prediction.match_id || index} 
-                    to={`/match/${prediction.match_id}`}
+                    to={`/live-odds?filter=${sportFilter}#match-${prediction.match_id}`}
                     className="bg-[#2E004F]/50 rounded-lg p-4 border border-[#FFD700]/10 hover:border-[#FFD700]/50 hover:shadow-lg hover:shadow-[#FFD700]/20 transition-all cursor-pointer block group"
                   >
                     {/* Match Header */}
