@@ -547,11 +547,11 @@ const LiveOdds = () => {
                 // FunBet.ME should show 3 outcomes for all sports except baseball
                 const showThreeOutcomes = sportAllowsDraws;
                 
-                // Try to get draw odds from ALL bookmakers (not just first one)
+                // Try to get draw odds from non-FunBet bookmakers
                 // Some bookmakers might have 3 outcomes while others have 2
                 let drawBest = null;
                 if (showThreeOutcomes) {
-                  drawBest = getBestOdds(bookmakers, 2, match.home_team, match.away_team);
+                  drawBest = getBestOdds(nonFunbetBookmakers, 2, match.home_team, match.away_team);
                   
                   // If no bookmaker provides draw odds, calculate an implied draw odd
                   // Using the formula: implied draw odd based on home/away odds
