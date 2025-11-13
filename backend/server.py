@@ -90,7 +90,7 @@ async def get_live_matches():
                 '$gte': two_hours_ago.isoformat(),
                 '$lte': now.isoformat()
             }
-        }, {'_id': 0}).to_list(length=None)
+        }, {'_id': 0}).to_list(length=1000)
         
         logger.info(f"✅ Live: {len(live_matches)} matches")
         return live_matches
