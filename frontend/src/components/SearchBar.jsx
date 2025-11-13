@@ -185,7 +185,7 @@ const SearchBar = () => {
               </button>
             </div>
 
-            {/* Sport Filter */}
+            {/* Sport Filter with Clear Button */}
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400" />
               <select
