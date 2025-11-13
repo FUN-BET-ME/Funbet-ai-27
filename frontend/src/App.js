@@ -39,7 +39,6 @@ function App() {
             <Route path="/predictions" element={<Predictions />} />
             <Route path="/prediction-history" element={<PredictionHistory />} />
             <Route path="/stats" element={<Stats />} />
-            <Route path="/news" element={<News />} />
             <Route path="/responsible-play" element={<ResponsiblePlay />} />
             <Route path="/about" element={<About />} />
             <Route path="/admin/stats" element={<AdminStats />} />
