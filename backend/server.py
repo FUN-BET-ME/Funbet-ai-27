@@ -732,12 +732,97 @@ async def get_all_predictions(sport: str = Query(None, description="Filter by sp
         # Generate predictions
         predictions_data = predictions_generator.generate_all_predictions(matches)
         
+        # Store/update predictions in database for tracking
+        for pred in predictions_data['all_predictions']:
+            existing = await db_instance.db.predictions_history.find_one({'match_id': pred['match_id']})
+            
+            if not existing:
+                # New prediction - store with pending status
+                pred_doc = {
+                    **pred,
+                    'status': 'pending',
+                    'predicted_at': now.isoformat(),
+                    'result': None,
+                    'is_correct': None
+                }
+                await db_instance.db.predictions_history.insert_one(pred_doc)
+        
         logger.info(f"✅ Generated {predictions_data['total_count']} predictions")
         
         return predictions_data
         
     except Exception as e:
         logger.error(f"Error generating predictions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/predictions/stats")
+async def get_predictions_stats():
+    """Get prediction accuracy statistics"""
+    try:
+        # Count by status
+        total = await db_instance.db.predictions_history.count_documents({})
+        pending = await db_instance.db.predictions_history.count_documents({'status': 'pending'})
+        correct = await db_instance.db.predictions_history.count_documents({'status': 'correct'})
+        incorrect = await db_instance.db.predictions_history.count_documents({'status': 'incorrect'})
+        
+        # Calculate accuracy
+        completed = correct + incorrect
+        accuracy = (correct / completed * 100) if completed > 0 else 0
+        
+        return {
+            'total': total,
+            'pending': pending,
+            'correct': correct,
+            'incorrect': incorrect,
+            'completed': completed,
+            'accuracy': round(accuracy, 1)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching prediction stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/predictions/by-status")
+async def get_predictions_by_status(
+    status: str = Query(..., description="Status: pending, correct, or incorrect"),
+    sport: str = Query(None),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100)
+):
+    """Get predictions filtered by status"""
+    try:
+        query = {'status': status}
+        
+        # Filter by sport
+        if sport:
+            if sport == 'soccer' or sport == 'football':
+                query['sport_key'] = {'$regex': '^soccer_', '$options': 'i'}
+            elif sport == 'cricket':
+                query['sport_key'] = {'$regex': '^cricket_', '$options': 'i'}
+        
+        # Count total
+        total = await db_instance.db.predictions_history.count_documents(query)
+        
+        # Get paginated results
+        skip = (page - 1) * page_size
+        predictions = await db_instance.db.predictions_history.find(query, {'_id': 0}) \
+            .sort('predicted_at', -1) \
+            .skip(skip) \
+            .limit(page_size) \
+            .to_list(length=page_size)
+        
+        return {
+            'predictions': predictions,
+            'pagination': {
+                'page': page,
+                'page_size': page_size,
+                'total': total,
+                'total_pages': (total + page_size - 1) // page_size
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching predictions by status: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/news")
