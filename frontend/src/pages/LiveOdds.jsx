@@ -529,7 +529,8 @@ const LiveOdds = () => {
                 const awayTeam = match.away_team;
                 const league = match.sport_title;
                 const commenceTime = new Date(match.commence_time);
-                const bookmakers = match.bookmakers || [];
+                // Get bookmakers for this match (EXCLUDE FunBet from list)
+                const bookmakers = (match.bookmakers || []).filter(b => b.key !== 'funbet');
 
                 // Get best odds from ALL bookmakers (for reference)
                 const homeBest = getBestOdds(bookmakers, 0, match.home_team, match.away_team);
