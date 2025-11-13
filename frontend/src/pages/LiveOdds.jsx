@@ -1089,26 +1089,15 @@ const LiveOdds = () => {
                             );
                           })()}
                           
-                          {/* FunBet.ME row (from backend API) - Render first with special styling */}
+                          {/* FunBet.ME row - Calculate dynamically (5% above best market odds) */}
                           {(() => {
-                            const funbetBookmaker = displayedBookmakers.find(b => b.key === 'funbet');
-                            if (!funbetBookmaker) return null;
+                            // Calculate FunBet odds: 5% above best market odds
+                            const funbetHomeOdds = homeBest ? (homeBest.odds * 1.05).toFixed(2) : null;
+                            const funbetAwayOdds = awayBest ? (awayBest.odds * 1.05).toFixed(2) : null;
+                            const funbetDrawOdds = showThreeOutcomes && drawBest ? (drawBest.odds * 1.05).toFixed(2) : null;
                             
-                            const outcomes = funbetBookmaker.markets?.[0]?.outcomes || [];
-                            const homeOutcome = outcomes.find(o => 
-                              o.name && homeTeam && 
-                              o.name.trim().toLowerCase() === homeTeam.trim().toLowerCase()
-                            );
-                            const awayOutcome = outcomes.find(o => 
-                              o.name && awayTeam && 
-                              o.name.trim().toLowerCase() === awayTeam.trim().toLowerCase()
-                            );
-                            const drawOutcome = outcomes.find(o => 
-                              o.name && (
-                                o.name.toLowerCase().includes('draw') || 
-                                o.name.toLowerCase().includes('tie')
-                              )
-                            );
+                            // Only show if we have odds
+                            if (!funbetHomeOdds || !funbetAwayOdds) return null;
                             
                             return (
                               <tr className="border-b-2 border-[#FFD700] bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10">
@@ -1120,7 +1109,7 @@ const LiveOdds = () => {
                                     className="flex items-center gap-2 hover:opacity-80 transition-opacity"
                                   >
                                     <span className="text-[#FFD700] text-2xl">⭐</span>
-                                    <span className="text-[#FFD700] font-bold text-lg">{funbetBookmaker.title}</span>
+                                    <span className="text-[#FFD700] font-bold text-lg">FunBet.me</span>
                                   </a>
                                 </td>
                                 <td className="py-4 px-4 text-center">
@@ -1131,7 +1120,7 @@ const LiveOdds = () => {
                                     className="inline-block"
                                   >
                                     <span className="bg-[#FFD700] text-[#2E004F] px-5 py-2 rounded-lg font-black text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg">
-                                      {homeOutcome ? homeOutcome.price.toFixed(2) : '-'}
+                                      {funbetHomeOdds}
                                     </span>
                                   </a>
                                 </td>
@@ -1144,7 +1133,7 @@ const LiveOdds = () => {
                                       className="inline-block"
                                     >
                                       <span className="bg-[#FFD700] text-[#2E004F] px-5 py-2 rounded-lg font-black text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg">
-                                        {drawOutcome ? drawOutcome.price.toFixed(2) : '-'}
+                                        {funbetDrawOdds || '-'}
                                       </span>
                                     </a>
                                   </td>
@@ -1157,7 +1146,7 @@ const LiveOdds = () => {
                                     className="inline-block"
                                   >
                                     <span className="bg-[#FFD700] text-[#2E004F] px-5 py-2 rounded-lg font-black text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg">
-                                      {awayOutcome ? awayOutcome.price.toFixed(2) : '-'}
+                                      {funbetAwayOdds}
                                     </span>
                                   </a>
                                 </td>
