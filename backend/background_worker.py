@@ -267,12 +267,12 @@ class OddsWorker:
             replace_existing=True
         )
         
-        # Job 2: Daily refresh at GMT 00:00 to maintain rolling window
+        # Job 2: Daily refresh at GMT 00:00 to maintain rolling 30-day window
         self.scheduler.add_job(
             self.add_day_8_job,
             trigger=CronTrigger(hour=0, minute=0, timezone='UTC'),
             id='daily_refresh',
-            name='Daily refresh at GMT 00:00',
+            name='Daily refresh at GMT 00:00 (add day 31 data)',
             replace_existing=True
         )
         
