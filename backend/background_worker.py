@@ -130,20 +130,47 @@ class OddsWorker:
     
     async def update_odds_job(self):
         """
-        Update odds every 5 minutes - EFFICIENT VERSION
-        Uses ONLY 1 API call to get all upcoming matches across all sports
+        Update odds every 5 minutes - HYBRID APPROACH
+        Fetches upcoming + specific football leagues for comprehensive coverage
         """
         try:
-            logger.info("🔄 Starting odds update (EFFICIENT - 1 API call)...")
+            logger.info("🔄 Starting odds update...")
             
-            # SINGLE API CALL - Gets ALL upcoming matches across ALL sports
-            all_matches = await self.fetch_odds_for_sport('upcoming')
+            all_matches = []
+            api_calls = 0
+            
+            # 1. Fetch from upcoming endpoint (diverse sports coverage)
+            upcoming_matches = await self.fetch_odds_for_sport('upcoming')
+            if upcoming_matches:
+                all_matches.extend(upcoming_matches)
+                api_calls += 1
+                logger.info(f"✅ Fetched {len(upcoming_matches)} matches from upcoming endpoint")
+            
+            # 2. Fetch specific football leagues for comprehensive football coverage
+            football_fetched = 0
+            for league in FOOTBALL_LEAGUES[:10]:  # Top 10 leagues to balance API usage
+                try:
+                    league_matches = await self.fetch_odds_for_sport(league)
+                    if league_matches:
+                        # Deduplicate by match ID
+                        existing_ids = {m.get('id') for m in all_matches if m.get('id')}
+                        new_matches = [m for m in league_matches if m.get('id') not in existing_ids]
+                        if new_matches:
+                            all_matches.extend(new_matches)
+                            football_fetched += len(new_matches)
+                    api_calls += 1
+                    await asyncio.sleep(0.5)  # Rate limiting
+                except Exception as e:
+                    logger.warning(f"Error fetching {league}: {e}")
+                    continue
+            
+            logger.info(f"✅ Fetched {football_fetched} additional football matches from specific leagues")
             
             if not all_matches:
-                logger.warning("⚠️ No matches fetched from upcoming endpoint")
+                logger.warning("⚠️ No matches fetched")
                 return
             
-            logger.info(f"✅ Fetched {len(all_matches)} matches in 1 API call")
+            logger.info(f"📊 Total: {len(all_matches)} matches from {api_calls} API calls")
             
             # Add FunBet odds (5% markup above market best)
             all_matches = add_funbet_odds_to_matches(all_matches)
@@ -157,10 +184,10 @@ class OddsWorker:
                 match['updated_at'] = datetime.now(timezone.utc).isoformat()
                 match['fetched_at'] = datetime.now(timezone.utc).isoformat()
             
-            await self.db.odds_cache.insert_many(all_matches)
+            if all_matches:
+                await self.db.odds_cache.insert_many(all_matches)
             
             logger.info(f"✅ Database updated with {len(all_matches)} matches")
-            logger.info(f"📊 API Efficiency: 1 call for {len(all_matches)} matches")
                 
         except Exception as e:
             logger.error(f"❌ Error in odds update job: {e}")
