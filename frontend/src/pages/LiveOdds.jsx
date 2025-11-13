@@ -1262,22 +1262,33 @@ const LiveOdds = () => {
         )}
 
         {/* Individual Sport View - Use OddsTable Component */}
-        {filter !== 'all' && (
-          <div>
-            <OddsTable 
-              key={`${filter}-${refreshKey}-${timeFilter}-${leagueFilter}`}
-              sportKeys={sportKeysMap[filter]}
-              sportTitle={filter.charAt(0).toUpperCase() + filter.slice(1)}
-              usePriorityEndpoint={filter === 'football' || filter === 'cricket'}
-              isCricket={filter === 'cricket'}
-              refreshTrigger={refreshKey}
-              timeFilter={timeFilter}
-              preloadedOdds={filteredOddsByLeague}
-              loading={loading}
-              selectedLeague={leagueFilter !== 'all' ? (filter === 'football' ? footballLeagues[leagueFilter] : cricketLeagues[leagueFilter]) : null}
-            />
-          </div>
-        )}
+        {filter !== 'all' && (() => {
+          const oddsTableKey = `${filter}-${refreshKey}-${timeFilter}-${leagueFilter}-${filteredOddsByLeague.length}`;
+          console.log('[LiveOdds] Rendering OddsTable with:', {
+            key: oddsTableKey,
+            filter,
+            leagueFilter,
+            filteredCount: filteredOddsByLeague.length,
+            firstMatch: filteredOddsByLeague[0] ? `${filteredOddsByLeague[0].sport_key} ${filteredOddsByLeague[0].home_team}` : 'none'
+          });
+          
+          return (
+            <div>
+              <OddsTable 
+                key={oddsTableKey}
+                sportKeys={sportKeysMap[filter]}
+                sportTitle={filter.charAt(0).toUpperCase() + filter.slice(1)}
+                usePriorityEndpoint={filter === 'football' || filter === 'cricket'}
+                isCricket={filter === 'cricket'}
+                refreshTrigger={refreshKey}
+                timeFilter={timeFilter}
+                preloadedOdds={filteredOddsByLeague}
+                loading={loading}
+                selectedLeague={leagueFilter !== 'all' ? (filter === 'football' ? footballLeagues[leagueFilter] : cricketLeagues[leagueFilter]) : null}
+              />
+            </div>
+          );
+        })()}
 
         {/* Disclaimer */}
         <div className="mt-12 p-6 rounded-lg bg-[#2E004F]/10 border border-[#2E004F]/30">
