@@ -7,9 +7,14 @@ from typing import List, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
-def find_best_odds(bookmakers: List[Dict]) -> Dict[str, float]:
+def find_best_odds(bookmakers: List[Dict], home_team: str, away_team: str) -> Dict[str, float]:
     """
-    Find the best odds for each outcome across all bookmakers
+    Find the best odds for each outcome across all bookmakers by matching team names
+    
+    Args:
+        bookmakers: List of bookmaker dictionaries
+        home_team: Name of the home team
+        away_team: Name of the away team
     
     Returns:
         {
@@ -30,18 +35,15 @@ def find_best_odds(bookmakers: List[Dict]) -> Dict[str, float]:
             if market.get('key') == 'h2h':
                 outcomes = market.get('outcomes', [])
                 for outcome in outcomes:
-                    name = outcome.get('name', '')
+                    name = outcome.get('name', '').strip()
                     price = outcome.get('price', 0)
                     
-                    # Determine which team/outcome this is
-                    # Outcomes are usually ordered: [home, away, draw]
-                    outcome_index = outcomes.index(outcome)
-                    
-                    if outcome_index == 0:  # Home team
+                    # Match by team name (case-insensitive)
+                    if name.lower() == home_team.lower():
                         best_odds['home'] = max(best_odds['home'], price)
-                    elif outcome_index == 1:  # Away team
+                    elif name.lower() == away_team.lower():
                         best_odds['away'] = max(best_odds['away'], price)
-                    elif outcome_index == 2:  # Draw
+                    elif 'draw' in name.lower() or 'tie' in name.lower():
                         best_odds['draw'] = max(best_odds['draw'], price)
     
     return best_odds
