@@ -251,23 +251,19 @@ const LiveOdds = () => {
     }
   }, [filter, timeFilter]);
 
-  // Sport keys configuration for each category
+  // Sport keys configuration - FOOTBALL & CRICKET ONLY
   const sportKeysMap = {
     football: [
       'soccer_epl', 'soccer_spain_la_liga', 'soccer_germany_bundesliga',
-      'soccer_italy_serie_a', 'soccer_france_ligue_one', 'soccer_brazil_campeonato'
+      'soccer_italy_serie_a', 'soccer_france_ligue_one', 'soccer_brazil_campeonato',
+      'soccer_uefa_champs_league', 'soccer_uefa_europa_league', 'soccer_argentina_primera_division',
+      'soccer_usa_mls', 'soccer_mexico_ligamx'
     ],
     cricket: [
       'cricket_ipl', 'cricket_icc_world_cup', 'cricket_international_t20',
-      'cricket_test_match', 'cricket_odi', 'cricket_big_bash'
-    ],
-    basketball: ['basketball_nba', 'basketball_ncaab', 'basketball_euroleague'],
-    hockey: ['icehockey_nhl', 'icehockey_sweden_hockey_league'],
-    baseball: ['baseball_mlb'],
-    tennis: ['tennis_atp', 'tennis_wta'],
-    boxing: ['boxing_boxing'],
-    mma: ['mma_mixed_martial_arts'],
-    rugby: ['rugbyleague_nrl', 'rugby_rugby_union_world_cup']
+      'cricket_test_match', 'cricket_odi', 'cricket_big_bash', 'cricket_psl',
+      'cricket_caribbean_premier_league'
+    ]
   };
 
   const getBestOdds = (bookmakers, outcomeIndex, homeTeam, awayTeam) => {
