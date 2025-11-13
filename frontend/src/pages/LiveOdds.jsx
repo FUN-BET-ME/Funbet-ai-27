@@ -1145,8 +1145,8 @@ const LiveOdds = () => {
                             );
                           })()}
                           
-                          {/* Other bookmakers (excluding FunBet) */}
-                          {displayedBookmakers.filter(b => b.key !== 'funbet').map((bookmaker) => {
+                          {/* Other bookmakers */}
+                          {displayedBookmakers.map((bookmaker) => {
                             const outcomes = bookmaker.markets?.[0]?.outcomes || [];
                             
                             // Match outcomes by team name, not array index
