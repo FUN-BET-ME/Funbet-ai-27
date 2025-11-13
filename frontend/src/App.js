@@ -9,7 +9,7 @@ import GolfOdds from "./pages/GolfOdds";
 import OtherSportsOdds from "./pages/OtherSportsOdds";
 import LiveOdds from "./pages/LiveOdds";
 import MatchDetail from "./pages/MatchDetail";
-import Predictions from "./pages/Predictions";
+import Predictions from "./pages/PredictionsNew";
 import PredictionHistory from "./pages/PredictionHistory";
 import Stats from "./pages/Stats";
 import News from "./pages/News";
