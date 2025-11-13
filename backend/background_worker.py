@@ -236,16 +236,19 @@ class OddsWorker:
             logger.error(f"❌ Error in daily refresh job: {e}")
     
     async def cleanup_old_data(self):
-        """Clean up matches older than 2 days"""
+        """Clean up matches older than 48 hours (keep completed games for historic data)"""
         try:
-            two_days_ago = datetime.now(timezone.utc) - timedelta(days=2)
+            forty_eight_hours_ago = datetime.now(timezone.utc) - timedelta(hours=48)
             
+            # Delete matches that started more than 48 hours ago
             result = await self.db.odds_cache.delete_many({
-                'commence_time': {'$lt': two_days_ago.isoformat()}
+                'commence_time': {'$lt': forty_eight_hours_ago.isoformat()}
             })
             
             if result.deleted_count > 0:
-                logger.info(f"🗑️ Cleaned up {result.deleted_count} old matches")
+                logger.info(f"🗑️ Cleaned up {result.deleted_count} matches older than 48 hours")
+            else:
+                logger.info(f"✅ No old matches to clean (keeping 48-hour history)")
                 
         except Exception as e:
             logger.error(f"❌ Error cleaning old data: {e}")
