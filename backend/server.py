@@ -829,79 +829,65 @@ async def get_predictions_by_status(
 
 @api_router.get("/news")
 async def get_news(q: str = Query(None), pageSize: int = Query(20, le=100)):
-    """Get sports news - Returns sample data for Football & Cricket"""
+    """Get sports news from NewsAPI"""
     try:
-        sample_articles = [
-            {
-                "title": "EPL: Manchester City defeats Arsenal in thrilling match",
-                "description": "Manchester City secured a 2-1 victory over Arsenal in a Premier League clash.",
-                "url": "https://example.com/news/1",
-                "urlToImage": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
-                "publishedAt": datetime.now(timezone.utc).isoformat(),
-                "source": {"name": "Sports Daily"},
-                "content": "Full match report..."
-            },
-            {
-                "title": "Cricket World Cup: India advances to finals",
-                "description": "India secured their spot in the ICC Cricket World Cup finals.",
-                "url": "https://example.com/news/2",
-                "urlToImage": "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800",
-                "publishedAt": datetime.now(timezone.utc).isoformat(),
-                "source": {"name": "Cricket News"},
-                "content": "Match highlights..."
-            },
-            {
-                "title": "La Liga: Real Madrid extends winning streak",
-                "description": "Real Madrid continues their impressive form with a 3-0 win.",
-                "url": "https://example.com/news/3",
-                "urlToImage": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800",
-                "publishedAt": datetime.now(timezone.utc).isoformat(),
-                "source": {"name": "Football Times"},
-                "content": "Match summary..."
-            },
-            {
-                "title": "IPL 2025: Mumbai Indians sign star player",
-                "description": "Mumbai Indians make blockbuster signing ahead of IPL 2025.",
-                "url": "https://example.com/news/4",
-                "urlToImage": "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800",
-                "publishedAt": datetime.now(timezone.utc).isoformat(),
-                "source": {"name": "IPL News"},
-                "content": "Transfer news..."
-            },
-            {
-                "title": "Champions League: Bayern Munich reaches quarter-finals",
-                "description": "Bayern Munich advances to Champions League quarter-finals.",
-                "url": "https://example.com/news/5",
-                "urlToImage": "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800",
-                "publishedAt": datetime.now(timezone.utc).isoformat(),
-                "source": {"name": "UEFA News"},
-                "content": "Match report..."
-            }
-        ]
+        import httpx
+        import os
         
-        # Filter articles based on query
+        news_api_key = os.environ.get('NEWS_API_KEY')
+        if not news_api_key:
+            raise HTTPException(status_code=500, detail="News API key not configured")
+        
+        # Build query - default to sports if no specific query
+        search_query = q if q else 'sports'
+        
+        # Add specific keywords for better results
         if q:
-            q_lower = q.lower()
-            
-            # Smart filtering for football/cricket
-            if 'football' in q_lower or 'soccer' in q_lower:
-                # Include football-related articles (EPL, La Liga, Champions, etc.)
-                filtered = [a for a in sample_articles if any(keyword in (a['title'] + ' ' + a['description']).lower() 
-                           for keyword in ['epl', 'premier', 'la liga', 'champions', 'madrid', 'barcelona', 'manchester', 'arsenal', 'bayern'])]
-            elif 'cricket' in q_lower:
-                # Include cricket-related articles
-                filtered = [a for a in sample_articles if any(keyword in (a['title'] + ' ' + a['description']).lower() 
-                           for keyword in ['cricket', 'ipl', 'india', 'world cup', 'mumbai indians'])]
-            else:
-                # Default exact match
-                filtered = [a for a in sample_articles if q_lower in a['title'].lower() or q_lower in a['description'].lower()]
-            
-            articles = filtered[:pageSize]
-        else:
-            articles = sample_articles[:pageSize]
+            if 'football' in q.lower() or 'soccer' in q.lower():
+                search_query = 'football OR soccer OR premier OR "champions league" OR bundesliga'
+            elif 'cricket' in q.lower():
+                search_query = 'cricket OR IPL OR "world cup cricket" OR T20'
         
-        return {"status": "ok", "totalResults": len(articles), "articles": articles}
+        # Fetch from NewsAPI
+        url = "https://newsapi.org/v2/everything"
+        params = {
+            'q': search_query,
+            'apiKey': news_api_key,
+            'language': 'en',
+            'sortBy': 'publishedAt',
+            'pageSize': min(pageSize, 100)
+        }
         
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(url, params=params)
+            
+            if response.status_code != 200:
+                logger.error(f"NewsAPI error: {response.status_code} - {response.text}")
+                raise HTTPException(status_code=response.status_code, detail="Failed to fetch news")
+            
+            data = response.json()
+            
+            # Filter out articles without description or from removed sources
+            articles = []
+            for article in data.get('articles', []):
+                # Skip articles without basic content
+                if not article.get('title') or not article.get('description'):
+                    continue
+                
+                # Skip removed articles
+                if '[Removed]' in article.get('title', '') or '[Removed]' in article.get('description', ''):
+                    continue
+                
+                articles.append(article)
+            
+            return {
+                "status": "ok",
+                "totalResults": len(articles),
+                "articles": articles[:pageSize]
+            }
+        
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error fetching news: {e}")
         raise HTTPException(status_code=500, detail=str(e))
