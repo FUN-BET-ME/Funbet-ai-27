@@ -75,64 +75,29 @@ const News = () => {
         }
       });
 
-      // Process and format news articles - STRICT sports-only filtering
+      // Process and format news articles
       const articles = newsResponse.data.articles
         .filter(article => {
-          if (!article.urlToImage || !article.title || !article.description) return false;
+          if (!article.title || !article.description) return false;
           
-          const fullText = (article.title + ' ' + article.description + ' ' + (article.content || '')).toLowerCase();
+          const fullText = (article.title + ' ' + article.description).toLowerCase();
           
-          // EXCLUDE: Product reviews, advertisements, commercial content
-          const adKeywords = ['smartwatch', 'watch', 'garmin', 'fitbit', 'apple watch', 'product', 'review', 
-                             'best', 'buy', 'purchase', 'deal', 'sale', 'price', 'amazon', 'ebay',
-                             'gadget', 'device', 'technology', 'tech', 'phone', 'laptop', 'computer',
-                             'headphones', 'earbuds', 'speaker', 'camera', 'drone', 'wearable',
-                             'i found', 'i tested', 'we tested', 'buying guide'];
-          const hasAdContent = adKeywords.some(keyword => fullText.includes(keyword));
-          
-          if (hasAdContent) return false; // Block advertisement/review content
-          
-          // For specific sport filters, ensure content matches that sport
-          if (filter !== 'all') {
-            if (filter === 'basketball') {
-              const hasBasketball = fullText.includes('basketball') || fullText.includes('nba') || 
-                                   fullText.includes('lakers') || fullText.includes('warriors') || 
-                                   fullText.includes('celtics') || fullText.includes('nets') ||
-                                   fullText.includes('bucks') || fullText.includes('heat');
-              const hasOtherSports = fullText.includes('football') || fullText.includes('soccer') || 
-                                    fullText.includes('cricket') || fullText.includes('baseball') || 
-                                    fullText.includes('hockey');
-              return hasBasketball && !hasOtherSports;
-            }
-            if (filter === 'football') {
-              const hasFootball = fullText.includes('football') || fullText.includes('soccer') || 
-                                 fullText.includes('epl') || fullText.includes('premier league') ||
-                                 fullText.includes('la liga') || fullText.includes('champions league');
-              return hasFootball;
-            }
-            if (filter === 'cricket') {
-              const hasCricket = fullText.includes('cricket') || fullText.includes('ipl') || 
-                                fullText.includes('test match') || fullText.includes('odi');
-              return hasCricket;
-            }
-            if (filter === 'hockey') {
-              const hasHockey = fullText.includes('hockey') || fullText.includes('nhl');
-              return hasHockey;
-            }
-            if (filter === 'baseball') {
-              const hasBaseball = fullText.includes('baseball') || fullText.includes('mlb') ||
-                                 fullText.includes('world series');
-              return hasBaseball;
-            }
+          // For specific sport filters, match the sport
+          if (filter === 'football') {
+            return fullText.includes('football') || fullText.includes('soccer') || 
+                   fullText.includes('epl') || fullText.includes('premier') ||
+                   fullText.includes('la liga') || fullText.includes('champions') ||
+                   fullText.includes('madrid') || fullText.includes('manchester') ||
+                   fullText.includes('barcelona') || fullText.includes('arsenal');
+          }
+          if (filter === 'cricket') {
+            return fullText.includes('cricket') || fullText.includes('ipl') || 
+                   fullText.includes('test') || fullText.includes('odi') ||
+                   fullText.includes('india') || fullText.includes('world cup');
           }
           
-          // For "all" filter, ensure it's REAL sports content (matches, players, leagues)
-          const sportsKeywords = ['match', 'game', 'win', 'loss', 'score', 'goal', 'player', 'team', 
-                                 'league', 'championship', 'tournament', 'coach', 'season', 'playoff'];
-          const hasSportsKeyword = sportsKeywords.some(keyword => fullText.includes(keyword));
-          
-          // Must have sports keyword AND not be advertisement
-          return hasSportsKeyword && !hasAdContent;
+          // For "all", show all articles
+          return true;
         })
         .slice(0, 20)
         .map(article => ({
