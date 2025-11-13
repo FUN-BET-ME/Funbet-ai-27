@@ -193,12 +193,12 @@ const LiveOdds = () => {
   };
 
   // Fetch all odds - FETCH FROM DATABASE WITH SPORT FILTER
-  const fetchAllOdds = async (loadMore = false, currentFilter = filter) => {
-    console.log('🚀 fetchAllOdds called with:', { loadMore, currentFilter, allOddsLength: allOdds.length });
+  const fetchAllOdds = async (loadMore = false, currentFilter = filter, showLoading = true) => {
+    console.log('🚀 fetchAllOdds called with:', { loadMore, currentFilter, showLoading, allOddsLength: allOdds.length });
     
     if (loadMore) {
       setLoadingMore(true);
-    } else {
+    } else if (showLoading) {
       setLoading(true);
     }
     
