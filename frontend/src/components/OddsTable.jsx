@@ -391,7 +391,10 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
   // Update oddsData when preloadedOdds changes (including when it becomes empty!)
   useEffect(() => {
     if (preloadedOdds !== null) {
-      console.log('[OddsTable] Using preloaded odds:', preloadedOdds.length, 'matches');
+      console.log('[OddsTable] Preloaded odds changed:', preloadedOdds.length, 'matches');
+      if (preloadedOdds.length > 0) {
+        console.log('[OddsTable] First match sport:', preloadedOdds[0].sport_key, preloadedOdds[0].home_team);
+      }
       setOddsData(preloadedOdds);
       setLoading(false);
     }
