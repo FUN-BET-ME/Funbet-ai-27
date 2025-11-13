@@ -552,10 +552,17 @@ const LiveOdds = () => {
             ) : (
               <>
                 {(() => {
-                  // NO CLIENT-SIDE FILTERING - backend already filtered
+                  // Filter matches by bookmakers and league
                   const filteredMatches = allOdds.filter(match => {
-                    // Only filter: must have bookmakers
-                    return match.bookmakers && match.bookmakers.length > 0;
+                    // Must have bookmakers
+                    if (!match.bookmakers || match.bookmakers.length === 0) return false;
+                    
+                    // Apply league filter if not "all"
+                    if (leagueFilter !== 'all') {
+                      return match.sport_key === leagueFilter;
+                    }
+                    
+                    return true;
                   });
                   
                   // Show skeleton loaders while loading
