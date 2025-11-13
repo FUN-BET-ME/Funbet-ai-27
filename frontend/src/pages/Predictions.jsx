@@ -733,7 +733,8 @@ const Predictions = () => {
                       </div>
                     </div>
                   </Link>
-                ))}
+                  );
+                })}
               </div>
             )}
             
