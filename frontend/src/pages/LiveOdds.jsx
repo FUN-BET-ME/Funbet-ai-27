@@ -506,10 +506,7 @@ const LiveOdds = () => {
               </label>
               <select
                 value={leagueFilter}
-                onChange={(e) => {
-                  console.log('League filter changed to:', e.target.value);
-                  setLeagueFilter(e.target.value);
-                }}
+                onChange={(e) => setLeagueFilter(e.target.value)}
                 className="w-full sm:w-auto px-4 py-2 rounded-lg bg-white/5 border border-[#2E004F]/30 text-white focus:border-[#FFD700] focus:outline-none"
               >
                 {filter === 'football' 
