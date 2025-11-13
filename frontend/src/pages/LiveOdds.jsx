@@ -43,30 +43,33 @@ const LiveOdds = () => {
   const [leagueFilter, setLeagueFilter] = useState('all'); // League sub-filter
   const { toggleFollowTeam, isFollowing, isMatchFollowed} = useFavorites();
   
-  // Use useMemo to filter matches by league
+  // Use useMemo to filter matches by SPORT first, then by league
   const filteredOddsByLeague = useMemo(() => {
-    console.log('🔍 Filtering - leagueFilter:', leagueFilter, '| Total matches:', allOdds.length);
+    console.log('🔍 Filtering - filter:', filter, 'leagueFilter:', leagueFilter, '| Total matches:', allOdds.length);
     
-    if (leagueFilter === 'all') {
-      console.log('  → Showing all matches:', allOdds.length);
-      return allOdds;
+    let filtered = allOdds;
+    
+    // FIRST: Filter by sport (football vs cricket) if not "all"
+    if (filter !== 'all') {
+      const sportPrefix = filter === 'football' ? 'soccer_' : 'cricket_';
+      filtered = filtered.filter(match => match.sport_key?.startsWith(sportPrefix));
+      console.log('  → After sport filter (', filter, '):', filtered.length, 'matches');
     }
     
-    const filtered = allOdds.filter(match => {
-      const matches = match.sport_key === leagueFilter;
-      if (!matches && allOdds.length < 5) {
-        console.log('  ✗ Filtered out:', match.sport_key, match.home_team);
-      }
-      return matches;
-    });
+    // SECOND: Filter by specific league if selected
+    if (leagueFilter !== 'all') {
+      filtered = filtered.filter(match => match.sport_key === leagueFilter);
+      console.log('  → After league filter (', leagueFilter, '):', filtered.length, 'matches');
+    }
     
-    console.log('  → After league filter:', filtered.length, 'matches for', leagueFilter);
     if (filtered.length > 0) {
       console.log('  → Sample match:', filtered[0].sport_key, filtered[0].home_team);
+    } else {
+      console.log('  → No matches after filtering!');
     }
     
     return filtered;
-  }, [allOdds, leagueFilter]);
+  }, [allOdds, filter, leagueFilter]);
 
   const sports = ['all', 'football', 'cricket'];
   
