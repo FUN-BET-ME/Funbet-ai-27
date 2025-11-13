@@ -47,51 +47,16 @@ const Home = () => {
     {
       name: 'Football',
       icon: '⚽',
-      description: 'Premier League, La Liga, Bundesliga, Serie A & more',
+      description: 'EPL, La Liga, Bundesliga, Serie A, Champions League & 20+ leagues',
       link: '/live-odds?filter=football',
       color: 'from-green-500/20 to-emerald-500/20'
     },
     {
       name: 'Cricket',
       icon: '🏏',
-      description: 'IPL, World Cup, Test Matches, ODI & T20',
+      description: 'IPL, World Cup, Test Matches, ODI, T20 & International Cricket',
       link: '/live-odds?filter=cricket',
       color: 'from-blue-500/20 to-cyan-500/20'
-    },
-    {
-      name: 'NFL',
-      icon: '🏈',
-      description: 'American Football - NFL matches & playoffs',
-      link: '/live-odds?filter=basketball',
-      color: 'from-orange-500/20 to-red-500/20'
-    },
-    {
-      name: 'Hockey',
-      icon: '🏒',
-      description: 'NHL, Ice Hockey & more',
-      link: '/live-odds?filter=hockey',
-      color: 'from-cyan-500/20 to-blue-500/20'
-    },
-    {
-      name: 'Basketball',
-      icon: '🏀',
-      description: 'NBA, Euroleague & more',
-      link: '/live-odds?filter=basketball',
-      color: 'from-purple-500/20 to-pink-500/20'
-    },
-    {
-      name: 'Tennis',
-      icon: '🎾',
-      description: 'ATP, WTA, Grand Slams & Masters',
-      link: '/live-odds?filter=tennis',
-      color: 'from-yellow-500/20 to-amber-500/20'
-    },
-    {
-      name: 'Baseball',
-      icon: '⚾',
-      description: 'MLB & International Baseball',
-      link: '/live-odds?filter=baseball',
-      color: 'from-red-500/20 to-orange-500/20'
     },
     {
       name: 'Boxing',
