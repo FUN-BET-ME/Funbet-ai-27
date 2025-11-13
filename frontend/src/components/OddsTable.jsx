@@ -1222,7 +1222,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                     <span
                                       className={`inline-block px-2 py-1 sm:px-3 sm:py-1.5 rounded font-bold text-xs sm:text-sm ${
                                         isBest
-                                          ? 'bg-amber-400/80 text-[#2E004F]'
+                                          ? 'bg-amber-400/80 text-[#2E004F] shadow-sm'
                                           : 'text-white'
                                       }`}
                                     >
