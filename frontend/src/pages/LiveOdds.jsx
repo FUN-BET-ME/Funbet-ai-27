@@ -178,7 +178,6 @@ const LiveOdds = () => {
       
       const responseData = response.data || {};
       const newMatches = responseData.matches || [];
-      const pagination = responseData.pagination || {};
       
       // Merge with existing if loading more
       if (loadMore) {
@@ -189,7 +188,8 @@ const LiveOdds = () => {
         console.log('🔄 Replaced all matches, new total:', newMatches.length);
       }
       
-      setHasMore(pagination.has_more || false);
+      // Check if there are more matches (if we got full limit, there might be more)
+      setHasMore(newMatches.length >= limit);
       setLastUpdated(new Date());
       
       console.log(`✅ SUCCESS: Loaded ${newMatches.length} matches for filter="${currentFilter}"`);
