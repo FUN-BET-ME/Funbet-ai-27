@@ -1172,30 +1172,6 @@ const LiveOdds = () => {
                   })
                 })()}
               </div>
-
-              {/* Load More Button */}
-              {hasMore && (
-                    <div className="mt-8 text-center">
-                      <button
-                        onClick={() => fetchAllOdds(true)}
-                        disabled={loadingMore}
-                        className="inline-flex items-center gap-2 px-8 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg transition-colors font-semibold text-lg"
-                      >
-                        {loadingMore ? (
-                          <>
-                            <RefreshCw className="w-5 h-5 animate-spin" />
-                            Loading More...
-                          </>
-                        ) : (
-                          <>
-                            <ChevronDown className="w-5 h-5" />
-                            Load More Matches
-                          </>
-                        )}
-                      </button>
-                    </div>
-              )}
-            </div>
             )}
           </div>
         )}
