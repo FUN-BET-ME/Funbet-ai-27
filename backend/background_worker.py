@@ -214,10 +214,12 @@ class OddsWorker:
                 )
                 upserted_count += 1
             
-            # Clean up old matches (older than 48 hours)
-            cutoff_time = datetime.now(timezone.utc) - timedelta(hours=48)
+            # Clean up old UPCOMING matches only (older than 7 days)
+            # Don't delete completed matches - they're needed for "Recent Results"
+            cutoff_time = datetime.now(timezone.utc) - timedelta(days=7)
             delete_result = await self.db.odds_cache.delete_many({
-                'updated_at': {'$lt': cutoff_time.isoformat()}
+                'updated_at': {'$lt': cutoff_time.isoformat()},
+                'completed': {'$ne': True}  # Only delete if not completed
             })
             
             logger.info(f"✅ Database updated: {upserted_count} matches upserted, {delete_result.deleted_count} old matches removed")
