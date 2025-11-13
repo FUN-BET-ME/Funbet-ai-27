@@ -222,7 +222,7 @@ class OddsWorker:
                 'completed': {'$ne': True}  # Only delete if not completed
             })
             
-            logger.info(f"✅ Database updated: {upserted_count} matches upserted, {delete_result.deleted_count} old matches removed")
+            logger.info(f"✅ Database updated: {upserted_count} matches upserted")
             logger.info(f"   ⚽ {football_fetched} football + 🏏 {cricket_fetched} cricket")
                 
         except Exception as e:
