@@ -68,16 +68,15 @@ const LiveOdds = () => {
     }));
   };
 
-  // Fetch live scores
+  // Fetch live scores from ESPN
   const fetchScores = async () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/scores`, {
-        params: { daysFrom: 1 } // Only fetch recent scores
-      });
-      return response.data || [];
+      const response = await axios.get(`${BACKEND_URL}/api/espn/scores`);
+      console.log('✅ ESPN Scores fetched:', response.data?.count || 0, 'matches');
+      return response.data?.scores || [];
     } catch (error) {
-      console.error('Error fetching scores:', error);
+      console.error('Error fetching ESPN scores:', error);
       return [];
     }
   };
