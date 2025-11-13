@@ -641,8 +641,9 @@ const LiveOdds = () => {
 
                 return (
                   <div
+                    id={`match-${match.id}`}
                     key={match.id || `${homeTeam}_${awayTeam}_${match.commence_time}`}
-                    className="bg-purple-900/20 border border-[#2E004F]/30 rounded-lg p-6"
+                    className="bg-purple-900/20 border border-[#2E004F]/30 rounded-lg p-6 transition-all duration-300"
                   >
                     {/* Match Header */}
                     <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
