@@ -1,8 +1,8 @@
 """
 FunBet.ai Background Worker
-- Updates odds every 20 minutes (9 leagues = ~300 calls/day)
-- Only fetches TOP priority leagues to conserve API quota
-- Maintains 15-day rolling window
+- Updates odds every 5 minutes
+- Fetches 32 leagues (24 football + 8 cricket)
+- Comprehensive worldwide coverage
 """
 import logging
 import asyncio
