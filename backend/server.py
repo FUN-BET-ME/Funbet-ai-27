@@ -800,3 +800,86 @@ async def record_prediction(prediction: dict):
         logger.error(f"Error recording prediction: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
+# ==========================================
+# NEWS ENDPOINT (Placeholder)
+# ==========================================
+
+@api_router.get("/news")
+async def get_news(q: str = Query(None), pageSize: int = Query(20, le=100)):
+    """
+    Get sports news (placeholder - returns sample data)
+    In production, this would fetch from a news API like NewsAPI.org
+    """
+    try:
+        # Sample news data for Football & Cricket
+        sample_articles = [
+            {
+                "title": "EPL: Manchester City defeats Arsenal in thrilling match",
+                "description": "Manchester City secured a 2-1 victory over Arsenal in a Premier League clash at the Etihad Stadium.",
+                "url": "https://example.com/news/1",
+                "urlToImage": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "source": {"name": "Sports Daily"},
+                "content": "Full match report..."
+            },
+            {
+                "title": "Cricket World Cup: India advances to finals",
+                "description": "India secured their spot in the ICC Cricket World Cup finals with a dominant performance.",
+                "url": "https://example.com/news/2",
+                "urlToImage": "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "source": {"name": "Cricket News"},
+                "content": "Match highlights..."
+            },
+            {
+                "title": "La Liga: Real Madrid extends winning streak",
+                "description": "Real Madrid continues their impressive form with a 3-0 win over Valencia.",
+                "url": "https://example.com/news/3",
+                "urlToImage": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "source": {"name": "Football Times"},
+                "content": "Match summary..."
+            },
+            {
+                "title": "IPL 2025: Mumbai Indians sign star player",
+                "description": "Mumbai Indians make blockbuster signing ahead of IPL 2025 season.",
+                "url": "https://example.com/news/4",
+                "urlToImage": "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "source": {"name": "IPL News"},
+                "content": "Transfer news..."
+            },
+            {
+                "title": "Champions League: Bayern Munich reaches quarter-finals",
+                "description": "Bayern Munich advances to Champions League quarter-finals with aggregate win.",
+                "url": "https://example.com/news/5",
+                "urlToImage": "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "source": {"name": "UEFA News"},
+                "content": "Match report..."
+            }
+        ]
+        
+        # Filter based on query if provided
+        if q:
+            q_lower = q.lower()
+            filtered = [
+                article for article in sample_articles
+                if q_lower in article['title'].lower() or q_lower in article['description'].lower()
+            ]
+            articles = filtered[:pageSize]
+        else:
+            articles = sample_articles[:pageSize]
+        
+        return {
+            "status": "ok",
+            "totalResults": len(articles),
+            "articles": articles,
+            "message": "Sample news data - integrate real news API for production"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching news: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
