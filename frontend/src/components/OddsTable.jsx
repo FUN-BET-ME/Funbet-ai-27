@@ -7,7 +7,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { getTeamLogo, getCricketFlag } from '../services/teamLogos';
 import axios from 'axios';
 
-const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refreshTrigger = 0, timeFilter = 'live-upcoming', showAllRows = false, preloadedOdds = null, loading: externalLoading = null }) => {
+const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refreshTrigger = 0, timeFilter = 'live-upcoming', showAllRows = false, preloadedOdds = null, loading: externalLoading = null, selectedLeague = null }) => {
   const navigate = useNavigate();
   const [oddsData, setOddsData] = useState(preloadedOdds || []);
   const [scores, setScores] = useState([]);
