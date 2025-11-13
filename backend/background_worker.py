@@ -261,7 +261,7 @@ class OddsWorker:
         # Job 1: Update odds every 5 minutes (12 calls/hour = 288/day)
         self.scheduler.add_job(
             self.update_odds_job,
-            trigger=IntervalTrigger(minutes=20),  # Reduced frequency to save API calls
+            trigger=IntervalTrigger(minutes=5),
             id='update_odds',
             name='Update odds every 5 minutes (1 API call)',
             replace_existing=True
