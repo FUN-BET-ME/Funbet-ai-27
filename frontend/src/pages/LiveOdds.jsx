@@ -138,17 +138,10 @@ const LiveOdds = () => {
       const currentSkip = loadMore ? allOdds.length : 0;
       const limit = 100;
 
-      // Map frontend filter to backend sport_key pattern - THIS IS CRITICAL
+      // Map frontend filter to backend sport_key pattern - FOOTBALL & CRICKET ONLY
       const sportKeyMap = {
         'football': 'soccer',
-        'cricket': 'cricket',
-        'basketball': 'basketball',
-        'hockey': 'icehockey',
-        'baseball': 'baseball',
-        'tennis': 'tennis',
-        'boxing': 'boxing',
-        'mma': 'mma',
-        'rugby': 'rugby'
+        'cricket': 'cricket'
       };
       
       const sportFilter = currentFilter !== 'all' ? sportKeyMap[currentFilter] : null;
