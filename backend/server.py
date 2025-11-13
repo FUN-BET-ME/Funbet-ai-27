@@ -472,7 +472,7 @@ async def get_cricket_priority_legacy():
                 '$gte': now.isoformat(),
                 '$lte': thirty_days.isoformat()
             }
-        }, {'_id': 0}).sort('commence_time', 1).to_list(length=100)
+        }, {'_id': 0}).sort('commence_time', 1).to_list(length=1000)
         
         logger.info(f"✅ cricket/priority: Returned {len(matches)} matches")
         return matches
