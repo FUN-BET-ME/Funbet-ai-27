@@ -322,12 +322,14 @@ const LiveOdds = () => {
   useEffect(() => {
     console.log('🔥 FILTER or TIME FILTER CHANGED useEffect triggered, filter=', filter, 'timeFilter=', timeFilter);
     
-    setLoading(true); // Set loading state
+    // Only show loading if we don't have data OR if switching from a different data set
+    const shouldShowLoading = allOdds.length === 0;
     
     // Fetch data based on time filter
     if (timeFilter === 'recent-results') {
       // Fetch historical data for recent results
       console.log('Fetching historical/recent results...');
+      if (shouldShowLoading) setLoading(true);
       fetchHistoricalOdds().then(data => {
         console.log('Historical data received:', data.length, 'matches');
         setAllOdds(data);
@@ -336,15 +338,16 @@ const LiveOdds = () => {
     } else if (timeFilter === 'inplay') {
       // Fetch in-play matches
       console.log('Fetching in-play matches...');
+      if (shouldShowLoading) setLoading(true);
       fetchInPlayOdds().then(data => {
         console.log('In-play data received:', data.length, 'matches');
         setAllOdds(data);
         setLoading(false);
       });
     } else {
-      // Fetch upcoming matches
-      console.log('Fetching upcoming matches...');
-      fetchAllOdds(false, filter);
+      // Fetch upcoming matches - pass showLoading parameter
+      console.log('Fetching upcoming matches...', 'shouldShowLoading:', shouldShowLoading);
+      fetchAllOdds(false, filter, shouldShowLoading);
     }
   }, [filter, timeFilter]);
 
