@@ -251,6 +251,24 @@ const LiveOdds = () => {
     }
   }, [filter, timeFilter]);
 
+  // Scroll to specific match if hash is present in URL
+  useEffect(() => {
+    if (window.location.hash && allMatches.length > 0) {
+      const matchId = window.location.hash.replace('#match-', '');
+      setTimeout(() => {
+        const element = document.getElementById(`match-${matchId}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Highlight the match briefly
+          element.style.border = '2px solid #FFD700';
+          setTimeout(() => {
+            element.style.border = '';
+          }, 3000);
+        }
+      }, 500);
+    }
+  }, [allMatches]);
+
   // Sport keys configuration - FOOTBALL & CRICKET ONLY
   const sportKeysMap = {
     football: [
