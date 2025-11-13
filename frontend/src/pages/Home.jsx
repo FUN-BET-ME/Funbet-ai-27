@@ -57,34 +57,6 @@ const Home = () => {
       description: 'IPL, World Cup, Test Matches, ODI, T20 & International Cricket',
       link: '/live-odds?filter=cricket',
       color: 'from-blue-500/20 to-cyan-500/20'
-    },
-    {
-      name: 'Boxing',
-      icon: '🥊',
-      description: 'World Championships & Title Fights',
-      link: '/live-odds?filter=boxing',
-      color: 'from-red-500/20 to-rose-500/20'
-    },
-    {
-      name: 'MMA/UFC',
-      icon: '🥋',
-      description: 'UFC, Bellator & MMA Events',
-      link: '/live-odds?filter=mma',
-      color: 'from-slate-500/20 to-gray-500/20'
-    },
-    {
-      name: 'Rugby',
-      icon: '🏉',
-      description: 'Rugby League & Rugby Union',
-      link: '/live-odds?filter=rugby',
-      color: 'from-teal-500/20 to-emerald-500/20'
-    },
-    {
-      name: 'Aussie Rules',
-      icon: '🏉',
-      description: 'AFL & Australian Football',
-      link: '/live-odds?filter=rugby',
-      color: 'from-green-600/20 to-lime-500/20'
     }
   ];
 
