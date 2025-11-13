@@ -1180,14 +1180,14 @@ const LiveOdds = () => {
         {filter !== 'all' && (
           <div>
             <OddsTable 
-              key={`${filter}-${refreshKey}-${timeFilter}`}
+              key={`${filter}-${refreshKey}-${timeFilter}-${leagueFilter}`}
               sportKeys={sportKeysMap[filter]}
               sportTitle={filter.charAt(0).toUpperCase() + filter.slice(1)}
               usePriorityEndpoint={filter === 'football' || filter === 'cricket'}
               isCricket={filter === 'cricket'}
               refreshTrigger={refreshKey}
               timeFilter={timeFilter}
-              preloadedOdds={allOdds}
+              preloadedOdds={filteredOddsByLeague}
               loading={loading}
             />
           </div>
