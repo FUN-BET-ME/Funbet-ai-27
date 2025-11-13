@@ -390,6 +390,53 @@ async def get_all_cached_odds(
         logger.error(f"Error fetching all-cached: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.get("/odds/historical/recent")
+async def get_recent_historical_odds():
+    """Get completed matches from the last 48 hours"""
+    try:
+        from live_scores_service import live_scores_service
+        
+        now = datetime.now(timezone.utc)
+        forty_eight_hours_ago = now - timedelta(hours=48)
+        
+        # Query for matches that were scheduled within last 48 hours
+        # (completed matches should have commence_time in the past)
+        query = {
+            'commence_time': {
+                '$gte': forty_eight_hours_ago.isoformat(),
+                '$lt': now.isoformat()
+            }
+        }
+        
+        matches = await db_instance.db.odds_cache.find(query, {'_id': 0}) \
+            .sort('commence_time', -1) \
+            .limit(100) \
+            .to_list(length=100)
+        
+        # Get live scores to determine which matches are actually completed
+        scores_data = await live_scores_service.get_all_live_scores()
+        completed_scores = scores_data.get('completed_scores', [])
+        
+        # Only return matches that have completed scores
+        recent_results = []
+        for match in matches:
+            matched_score = await live_scores_service.match_score_to_match(match, completed_scores)
+            if matched_score and matched_score.get('completed'):
+                match['live_score'] = {
+                    'scores': matched_score.get('scores'),
+                    'match_status': matched_score.get('match_status'),
+                    'completed': True,
+                    'last_update': matched_score.get('last_update')
+                }
+                recent_results.append(match)
+        
+        logger.info(f"✅ Recent results: {len(recent_results)} completed matches in last 48h")
+        return recent_results
+        
+    except Exception as e:
+        logger.error(f"Error fetching recent historical odds: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/odds/football/priority")
 async def get_football_priority_legacy():
     """Legacy endpoint - Get priority football matches"""
