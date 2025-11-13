@@ -297,9 +297,20 @@ const LiveOdds = () => {
   // Load data on mount and when filters change
   // Load data when filter changes
   useEffect(() => {
-    console.log('🔥 FILTER CHANGED useEffect triggered, filter=', filter);
-    fetchAllOdds(false, filter);
-  }, [filter]);
+    console.log('🔥 FILTER or TIME FILTER CHANGED useEffect triggered, filter=', filter, 'timeFilter=', timeFilter);
+    
+    // Fetch data based on time filter
+    if (timeFilter === 'recent-results') {
+      // Fetch historical data for recent results
+      fetchHistoricalOdds().then(data => {
+        setAllOdds(data);
+        setLoading(false);
+      });
+    } else {
+      // Fetch upcoming matches
+      fetchAllOdds(false, filter);
+    }
+  }, [filter, timeFilter]);
 
   // Load data when manually refreshed
   useEffect(() => {
