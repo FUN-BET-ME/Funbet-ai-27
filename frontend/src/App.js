@@ -12,7 +12,6 @@ import MatchDetail from "./pages/MatchDetail";
 import Predictions from "./pages/PredictionsNew";
 import PredictionHistory from "./pages/PredictionHistory";
 import Stats from "./pages/Stats";
-import News from "./pages/News";
 import ResponsiblePlay from "./pages/ResponsiblePlay";
 import About from "./pages/About";
 import AdminStats from "./pages/AdminStats";
