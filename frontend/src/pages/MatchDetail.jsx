@@ -25,23 +25,15 @@ const MatchDetail = () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       
-      // Try all sources to find the match
-      const [footballRes, cricketRes, generalRes, cricketCompleteRes, cricketRecentRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/odds/football/priority`).catch(() => ({ data: [] })),
-        axios.get(`${BACKEND_URL}/api/odds/cricket/priority`).catch(() => ({ data: [] })),
-        axios.get(`${BACKEND_URL}/api/odds/upcoming`).catch(() => ({ data: [] })),
-        axios.get(`${BACKEND_URL}/api/cricket/complete`).catch(() => ({ data: { data: [] } })),
-        axios.get(`${BACKEND_URL}/api/cricket/recent`).catch(() => ({ data: { data: [] } }))
-      ]);
+      // Fetch all matches from unified endpoint
+      const response = await axios.get(`${BACKEND_URL}/api/odds/all-cached`, {
+        params: {
+          limit: 500,
+          include_scores: true
+        }
+      });
 
-      const allMatches = [
-        ...footballRes.data,
-        ...cricketRes.data,
-        ...generalRes.data,
-        ...(cricketCompleteRes.data.data || cricketCompleteRes.data || []),
-        ...(cricketRecentRes.data.data || cricketRecentRes.data || [])
-      ];
-
+      const allMatches = response.data?.matches || [];
       const foundMatch = allMatches.find(m => m.id === matchId);
       
       if (foundMatch) {
