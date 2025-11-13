@@ -18,7 +18,7 @@ class LiveScoresService:
         self.odds_api_scores_cache = []
         self.last_espn_update = None
         self.last_odds_api_update = None
-        self.update_interval = 30  # seconds
+        self.update_interval = 120  # seconds (2 minutes for live games)
         
     async def fetch_espn_live_scores(self) -> List[Dict]:
         """Fetch live scores from ESPN API for football and basketball"""
