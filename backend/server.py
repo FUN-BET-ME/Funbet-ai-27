@@ -99,6 +99,62 @@ async def get_live_matches():
         logger.error(f"Error fetching live: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.get("/espn/scores")
+async def get_espn_live_scores():
+    """Get live scores from ESPN API"""
+    try:
+        # Fetch live scores from ESPN
+        espn_scores = await fetch_all_espn_scores()
+        
+        logger.info(f"✅ ESPN Scores: {len(espn_scores)} matches")
+        return {
+            'scores': espn_scores,
+            'count': len(espn_scores),
+            'live_count': sum(1 for s in espn_scores if s.get('is_live', False))
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching ESPN scores: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/odds/live-with-scores")
+async def get_live_matches_with_scores():
+    """Get all currently live matches with ESPN scores merged"""
+    try:
+        now = datetime.now(timezone.utc)
+        two_hours_ago = now - timedelta(hours=2)
+        
+        # Fetch live matches from database
+        live_matches = await db_instance.db.odds_cache.find({
+            'commence_time': {
+                '$gte': two_hours_ago.isoformat(),
+                '$lte': now.isoformat()
+            }
+        }, {'_id': 0}).to_list(length=None)
+        
+        # Fetch ESPN scores
+        espn_scores = await fetch_all_espn_scores()
+        
+        # Merge ESPN scores with odds data
+        for match in live_matches:
+            matched_score = match_score_to_odds(match, espn_scores)
+            if matched_score:
+                match['scores'] = matched_score.get('scores')
+                match['match_status'] = matched_score.get('match_status')
+                match['is_live'] = matched_score.get('is_live')
+                match['last_update'] = matched_score.get('last_update')
+        
+        logger.info(f"✅ Live with scores: {len(live_matches)} matches, {len(espn_scores)} ESPN scores")
+        return {
+            'matches': live_matches,
+            'count': len(live_matches),
+            'espn_scores_count': len(espn_scores)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching live matches with scores: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ==========================================
 # UPCOMING MATCHES (14 days, paginated)
 # ==========================================
