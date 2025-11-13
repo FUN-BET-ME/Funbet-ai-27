@@ -40,9 +40,35 @@ const LiveOdds = () => {
   const [aiPredictions, setAiPredictions] = useState([]); // Store AI predictions
   const [hasMore, setHasMore] = useState(false); // Pagination state
   const [loadingMore, setLoadingMore] = useState(false); // Loading more state
+  const [leagueFilter, setLeagueFilter] = useState('all'); // League sub-filter
   const { toggleFollowTeam, isFollowing, isMatchFollowed} = useFavorites();
 
   const sports = ['all', 'football', 'cricket'];
+  
+  // League definitions for sub-filters
+  const footballLeagues = {
+    'all': 'All Leagues',
+    'soccer_epl': 'Premier League',
+    'soccer_spain_la_liga': 'La Liga',
+    'soccer_germany_bundesliga': 'Bundesliga',
+    'soccer_italy_serie_a': 'Serie A',
+    'soccer_france_ligue_one': 'Ligue 1',
+    'soccer_uefa_champs_league': 'Champions League',
+    'soccer_uefa_europa_league': 'Europa League',
+    'soccer_efl_champ': 'Championship',
+    'soccer_brazil_campeonato': 'Brasileirão',
+    'soccer_usa_mls': 'MLS',
+  };
+  
+  const cricketLeagues = {
+    'all': 'All Leagues',
+    'cricket_ipl': 'IPL',
+    'cricket_international_t20': 'T20 International',
+    'cricket_odi': 'ODI',
+    'cricket_test_match': 'Test Matches',
+    'cricket_big_bash': 'Big Bash',
+    'cricket_psl': 'PSL',
+  };
 
   const sportEmojis = {
     all: '🏆',
