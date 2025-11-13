@@ -645,11 +645,22 @@ const LiveOdds = () => {
                 <p className="text-gray-400">Loading odds...</p>
               </div>
             ) : allOdds.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-400">
-                  {timeFilter === 'recent-results' 
-                    ? 'No completed matches with results in the last 48 hours. Historical odds are being collected - check back after matches finish!' 
-                    : 'No odds available at the moment.'}
+              <div className="text-center py-12 bg-red-500/10 border border-red-500/30 rounded-xl p-8">
+                <p className="text-red-400 text-lg font-semibold mb-2">⚠️ No Odds Loaded</p>
+                <p className="text-gray-400 text-sm mb-4">
+                  Data failed to load. Backend has 300+ matches but frontend isn't receiving them.
+                </p>
+                <button
+                  onClick={() => {
+                    console.log('🔄 Manual refresh triggered');
+                    fetchAllOdds(false, filter, true);
+                  }}
+                  className="px-6 py-2 bg-[#FFD700] text-[#2E004F] rounded-lg font-semibold hover:bg-[#FFD700]/90"
+                >
+                  Retry Loading
+                </button>
+                <p className="text-gray-500 text-xs mt-3">
+                  Check browser console (F12) for error details
                 </p>
               </div>
             ) : (
