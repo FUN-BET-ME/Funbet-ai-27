@@ -24,18 +24,42 @@ const PredictionsNew = () => {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       const sportParam = filter === 'football' ? 'soccer' : filter === 'cricket' ? 'cricket' : null;
       
-      const response = await axios.get(`${BACKEND_URL}/api/predictions/all`, {
-        params: sportParam ? { sport: sportParam } : {}
-      });
-
-      const data = response.data;
-      setPredictions(data);
-      setStats(data.sports_breakdown);
+      if (viewMode === 'upcoming') {
+        // Fetch upcoming predictions
+        const response = await axios.get(`${BACKEND_URL}/api/predictions/all`, {
+          params: sportParam ? { sport: sportParam } : {}
+        });
+        const data = response.data;
+        setPredictions(data);
+        setStats(data.sports_breakdown);
+      } else {
+        // Fetch by status (correct/incorrect/pending)
+        const response = await axios.get(`${BACKEND_URL}/api/predictions/by-status`, {
+          params: {
+            status: viewMode,
+            sport: sportParam,
+            page: 1,
+            page_size: 100
+          }
+        });
+        setPredictions({ all_predictions: response.data.predictions });
+      }
+      
       setLastUpdated(new Date());
     } catch (error) {
       console.error('Error fetching predictions:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchAccuracyStats = async () => {
+    try {
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      const response = await axios.get(`${BACKEND_URL}/api/predictions/stats`);
+      setAccuracyStats(response.data);
+    } catch (error) {
+      console.error('Error fetching accuracy stats:', error);
     }
   };
 
