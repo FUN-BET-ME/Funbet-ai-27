@@ -299,15 +299,28 @@ const LiveOdds = () => {
   useEffect(() => {
     console.log('🔥 FILTER or TIME FILTER CHANGED useEffect triggered, filter=', filter, 'timeFilter=', timeFilter);
     
+    setLoading(true); // Set loading state
+    
     // Fetch data based on time filter
     if (timeFilter === 'recent-results') {
       // Fetch historical data for recent results
+      console.log('Fetching historical/recent results...');
       fetchHistoricalOdds().then(data => {
+        console.log('Historical data received:', data.length, 'matches');
+        setAllOdds(data);
+        setLoading(false);
+      });
+    } else if (timeFilter === 'inplay') {
+      // Fetch in-play matches
+      console.log('Fetching in-play matches...');
+      fetchInPlayOdds().then(data => {
+        console.log('In-play data received:', data.length, 'matches');
         setAllOdds(data);
         setLoading(false);
       });
     } else {
       // Fetch upcoming matches
+      console.log('Fetching upcoming matches...');
       fetchAllOdds(false, filter);
     }
   }, [filter, timeFilter]);
