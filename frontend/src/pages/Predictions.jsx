@@ -39,19 +39,12 @@ const Predictions = () => {
     setFilter(sport);
   }, [location.search]);
 
-  const sports = ['all', 'football', 'cricket', 'basketball', 'hockey', 'baseball', 'tennis', 'boxing', 'mma', 'rugby'];
+  const sports = ['all', 'football', 'cricket'];
 
   const sportEmojis = {
     all: '🏆',
     football: '⚽',
-    cricket: '🏏',
-    basketball: '🏀',
-    hockey: '🏒',
-    baseball: '⚾',
-    tennis: '🎾',
-    boxing: '🥊',
-    mma: '🥋',
-    rugby: '🏉'
+    cricket: '🏏'
   };
 
   const handleRefresh = () => {
