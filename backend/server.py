@@ -332,10 +332,13 @@ async def get_cricket_matches(
 async def get_all_cached_odds(
     limit: int = Query(100, ge=1, le=500),
     skip: int = Query(0, ge=0),
-    sport: str = Query(None)
+    sport: str = Query(None),
+    include_scores: bool = Query(True)
 ):
-    """Legacy endpoint - Get all cached odds (for frontend compatibility)"""
+    """Get all cached odds with optional live scores"""
     try:
+        from live_scores_service import live_scores_service
+        
         now = datetime.now(timezone.utc)
         
         query = {}
@@ -356,7 +359,27 @@ async def get_all_cached_odds(
             .limit(limit) \
             .to_list(length=limit)
         
-        logger.info(f"✅ all-cached: Returned {len(matches)} matches")
+        # Merge live scores if requested
+        if include_scores and matches:
+            scores_data = await live_scores_service.get_all_live_scores()
+            all_scores = scores_data['live_scores'] + scores_data['completed_scores']
+            
+            matched_count = 0
+            for match in matches:
+                matched_score = await live_scores_service.match_score_to_match(match, all_scores)
+                if matched_score:
+                    match['live_score'] = {
+                        'scores': matched_score.get('scores'),
+                        'match_status': matched_score.get('match_status'),
+                        'is_live': matched_score.get('is_live', False),
+                        'completed': matched_score.get('completed', False),
+                        'last_update': matched_score.get('last_update')
+                    }
+                    matched_count += 1
+            
+            logger.info(f"✅ all-cached: {len(matches)} matches, {matched_count} with live scores")
+        else:
+            logger.info(f"✅ all-cached: Returned {len(matches)} matches (scores disabled)")
         
         # Return in format frontend expects: {matches: [...]}
         return {"matches": matches}
