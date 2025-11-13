@@ -205,9 +205,9 @@ const LiveOdds = () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       
-      // Simple paginated fetch from database
+      // Fetch from database - increased limit for 30-day window with 32 leagues
       const currentSkip = loadMore ? allOdds.length : 0;
-      const limit = 100;
+      const limit = 500; // Increased for 30 days × 32 leagues
 
       // Map frontend filter to backend sport_key pattern - FOOTBALL & CRICKET ONLY
       const sportKeyMap = {
