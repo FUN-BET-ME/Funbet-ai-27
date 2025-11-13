@@ -614,15 +614,40 @@ const LiveOdds = () => {
                   
                   // If no matches after filtering, show message
                   if (filteredMatches.length === 0) {
+                    // Get league name for custom message
+                    const getLeagueName = () => {
+                      if (filter === 'football' && leagueFilter !== 'all') {
+                        return footballLeagues[leagueFilter] || 'this league';
+                      }
+                      if (filter === 'cricket' && leagueFilter !== 'all') {
+                        return cricketLeagues[leagueFilter] || 'this league';
+                      }
+                      return null;
+                    };
+                    
+                    const leagueName = getLeagueName();
+                    
                     return (
                       <div className="text-center py-12">
-                        <p className="text-gray-400">
+                        <p className="text-gray-400 text-lg mb-2">
                           {timeFilter === 'inplay'
-                            ? '⏱️ No live matches in progress at the moment. Check back when matches start!'
+                            ? '⏱️ No live matches in progress at the moment.'
                             : timeFilter === 'recent-results' 
-                            ? '⏳ No completed matches yet. The system is collecting odds from upcoming matches. Completed matches will appear here 0.5-48 hours after they finish!' 
+                            ? '⏳ No completed matches yet.' 
+                            : leagueName
+                            ? `📅 No upcoming matches for ${leagueName}`
                             : '📅 No upcoming matches available at the moment.'}
                         </p>
+                        {leagueName && timeFilter === 'live-upcoming' && (
+                          <p className="text-gray-500 text-sm mt-2">
+                            ⏰ Matches will be updated closer to the tournament/season start date.
+                          </p>
+                        )}
+                        {timeFilter === 'recent-results' && (
+                          <p className="text-gray-500 text-sm mt-2">
+                            Completed matches will appear here 0.5-48 hours after they finish.
+                          </p>
+                        )}
                       </div>
                     );
                   }
