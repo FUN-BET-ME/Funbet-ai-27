@@ -358,13 +358,14 @@ const LiveOdds = () => {
     if (refreshKey > 0) { // Skip initial render
       const isBackgroundRefresh = refreshKey > 1; // First refresh is manual, rest are auto
       
-      if (timeFilter === 'recent-results') {
-        fetchHistoricalOdds().then(data => {
+      if (timeFilter === 'inplay') {
+        // Refresh in-play matches
+        fetchInPlayOdds().then(data => {
           setAllOdds(data);
           if (!isBackgroundRefresh) setLoading(false);
         });
       } else {
-        // Pass showLoading=false for background refreshes to avoid UI disruption
+        // Refresh upcoming matches - silent refresh for background updates
         fetchAllOdds(false, filter, !isBackgroundRefresh);
       }
     }
