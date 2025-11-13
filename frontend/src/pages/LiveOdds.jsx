@@ -540,7 +540,7 @@ const LiveOdds = () => {
               ? 'Real-time in-play betting odds for matches currently in progress. Odds and scores update every minute.'
               : timeFilter === 'recent-results' 
               ? 'Compare final odds with actual results from matches completed in the last 48 hours (2 days). Analyze bookmaker accuracy and past predictions.'
-              : 'Compare real-time odds from top bookmakers around the world for upcoming matches in the next 14 days. Auto-refreshes every 5 minutes.'}
+              : 'Compare real-time odds from top bookmakers around the world for upcoming matches in the next 30 days. Auto-refreshes every 5 minutes.'}
           </p>
           
           {/* Time Period Filter */}
