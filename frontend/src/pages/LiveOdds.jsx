@@ -42,19 +42,12 @@ const LiveOdds = () => {
   const [loadingMore, setLoadingMore] = useState(false); // Loading more state
   const { toggleFollowTeam, isFollowing, isMatchFollowed} = useFavorites();
 
-  const sports = ['all', 'football', 'cricket', 'basketball', 'hockey', 'baseball', 'tennis', 'boxing', 'mma', 'rugby'];
+  const sports = ['all', 'football', 'cricket'];
 
   const sportEmojis = {
     all: '🏆',
     football: '⚽',
-    cricket: '🏏',
-    basketball: '🏀',
-    hockey: '🏒',
-    baseball: '⚾',
-    tennis: '🎾',
-    boxing: '🥊',
-    mma: '🥋',
-    rugby: '🏉'
+    cricket: '🏏'
   };
 
   const handleRefresh = () => {
