@@ -556,17 +556,26 @@ const LiveOdds = () => {
               <>
                 {(() => {
                   // Filter matches by bookmakers and league
+                  console.log('Current leagueFilter:', leagueFilter);
+                  console.log('Total matches before filter:', allOdds.length);
+                  
                   const filteredMatches = allOdds.filter(match => {
                     // Must have bookmakers
                     if (!match.bookmakers || match.bookmakers.length === 0) return false;
                     
                     // Apply league filter if not "all"
                     if (leagueFilter !== 'all') {
-                      return match.sport_key === leagueFilter;
+                      const matches = match.sport_key === leagueFilter;
+                      if (!matches && leagueFilter === 'soccer_epl') {
+                        console.log('Filtered out:', match.sport_key, match.home_team);
+                      }
+                      return matches;
                     }
                     
                     return true;
                   });
+                  
+                  console.log('Matches after filter:', filteredMatches.length);
                   
                   // Show skeleton loaders while loading
                   if (loading) {
