@@ -187,11 +187,11 @@ const MatchDetail = () => {
               {match.sport_title}
             </span>
             <div className="flex items-center gap-2">
-              {/* FunBet IQ Button */}
+              {/* FunBet IQ Button - Redirects to predictions page */}
               <Link
-                to={`/prediction/${matchId}`}
+                to={`/predictions?sport=${match.sport_key?.includes('soccer') ? 'football' : match.sport_key?.includes('cricket') ? 'cricket' : 'all'}`}
                 className="flex items-center gap-2 px-4 py-2 bg-[#FFD700] text-[#2E004F] rounded-lg hover:bg-[#FFD700]/90 transition-all font-bold group"
-                title="View AI Prediction"
+                title="View AI Predictions"
               >
                 <Brain className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 <span className="hidden sm:inline">FunBet IQ</span>
