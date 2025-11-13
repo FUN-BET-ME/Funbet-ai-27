@@ -182,7 +182,7 @@ const PredictionsNew = () => {
         {/* Quick Stats */}
         {viewMode === 'upcoming' && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-purple-900/30 border border-purple-500/10 rounded-lg p-3">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-lg p-3 hover:border-[#FFD700]/30 transition-all">
               <div className="flex items-center gap-2 mb-1">
                 <Trophy className="w-4 h-4 text-[#FFD700]" />
                 <span className="text-gray-400 text-xs">Total Predictions</span>
@@ -190,7 +190,7 @@ const PredictionsNew = () => {
               <p className="text-2xl font-bold text-white">{predictions.total_count || 0}</p>
             </div>
             
-            <div className="bg-green-900/30 border border-green-500/10 rounded-lg p-3">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-lg p-3 hover:border-green-500/30 transition-all">
               <div className="flex items-center gap-2 mb-1">
                 <Star className="w-4 h-4 text-green-400" />
                 <span className="text-gray-400 text-xs">High Confidence</span>
@@ -198,7 +198,7 @@ const PredictionsNew = () => {
               <p className="text-2xl font-bold text-white">{predictions.high_confidence?.length || 0}</p>
             </div>
 
-            <div className="bg-blue-900/30 border border-blue-500/10 rounded-lg p-3">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-lg p-3 hover:border-blue-500/30 transition-all">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xl">⚽</span>
                 <span className="text-gray-400 text-xs">Football</span>
@@ -206,7 +206,7 @@ const PredictionsNew = () => {
               <p className="text-2xl font-bold text-white">{stats.football || 0}</p>
             </div>
 
-            <div className="bg-cyan-900/30 border border-cyan-500/10 rounded-lg p-3">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-lg p-3 hover:border-cyan-500/30 transition-all">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xl">🏏</span>
                 <span className="text-gray-400 text-xs">Cricket</span>
