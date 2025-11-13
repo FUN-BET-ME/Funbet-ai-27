@@ -202,8 +202,9 @@ const SearchBar = () => {
               {(searchQuery || selectedSport !== 'all') && (
                 <button
                   onClick={clearSearch}
-                  className="text-xs text-amber-600 dark:text-[#FFD700] hover:underline"
+                  className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 rounded-lg transition-colors border border-red-500/30"
                 >
+                  <X className="w-4 h-4" />
                   Clear
                 </button>
               )}
