@@ -626,26 +626,44 @@ const LiveOdds = () => {
                     };
                     
                     const leagueName = getLeagueName();
+                    const isCricket = filter === 'cricket';
                     
                     return (
-                      <div className="text-center py-12">
-                        <p className="text-gray-400 text-lg mb-2">
+                      <div className="text-center py-12 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-xl p-8 border border-purple-500/20">
+                        <div className="text-6xl mb-4">
+                          {isCricket ? '🏏' : '⚽'}
+                        </div>
+                        <p className="text-white text-xl font-semibold mb-3">
                           {timeFilter === 'inplay'
-                            ? '⏱️ No live matches in progress at the moment.'
+                            ? 'No Live Matches Right Now'
                             : timeFilter === 'recent-results' 
-                            ? '⏳ No completed matches yet.' 
+                            ? 'No Recent Results Yet' 
                             : leagueName
-                            ? `📅 No upcoming matches for ${leagueName}`
-                            : '📅 No upcoming matches available at the moment.'}
+                            ? `No Upcoming Matches for ${leagueName}`
+                            : 'No Upcoming Matches Available'}
                         </p>
                         {leagueName && timeFilter === 'live-upcoming' && (
-                          <p className="text-gray-500 text-sm mt-2">
-                            ⏰ Matches will be updated closer to the tournament/season start date.
+                          <div className="space-y-2">
+                            <p className="text-gray-400 text-sm">
+                              {isCricket 
+                                ? '🏏 Cricket schedules are updated as tournaments and series are announced.'
+                                : '⚽ Football matches will appear closer to the season/tournament start date.'}
+                            </p>
+                            <p className="text-gray-500 text-xs">
+                              {isCricket
+                                ? 'Check back for IPL, T20 Internationals, ODI series, and Test matches!'
+                                : 'We track 24+ football leagues worldwide.'}
+                            </p>
+                          </div>
+                        )}
+                        {timeFilter === 'inplay' && (
+                          <p className="text-gray-400 text-sm mt-2">
+                            ⏱️ Live matches will appear here when they start. Check back soon!
                           </p>
                         )}
                         {timeFilter === 'recent-results' && (
-                          <p className="text-gray-500 text-sm mt-2">
-                            Completed matches will appear here 0.5-48 hours after they finish.
+                          <p className="text-gray-400 text-sm mt-2">
+                            📊 Completed matches appear here 0.5-48 hours after they finish.
                           </p>
                         )}
                       </div>
