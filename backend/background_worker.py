@@ -196,19 +196,32 @@ class OddsWorker:
             
             logger.info(f"📊 Total: {len(all_matches)} matches from {api_calls} API calls")
             
-            # Store in database (FunBet odds will be calculated on-the-fly in frontend)
-            # Clear existing cache and insert fresh data
-            await self.db.odds_cache.delete_many({})
+            # Store in database using upsert (update or insert)
+            # This prevents data loss - old matches stay until successfully replaced
+            now = datetime.now(timezone.utc).isoformat()
             
-            # Prepare documents with metadata
+            # Upsert each match (safer than delete-all-then-insert)
+            upserted_count = 0
             for match in all_matches:
-                match['updated_at'] = datetime.now(timezone.utc).isoformat()
-                match['fetched_at'] = datetime.now(timezone.utc).isoformat()
+                match['updated_at'] = now
+                match['fetched_at'] = now
+                
+                # Upsert based on match ID
+                await self.db.odds_cache.update_one(
+                    {'id': match['id']},
+                    {'$set': match},
+                    upsert=True
+                )
+                upserted_count += 1
             
-            if all_matches:
-                await self.db.odds_cache.insert_many(all_matches)
+            # Clean up old matches (older than 48 hours)
+            cutoff_time = datetime.now(timezone.utc) - timedelta(hours=48)
+            delete_result = await self.db.odds_cache.delete_many({
+                'updated_at': {'$lt': cutoff_time.isoformat()}
+            })
             
-            logger.info(f"✅ Database updated: ⚽ {football_fetched} football + 🏏 {cricket_fetched} cricket")
+            logger.info(f"✅ Database updated: {upserted_count} matches upserted, {delete_result.deleted_count} old matches removed")
+            logger.info(f"   ⚽ {football_fetched} football + 🏏 {cricket_fetched} cricket")
                 
         except Exception as e:
             logger.error(f"❌ Error in odds update job: {e}")
