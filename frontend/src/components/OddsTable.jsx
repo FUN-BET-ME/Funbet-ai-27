@@ -1245,8 +1245,28 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
 
       {/* No Data */}
       {!loading && !error && oddsData.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-400 text-lg">No upcoming matches found in the next 7 days.</p>
+        <div className="text-center py-16 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-xl p-12 border border-purple-500/20">
+          <div className="text-7xl mb-6">
+            {sportTitle === 'Cricket' ? '🏏' : '⚽'}
+          </div>
+          <p className="text-white text-2xl font-semibold mb-4">
+            No Upcoming Matches for {sportTitle}
+          </p>
+          <div className="space-y-3 max-w-md mx-auto">
+            <p className="text-gray-400">
+              {sportTitle === 'Cricket' 
+                ? '🏏 Cricket schedules are updated as tournaments and series are announced.'
+                : '⚽ Football matches will appear closer to the season start date.'}
+            </p>
+            <p className="text-[#FFD700] font-medium">
+              ⏰ We will update close to the season/tournament start
+            </p>
+            <p className="text-gray-500 text-sm">
+              {sportTitle === 'Cricket'
+                ? 'Check back for IPL, T20 Internationals, ODI series, and Test matches!'
+                : 'We track 24+ football leagues from around the world.'}
+            </p>
+          </div>
           {console.log('[OddsTable RENDER] No data - loading:', loading, 'error:', error, 'oddsData.length:', oddsData.length)}
         </div>
       )}
