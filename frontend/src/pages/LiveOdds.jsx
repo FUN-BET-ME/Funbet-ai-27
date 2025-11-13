@@ -250,6 +250,15 @@ const LiveOdds = () => {
       const responseData = response.data || {};
       const newMatches = responseData.matches || [];
       
+      console.log('💾 Data merge decision:', {
+        loadMore,
+        currentOddsLength: allOdds.length,
+        newMatchesLength: newMatches.length,
+        loading,
+        willMerge: allOdds.length > 0 && !loading,
+        willReplace: !(allOdds.length > 0 && !loading) && !loadMore
+      });
+      
       // Smart upsert: merge new data with existing without clearing UI
       if (loadMore) {
         // Loading more: append to existing
@@ -257,6 +266,7 @@ const LiveOdds = () => {
         console.log('➕ Appended matches, new total:', allOdds.length + newMatches.length);
       } else if (allOdds.length > 0 && !loading) {
         // Background refresh: intelligently merge without disruption
+        console.log('🔄 Smart merge mode: Preserving', allOdds.length, 'existing matches, updating with', newMatches.length, 'new');
         setAllOdds(prev => {
           const merged = [...prev];
           const existingIds = new Set(prev.map(m => m.id));
@@ -273,13 +283,14 @@ const LiveOdds = () => {
             }
           });
           
-          console.log('🔄 Smart merge: Updated/added matches, total:', merged.length);
+          console.log('✅ Smart merge complete: Updated/added matches, total:', merged.length);
           return merged;
         });
       } else {
         // Initial load or explicit refresh: replace all
+        console.log('🔄 Full replace mode: Setting', newMatches.length, 'matches (was:', allOdds.length, ')');
         setAllOdds(newMatches);
-        console.log('🔄 Initial load, total:', newMatches.length);
+        console.log('✅ Replace complete');
       }
       
       // Check if there are more matches (if we got full limit, there might be more)
