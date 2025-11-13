@@ -224,18 +224,18 @@ class OddsWorker:
     
     async def add_day_8_job(self):
         """
-        Add day 8 data daily at GMT 00:00 (rolling 15-day window)
-        Note: The 'upcoming' endpoint automatically gives us ~15 days
-        This job just ensures we refresh at midnight to capture new day 8 data
+        Add day 31 data daily at GMT 00:00 (rolling 30-day window)
+        Note: The 'upcoming' endpoint automatically gives us ~30 days
+        This job ensures we refresh at midnight to capture new day 31 data
         """
         try:
-            logger.info("📅 Daily refresh at GMT 00:00 (rolling window update)...")
+            logger.info("📅 Daily refresh at GMT 00:00 (rolling 30-day window update)...")
             
             # The 'upcoming' endpoint automatically handles the rolling window
-            # This midnight refresh ensures we capture any new matches for day 8
+            # This midnight refresh ensures we capture any new matches for day 31
             await self.update_odds_job()
             
-            logger.info("✅ Daily refresh complete - 15-day window maintained")
+            logger.info("✅ Daily refresh complete - 30-day window maintained")
             
         except Exception as e:
             logger.error(f"❌ Error in daily refresh job: {e}")
