@@ -15,11 +15,7 @@ const SearchBar = () => {
   const sports = [
     { value: 'all', label: 'All Sports' },
     { value: 'football', label: 'Football ⚽' },
-    { value: 'cricket', label: 'Cricket 🏏' },
-    { value: 'basketball', label: 'Basketball 🏀' },
-    { value: 'baseball', label: 'Baseball ⚾' },
-    { value: 'hockey', label: 'Hockey 🏒' },
-    { value: 'tennis', label: 'Tennis 🎾' }
+    { value: 'cricket', label: 'Cricket 🏏' }
   ];
 
   // Fetch all matches when search opens - with caching
