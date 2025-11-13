@@ -11,8 +11,8 @@ const News = () => {
   const [filter, setFilter] = useState('all');
   const [subFilter, setSubFilter] = useState('all');
 
-  // Main categories
-  const categories = ['all', 'cricket', 'football', 'basketball', 'hockey', 'baseball'];
+  // Main categories - Football & Cricket only
+  const categories = ['all', 'cricket', 'football'];
   
   // Sub-categories for cricket and football
   const subCategories = {
