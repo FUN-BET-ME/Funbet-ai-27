@@ -27,45 +27,14 @@ const News = () => {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       const API = `${BACKEND_URL}/api`;
       
-      // Build query based on filter and subFilter
+      // Build simple query for Football & Cricket
       let query = '';
-      
       if (filter === 'cricket') {
-        if (subFilter === 'IPL') {
-          query = '(IPL OR "Indian Premier League") AND (cricket OR match OR wicket OR runs)';
-        } else if (subFilter === 'International') {
-          query = '(cricket) AND ("World Cup" OR "T20 World Cup" OR international OR India OR Australia OR England) AND (match OR wicket)';
-        } else if (subFilter === 'T20') {
-          query = '(T20 OR "Twenty20") AND cricket AND (match OR league)';
-        } else if (subFilter === 'Test') {
-          query = '("Test cricket" OR "Test match") AND (wicket OR runs OR century)';
-        } else if (subFilter === 'ODI') {
-          query = '(ODI OR "One Day") AND cricket AND (match OR wicket)';
-        } else {
-          query = '(cricket) AND (IPL OR "World Cup" OR T20 OR Test OR ODI OR match OR wicket OR runs)';
-        }
+        query = 'cricket';
       } else if (filter === 'football') {
-        if (subFilter === 'EPL') {
-          query = '("Premier League" OR EPL) AND (football OR soccer) AND (match OR goal OR win)';
-        } else if (subFilter === 'La Liga') {
-          query = '("La Liga" OR "Spanish football") AND (match OR goal OR Barcelona OR Madrid)';
-        } else if (subFilter === 'Champions League') {
-          query = '("Champions League" OR UCL OR "European Cup") AND (football OR soccer) AND (match OR goal)';
-        } else if (subFilter === 'Serie A') {
-          query = '("Serie A" OR "Italian football") AND (match OR goal OR Milan OR Juventus)';
-        } else if (subFilter === 'Bundesliga') {
-          query = '(Bundesliga OR "German football") AND (match OR goal OR Bayern)';
-        } else {
-          query = '(football OR soccer) AND (EPL OR "Premier League" OR "La Liga" OR "Serie A" OR "Bundesliga" OR "Champions League" OR match OR goal)';
-        }
-      } else if (filter === 'basketball') {
-        query = '(basketball OR NBA) AND (game OR match OR championship OR playoffs OR score)';
-      } else if (filter === 'hockey') {
-        query = '(hockey OR NHL) AND (game OR match OR playoffs OR goal OR score)';
-      } else if (filter === 'baseball') {
-        query = '(baseball OR MLB) AND (game OR match OR World Series OR playoffs OR home run)';
+        query = 'football';
       } else {
-        query = '(sports OR football OR soccer OR cricket OR basketball OR hockey OR baseball) AND (game OR match OR league OR championship OR tournament OR score OR win)';
+        query = ''; // Get all news
       }
       
       const newsResponse = await axios.get(`${API}/news`, {
