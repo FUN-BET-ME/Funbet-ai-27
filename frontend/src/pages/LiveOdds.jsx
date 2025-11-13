@@ -45,11 +45,27 @@ const LiveOdds = () => {
   
   // Use useMemo to filter matches by league
   const filteredOddsByLeague = useMemo(() => {
+    console.log('🔍 Filtering - leagueFilter:', leagueFilter, '| Total matches:', allOdds.length);
+    
     if (leagueFilter === 'all') {
+      console.log('  → Showing all matches:', allOdds.length);
       return allOdds;
     }
     
-    return allOdds.filter(match => match.sport_key === leagueFilter);
+    const filtered = allOdds.filter(match => {
+      const matches = match.sport_key === leagueFilter;
+      if (!matches && allOdds.length < 5) {
+        console.log('  ✗ Filtered out:', match.sport_key, match.home_team);
+      }
+      return matches;
+    });
+    
+    console.log('  → After league filter:', filtered.length, 'matches for', leagueFilter);
+    if (filtered.length > 0) {
+      console.log('  → Sample match:', filtered[0].sport_key, filtered[0].home_team);
+    }
+    
+    return filtered;
   }, [allOdds, leagueFilter]);
 
   const sports = ['all', 'football', 'cricket'];
