@@ -42,6 +42,15 @@ const LiveOdds = () => {
   const [loadingMore, setLoadingMore] = useState(false); // Loading more state
   const [leagueFilter, setLeagueFilter] = useState('all'); // League sub-filter
   const { toggleFollowTeam, isFollowing, isMatchFollowed} = useFavorites();
+  
+  // Use useMemo to filter matches by league
+  const filteredOddsByLeague = useMemo(() => {
+    if (leagueFilter === 'all') {
+      return allOdds;
+    }
+    
+    return allOdds.filter(match => match.sport_key === leagueFilter);
+  }, [allOdds, leagueFilter]);
 
   const sports = ['all', 'football', 'cricket'];
   
