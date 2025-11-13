@@ -531,10 +531,14 @@ const LiveOdds = () => {
                 const commenceTime = new Date(match.commence_time);
                 // Get ALL bookmakers for this match (including FunBet)
                 const bookmakers = match.bookmakers || [];
+                
+                // Get bookmakers EXCLUDING FunBet for best odds calculation
+                // (FunBet is always 5% higher, so we exclude it from best odds calc)
+                const nonFunbetBookmakers = bookmakers.filter(b => b.key !== 'funbet');
 
-                // Get best odds from ALL bookmakers (for reference)
-                const homeBest = getBestOdds(bookmakers, 0, match.home_team, match.away_team);
-                const awayBest = getBestOdds(bookmakers, 1, match.home_team, match.away_team);
+                // Get best odds from non-FunBet bookmakers
+                const homeBest = getBestOdds(nonFunbetBookmakers, 0, match.home_team, match.away_team);
+                const awayBest = getBestOdds(nonFunbetBookmakers, 1, match.home_team, match.away_team);
                 
                 // Check if this sport allows draws (all except baseball)
                 const sportAllowsDraws = !league?.toLowerCase().includes('baseball') && 
