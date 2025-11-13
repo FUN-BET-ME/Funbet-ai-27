@@ -351,13 +351,16 @@ const LiveOdds = () => {
   // Load data when manually refreshed
   useEffect(() => {
     if (refreshKey > 0) { // Skip initial render
+      const isBackgroundRefresh = refreshKey > 1; // First refresh is manual, rest are auto
+      
       if (timeFilter === 'recent-results') {
         fetchHistoricalOdds().then(data => {
           setAllOdds(data);
-          setLoading(false);
+          if (!isBackgroundRefresh) setLoading(false);
         });
       } else {
-        fetchAllOdds(false, filter);
+        // Pass showLoading=false for background refreshes to avoid UI disruption
+        fetchAllOdds(false, filter, !isBackgroundRefresh);
       }
     }
   }, [refreshKey]);
