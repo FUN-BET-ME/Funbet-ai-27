@@ -626,9 +626,18 @@ const LiveOdds = () => {
                   }
                 });
 
-                // Get top 4 bookmakers to display by default
+                // Prioritize FunBet to always show first
+                const funbetIndex = sortedBookmakers.findIndex(b => b.key === 'funbet');
+                let prioritizedBookmakers = [...sortedBookmakers];
+                if (funbetIndex > 0) {
+                  // Move FunBet to first position
+                  const funbet = prioritizedBookmakers.splice(funbetIndex, 1)[0];
+                  prioritizedBookmakers.unshift(funbet);
+                }
+                
+                // Get top 4 bookmakers to display by default (FunBet will be first if present)
                 const isExpanded = expandedMatches[matchId];
-                const displayedBookmakers = isExpanded ? sortedBookmakers : sortedBookmakers.slice(0, 4);
+                const displayedBookmakers = isExpanded ? prioritizedBookmakers : prioritizedBookmakers.slice(0, 4);
                 
                 // Get best odds from displayed bookmakers EXCLUDING FunBet for highlighting
                 // FunBet is always 5% higher, so we highlight the best market odds among real bookmakers
