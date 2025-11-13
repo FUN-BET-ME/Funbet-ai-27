@@ -565,11 +565,6 @@ const LiveOdds = () => {
                   }
                 }
 
-                // Calculate FunBet.ME odds (5% better than market best)
-                const funbetHomeOdds = homeBest ? (homeBest.odds * 1.05).toFixed(2) : null;
-                const funbetAwayOdds = awayBest ? (awayBest.odds * 1.05).toFixed(2) : null;
-                const funbetDrawOdds = showThreeOutcomes && drawBest ? (drawBest.odds * 1.05).toFixed(2) : null;
-
                 // Remove duplicate bookmakers by TITLE (not key)
                 // Keep the one with best total odds for each title
                 const bookmakersByTitle = {};
