@@ -462,8 +462,10 @@ async def get_predictions(limit: int = 20):
 
 @api_router.get("/stats")
 async def get_stats():
-    """Get statistics"""
+    """Get overall statistics"""
     try:
+        now = datetime.now(timezone.utc)
+        
         total_matches = await db_instance.db.odds_cache.count_documents({})
         
         # Football count
@@ -477,7 +479,6 @@ async def get_stats():
         })
         
         # Live count
-        now = datetime.now(timezone.utc)
         two_hours_ago = now - timedelta(hours=2)
         live = await db_instance.db.odds_cache.count_documents({
             'commence_time': {
@@ -486,16 +487,186 @@ async def get_stats():
             }
         })
         
+        # Upcoming (next 14 days)
+        fourteen_days = now + timedelta(days=14)
+        upcoming = await db_instance.db.odds_cache.count_documents({
+            'commence_time': {
+                '$gte': now.isoformat(),
+                '$lte': fourteen_days.isoformat()
+            }
+        })
+        
+        # Completed (last 48 hours for display)
+        forty_eight_hours_ago = now - timedelta(hours=48)
+        completed_recent = await db_instance.db.odds_cache.count_documents({
+            'commence_time': {
+                '$gte': forty_eight_hours_ago.isoformat(),
+                '$lt': now.isoformat()
+            }
+        })
+        
+        # Historical (older than 48 hours - kept for predictions)
+        historical = await db_instance.db.odds_cache.count_documents({
+            'commence_time': {
+                '$lt': forty_eight_hours_ago.isoformat()
+            }
+        })
+        
         return {
             "total_matches": total_matches,
             "football_matches": football,
             "cricket_matches": cricket,
             "live_matches": live,
-            "last_updated": datetime.now(timezone.utc).isoformat()
+            "upcoming_matches": upcoming,
+            "completed_recent": completed_recent,
+            "historical_matches": historical,
+            "last_updated": now.isoformat()
         }
         
     except Exception as e:
         logger.error(f"Error fetching stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/stats/14-days")
+async def get_stats_14_days(
+    sport: str = Query(None, description="Filter by sport: soccer or cricket"),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(50, ge=1, le=200)
+):
+    """Get all matches for next 14 days (for stats page)"""
+    try:
+        now = datetime.now(timezone.utc)
+        fourteen_days = now + timedelta(days=14)
+        
+        query = {
+            'commence_time': {
+                '$gte': now.isoformat(),
+                '$lte': fourteen_days.isoformat()
+            }
+        }
+        
+        # Filter by sport
+        if sport:
+            if sport == 'soccer':
+                query['sport_key'] = {'$regex': '^soccer_', '$options': 'i'}
+            elif sport == 'cricket':
+                query['sport_key'] = {'$regex': '^cricket_', '$options': 'i'}
+        else:
+            # Default: only football and cricket
+            query['sport_key'] = {'$regex': '^(soccer_|cricket_)', '$options': 'i'}
+        
+        # Count total
+        total = await db_instance.db.odds_cache.count_documents(query)
+        
+        # Get paginated results
+        skip = (page - 1) * page_size
+        matches = await db_instance.db.odds_cache.find(query, {'_id': 0}) \
+            .sort('commence_time', 1) \
+            .skip(skip) \
+            .limit(page_size) \
+            .to_list(length=page_size)
+        
+        # Group by league
+        leagues = {}
+        for match in matches:
+            league = match.get('sport_title', 'Unknown')
+            if league not in leagues:
+                leagues[league] = []
+            leagues[league].append(match)
+        
+        return {
+            "matches": matches,
+            "leagues": leagues,
+            "pagination": {
+                "page": page,
+                "page_size": page_size,
+                "total": total,
+                "total_pages": (total + page_size - 1) // page_size
+            },
+            "period": {
+                "from": now.isoformat(),
+                "to": fourteen_days.isoformat()
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching 14-day stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/stats/completed")
+async def get_completed_games(
+    hours: int = Query(48, ge=1, le=168, description="Hours to look back (default 48)"),
+    sport: str = Query(None),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(50, ge=1, le=200)
+):
+    """Get completed games (for recent history display, default 48 hours)"""
+    try:
+        from live_scores_service import live_scores_service
+        
+        now = datetime.now(timezone.utc)
+        hours_ago = now - timedelta(hours=hours)
+        
+        query = {
+            'commence_time': {
+                '$gte': hours_ago.isoformat(),
+                '$lt': now.isoformat()
+            }
+        }
+        
+        # Filter by sport
+        if sport:
+            if sport == 'soccer':
+                query['sport_key'] = {'$regex': '^soccer_', '$options': 'i'}
+            elif sport == 'cricket':
+                query['sport_key'] = {'$regex': '^cricket_', '$options': 'i'}
+        else:
+            query['sport_key'] = {'$regex': '^(soccer_|cricket_)', '$options': 'i'}
+        
+        # Count total
+        total = await db_instance.db.odds_cache.count_documents(query)
+        
+        # Get paginated results
+        skip = (page - 1) * page_size
+        matches = await db_instance.db.odds_cache.find(query, {'_id': 0}) \
+            .sort('commence_time', -1) \
+            .skip(skip) \
+            .limit(page_size) \
+            .to_list(length=page_size)
+        
+        # Try to get scores for completed matches
+        scores_data = await live_scores_service.get_all_live_scores()
+        completed_scores = scores_data.get('completed_scores', [])
+        
+        matched_count = 0
+        for match in matches:
+            matched_score = await live_scores_service.match_score_to_match(match, completed_scores)
+            if matched_score:
+                match['final_score'] = {
+                    'scores': matched_score.get('scores'),
+                    'completed': matched_score.get('completed', True),
+                    'last_update': matched_score.get('last_update')
+                }
+                matched_count += 1
+        
+        return {
+            "matches": matches,
+            "pagination": {
+                "page": page,
+                "page_size": page_size,
+                "total": total,
+                "total_pages": (total + page_size - 1) // page_size
+            },
+            "scores_matched": matched_count,
+            "period": {
+                "from": hours_ago.isoformat(),
+                "to": now.isoformat(),
+                "hours": hours
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching completed games: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # ==========================================
