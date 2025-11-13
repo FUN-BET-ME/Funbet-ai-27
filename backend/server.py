@@ -702,6 +702,44 @@ async def login(credentials: UserLogin):
 # NEWS ENDPOINT (Sample Data)
 # ==========================================
 
+@api_router.get("/predictions/all")
+async def get_all_predictions(sport: str = Query(None, description="Filter by sport: soccer or cricket")):
+    """Generate AI predictions for all football & cricket matches"""
+    try:
+        from predictions_generator import predictions_generator
+        
+        # Get all matches
+        query = {}
+        if sport:
+            if sport == 'soccer' or sport == 'football':
+                query['sport_key'] = {'$regex': '^soccer_', '$options': 'i'}
+            elif sport == 'cricket':
+                query['sport_key'] = {'$regex': '^cricket_', '$options': 'i'}
+        else:
+            # Default: only football and cricket
+            query['sport_key'] = {'$regex': '^(soccer_|cricket_)', '$options': 'i'}
+        
+        # Only get upcoming matches (within next 14 days)
+        now = datetime.now(timezone.utc)
+        fourteen_days = now + timedelta(days=14)
+        query['commence_time'] = {
+            '$gte': now.isoformat(),
+            '$lte': fourteen_days.isoformat()
+        }
+        
+        matches = await db_instance.db.odds_cache.find(query, {'_id': 0}).to_list(length=500)
+        
+        # Generate predictions
+        predictions_data = predictions_generator.generate_all_predictions(matches)
+        
+        logger.info(f"✅ Generated {predictions_data['total_count']} predictions")
+        
+        return predictions_data
+        
+    except Exception as e:
+        logger.error(f"Error generating predictions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/news")
 async def get_news(q: str = Query(None), pageSize: int = Query(20, le=100)):
     """Get sports news - Returns sample data for Football & Cricket"""
