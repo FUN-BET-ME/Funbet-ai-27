@@ -1195,7 +1195,7 @@ const LiveOdds = () => {
                       </button>
                     </div>
               )}
-            </>
+            </div>
             )}
           </div>
         )}
