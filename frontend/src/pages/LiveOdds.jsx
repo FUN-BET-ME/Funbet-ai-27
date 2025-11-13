@@ -1171,6 +1171,7 @@ const LiveOdds = () => {
                 );
                   })
                 })()}
+              </div>
 
               {/* Load More Button */}
               {hasMore && (
