@@ -22,67 +22,22 @@ load_dotenv(ROOT_DIR / '.env')
 
 logger = logging.getLogger(__name__)
 
-# Football leagues to fetch - Top tier leagues worldwide
+# Football leagues to fetch - TOP PRIORITY ONLY (to save API calls)
 FOOTBALL_LEAGUES = [
-    # UEFA Competitions
-    'soccer_uefa_champs_league',
-    'soccer_uefa_europa_league',
-    'soccer_uefa_europa_conference_league',
-    
-    # FIFA
-    'soccer_fifa_world_cup',
-    
-    # England
-    'soccer_epl',
-    'soccer_efl_champ',
-    'soccer_england_league1',
-    'soccer_england_league2',
-    
-    # Spain
-    'soccer_spain_la_liga',
-    'soccer_spain_segunda_division',
-    
-    # Germany
-    'soccer_germany_bundesliga',
-    'soccer_germany_bundesliga2',
-    
-    # Italy
-    'soccer_italy_serie_a',
-    'soccer_italy_serie_b',
-    
-    # France
-    'soccer_france_ligue_one',
-    'soccer_france_ligue_two',
-    
-    # Portugal
-    'soccer_portugal_primeira_liga',
-    
-    # Netherlands
-    'soccer_netherlands_eredivisie',
-    
-    # South America
-    'soccer_brazil_campeonato',
-    'soccer_argentina_primera_division',
-    'soccer_conmebol_libertadores',
-    'soccer_conmebol_copa_sudamericana',
-    'soccer_mexico_ligamx',
-    
-    # Other Major Leagues
-    'soccer_usa_mls',
-    'soccer_australia_aleague',
-    'soccer_japan_j_league',
+    # Top 5 European Leagues + Champions League ONLY
+    'soccer_epl',                    # English Premier League
+    'soccer_spain_la_liga',          # La Liga
+    'soccer_germany_bundesliga',     # Bundesliga
+    'soccer_italy_serie_a',          # Serie A
+    'soccer_france_ligue_one',       # Ligue 1
+    'soccer_uefa_champs_league',     # Champions League
 ]
 
-# Cricket competitions
+# Cricket competitions - TOP PRIORITY ONLY
 CRICKET_LEAGUES = [
-    'cricket_test_match',
-    'cricket_odi',
-    'cricket_international_t20',
-    'cricket_ipl',
-    'cricket_big_bash',
-    'cricket_caribbean_premier_league',
-    'cricket_icc_world_cup',
-    'cricket_psl',
+    'cricket_international_t20',     # T20 Internationals
+    'cricket_ipl',                   # Indian Premier League
+    'cricket_big_bash',              # Big Bash League
 ]
 
 class OddsWorker:
