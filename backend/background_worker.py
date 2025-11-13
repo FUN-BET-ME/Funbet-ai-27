@@ -22,22 +22,67 @@ load_dotenv(ROOT_DIR / '.env')
 
 logger = logging.getLogger(__name__)
 
-# Football leagues to fetch - TOP PRIORITY ONLY (to save API calls)
+# Football leagues to fetch - Comprehensive worldwide coverage
 FOOTBALL_LEAGUES = [
-    # Top 5 European Leagues + Champions League ONLY
-    'soccer_epl',                    # English Premier League
-    'soccer_spain_la_liga',          # La Liga
-    'soccer_germany_bundesliga',     # Bundesliga
-    'soccer_italy_serie_a',          # Serie A
-    'soccer_france_ligue_one',       # Ligue 1
-    'soccer_uefa_champs_league',     # Champions League
+    # UEFA Competitions
+    'soccer_uefa_champs_league',              # UEFA Champions League
+    'soccer_uefa_europa_league',              # UEFA Europa League
+    'soccer_uefa_europa_conference_league',   # UEFA Conference League
+    
+    # FIFA
+    'soccer_fifa_world_cup',                  # FIFA World Cup
+    
+    # England - 4 divisions
+    'soccer_epl',                             # Premier League
+    'soccer_efl_champ',                       # Championship
+    'soccer_england_league1',                 # League One
+    'soccer_england_league2',                 # League Two
+    
+    # Spain - 2 divisions
+    'soccer_spain_la_liga',                   # La Liga
+    'soccer_spain_segunda_division',          # Segunda División
+    
+    # Germany - 2 divisions
+    'soccer_germany_bundesliga',              # Bundesliga
+    'soccer_germany_bundesliga2',             # 2. Bundesliga
+    
+    # Italy - 2 divisions
+    'soccer_italy_serie_a',                   # Serie A
+    'soccer_italy_serie_b',                   # Serie B
+    
+    # France - 2 divisions
+    'soccer_france_ligue_one',                # Ligue 1
+    'soccer_france_ligue_two',                # Ligue 2
+    
+    # Portugal
+    'soccer_portugal_primeira_liga',          # Primeira Liga
+    
+    # Netherlands
+    'soccer_netherlands_eredivisie',          # Eredivisie
+    
+    # South America
+    'soccer_brazil_campeonato',               # Brasileirão
+    'soccer_argentina_primera_division',      # Primera División
+    'soccer_conmebol_libertadores',           # Copa Libertadores
+    'soccer_conmebol_copa_sudamericana',      # Copa Sudamericana
+    'soccer_mexico_ligamx',                   # Liga MX
+    
+    # Other Major Leagues
+    'soccer_usa_mls',                         # MLS
+    'soccer_australia_aleague',               # A-League
+    'soccer_japan_j_league',                  # J-League
 ]
 
-# Cricket competitions - TOP PRIORITY ONLY
+# Cricket competitions - Complete international coverage
 CRICKET_LEAGUES = [
-    'cricket_international_t20',     # T20 Internationals
-    'cricket_ipl',                   # Indian Premier League
-    'cricket_big_bash',              # Big Bash League
+    'cricket_test_match',                     # Test Matches
+    'cricket_odi',                            # One Day Internationals
+    'cricket_international_t20',              # T20 Internationals
+    'cricket_ipl',                            # Indian Premier League
+    'cricket_big_bash',                       # Big Bash League (Australia)
+    'cricket_caribbean_premier_league',       # Caribbean Premier League
+    'cricket_icc_world_cup',                  # ICC World Cup
+    'cricket_psl',                            # Pakistan Super League
 ]
 
 class OddsWorker:
