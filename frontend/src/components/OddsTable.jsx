@@ -1250,7 +1250,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
             {sportTitle === 'Cricket' ? '🏏' : '⚽'}
           </div>
           <p className="text-white text-2xl font-semibold mb-4">
-            No Upcoming Matches for {sportTitle}
+            No Upcoming Matches for {selectedLeague || sportTitle}
           </p>
           <div className="space-y-3 max-w-md mx-auto">
             <p className="text-gray-400">
@@ -1258,7 +1258,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                 ? '🏏 Cricket schedules are updated as tournaments and series are announced.'
                 : '⚽ Football matches will appear closer to the season start date.'}
             </p>
-            <p className="text-[#FFD700] font-medium">
+            <p className="text-[#FFD700] font-medium text-lg">
               ⏰ We will update close to the season/tournament start
             </p>
             <p className="text-gray-500 text-sm">
