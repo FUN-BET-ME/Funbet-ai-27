@@ -109,40 +109,104 @@ const PredictionsNew = () => {
           </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-purple-900/40 border border-purple-500/20 rounded-lg p-4">
+        {/* Accuracy Stats - Clickable Slabs */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <button
+            onClick={() => setViewMode('correct')}
+            className={`bg-green-900/40 border-2 rounded-lg p-4 text-left transition-all hover:scale-105 ${
+              viewMode === 'correct' ? 'border-green-400 shadow-lg shadow-green-500/20' : 'border-green-500/20'
+            }`}
+          >
             <div className="flex items-center gap-2 mb-2">
-              <Trophy className="w-5 h-5 text-[#FFD700]" />
-              <span className="text-gray-400 text-sm">Total Predictions</span>
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-xl">✓</span>
+              </div>
+              <span className="text-gray-300 text-sm font-medium">Correct</span>
             </div>
-            <p className="text-3xl font-bold text-white">{predictions.total_count || 0}</p>
-          </div>
-          
-          <div className="bg-green-900/40 border border-green-500/20 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Star className="w-5 h-5 text-green-400" />
-              <span className="text-gray-400 text-sm">High Confidence</span>
-            </div>
-            <p className="text-3xl font-bold text-white">{predictions.high_confidence?.length || 0}</p>
-          </div>
+            <p className="text-3xl font-bold text-green-400">{accuracyStats.correct || 0}</p>
+            <p className="text-xs text-gray-400 mt-1">Winning predictions</p>
+          </button>
 
-          <div className="bg-blue-900/40 border border-blue-500/20 rounded-lg p-4">
+          <button
+            onClick={() => setViewMode('incorrect')}
+            className={`bg-red-900/40 border-2 rounded-lg p-4 text-left transition-all hover:scale-105 ${
+              viewMode === 'incorrect' ? 'border-red-400 shadow-lg shadow-red-500/20' : 'border-red-500/20'
+            }`}
+          >
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl">⚽</span>
-              <span className="text-gray-400 text-sm">Football</span>
+              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-xl">✗</span>
+              </div>
+              <span className="text-gray-300 text-sm font-medium">Incorrect</span>
             </div>
-            <p className="text-3xl font-bold text-white">{stats.football || 0}</p>
-          </div>
+            <p className="text-3xl font-bold text-red-400">{accuracyStats.incorrect || 0}</p>
+            <p className="text-xs text-gray-400 mt-1">Missed predictions</p>
+          </button>
 
-          <div className="bg-cyan-900/40 border border-cyan-500/20 rounded-lg p-4">
+          <button
+            onClick={() => setViewMode('pending')}
+            className={`bg-yellow-900/40 border-2 rounded-lg p-4 text-left transition-all hover:scale-105 ${
+              viewMode === 'pending' ? 'border-yellow-400 shadow-lg shadow-yellow-500/20' : 'border-yellow-500/20'
+            }`}
+          >
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl">🏏</span>
-              <span className="text-gray-400 text-sm">Cricket</span>
+              <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                <Clock className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-gray-300 text-sm font-medium">Pending</span>
             </div>
-            <p className="text-3xl font-bold text-white">{stats.cricket || 0}</p>
+            <p className="text-3xl font-bold text-yellow-400">{accuracyStats.pending || 0}</p>
+            <p className="text-xs text-gray-400 mt-1">Awaiting results</p>
+          </button>
+
+          <div className="bg-purple-900/40 border-2 border-purple-500/20 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Target className="w-6 h-6 text-[#FFD700]" />
+              <span className="text-gray-300 text-sm font-medium">Accuracy</span>
+            </div>
+            <p className="text-3xl font-bold text-[#FFD700]">{accuracyStats.accuracy || 0}%</p>
+            <p className="text-xs text-gray-400 mt-1">
+              {accuracyStats.completed || 0} completed games
+            </p>
           </div>
         </div>
+
+        {/* Quick Stats */}
+        {viewMode === 'upcoming' && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-purple-900/30 border border-purple-500/10 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <Trophy className="w-4 h-4 text-[#FFD700]" />
+                <span className="text-gray-400 text-xs">Total Predictions</span>
+              </div>
+              <p className="text-2xl font-bold text-white">{predictions.total_count || 0}</p>
+            </div>
+            
+            <div className="bg-green-900/30 border border-green-500/10 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <Star className="w-4 h-4 text-green-400" />
+                <span className="text-gray-400 text-xs">High Confidence</span>
+              </div>
+              <p className="text-2xl font-bold text-white">{predictions.high_confidence?.length || 0}</p>
+            </div>
+
+            <div className="bg-blue-900/30 border border-blue-500/10 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xl">⚽</span>
+                <span className="text-gray-400 text-xs">Football</span>
+              </div>
+              <p className="text-2xl font-bold text-white">{stats.football || 0}</p>
+            </div>
+
+            <div className="bg-cyan-900/30 border border-cyan-500/10 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xl">🏏</span>
+                <span className="text-gray-400 text-xs">Cricket</span>
+              </div>
+              <p className="text-2xl font-bold text-white">{stats.cricket || 0}</p>
+            </div>
+          </div>
+        )}
 
         {/* Sport Filters */}
         <div className="flex items-center justify-center gap-3 mb-6">
