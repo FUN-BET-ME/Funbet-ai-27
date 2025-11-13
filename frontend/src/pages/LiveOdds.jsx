@@ -474,6 +474,7 @@ const LiveOdds = () => {
                   key={sport}
                   onClick={() => {
                     navigate(`/live-odds?filter=${sport}`);
+                    setLeagueFilter('all'); // Reset league filter when sport changes
                   }}
                   className={`px-4 py-2 rounded-lg font-medium transition-all capitalize flex items-center gap-2 ${
                     filter === sport
@@ -487,6 +488,33 @@ const LiveOdds = () => {
               ))}
             </div>
           </div>
+
+          {/* League Sub-Filters */}
+          {(filter === 'football' || filter === 'cricket') && (
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                Filter by League:
+              </label>
+              <select
+                value={leagueFilter}
+                onChange={(e) => setLeagueFilter(e.target.value)}
+                className="w-full sm:w-auto px-4 py-2 rounded-lg bg-white/5 border border-[#2E004F]/30 text-white focus:border-[#FFD700] focus:outline-none"
+              >
+                {filter === 'football' 
+                  ? Object.entries(footballLeagues).map(([key, name]) => (
+                      <option key={key} value={key} className="bg-[#0a0012] text-white">
+                        {name}
+                      </option>
+                    ))
+                  : Object.entries(cricketLeagues).map(([key, name]) => (
+                      <option key={key} value={key} className="bg-[#0a0012] text-white">
+                        {name}
+                      </option>
+                    ))
+                }
+              </select>
+            </div>
+          )}
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <Button
