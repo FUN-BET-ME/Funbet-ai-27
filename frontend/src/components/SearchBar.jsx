@@ -213,6 +213,24 @@ const SearchBar = () => {
 
           {/* Results */}
           <div className="flex-1 overflow-y-auto">
+            {/* Active Filters Indicator */}
+            {!loading && results.length > 0 && (
+              <div className="px-4 py-2 bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-[#2E004F]/30">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-600 dark:text-gray-400">
+                    {results.length} {results.length === 1 ? 'match' : 'matches'} found
+                    {selectedSport !== 'all' && (
+                      <span className="ml-1">
+                        in <span className="font-semibold text-[#FFD700]">
+                          {sports.find(s => s.value === selectedSport)?.label}
+                        </span>
+                      </span>
+                    )}
+                  </span>
+                </div>
+              </div>
+            )}
+            
             {loading ? (
               <div className="p-8 text-center text-gray-500 dark:text-gray-400">
                 <div className="animate-spin w-8 h-8 border-2 border-[#FFD700] border-t-transparent rounded-full mx-auto mb-2"></div>
