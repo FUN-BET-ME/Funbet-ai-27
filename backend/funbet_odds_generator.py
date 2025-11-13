@@ -88,8 +88,8 @@ def generate_funbet_bookmaker(match: Dict, home_team: str, away_team: str) -> Di
             logger.warning(f"No bookmakers found for {home_team} vs {away_team}")
             return None
         
-        # Find best market odds
-        best_odds = find_best_odds(existing_bookmakers)
+        # Find best market odds (match by team name)
+        best_odds = find_best_odds(existing_bookmakers, home_team, away_team)
         
         # Calculate FunBet odds (5% above market best)
         funbet_odds = calculate_funbet_odds(best_odds, markup_percent=5.0)
