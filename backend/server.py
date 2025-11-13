@@ -194,12 +194,12 @@ async def get_upcoming_matches(
     """Get upcoming matches - next 14 days, 100 per page"""
     try:
         now = datetime.now(timezone.utc)
-        fourteen_days = now + timedelta(days=30)
+        thirty_days = now + timedelta(days=30)
         
         query = {
             'commence_time': {
                 '$gte': now.isoformat(),
-                '$lte': fourteen_days.isoformat()
+                '$lte': thirty_days.isoformat()
             }
         }
         
@@ -246,13 +246,13 @@ async def get_football_matches(
     """Get football matches (14 days, paginated)"""
     try:
         now = datetime.now(timezone.utc)
-        fourteen_days = now + timedelta(days=30)
+        thirty_days = now + timedelta(days=30)
         
         query = {
             'sport_key': {'$regex': '^soccer_', '$options': 'i'},
             'commence_time': {
                 '$gte': now.isoformat(),
-                '$lte': fourteen_days.isoformat()
+                '$lte': thirty_days.isoformat()
             }
         }
         
@@ -292,13 +292,13 @@ async def get_cricket_matches(
     """Get cricket matches (14 days, paginated)"""
     try:
         now = datetime.now(timezone.utc)
-        fourteen_days = now + timedelta(days=30)
+        thirty_days = now + timedelta(days=30)
         
         query = {
             'sport_key': {'$regex': '^cricket_', '$options': 'i'},
             'commence_time': {
                 '$gte': now.isoformat(),
-                '$lte': fourteen_days.isoformat()
+                '$lte': thirty_days.isoformat()
             }
         }
         
@@ -442,13 +442,13 @@ async def get_football_priority_legacy():
     """Legacy endpoint - Get priority football matches"""
     try:
         now = datetime.now(timezone.utc)
-        fourteen_days = now + timedelta(days=30)
+        thirty_days = now + timedelta(days=30)
         
         matches = await db_instance.db.odds_cache.find({
             'sport_key': {'$regex': '^soccer_', '$options': 'i'},
             'commence_time': {
                 '$gte': now.isoformat(),
-                '$lte': fourteen_days.isoformat()
+                '$lte': thirty_days.isoformat()
             }
         }, {'_id': 0}).sort('commence_time', 1).to_list(length=100)
         
@@ -464,13 +464,13 @@ async def get_cricket_priority_legacy():
     """Legacy endpoint - Get priority cricket matches"""
     try:
         now = datetime.now(timezone.utc)
-        fourteen_days = now + timedelta(days=30)
+        thirty_days = now + timedelta(days=30)
         
         matches = await db_instance.db.odds_cache.find({
             'sport_key': {'$regex': '^cricket_', '$options': 'i'},
             'commence_time': {
                 '$gte': now.isoformat(),
-                '$lte': fourteen_days.isoformat()
+                '$lte': thirty_days.isoformat()
             }
         }, {'_id': 0}).sort('commence_time', 1).to_list(length=100)
         
@@ -537,11 +537,11 @@ async def get_stats():
         })
         
         # Upcoming (next 14 days)
-        fourteen_days = now + timedelta(days=30)
+        thirty_days = now + timedelta(days=30)
         upcoming = await db_instance.db.odds_cache.count_documents({
             'commence_time': {
                 '$gte': now.isoformat(),
-                '$lte': fourteen_days.isoformat()
+                '$lte': thirty_days.isoformat()
             }
         })
         
@@ -585,12 +585,12 @@ async def get_stats_14_days(
     """Get all matches for next 14 days (for stats page)"""
     try:
         now = datetime.now(timezone.utc)
-        fourteen_days = now + timedelta(days=30)
+        thirty_days = now + timedelta(days=30)
         
         query = {
             'commence_time': {
                 '$gte': now.isoformat(),
-                '$lte': fourteen_days.isoformat()
+                '$lte': thirty_days.isoformat()
             }
         }
         
@@ -634,7 +634,7 @@ async def get_stats_14_days(
             },
             "period": {
                 "from": now.isoformat(),
-                "to": fourteen_days.isoformat()
+                "to": thirty_days.isoformat()
             }
         }
         
@@ -770,10 +770,10 @@ async def get_all_predictions(sport: str = Query(None, description="Filter by sp
         
         # Only get upcoming matches (within next 14 days)
         now = datetime.now(timezone.utc)
-        fourteen_days = now + timedelta(days=30)
+        thirty_days = now + timedelta(days=30)
         query['commence_time'] = {
             '$gte': now.isoformat(),
-            '$lte': fourteen_days.isoformat()
+            '$lte': thirty_days.isoformat()
         }
         
         matches = await db_instance.db.odds_cache.find(query, {'_id': 0}).to_list(length=500)
