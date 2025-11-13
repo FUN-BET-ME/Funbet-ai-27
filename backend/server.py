@@ -754,9 +754,23 @@ async def get_news(q: str = Query(None), pageSize: int = Query(20, le=100)):
             }
         ]
         
+        # Filter articles based on query
         if q:
             q_lower = q.lower()
-            filtered = [a for a in sample_articles if q_lower in a['title'].lower() or q_lower in a['description'].lower()]
+            
+            # Smart filtering for football/cricket
+            if 'football' in q_lower or 'soccer' in q_lower:
+                # Include football-related articles (EPL, La Liga, Champions, etc.)
+                filtered = [a for a in sample_articles if any(keyword in (a['title'] + ' ' + a['description']).lower() 
+                           for keyword in ['epl', 'premier', 'la liga', 'champions', 'madrid', 'barcelona', 'manchester', 'arsenal', 'bayern'])]
+            elif 'cricket' in q_lower:
+                # Include cricket-related articles
+                filtered = [a for a in sample_articles if any(keyword in (a['title'] + ' ' + a['description']).lower() 
+                           for keyword in ['cricket', 'ipl', 'india', 'world cup', 'mumbai indians'])]
+            else:
+                # Default exact match
+                filtered = [a for a in sample_articles if q_lower in a['title'].lower() or q_lower in a['description'].lower()]
+            
             articles = filtered[:pageSize]
         else:
             articles = sample_articles[:pageSize]
