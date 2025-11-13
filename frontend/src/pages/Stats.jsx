@@ -17,18 +17,13 @@ const Stats = () => {
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [filter, setFilter] = useState('all');
-  const sports = ['all', 'football', 'cricket', 'basketball', 'americanfootball', 'hockey', 'baseball', 'tennis'];
+  const sports = ['all', 'football', 'cricket'];
   
   const formatSportName = (sport) => {
     const sportNames = {
       'all': 'All',
       'football': 'Football',
-      'cricket': 'Cricket',
-      'basketball': 'Basketball',
-      'americanfootball': 'American Football',
-      'hockey': 'Hockey',
-      'baseball': 'Baseball',
-      'tennis': 'Tennis'
+      'cricket': 'Cricket'
     };
     return sportNames[sport] || sport;
   };
