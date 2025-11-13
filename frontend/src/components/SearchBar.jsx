@@ -57,12 +57,24 @@ const SearchBar = () => {
     setLoading(true);
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      console.log('[Search] Fetching matches from:', BACKEND_URL);
       
       // Fetch only football and cricket priority (most common searches)
       const [footballRes, cricketRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/odds/football/priority`).catch(() => ({ data: [] })),
-        axios.get(`${BACKEND_URL}/api/odds/cricket/priority`).catch(() => ({ data: [] }))
+        axios.get(`${BACKEND_URL}/api/odds/football/priority`)
+          .catch((err) => {
+            console.error('[Search] Football API error:', err.message, err.response?.status);
+            return { data: [] };
+          }),
+        axios.get(`${BACKEND_URL}/api/odds/cricket/priority`)
+          .catch((err) => {
+            console.error('[Search] Cricket API error:', err.message, err.response?.status);
+            return { data: [] };
+          })
       ]);
+
+      console.log('[Search] Football matches:', footballRes.data?.length || 0);
+      console.log('[Search] Cricket matches:', cricketRes.data?.length || 0);
 
       const combined = [
         ...footballRes.data,
@@ -75,9 +87,10 @@ const SearchBar = () => {
         index === self.findIndex(m => m.id === match.id)
       );
 
+      console.log('[Search] Total unique matches:', unique.length);
       setAllMatches(unique);
     } catch (error) {
-      console.error('Error fetching matches:', error);
+      console.error('[Search] Error fetching matches:', error);
     } finally {
       setLoading(false);
     }
