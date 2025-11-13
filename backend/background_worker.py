@@ -197,10 +197,7 @@ class OddsWorker:
             
             logger.info(f"📊 Total: {len(all_matches)} matches from {api_calls} API calls")
             
-            # Add FunBet odds (5% markup above market best)
-            all_matches = add_funbet_odds_to_matches(all_matches)
-            
-            # Store in database
+            # Store in database (FunBet odds will be calculated on-the-fly in frontend)
             # Clear existing cache and insert fresh data
             await self.db.odds_cache.delete_many({})
             
