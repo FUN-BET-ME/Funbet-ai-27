@@ -388,10 +388,10 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
     return aiPredictions.some(pred => pred.match_id === matchId);
   };
 
-  // Update oddsData when preloadedOdds changes
+  // Update oddsData when preloadedOdds changes (including when it becomes empty!)
   useEffect(() => {
-    if (preloadedOdds && preloadedOdds.length > 0) {
-      console.log('[OddsTable] Using preloaded odds:', preloadedOdds.length);
+    if (preloadedOdds !== null) {
+      console.log('[OddsTable] Using preloaded odds:', preloadedOdds.length, 'matches');
       setOddsData(preloadedOdds);
       setLoading(false);
     }
