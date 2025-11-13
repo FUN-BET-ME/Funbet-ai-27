@@ -9,11 +9,14 @@ const PredictionsNew = () => {
   const [filter, setFilter] = useState('all');
   const [category, setCategory] = useState('high_confidence');
   const [stats, setStats] = useState({});
+  const [accuracyStats, setAccuracyStats] = useState({});
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [viewMode, setViewMode] = useState('upcoming'); // upcoming, correct, incorrect, pending
 
   useEffect(() => {
     fetchPredictions();
-  }, [filter]);
+    fetchAccuracyStats();
+  }, [filter, viewMode]);
 
   const fetchPredictions = async () => {
     setLoading(true);
