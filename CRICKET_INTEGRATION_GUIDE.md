@@ -70,10 +70,10 @@ cd /app/backend && python test_cricket_api.py
 
 ```bash
 # Test live cricket matches
-curl "https://funbet-odds.preview.emergentagent.com/api/cricket/live" | jq '.'
+curl "https://funbet-ai.preview.emergentagent.com/api/cricket/live" | jq '.'
 
 # Test recent cricket results
-curl "https://funbet-odds.preview.emergentagent.com/api/cricket/recent" | jq '.'
+curl "https://funbet-ai.preview.emergentagent.com/api/cricket/recent" | jq '.'
 ```
 
 **Expected Response:**
