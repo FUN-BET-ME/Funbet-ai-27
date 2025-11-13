@@ -18,7 +18,6 @@ const Layout = ({ children }) => {
     { name: 'Cricket', path: '/live-odds?sport=cricket', canHighlight: false },
     { name: 'Predictions', path: '/predictions', canHighlight: true },
     { name: 'Stats', path: '/stats', canHighlight: true },
-    { name: 'News', path: '/news', canHighlight: true },
     { name: 'About', path: '/about', canHighlight: true }
   ];
 
