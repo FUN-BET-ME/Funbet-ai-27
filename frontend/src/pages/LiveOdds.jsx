@@ -1083,12 +1083,15 @@ const LiveOdds = () => {
                           {/* FunBet.ME row - Calculate dynamically (5% above best market odds) */}
                           {(() => {
                             // Calculate FunBet odds: 5% above best market odds
-                            const funbetHomeOdds = homeBest ? (homeBest.odds * 1.05).toFixed(2) : null;
-                            const funbetAwayOdds = awayBest ? (awayBest.odds * 1.05).toFixed(2) : null;
-                            const funbetDrawOdds = showThreeOutcomes && drawBest ? (drawBest.odds * 1.05).toFixed(2) : null;
+                            const funbetHomeOdds = homeBest?.odds ? (homeBest.odds * 1.05).toFixed(2) : null;
+                            const funbetAwayOdds = awayBest?.odds ? (awayBest.odds * 1.05).toFixed(2) : null;
+                            const funbetDrawOdds = showThreeOutcomes && drawBest?.odds ? (drawBest.odds * 1.05).toFixed(2) : null;
                             
-                            // Only show if we have odds
-                            if (!funbetHomeOdds || !funbetAwayOdds) return null;
+                            // Debug logging
+                            if (!funbetHomeOdds || !funbetAwayOdds) {
+                              console.log('FunBet not showing:', { homeBest, awayBest, funbetHomeOdds, funbetAwayOdds });
+                              return null;
+                            }
                             
                             return (
                               <tr className="border-b-2 border-[#FFD700] bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10">
