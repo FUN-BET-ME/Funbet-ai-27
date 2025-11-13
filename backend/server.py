@@ -117,6 +117,21 @@ async def get_espn_live_scores():
         logger.error(f"Error fetching ESPN scores: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.get("/scores/live")
+async def get_live_scores_realtime(force_refresh: bool = False):
+    """Get real-time live scores from all sources (cached, updates every 30s)"""
+    try:
+        from live_scores_service import live_scores_service
+        
+        scores_data = await live_scores_service.get_all_live_scores(force_refresh=force_refresh)
+        
+        logger.info(f"✅ Live Scores: {scores_data['live_count']} live, {scores_data['completed_count']} completed")
+        return scores_data
+        
+    except Exception as e:
+        logger.error(f"Error fetching live scores: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/odds/live-with-scores")
 async def get_live_matches_with_scores():
     """Get all currently live matches with ESPN scores merged"""
