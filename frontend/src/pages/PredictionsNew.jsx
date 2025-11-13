@@ -232,28 +232,48 @@ const PredictionsNew = () => {
           </button>
         </div>
 
-        {/* Category Filters */}
-        <div className="flex items-center justify-center gap-3 mb-8">
-          {[
-            { key: 'high_confidence', label: '⭐ High Confidence', icon: Star },
-            { key: 'medium_confidence', label: '🎯 Medium Confidence', icon: Target },
-            { key: 'value_bets', label: '💎 Value Bets', icon: Zap },
-            { key: 'all', label: '📊 All Predictions', icon: TrendingUp }
-          ].map(({ key, label, icon: Icon }) => (
+        {/* View Mode Indicator */}
+        <div className="text-center mb-4">
+          <h2 className="text-2xl font-bold text-white">
+            {viewMode === 'correct' && '✅ Correct Predictions'}
+            {viewMode === 'incorrect' && '❌ Incorrect Predictions'}
+            {viewMode === 'pending' && '⏱️ Pending Predictions'}
+            {viewMode === 'upcoming' && '🎯 Upcoming Matches'}
+          </h2>
+          {viewMode !== 'upcoming' && (
             <button
-              key={key}
-              onClick={() => setCategory(key)}
-              className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-                category === key
-                  ? 'bg-[#FFD700] text-[#2E004F]'
-                  : 'bg-purple-900/30 text-gray-300 hover:bg-purple-800/50'
-              }`}
+              onClick={() => setViewMode('upcoming')}
+              className="mt-2 text-[#FFD700] hover:text-yellow-400 text-sm"
             >
-              <Icon className="w-4 h-4" />
-              <span className="hidden sm:inline">{label}</span>
+              ← Back to Upcoming Predictions
             </button>
-          ))}
+          )}
         </div>
+
+        {/* Category Filters - Only show for upcoming */}
+        {viewMode === 'upcoming' && (
+          <div className="flex items-center justify-center gap-3 mb-8">
+            {[
+              { key: 'high_confidence', label: '⭐ High Confidence', icon: Star },
+              { key: 'medium_confidence', label: '🎯 Medium Confidence', icon: Target },
+              { key: 'value_bets', label: '💎 Value Bets', icon: Zap },
+              { key: 'all', label: '📊 All Predictions', icon: TrendingUp }
+            ].map(({ key, label, icon: Icon }) => (
+              <button
+                key={key}
+                onClick={() => setCategory(key)}
+                className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+                  category === key
+                    ? 'bg-[#FFD700] text-[#2E004F]'
+                    : 'bg-purple-900/30 text-gray-300 hover:bg-purple-800/50'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="hidden sm:inline">{label}</span>
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Loading State */}
         {loading && (
