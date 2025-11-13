@@ -54,29 +54,49 @@ const LiveOdds = () => {
 
   const sports = ['all', 'football', 'cricket'];
   
-  // League definitions for sub-filters
+  // League definitions for sub-filters (ALL 24 football + 8 cricket leagues)
   const footballLeagues = {
-    'all': 'All Leagues',
-    'soccer_epl': 'Premier League',
-    'soccer_spain_la_liga': 'La Liga',
-    'soccer_germany_bundesliga': 'Bundesliga',
-    'soccer_italy_serie_a': 'Serie A',
-    'soccer_france_ligue_one': 'Ligue 1',
-    'soccer_uefa_champs_league': 'Champions League',
-    'soccer_uefa_europa_league': 'Europa League',
-    'soccer_efl_champ': 'Championship',
-    'soccer_brazil_campeonato': 'Brasileirão',
-    'soccer_usa_mls': 'MLS',
+    'all': '🏆 All Football Leagues',
+    // UEFA
+    'soccer_uefa_champs_league': '🏆 Champions League',
+    'soccer_uefa_europa_league': '🏆 Europa League',
+    'soccer_uefa_europa_conference_league': '🏆 Conference League',
+    // Top 5 Leagues
+    'soccer_epl': '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League',
+    'soccer_spain_la_liga': '🇪🇸 La Liga',
+    'soccer_germany_bundesliga': '🇩🇪 Bundesliga',
+    'soccer_italy_serie_a': '🇮🇹 Serie A',
+    'soccer_france_ligue_one': '🇫🇷 Ligue 1',
+    // Second Divisions
+    'soccer_efl_champ': '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship',
+    'soccer_spain_segunda_division': '🇪🇸 Segunda División',
+    'soccer_germany_bundesliga2': '🇩🇪 2. Bundesliga',
+    'soccer_italy_serie_b': '🇮🇹 Serie B',
+    'soccer_france_ligue_two': '🇫🇷 Ligue 2',
+    'soccer_england_league1': '🏴󠁧󠁢󠁥󠁮󠁧󠁿 League One',
+    'soccer_england_league2': '🏴󠁧󠁢󠁥󠁮󠁧󠁿 League Two',
+    // Other Leagues
+    'soccer_portugal_primeira_liga': '🇵🇹 Primeira Liga',
+    'soccer_netherlands_eredivisie': '🇳🇱 Eredivisie',
+    'soccer_brazil_campeonato': '🇧🇷 Brasileirão',
+    'soccer_argentina_primera_division': '🇦🇷 Primera División',
+    'soccer_mexico_ligamx': '🇲🇽 Liga MX',
+    'soccer_usa_mls': '🇺🇸 MLS',
+    'soccer_australia_aleague': '🇦🇺 A-League',
+    'soccer_conmebol_libertadores': '🏆 Copa Libertadores',
+    'soccer_conmebol_copa_sudamericana': '🏆 Copa Sudamericana',
   };
   
   const cricketLeagues = {
-    'all': 'All Leagues',
-    'cricket_ipl': 'IPL',
-    'cricket_international_t20': 'T20 International',
-    'cricket_odi': 'ODI',
-    'cricket_test_match': 'Test Matches',
-    'cricket_big_bash': 'Big Bash',
-    'cricket_psl': 'PSL',
+    'all': '🏏 All Cricket',
+    'cricket_ipl': '🇮🇳 IPL',
+    'cricket_international_t20': '🌍 T20 International',
+    'cricket_odi': '🌍 ODI',
+    'cricket_test_match': '🌍 Test Matches',
+    'cricket_big_bash': '🇦🇺 Big Bash League',
+    'cricket_caribbean_premier_league': '🏝️ Caribbean Premier League',
+    'cricket_psl': '🇵🇰 Pakistan Super League',
+    'cricket_icc_world_cup': '🏆 ICC World Cup',
   };
 
   const sportEmojis = {
