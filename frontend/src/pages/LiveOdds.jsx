@@ -250,13 +250,36 @@ const LiveOdds = () => {
       const responseData = response.data || {};
       const newMatches = responseData.matches || [];
       
-      // Merge with existing if loading more
+      // Smart upsert: merge new data with existing without clearing UI
       if (loadMore) {
+        // Loading more: append to existing
         setAllOdds(prev => [...prev, ...newMatches]);
         console.log('➕ Appended matches, new total:', allOdds.length + newMatches.length);
+      } else if (allOdds.length > 0 && !loading) {
+        // Background refresh: intelligently merge without disruption
+        setAllOdds(prev => {
+          const merged = [...prev];
+          const existingIds = new Set(prev.map(m => m.id));
+          
+          // Update existing matches and add new ones
+          newMatches.forEach(newMatch => {
+            const existingIndex = merged.findIndex(m => m.id === newMatch.id);
+            if (existingIndex >= 0) {
+              // Update existing match (odds may have changed)
+              merged[existingIndex] = newMatch;
+            } else if (!existingIds.has(newMatch.id)) {
+              // Add new match
+              merged.push(newMatch);
+            }
+          });
+          
+          console.log('🔄 Smart merge: Updated/added matches, total:', merged.length);
+          return merged;
+        });
       } else {
+        // Initial load or explicit refresh: replace all
         setAllOdds(newMatches);
-        console.log('🔄 Replaced all matches, new total:', newMatches.length);
+        console.log('🔄 Initial load, total:', newMatches.length);
       }
       
       // Check if there are more matches (if we got full limit, there might be more)
