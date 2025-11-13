@@ -600,12 +600,12 @@ const LiveOdds = () => {
                 </p>
               </div>
             ) : (
-              <>
-                {filteredOddsByLeague.filter(match => match.bookmakers && match.bookmakers.length > 0).map((match) => {
-                  // Use filteredOddsByLeague directly in map
-                  const homeTeam = match.home_team;
-                  const awayTeam = match.away_team;
-                  const league = match.sport_title;
+              <div key={`matches-${leagueFilter}-${filteredOddsByLeague.length}`}>
+                {(() => {
+                  // Filter by bookmakers only (league filtering done via useMemo)
+                  const filteredMatches = filteredOddsByLeague.filter(match => {
+                    return match.bookmakers && match.bookmakers.length > 0;
+                  });
                   
                   // Show skeleton loaders while loading
                   if (loading) {
