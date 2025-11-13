@@ -64,7 +64,7 @@ const Home = () => {
     {
       icon: TrendingUp,
       title: 'Live Odds Comparison',
-      description: 'Track real-time odds from multiple bookmakers across football, cricket, basketball, and tennis.',
+      description: 'Track real-time odds from 30+ bookmakers across football and cricket.',
       link: '/live-odds'
     },
     {
