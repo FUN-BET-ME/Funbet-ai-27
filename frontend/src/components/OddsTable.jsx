@@ -405,8 +405,8 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
   }, [externalLoading]);
 
   useEffect(() => {
-    // Skip fetching if we have preloaded data
-    if (preloadedOdds && preloadedOdds.length > 0) {
+    // Skip fetching if we have preloaded data (even if empty array)
+    if (preloadedOdds !== null) {
       console.log('[OddsTable] Skipping fetch - using preloaded data:', preloadedOdds.length, 'matches');
       fetchAIPredictions(); // Still fetch predictions
       return;
@@ -414,7 +414,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
     
     console.log('[OddsTable] Fetching own data - no preloaded data');
     fetchOdds();
-    fetchAIPredictions(); // Fetch AI predictions on mount
+    fetchAIPredictions(); // Fetch API predictions on mount
     // Auto-refresh every 2 minutes for live odds and scores
     const interval = setInterval(() => {
       fetchOdds();
