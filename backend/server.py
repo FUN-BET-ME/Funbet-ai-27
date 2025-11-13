@@ -32,7 +32,8 @@ async def lifespan(app: FastAPI):
     """Startup and shutdown"""
     logger.info("🚀 Starting FunBet.ai...")
     await connect_to_mongo()
-    await start_worker()  # Start background worker
+    # Start background worker asynchronously to not block startup
+    asyncio.create_task(start_worker())
     logger.info("✅ Application started")
     yield
     logger.info("🛑 Shutting down...")
