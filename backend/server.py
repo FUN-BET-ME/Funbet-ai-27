@@ -147,7 +147,7 @@ async def get_live_matches_with_scores():
                 '$gte': two_hours_ago.isoformat(),
                 '$lte': now.isoformat()
             }
-        }, {'_id': 0}).to_list(length=None)
+        }, {'_id': 0}).to_list(length=1000)
         
         # Get all live scores
         scores_data = await live_scores_service.get_all_live_scores()
