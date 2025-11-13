@@ -634,11 +634,9 @@ const Predictions = () => {
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {aiPredictions.map((prediction, index) => (
-                  <a 
+                  <Link 
                     key={prediction.match_id || index} 
-                    href="https://funbet.me" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
+                    to={`/match/${prediction.match_id}`}
                     className="bg-[#2E004F]/50 rounded-lg p-4 border border-[#FFD700]/10 hover:border-[#FFD700]/50 hover:shadow-lg hover:shadow-[#FFD700]/20 transition-all cursor-pointer block group"
                   >
                     {/* Match Header */}
