@@ -698,6 +698,75 @@ async def login(credentials: UserLogin):
     access_token = create_access_token(data={"sub": credentials.email})
     return Token(access_token=access_token, token_type="bearer")
 
+# ==========================================
+# NEWS ENDPOINT (Sample Data)
+# ==========================================
+
+@api_router.get("/news")
+async def get_news(q: str = Query(None), pageSize: int = Query(20, le=100)):
+    """Get sports news - Returns sample data for Football & Cricket"""
+    try:
+        sample_articles = [
+            {
+                "title": "EPL: Manchester City defeats Arsenal in thrilling match",
+                "description": "Manchester City secured a 2-1 victory over Arsenal in a Premier League clash.",
+                "url": "https://example.com/news/1",
+                "urlToImage": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "source": {"name": "Sports Daily"},
+                "content": "Full match report..."
+            },
+            {
+                "title": "Cricket World Cup: India advances to finals",
+                "description": "India secured their spot in the ICC Cricket World Cup finals.",
+                "url": "https://example.com/news/2",
+                "urlToImage": "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "source": {"name": "Cricket News"},
+                "content": "Match highlights..."
+            },
+            {
+                "title": "La Liga: Real Madrid extends winning streak",
+                "description": "Real Madrid continues their impressive form with a 3-0 win.",
+                "url": "https://example.com/news/3",
+                "urlToImage": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "source": {"name": "Football Times"},
+                "content": "Match summary..."
+            },
+            {
+                "title": "IPL 2025: Mumbai Indians sign star player",
+                "description": "Mumbai Indians make blockbuster signing ahead of IPL 2025.",
+                "url": "https://example.com/news/4",
+                "urlToImage": "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "source": {"name": "IPL News"},
+                "content": "Transfer news..."
+            },
+            {
+                "title": "Champions League: Bayern Munich reaches quarter-finals",
+                "description": "Bayern Munich advances to Champions League quarter-finals.",
+                "url": "https://example.com/news/5",
+                "urlToImage": "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "source": {"name": "UEFA News"},
+                "content": "Match report..."
+            }
+        ]
+        
+        if q:
+            q_lower = q.lower()
+            filtered = [a for a in sample_articles if q_lower in a['title'].lower() or q_lower in a['description'].lower()]
+            articles = filtered[:pageSize]
+        else:
+            articles = sample_articles[:pageSize]
+        
+        return {"status": "ok", "totalResults": len(articles), "articles": articles}
+        
+    except Exception as e:
+        logger.error(f"Error fetching news: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include router
 app.include_router(api_router)
 
