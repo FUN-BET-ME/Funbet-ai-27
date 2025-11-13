@@ -134,8 +134,10 @@ async def get_live_scores_realtime(force_refresh: bool = False):
 
 @api_router.get("/odds/live-with-scores")
 async def get_live_matches_with_scores():
-    """Get all currently live matches with ESPN scores merged"""
+    """Get all currently live matches with scores merged from multiple sources"""
     try:
+        from live_scores_service import live_scores_service
+        
         now = datetime.now(timezone.utc)
         two_hours_ago = now - timedelta(hours=2)
         
@@ -147,23 +149,30 @@ async def get_live_matches_with_scores():
             }
         }, {'_id': 0}).to_list(length=None)
         
-        # Fetch ESPN scores
-        espn_scores = await fetch_all_espn_scores()
+        # Get all live scores
+        scores_data = await live_scores_service.get_all_live_scores()
+        all_scores = scores_data['live_scores'] + scores_data['completed_scores']
         
-        # Merge ESPN scores with odds data
+        # Merge scores with odds data
+        matched_count = 0
         for match in live_matches:
-            matched_score = match_score_to_odds(match, espn_scores)
+            matched_score = await live_scores_service.match_score_to_match(match, all_scores)
             if matched_score:
-                match['scores'] = matched_score.get('scores')
-                match['match_status'] = matched_score.get('match_status')
-                match['is_live'] = matched_score.get('is_live')
-                match['last_update'] = matched_score.get('last_update')
+                match['live_score'] = {
+                    'scores': matched_score.get('scores'),
+                    'match_status': matched_score.get('match_status'),
+                    'is_live': matched_score.get('is_live', False),
+                    'completed': matched_score.get('completed', False),
+                    'last_update': matched_score.get('last_update')
+                }
+                matched_count += 1
         
-        logger.info(f"✅ Live with scores: {len(live_matches)} matches, {len(espn_scores)} ESPN scores")
+        logger.info(f"✅ Live with scores: {len(live_matches)} matches, {matched_count} with scores")
         return {
             'matches': live_matches,
             'count': len(live_matches),
-            'espn_scores_count': len(espn_scores)
+            'scores_matched': matched_count,
+            'scores_available': len(all_scores)
         }
         
     except Exception as e:
