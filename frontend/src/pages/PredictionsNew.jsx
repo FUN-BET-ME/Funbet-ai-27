@@ -66,6 +66,12 @@ const PredictionsNew = () => {
   const getCategoryPredictions = () => {
     if (!predictions.all_predictions) return [];
     
+    // If viewing by status (correct/incorrect/pending), show all
+    if (viewMode !== 'upcoming') {
+      return predictions.all_predictions || [];
+    }
+    
+    // For upcoming, filter by category
     switch(category) {
       case 'high_confidence':
         return predictions.high_confidence || [];
