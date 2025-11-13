@@ -814,9 +814,13 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           outcomeNames.push(match.away_team);
                           
                           // Calculate best odds for each outcome by matching team names
+                          // EXCLUDE FunBet from best odds calculation (FunBet is always 5% higher)
                           outcomeNames.forEach(targetName => {
                             let maxOdds = 0;
                             uniqueBookmakers.forEach(bookmaker => {
+                              // Skip FunBet when calculating best market odds
+                              if (bookmaker.key === 'funbet') return;
+                              
                               const outcomes = bookmaker.markets?.[0]?.outcomes || [];
                               
                               // Find outcome by matching name
