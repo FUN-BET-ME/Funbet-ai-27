@@ -22,6 +22,7 @@ from auth import (
     get_current_user, require_auth
 )
 from ai_predictions import generate_ai_predictions
+from espn_scores_service import fetch_all_espn_scores, match_score_to_odds
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
