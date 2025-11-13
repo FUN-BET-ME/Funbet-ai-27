@@ -119,59 +119,61 @@ const PredictionsNew = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <button
             onClick={() => setViewMode('correct')}
-            className={`bg-green-900/40 border-2 rounded-lg p-4 text-left transition-all hover:scale-105 ${
-              viewMode === 'correct' ? 'border-green-400 shadow-lg shadow-green-500/20' : 'border-green-500/20'
+            className={`bg-gradient-to-br from-slate-800 to-slate-900 border-2 rounded-lg p-4 text-left transition-all hover:scale-105 hover:shadow-xl ${
+              viewMode === 'correct' ? 'border-green-400 shadow-lg shadow-green-500/30 ring-2 ring-green-400/20' : 'border-slate-700 hover:border-green-500/50'
             }`}
           >
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-xl">✓</span>
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/50">
+                <span className="text-white text-xl font-bold">✓</span>
               </div>
-              <span className="text-gray-300 text-sm font-medium">Correct</span>
+              <span className="text-gray-200 text-sm font-semibold">Correct</span>
             </div>
             <p className="text-3xl font-bold text-green-400">{accuracyStats.correct || 0}</p>
-            <p className="text-xs text-gray-400 mt-1">Winning predictions</p>
+            <p className="text-xs text-gray-500 mt-1">Winning predictions</p>
           </button>
 
           <button
             onClick={() => setViewMode('incorrect')}
-            className={`bg-red-900/40 border-2 rounded-lg p-4 text-left transition-all hover:scale-105 ${
-              viewMode === 'incorrect' ? 'border-red-400 shadow-lg shadow-red-500/20' : 'border-red-500/20'
+            className={`bg-gradient-to-br from-slate-800 to-slate-900 border-2 rounded-lg p-4 text-left transition-all hover:scale-105 hover:shadow-xl ${
+              viewMode === 'incorrect' ? 'border-red-400 shadow-lg shadow-red-500/30 ring-2 ring-red-400/20' : 'border-slate-700 hover:border-red-500/50'
             }`}
           >
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-xl">✗</span>
+              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center shadow-lg shadow-red-500/50">
+                <span className="text-white text-xl font-bold">✗</span>
               </div>
-              <span className="text-gray-300 text-sm font-medium">Incorrect</span>
+              <span className="text-gray-200 text-sm font-semibold">Incorrect</span>
             </div>
             <p className="text-3xl font-bold text-red-400">{accuracyStats.incorrect || 0}</p>
-            <p className="text-xs text-gray-400 mt-1">Missed predictions</p>
+            <p className="text-xs text-gray-500 mt-1">Missed predictions</p>
           </button>
 
           <button
             onClick={() => setViewMode('pending')}
-            className={`bg-yellow-900/40 border-2 rounded-lg p-4 text-left transition-all hover:scale-105 ${
-              viewMode === 'pending' ? 'border-yellow-400 shadow-lg shadow-yellow-500/20' : 'border-yellow-500/20'
+            className={`bg-gradient-to-br from-slate-800 to-slate-900 border-2 rounded-lg p-4 text-left transition-all hover:scale-105 hover:shadow-xl ${
+              viewMode === 'pending' ? 'border-[#FFD700] shadow-lg shadow-yellow-500/30 ring-2 ring-[#FFD700]/20' : 'border-slate-700 hover:border-yellow-500/50'
             }`}
           >
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                <Clock className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-[#FFD700] rounded-full flex items-center justify-center shadow-lg shadow-yellow-500/50">
+                <Clock className="w-5 h-5 text-slate-900 font-bold" />
               </div>
-              <span className="text-gray-300 text-sm font-medium">Pending</span>
+              <span className="text-gray-200 text-sm font-semibold">Pending</span>
             </div>
-            <p className="text-3xl font-bold text-yellow-400">{accuracyStats.pending || 0}</p>
-            <p className="text-xs text-gray-400 mt-1">Awaiting results</p>
+            <p className="text-3xl font-bold text-[#FFD700]">{accuracyStats.pending || 0}</p>
+            <p className="text-xs text-gray-500 mt-1">Awaiting results</p>
           </button>
 
-          <div className="bg-purple-900/40 border-2 border-purple-500/20 rounded-lg p-4">
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Target className="w-6 h-6 text-[#FFD700]" />
-              <span className="text-gray-300 text-sm font-medium">Accuracy</span>
+              <div className="w-8 h-8 bg-[#FFD700] rounded-full flex items-center justify-center shadow-lg shadow-yellow-500/50">
+                <Target className="w-5 h-5 text-slate-900" />
+              </div>
+              <span className="text-gray-200 text-sm font-semibold">Accuracy</span>
             </div>
             <p className="text-3xl font-bold text-[#FFD700]">{accuracyStats.accuracy || 0}%</p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               {accuracyStats.completed || 0} completed games
             </p>
           </div>
