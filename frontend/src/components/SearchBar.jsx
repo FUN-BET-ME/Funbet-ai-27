@@ -278,6 +278,18 @@ const SearchBar = () => {
                   </Link>
                 ))}
               </div>
+            ) : allMatches.length === 0 && !loading ? (
+              <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                <Search className="w-12 h-12 mx-auto mb-2 opacity-30" />
+                <p className="font-medium mb-1 text-red-500">Unable to load matches</p>
+                <p className="text-sm">Please try again or check your connection</p>
+                <button
+                  onClick={fetchMatches}
+                  className="mt-3 px-4 py-2 bg-[#FFD700] text-[#2E004F] rounded-lg text-sm font-medium hover:bg-[#FFD700]/90"
+                >
+                  Retry
+                </button>
+              </div>
             ) : searchQuery.trim() || selectedSport !== 'all' ? (
               <div className="p-8 text-center text-gray-500 dark:text-gray-400">
                 <Search className="w-12 h-12 mx-auto mb-2 opacity-30" />
