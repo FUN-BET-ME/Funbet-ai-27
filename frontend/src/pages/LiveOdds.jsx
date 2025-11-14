@@ -1103,7 +1103,20 @@ const LiveOdds = () => {
                                 className="flex items-center justify-center gap-1 mx-auto hover:text-[#FFD700] transition-colors"
                                 title="Sort by Home odds (highest to lowest)"
                               >
-                                <span>{homeTeam}</span>
+                                <div className="flex items-center gap-2">
+                                  <span>{homeTeam}</span>
+                                  {(() => {
+                                    const matchIQ = iqScores[match.id];
+                                    if (matchIQ && matchIQ.home_iq) {
+                                      return (
+                                        <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-purple-600/40 text-[#FFD700]">
+                                          IQ {matchIQ.home_iq}
+                                        </span>
+                                      );
+                                    }
+                                    return null;
+                                  })()}
+                                </div>
                                 {oddsSortBy[matchId] === 'home' ? (
                                   <ChevronDown className="w-4 h-4 text-[#FFD700]" />
                                 ) : (
