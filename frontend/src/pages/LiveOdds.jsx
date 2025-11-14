@@ -394,8 +394,18 @@ const LiveOdds = () => {
           console.log('🔎 Filtered to cricket:', filteredData.length, 'matches');
         }
         
-        setAllOdds(filteredData);
+        // CRITICAL FIX: Only update if we have data, otherwise keep existing data
+        if (filteredData.length > 0) {
+          setAllOdds(filteredData);
+          console.log('✅ Updated with', filteredData.length, 'in-play matches');
+        } else {
+          console.log('⚠️ No in-play matches found, keeping existing data');
+        }
         setLoading(false);
+      }).catch(error => {
+        console.error('❌ Error fetching in-play odds:', error);
+        setLoading(false);
+        // Keep existing data on error
       });
     } else {
       // Fetch upcoming matches (default)
