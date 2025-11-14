@@ -979,11 +979,11 @@ backend:
 frontend:
   - task: "FunBet IQ Sorting on Predictions Page"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/pages/FunBetIQ.jsx"
-    stuck_count: 0
+    stuck_count: 1
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "user"
@@ -994,6 +994,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "✅ FIXED - Enhanced sorting logic in FunBetIQ.jsx (lines 671-685). PRIMARY SORT: Confidence level (High=3 > Medium=2 > Low=1) descending. SECONDARY SORT: IQ difference (larger difference = stronger prediction) descending. Added defensive code with explicit variable assignment (aConfidence, bConfidence) and proper null handling. Added debug logging to show confidence distribution on data fetch. This ensures HIGH confidence predictions always appear at top of list, followed by MEDIUM, then LOW. Within same confidence level, predictions with larger IQ differences appear first (more decisive matches). Ready for testing."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL SORTING ISSUE CONFIRMED - Backend API /api/funbet-iq/matches is NOT returning matches sorted by confidence level. Testing shows: First Low confidence at position 1, First High confidence at position 5, First Medium confidence at position 9. This means LOW confidence matches appear BEFORE High confidence matches, which is incorrect. The issue is in the BACKEND API - it's not applying the confidence-based sorting before returning data to frontend. Frontend sorting logic may be correct, but backend is providing unsorted data. Root cause: Backend endpoint needs to implement confidence-level sorting (High → Medium → Low) in the database query or post-processing before returning matches to frontend."
 
   - task: "IQ Scores Display on LiveOdds Page"
     implemented: true
