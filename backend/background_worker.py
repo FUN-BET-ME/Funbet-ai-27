@@ -324,16 +324,7 @@ class OddsWorker:
             replace_existing=True
         )
         
-        # Job 3: Cleanup old data daily at 01:00
-        self.scheduler.add_job(
-            self.cleanup_old_data,
-            trigger=CronTrigger(hour=1, minute=0, timezone='UTC'),
-            id='cleanup_old',
-            name='Cleanup old matches',
-            replace_existing=True
-        )
-        
-        # Job 4: Fetch live scores every 5 minutes (for in-play matches)
+        # Job 3: Fetch live scores every 5 minutes (for in-play matches)
         self.scheduler.add_job(
             self.fetch_live_scores_job,
             trigger=IntervalTrigger(minutes=5),
