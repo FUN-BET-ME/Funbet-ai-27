@@ -991,8 +991,19 @@ async def get_funbet_iq_matches(
             else:
                 query['sport_key'] = {'$regex': sport_pattern, '$options': 'i'}
         
-        # Fetch IQ scores
-        iq_matches = await iq_scores_collection.find(query).limit(limit).to_list(length=limit)
+        # Fetch IQ scores and sort by confidence (High > Medium > Low)
+        # MongoDB can't sort by mapped values, so we fetch and sort in Python
+        iq_matches = await iq_scores_collection.find(query).to_list(length=None)
+        
+        # Sort by confidence level (High=3, Medium=2, Low=1) then by IQ difference
+        confidence_order = {'High': 3, 'Medium': 2, 'Low': 1}
+        iq_matches.sort(key=lambda m: (
+            -confidence_order.get(m.get('confidence', 'Low'), 0),  # Primary: Confidence descending
+            -abs(m.get('home_iq', 0) - m.get('away_iq', 0))  # Secondary: IQ diff descending
+        ))
+        
+        # Apply limit after sorting
+        iq_matches = iq_matches[:limit]
         
         # Convert ObjectId to string
         for match in iq_matches:
