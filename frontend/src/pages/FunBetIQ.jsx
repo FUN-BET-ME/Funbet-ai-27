@@ -58,18 +58,48 @@ const FunBetIQ = () => {
     }
   }, [activeTab, historyFilter, historySortBy]);
 
-  // Fetch AI predictions with timeout
+  // Fetch FunBet IQ predictions from new API
   const fetchAIPredictions = async () => {
     setLoadingPredictions(true);
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/ai/predictions`, {
-        params: { limit: 20 },
-        timeout: 5000 // 5 second timeout
+      
+      // Determine sport filter
+      const sportParam = filter === 'football' ? 'football' : 
+                        filter === 'cricket' ? 'cricket' : null;
+      
+      const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/matches`, {
+        params: { 
+          sport: sportParam,
+          limit: 50 
+        },
+        timeout: 10000 // 10 second timeout
       });
-      setAiPredictions(response.data || []);
+      
+      // Transform IQ data to match card format
+      const iqMatches = (response.data?.matches || []).map(match => ({
+        match_id: match.match_id,
+        home_team: match.home_team,
+        away_team: match.away_team,
+        sport_key: match.sport_key,
+        sport_title: match.sport_key?.replace(/_/g, ' ').toUpperCase() || 'Unknown',
+        home_iq: match.home_iq,
+        away_iq: match.away_iq,
+        confidence: match.confidence,
+        verdict: match.verdict,
+        home_components: match.home_components,
+        away_components: match.away_components,
+        home_trend: match.home_trend,
+        away_trend: match.away_trend,
+        predicted_team: match.home_iq > match.away_iq ? match.home_team : match.away_team,
+        win_probability: Math.round(Math.max(match.home_iq, match.away_iq)),
+        funbet_odds: (100 / Math.max(match.home_iq, match.away_iq) * 1.05).toFixed(2)
+      }));
+      
+      setAiPredictions(iqMatches);
+      console.log('✅ Fetched', iqMatches.length, 'FunBet IQ matches');
     } catch (error) {
-      console.error('Error fetching AI predictions:', error);
+      console.error('Error fetching FunBet IQ:', error);
       setAiPredictions([]);
     } finally {
       setLoadingPredictions(false);
