@@ -297,8 +297,14 @@ const LiveOdds = () => {
       } else {
         // Initial load or explicit refresh: replace all
         console.log('🔄 Full replace mode: Setting', newMatches.length, 'matches (was:', allOdds.length, ')');
-        setAllOdds(newMatches);
-        console.log('✅ Replace complete');
+        
+        // CRITICAL FIX: Only replace if we have new data OR it's initial load
+        if (newMatches.length > 0 || allOdds.length === 0) {
+          setAllOdds(newMatches);
+          console.log('✅ Replace complete');
+        } else {
+          console.log('⚠️ API returned no matches, keeping existing', allOdds.length, 'matches');
+        }
       }
       
       // Check if there are more matches (if we got full limit, there might be more)
