@@ -1105,6 +1105,32 @@ test_plan:
 
 agent_communication:
   - agent: "testing"
+    message: "🧪 COMPREHENSIVE BACKEND API TESTING COMPLETED - CRITICAL ISSUE IDENTIFIED
+
+    **Testing Results Summary:**
+    ✅ Odds API - Upcoming Matches: WORKING (200 OK, 2.26s response, 20 matches returned)
+    ✅ FunBet IQ API: WORKING (200 OK, 0.04s response, proper data structure)
+    ❌ FunBet IQ Sorting: CRITICAL ISSUE (backend not sorting by confidence level)
+    ✅ Live Scores API: WORKING (200 OK, 0.04s response, proper structure)
+
+    **Critical Finding - FunBet IQ Sorting Bug:**
+    - Backend API /api/funbet-iq/matches returns unsorted data
+    - Low confidence matches appear at positions 1-4, High confidence at positions 5, 10, 16, 20
+    - Expected order: High → Medium → Low, Actual order: Mixed/Random
+    - Root cause: Backend endpoint lacks confidence-level sorting in database query
+    - Impact: Users see low-confidence predictions first instead of high-confidence ones
+
+    **All Other APIs Verified Working:**
+    - Odds API returns proper match structure with bookmakers data
+    - Live Scores API returns correct live_scores and completed_scores arrays
+    - FunBet IQ API provides complete IQ data (confidence, home_iq, away_iq)
+    - Response times excellent (0.04-2.26s)
+    - All endpoints return proper HTTP 200 status codes
+
+    **Action Required:**
+    Main agent needs to fix backend sorting in /api/funbet-iq/matches endpoint to sort by confidence level (High=3, Medium=2, Low=1) before returning data to frontend."
+  
+  - agent: "testing"
     message: "🚀 FUNBET.AI SCALABILITY IMPLEMENTATION TESTING COMPLETED - SYSTEM OPERATIONAL
     
     **Comprehensive Backend Testing Results:**
