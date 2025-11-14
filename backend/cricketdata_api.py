@@ -271,3 +271,166 @@ async def get_cricket_recent_results() -> List[Dict]:
     
     logger.info(f"CricketData: {len(completed)} completed matches found")
     return completed
+
+
+
+async def fetch_team_recent_matches(team_name: str, limit: int = 10) -> List[Dict]:
+    """
+    Fetch recent matches for a specific cricket team
+    
+    Args:
+        team_name: Team name to search for
+        limit: Number of recent matches
+    
+    Returns:
+        List of recent match results
+    """
+    try:
+        matches = await fetch_current_matches()
+        
+        # Filter matches involving the team
+        team_matches = []
+        for match in matches:
+            teams = match.get('teams', [])
+            if any(team_name.lower() in team.lower() for team in teams):
+                team_matches.append(match)
+        
+        # Sort by date (most recent first)
+        team_matches.sort(
+            key=lambda x: x.get('dateTimeGMT', x.get('date', '')),
+            reverse=True
+        )
+        
+        logger.info(f"CricketData: Found {len(team_matches[:limit])} matches for {team_name}")
+        return team_matches[:limit]
+        
+    except Exception as e:
+        logger.error(f"CricketData: Error fetching team matches: {e}")
+        return []
+
+
+async def update_cricket_team_stats(team_name: str, sport_key: str, db) -> bool:
+    """
+    Update team historical stats in database from CricketData API
+    
+    Args:
+        team_name: Team name
+        sport_key: Sport key (e.g., 'cricket_ipl', 'cricket_international')
+        db: MongoDB database
+    
+    Returns:
+        True if successful
+    """
+    try:
+        # Fetch recent matches
+        recent_matches = await fetch_team_recent_matches(team_name, limit=20)
+        
+        if not recent_matches:
+            logger.warning(f"No CricketData found for {team_name}")
+            return False
+        
+        # Calculate stats
+        total_games = 0
+        wins = 0
+        draws = 0
+        losses = 0
+        runs_scored = 0
+        runs_conceded = 0
+        home_wins = 0
+        away_wins = 0
+        recent_form = []
+        recent_results = []
+        
+        for match in recent_matches:
+            status = match.get('status', '').lower()
+            teams = match.get('teams', [])
+            scores = match.get('score', [])
+            
+            # Only count completed matches
+            if 'finished' not in status and 'won' not in status:
+                continue
+            
+            # Determine if team won
+            is_team_first = teams[0].lower() == team_name.lower() if len(teams) >= 2 else True
+            
+            # Determine result
+            if team_name.lower() in status and 'won' in status:
+                result = 'W'
+                wins += 1
+                # Assume home if not specified
+                home_wins += 1
+            elif 'won' in status:
+                result = 'L'
+                losses += 1
+            elif 'tie' in status or 'draw' in status:
+                result = 'D'
+                draws += 1
+            else:
+                continue  # Skip if result unclear
+            
+            total_games += 1
+            
+            # Get scores
+            team_runs = 0
+            opponent_runs = 0
+            
+            if len(scores) >= 2:
+                if is_team_first:
+                    team_runs = scores[0].get('r', 0)
+                    opponent_runs = scores[1].get('r', 0)
+                else:
+                    team_runs = scores[1].get('r', 0)
+                    opponent_runs = scores[0].get('r', 0)
+            
+            runs_scored += team_runs
+            runs_conceded += opponent_runs
+            
+            recent_form.append(result)
+            recent_results.append({
+                'result': result,
+                'venue': 'home',  # CricketData doesn't provide venue easily
+                'runs_scored': team_runs,
+                'runs_conceded': opponent_runs,
+                'date': match.get('dateTimeGMT', match.get('date', ''))
+            })
+        
+        if total_games == 0:
+            logger.warning(f"No completed matches found for {team_name}")
+            return False
+        
+        # Save to database
+        team_stats_collection = db['team_historical_stats']
+        
+        await team_stats_collection.update_one(
+            {
+                'team_name': team_name,
+                'sport_key': sport_key
+            },
+            {
+                '$set': {
+                    'team_name': team_name,
+                    'sport_key': sport_key,
+                    'total_games': total_games,
+                    'wins': wins,
+                    'draws': draws,
+                    'losses': losses,
+                    'goals_for': runs_scored,  # Using same field name for consistency
+                    'goals_against': runs_conceded,
+                    'home_wins': home_wins,
+                    'away_wins': away_wins,
+                    'recent_form': recent_form[-10:],
+                    'recent_results': recent_results[-10:],
+                    'last_updated': datetime.now(timezone.utc).isoformat(),
+                    'data_source': 'CricketData'
+                }
+            },
+            upsert=True
+        )
+        
+        logger.info(f"✅ Updated CricketData stats for {team_name}: {wins}W {draws}D {losses}L")
+        
+        return True
+        
+    except Exception as e:
+        logger.error(f"Error updating cricket team stats: {e}")
+        return False
