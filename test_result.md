@@ -1051,10 +1051,40 @@ frontend:
         agent: "main"
         comment: "✅ IMPLEMENTED - Added Turkish league filters to LiveOdds.jsx footballLeagues map (lines 105-106): '🇹🇷 Süper Lig' (soccer_turkey_super_league) and '🇹🇷 TFF 1. Lig' (soccer_turkey_1_lig). Both leagues include Turkish flag emoji as requested. Leagues appear under Football filter alongside other leagues. Filtering logic automatically works via sport_key matching. Turkish matches will display when available in database. Ready for testing."
 
+backend:
+  - task: "Time Filter - Separate Live from Upcoming Matches"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "✅ FIXED - Added time_filter parameter to /api/odds/all-cached endpoint (lines 341, 349-356). NEW PARAMETER: time_filter accepts 'upcoming' (future matches only), 'live' (matches started in last 3 hours), or 'all' (no filter). LOGIC: For 'upcoming', query filters commence_time > now. For 'live', query filters commence_time between (now - 3 hours) and now. This prevents live matches from appearing in upcoming list at the database level. Ready for testing."
+
+frontend:
+  - task: "Time Filter - Separate Live from Upcoming Matches"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/LiveOdds.jsx"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "🚨 USER REPORTED - Live games are showing in 'Upcoming (30 Days)' filter. They should ONLY appear in 'LIVE Now' filter. User provided screenshots showing India vs South Africa live match appearing in all filters."
+      - working: "NA"
+        agent: "main"
+        comment: "✅ FIXED - Added dual-layer filtering. BACKEND: Lines 266-270 pass time_filter=upcoming parameter when fetching for 'live-upcoming' filter. FRONTEND: Lines 847-870 added client-side filtering logic. For 'inplay' filter: only shows matches where commence_time is in past (started) but within 3 hours and not completed. For 'live-upcoming' filter: only shows matches where commence_time > now (future matches). This ensures complete separation between live and upcoming matches. Ready for testing."
+
 test_plan:
   current_focus:
     - "FunBet IQ Sorting on Predictions Page - COMPLETED"
-    - "Turkish Football Leagues Integration"
+    - "Turkish Football Leagues Integration - COMPLETED"
+    - "Time Filter - Separate Live from Upcoming - COMPLETED"
     - "IQ Scores Display on LiveOdds Page"
     - "LiveOdds Filter Data Loss (LIVE Now)"
   stuck_tasks: []
