@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
     { name: 'Home', path: '/', canHighlight: true },
     { name: 'Football', path: '/live-odds?sport=football', canHighlight: false },
     { name: 'Cricket', path: '/live-odds?sport=cricket', canHighlight: false },
-    { name: 'Predictions', path: '/predictions', canHighlight: true },
+    { name: 'FunBet IQ', path: '/funbet-iq', canHighlight: true },
     { name: 'Stats', path: '/stats', canHighlight: true },
     { name: 'About', path: '/about', canHighlight: true }
   ];
