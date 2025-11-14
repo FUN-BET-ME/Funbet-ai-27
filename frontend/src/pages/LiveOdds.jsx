@@ -843,9 +843,29 @@ const LiveOdds = () => {
             ) : (
               <div key={`matches-${leagueFilter}-${filteredOddsByLeague.length}`}>
                 {(() => {
-                  // Filter by bookmakers only (league filtering done via useMemo)
-                  const filteredMatches = filteredOddsByLeague.filter(match => {
-                    return match.bookmakers && match.bookmakers.length > 0;
+                  // CRITICAL FIX: Filter out live matches when showing upcoming
+                  let filteredMatches = filteredOddsByLeague.filter(match => {
+                    // Must have bookmakers
+                    if (!match.bookmakers || match.bookmakers.length === 0) return false;
+                    
+                    // If showing "LIVE Now", only show matches that have started
+                    if (timeFilter === 'inplay') {
+                      const commenceTime = new Date(match.commence_time);
+                      const now = new Date();
+                      const hoursSinceStart = (now - commenceTime) / (1000 * 60 * 60);
+                      // Match is live if it started in last 3 hours and not marked completed
+                      return hoursSinceStart > 0 && hoursSinceStart < 3 && !match.completed;
+                    }
+                    
+                    // If showing "Upcoming", only show matches that haven't started yet
+                    if (timeFilter === 'live-upcoming') {
+                      const commenceTime = new Date(match.commence_time);
+                      const now = new Date();
+                      // Only show matches that start in the future (haven't kicked off yet)
+                      return commenceTime > now;
+                    }
+                    
+                    return true;
                   });
                   
                   // Show skeleton loaders while loading
