@@ -252,6 +252,49 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in cleanup job: {e}")
     
+    async def calculate_funbet_iq_job(self):
+        """
+        Calculate FunBet IQ for all matches every 10 minutes
+        """
+        try:
+            logger.info("🧠 Starting FunBet IQ calculation...")
+            
+            from funbet_iq_engine import calculate_funbet_iq
+            
+            odds_cache_collection = self.db['odds_cache']
+            iq_scores_collection = self.db['funbet_iq_scores']
+            
+            # Get all matches (limit to upcoming/live matches)
+            matches = await odds_cache_collection.find({}).limit(100).to_list(length=100)
+            
+            if not matches:
+                logger.info("⚠️ No matches found for IQ calculation")
+                return
+            
+            calculated_count = 0
+            
+            for match in matches:
+                try:
+                    # Calculate IQ
+                    iq_data = await calculate_funbet_iq(match, self.db)
+                    
+                    if iq_data:
+                        # Save/update in database
+                        await iq_scores_collection.update_one(
+                            {'match_id': match.get('id')},
+                            {'$set': iq_data},
+                            upsert=True
+                        )
+                        calculated_count += 1
+                        
+                except Exception as e:
+                    logger.error(f"Error calculating IQ for {match.get('id')}: {e}")
+            
+            logger.info(f"✅ FunBet IQ calculation complete: {calculated_count}/{len(matches)} matches")
+            
+        except Exception as e:
+            logger.error(f"❌ Error in FunBet IQ calculation job: {e}")
+    
     def start(self):
         """Start the background worker - EFFICIENT VERSION"""
         logger.info("🚀 Starting FunBet.ai background worker (EFFICIENT MODE)...")
