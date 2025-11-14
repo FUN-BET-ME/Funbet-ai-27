@@ -103,6 +103,10 @@ const LiveOdds = () => {
     'soccer_mexico_ligamx': '🇲🇽 Liga MX',
     'soccer_usa_mls': '🇺🇸 MLS',
     'soccer_australia_aleague': '🇦🇺 A-League',
+    // Turkish Leagues
+    'soccer_turkey_super_league': '🇹🇷 Süper Lig',
+    'soccer_turkey_1_lig': '🇹🇷 TFF 1. Lig',
+    // Continental Cups
     'soccer_conmebol_libertadores': '🏆 Copa Libertadores',
     'soccer_conmebol_copa_sudamericana': '🏆 Copa Sudamericana',
   };
