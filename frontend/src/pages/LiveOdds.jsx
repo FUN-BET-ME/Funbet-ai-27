@@ -331,13 +331,18 @@ const LiveOdds = () => {
   const fetchIQScores = useCallback(async () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      console.log('🧠 Fetching IQ scores from:', `${BACKEND_URL}/api/funbet-iq/matches`);
+      
       const sportParam = filter === 'football' ? 'football' : filter === 'cricket' ? 'cricket' : null;
       const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/matches`, {
         params: { 
           sport: sportParam,
           limit: 100 
-        }
+        },
+        timeout: 10000 // 10 second timeout
       });
+      
+      console.log('🧠 IQ API Response:', response.data);
       
       // Convert array to map for quick lookup by match_id
       const iqMap = {};
@@ -346,8 +351,10 @@ const LiveOdds = () => {
       });
       setIqScores(iqMap);
       console.log('✅ Fetched IQ scores for', Object.keys(iqMap).length, 'matches');
+      console.log('📊 Sample IQ data:', iqMap[Object.keys(iqMap)[0]]);
     } catch (error) {
-      console.error('Error fetching IQ scores:', error);
+      console.error('❌ Error fetching IQ scores:', error.message);
+      console.error('❌ Full error:', error);
       setIqScores({});
     }
   }, [filter]);
