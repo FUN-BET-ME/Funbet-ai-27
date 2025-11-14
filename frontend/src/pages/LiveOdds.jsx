@@ -31,7 +31,20 @@ const LiveOdds = () => {
   }, [location.search]);
   const [timeFilter, setTimeFilter] = useState('live-upcoming'); // 'live-upcoming', 'inplay', 'recent-results'
   const [refreshKey, setRefreshKey] = useState(0);
-  const [allOdds, setAllOdds] = useState([]);
+  // CRITICAL FIX: Initialize from localStorage to prevent data loss on refresh
+  const [allOdds, setAllOdds] = useState(() => {
+    try {
+      const cached = localStorage.getItem('liveOdds_cached');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        console.log('📦 Restored', parsed.length, 'matches from localStorage');
+        return parsed;
+      }
+    } catch (e) {
+      console.error('Failed to restore from localStorage:', e);
+    }
+    return [];
+  });
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
