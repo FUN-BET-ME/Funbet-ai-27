@@ -327,6 +327,31 @@ const LiveOdds = () => {
     }
   }, []);
 
+  // Fetch FunBet IQ scores
+  const fetchIQScores = useCallback(async () => {
+    try {
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      const sportParam = filter === 'football' ? 'football' : filter === 'cricket' ? 'cricket' : null;
+      const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/matches`, {
+        params: { 
+          sport: sportParam,
+          limit: 100 
+        }
+      });
+      
+      // Convert array to map for quick lookup by match_id
+      const iqMap = {};
+      (response.data?.matches || []).forEach(match => {
+        iqMap[match.match_id] = match;
+      });
+      setIqScores(iqMap);
+      console.log('✅ Fetched IQ scores for', Object.keys(iqMap).length, 'matches');
+    } catch (error) {
+      console.error('Error fetching IQ scores:', error);
+      setIqScores({});
+    }
+  }, [filter]);
+
   // Check if a match has an AI prediction
   const hasAIPrediction = (matchId) => {
     return aiPredictions.some(pred => pred.match_id === matchId);
