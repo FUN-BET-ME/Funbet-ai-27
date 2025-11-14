@@ -1018,7 +1018,7 @@ const LiveOdds = () => {
                           })()}
                         </div>
                         
-                        {/* Team names with logos */}
+                        {/* Team names with logos and IQ scores */}
                         <div className="flex items-center gap-3 mt-3">
                           <TeamLogo 
                             logoUrl={teamLogos[homeTeam]} 
@@ -1026,13 +1026,39 @@ const LiveOdds = () => {
                             sport={match.sport_key}
                             size="md"
                           />
-                          <h3 className="text-xl font-bold text-white">
-                            {homeTeam}
-                          </h3>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-xl font-bold text-white">
+                              {homeTeam}
+                            </h3>
+                            {(() => {
+                              const matchIQ = iqScores[match.id];
+                              if (matchIQ) {
+                                return (
+                                  <span className="text-xs font-bold px-2 py-1 rounded bg-purple-600/30 text-[#FFD700]">
+                                    IQ {matchIQ.home_iq}
+                                  </span>
+                                );
+                              }
+                              return null;
+                            })()}
+                          </div>
                           <span className="text-gray-500 text-lg mx-2">vs</span>
-                          <h3 className="text-xl font-bold text-white">
-                            {awayTeam}
-                          </h3>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-xl font-bold text-white">
+                              {awayTeam}
+                            </h3>
+                            {(() => {
+                              const matchIQ = iqScores[match.id];
+                              if (matchIQ) {
+                                return (
+                                  <span className="text-xs font-bold px-2 py-1 rounded bg-purple-600/30 text-[#FFD700]">
+                                    IQ {matchIQ.away_iq}
+                                  </span>
+                                );
+                              }
+                              return null;
+                            })()}
+                          </div>
                           <TeamLogo 
                             logoUrl={teamLogos[awayTeam]} 
                             teamName={awayTeam}
