@@ -26,6 +26,8 @@ const LiveOdds = () => {
   useEffect(() => {
     const urlFilter = getFilterFromURL();
     setFilter(urlFilter);
+    // CRITICAL FIX: Reset league filter when sport filter changes to prevent no matches
+    setLeagueFilter('all');
   }, [location.search]);
   const [timeFilter, setTimeFilter] = useState('live-upcoming'); // 'live-upcoming', 'inplay', 'recent-results'
   const [refreshKey, setRefreshKey] = useState(0);
