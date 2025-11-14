@@ -183,7 +183,9 @@ const LiveOdds = () => {
   const fetchHistoricalOdds = async () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/odds/historical/recent`);
+      const response = await axios.get(`${BACKEND_URL}/api/odds/historical/recent`, {
+        timeout: 30000 // 30 second timeout
+      });
       return response.data || [];
     } catch (error) {
       console.error('Error fetching historical odds:', error);
