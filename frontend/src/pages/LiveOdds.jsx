@@ -379,7 +379,18 @@ const LiveOdds = () => {
       if (shouldShowLoading) setLoading(true);
       fetchInPlayOdds().then(data => {
         console.log('In-play data received:', data.length, 'matches');
-        setAllOdds(data);
+        
+        // Apply sport filter to in-play data
+        let filteredData = data;
+        if (filter === 'football') {
+          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('soccer'));
+          console.log('🔎 Filtered to football:', filteredData.length, 'matches');
+        } else if (filter === 'cricket') {
+          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
+          console.log('🔎 Filtered to cricket:', filteredData.length, 'matches');
+        }
+        
+        setAllOdds(filteredData);
         setLoading(false);
       });
     } else {
