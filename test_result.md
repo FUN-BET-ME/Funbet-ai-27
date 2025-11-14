@@ -976,7 +976,7 @@ backend:
 frontend:
   - task: "FunBet IQ Sorting on Predictions Page"
     implemented: true
-    working: false
+    working: "NA"
     file: "/app/frontend/src/pages/FunBetIQ.jsx"
     stuck_count: 0
     priority: "critical"
@@ -988,6 +988,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "🔍 ROOT CAUSE INVESTIGATION - Line 674 has sort logic: confidenceOrder = { 'High': 3, 'Medium': 2, 'Low': 1 }, return (confidenceOrder[b.confidence] || 0) - (confidenceOrder[a.confidence] || 0). This formula (b - a) should put High(3) before Low(1). Need to verify what confidence values are actually in the data."
+      - working: "NA"
+        agent: "main"
+        comment: "✅ FIXED - Enhanced sorting logic in FunBetIQ.jsx (lines 671-685). PRIMARY SORT: Confidence level (High=3 > Medium=2 > Low=1) descending. SECONDARY SORT: IQ difference (larger difference = stronger prediction) descending. Added defensive code with explicit variable assignment (aConfidence, bConfidence) and proper null handling. Added debug logging to show confidence distribution on data fetch. This ensures HIGH confidence predictions always appear at top of list, followed by MEDIUM, then LOW. Within same confidence level, predictions with larger IQ differences appear first (more decisive matches). Ready for testing."
 
   - task: "IQ Scores Display on LiveOdds Page"
     implemented: true
