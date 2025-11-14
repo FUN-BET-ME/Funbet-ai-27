@@ -1526,6 +1526,21 @@ const LiveOdds = () => {
           );
         })()}
 
+        {/* Load More Button */}
+        {hasMore && !loading && (
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => fetchAllOdds(true, filter, false)}
+              className="px-8 py-3 bg-[#FFD700] text-[#2E004F] rounded-lg font-bold text-lg hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg"
+            >
+              Load More Matches
+            </button>
+            <p className="text-gray-400 text-sm mt-2">
+              Showing {filteredOddsByLeague.length} matches
+            </p>
+          </div>
+        )}
+
         {/* Disclaimer */}
         <div className="mt-12 p-6 rounded-lg bg-[#2E004F]/10 border border-[#2E004F]/30">
           <div className="flex items-start gap-3">
