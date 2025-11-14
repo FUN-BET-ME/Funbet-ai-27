@@ -333,12 +333,12 @@ class OddsWorker:
             replace_existing=True
         )
         
-        # Job 4: Fetch live scores every 2 minutes (for in-play matches)
+        # Job 4: Fetch live scores every 5 minutes (for in-play matches)
         self.scheduler.add_job(
             self.fetch_live_scores_job,
-            trigger=IntervalTrigger(minutes=2),
+            trigger=IntervalTrigger(minutes=5),
             id='fetch_live_scores',
-            name='Fetch live scores every 2 minutes',
+            name='Fetch live scores every 5 minutes',
             replace_existing=True
         )
         
