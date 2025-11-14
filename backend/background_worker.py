@@ -67,6 +67,10 @@ FOOTBALL_LEAGUES = [
     'soccer_conmebol_copa_sudamericana',      # Copa Sudamericana
     'soccer_mexico_ligamx',                   # Liga MX
     
+    # Turkey - 2 divisions
+    'soccer_turkey_super_league',             # Süper Lig
+    'soccer_turkey_1_lig',                    # TFF 1. Lig
+    
     # Other Major Leagues
     'soccer_usa_mls',                         # MLS
     'soccer_australia_aleague',               # A-League
