@@ -669,9 +669,20 @@ const FunBetIQ = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {[...aiPredictions]
                   .sort((a, b) => {
-                    // Sort by confidence: High > Medium > Low
+                    // Primary sort: Confidence level (High > Medium > Low)
                     const confidenceOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
-                    return (confidenceOrder[b.confidence] || 0) - (confidenceOrder[a.confidence] || 0);
+                    const aConfidence = confidenceOrder[a.confidence] || 0;
+                    const bConfidence = confidenceOrder[b.confidence] || 0;
+                    
+                    // If confidence levels differ, sort by confidence (descending)
+                    if (bConfidence !== aConfidence) {
+                      return bConfidence - aConfidence;
+                    }
+                    
+                    // Secondary sort: IQ difference (higher difference = more confident pick)
+                    const aIqDiff = Math.abs((a.home_iq || 0) - (a.away_iq || 0));
+                    const bIqDiff = Math.abs((b.home_iq || 0) - (b.away_iq || 0));
+                    return bIqDiff - aIqDiff;
                   })
                   .map((prediction, index) => {
                   // Determine the sport filter for navigation
