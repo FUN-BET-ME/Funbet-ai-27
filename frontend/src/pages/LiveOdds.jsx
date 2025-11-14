@@ -496,6 +496,18 @@ const LiveOdds = () => {
     }
   }, [refreshKey]);
 
+  // CRITICAL FIX: Save to localStorage whenever data changes (data persistence)
+  useEffect(() => {
+    if (allOdds.length > 0) {
+      try {
+        localStorage.setItem('liveOdds_cached', JSON.stringify(allOdds));
+        console.log('💾 Saved', allOdds.length, 'matches to localStorage');
+      } catch (e) {
+        console.error('Failed to save to localStorage:', e);
+      }
+    }
+  }, [allOdds]);
+
   // Fetch IQ scores when odds data loads
   useEffect(() => {
     if (allOdds.length > 0) {
