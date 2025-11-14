@@ -845,8 +845,14 @@ const LiveOdds = () => {
                     return <MatchCardSkeletonList count={5} />;
                   }
                   
-                  // If no matches after filtering, show message
+                  // CRITICAL FIX: If filtering resulted in 0 matches but we have data, show fallback
                   if (filteredMatches.length === 0) {
+                    // If we have data in allOdds, this is just a filter mismatch
+                    if (allOdds.length > 0) {
+                      console.log('⚠️ Filter resulted in 0 matches but we have', allOdds.length, 'total matches');
+                      // Don't show empty state, the useMemo will auto-reset league filter
+                    }
+                    
                     // Get league name for custom message
                     const getLeagueName = () => {
                       if (filter === 'football' && leagueFilter !== 'all') {
