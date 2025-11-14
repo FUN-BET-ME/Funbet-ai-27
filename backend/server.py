@@ -350,13 +350,17 @@ async def get_all_cached_odds(
         query = {}
         
         # CRITICAL FIX: Filter by time status
+        # NOTE: commence_time is stored as ISO string, convert to comparable format
         if time_filter == 'upcoming':
             # Only matches that haven't started yet
-            query['commence_time'] = {'$gt': now}
+            now_str = now.isoformat().replace('+00:00', 'Z')
+            query['commence_time'] = {'$gt': now_str}
         elif time_filter == 'live':
             # Matches that started in last 3 hours (likely still live)
             three_hours_ago = now - timedelta(hours=3)
-            query['commence_time'] = {'$gte': three_hours_ago, '$lte': now}
+            three_hours_ago_str = three_hours_ago.isoformat().replace('+00:00', 'Z')
+            now_str = now.isoformat().replace('+00:00', 'Z')
+            query['commence_time'] = {'$gte': three_hours_ago_str, '$lte': now_str}
         # If time_filter is None or 'all', don't filter by time
         
         # Filter by sport if provided
