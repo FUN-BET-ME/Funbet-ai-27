@@ -406,9 +406,15 @@ const LiveOdds = () => {
       const isBackgroundRefresh = refreshKey > 1; // First refresh is manual, rest are auto
       
       if (timeFilter === 'inplay') {
-        // Refresh in-play matches
+        // Refresh in-play matches with sport filter
         fetchInPlayOdds().then(data => {
-          setAllOdds(data);
+          let filteredData = data;
+          if (filter === 'football') {
+            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('soccer'));
+          } else if (filter === 'cricket') {
+            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
+          }
+          setAllOdds(filteredData);
           if (!isBackgroundRefresh) setLoading(false);
         });
       } else {
