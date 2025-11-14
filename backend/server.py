@@ -1044,3 +1044,228 @@ async def record_prediction(prediction: dict):
         logger.error(f"Error recording prediction: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
+
+# ==================== FUNBET IQ V2 ENDPOINTS ====================
+
+@api_router.get("/funbet-iq/matches")
+async def get_funbet_iq_matches(
+    sport: Optional[str] = None,
+    limit: int = Query(default=50, le=200)
+):
+    """
+    Get all matches with FunBet IQ scores
+    
+    Args:
+        sport: Filter by sport (football, cricket, etc.)
+        limit: Maximum number of matches
+    
+    Returns:
+        List of matches with IQ scores
+    """
+    try:
+        db = db_instance.db
+        iq_scores_collection = db['funbet_iq_scores']
+        
+        # Build query
+        query = {}
+        if sport:
+            sport_pattern = sport.lower()
+            if sport_pattern == 'football':
+                query['sport_key'] = {'$regex': '^soccer', '$options': 'i'}
+            elif sport_pattern == 'cricket':
+                query['sport_key'] = {'$regex': '^cricket', '$options': 'i'}
+            else:
+                query['sport_key'] = {'$regex': sport_pattern, '$options': 'i'}
+        
+        # Fetch IQ scores
+        iq_matches = await iq_scores_collection.find(query).limit(limit).to_list(length=limit)
+        
+        # Convert ObjectId to string
+        for match in iq_matches:
+            if '_id' in match:
+                match['_id'] = str(match['_id'])
+        
+        logger.info(f"✅ Fetched {len(iq_matches)} FunBet IQ matches (sport={sport})")
+        
+        return {
+            'success': True,
+            'count': len(iq_matches),
+            'matches': iq_matches
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching FunBet IQ matches: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/funbet-iq/match/{match_id}")
+async def get_funbet_iq_match(match_id: str):
+    """
+    Get detailed FunBet IQ breakdown for a specific match
+    
+    Args:
+        match_id: Match ID
+    
+    Returns:
+        Detailed IQ breakdown with all components
+    """
+    try:
+        db = db_instance.db
+        iq_scores_collection = db['funbet_iq_scores']
+        
+        # Find IQ score
+        iq_data = await iq_scores_collection.find_one({'match_id': match_id})
+        
+        if not iq_data:
+            # Try to calculate it if not found
+            odds_cache_collection = db['odds_cache']
+            match = await odds_cache_collection.find_one({'id': match_id})
+            
+            if not match:
+                raise HTTPException(status_code=404, detail="Match not found")
+            
+            # Calculate IQ
+            iq_data = await calculate_funbet_iq(match, db)
+            
+            if iq_data:
+                # Save to database
+                await iq_scores_collection.insert_one(iq_data)
+                logger.info(f"✅ Calculated and saved IQ for match {match_id}")
+        
+        # Convert ObjectId to string
+        if '_id' in iq_data:
+            iq_data['_id'] = str(iq_data['_id'])
+        
+        return {
+            'success': True,
+            'match': iq_data
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching FunBet IQ for match {match_id}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.post("/funbet-iq/calculate")
+async def trigger_funbet_iq_calculation(sport: Optional[str] = None):
+    """
+    Manually trigger FunBet IQ calculation for all matches
+    (Admin endpoint - will be called by background worker)
+    
+    Args:
+        sport: Optional sport filter
+    
+    Returns:
+        Calculation results
+    """
+    try:
+        db = db_instance.db
+        odds_cache_collection = db['odds_cache']
+        iq_scores_collection = db['funbet_iq_scores']
+        
+        # Build query
+        query = {}
+        if sport:
+            sport_pattern = sport.lower()
+            if sport_pattern == 'football':
+                query['sport_key'] = {'$regex': '^soccer', '$options': 'i'}
+            elif sport_pattern == 'cricket':
+                query['sport_key'] = {'$regex': '^cricket', '$options': 'i'}
+            else:
+                query['sport_key'] = {'$regex': sport_pattern, '$options': 'i'}
+        
+        # Get all matches
+        matches = await odds_cache_collection.find(query).limit(100).to_list(length=100)
+        
+        if not matches:
+            return {
+                'success': True,
+                'message': 'No matches found to calculate IQ',
+                'calculated': 0
+            }
+        
+        calculated_count = 0
+        errors = []
+        
+        for match in matches:
+            try:
+                # Calculate IQ
+                iq_data = await calculate_funbet_iq(match, db)
+                
+                if iq_data:
+                    # Save/update in database
+                    await iq_scores_collection.update_one(
+                        {'match_id': match.get('id')},
+                        {'$set': iq_data},
+                        upsert=True
+                    )
+                    calculated_count += 1
+                    
+            except Exception as e:
+                error_msg = f"Error calculating IQ for {match.get('id')}: {str(e)}"
+                logger.error(error_msg)
+                errors.append(error_msg)
+        
+        logger.info(f"✅ FunBet IQ calculation complete: {calculated_count}/{len(matches)} matches")
+        
+        return {
+            'success': True,
+            'total_matches': len(matches),
+            'calculated': calculated_count,
+            'errors': errors[:10] if errors else []  # Return first 10 errors
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in FunBet IQ calculation: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.post("/funbet-iq/update-stats/{team_name}")
+async def update_team_historical_stats(
+    team_name: str,
+    sport_key: str = Query(..., description="Sport key (e.g., soccer_epl, cricket_ipl)")
+):
+    """
+    Update team historical stats from ESPN or CricketData API
+    
+    Args:
+        team_name: Team name
+        sport_key: Sport key
+    
+    Returns:
+        Update status
+    """
+    try:
+        db = db_instance.db
+        
+        # Determine data source based on sport
+        success = False
+        if sport_key.startswith('cricket'):
+            # Use CricketData API
+            success = await update_cricket_team_stats(team_name, sport_key, db)
+        else:
+            # Use ESPN API
+            success = await update_team_stats_from_espn(team_name, sport_key, db)
+        
+        if success:
+            return {
+                'success': True,
+                'message': f'Successfully updated stats for {team_name}',
+                'team': team_name,
+                'sport': sport_key
+            }
+        else:
+            return {
+                'success': False,
+                'message': f'Failed to fetch stats for {team_name}',
+                'team': team_name,
+                'sport': sport_key
+            }
+        
+    except Exception as e:
+        logger.error(f"Error updating team stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
