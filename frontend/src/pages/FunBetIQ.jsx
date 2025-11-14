@@ -1034,4 +1034,4 @@ const FunBetIQ = () => {
   );
 };
 
-export default Predictions;
+export default FunBetIQ;
