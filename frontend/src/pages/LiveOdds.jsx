@@ -698,31 +698,6 @@ const LiveOdds = () => {
               : 'Compare real-time odds from top bookmakers around the world for upcoming matches in the next 30 days. Auto-refreshes every 5 minutes.'}
           </p>
           
-          {/* API Error Banner */}
-          {apiError && (
-            <div className="mb-4 p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-lg flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
-              <div className="flex-1">
-                <p className="text-yellow-200 font-medium">{apiError}</p>
-                <button
-                  onClick={() => {
-                    setApiError(null);
-                    handleRefresh();
-                  }}
-                  className="mt-2 text-sm text-yellow-400 hover:text-yellow-300 underline"
-                >
-                  Try refreshing
-                </button>
-              </div>
-              <button
-                onClick={() => setApiError(null)}
-                className="text-yellow-500 hover:text-yellow-400"
-              >
-                ✕
-              </button>
-            </div>
-          )}
-          
           {/* Time Period Filter */}
           <div className="flex flex-wrap gap-2 mb-4">
             <button
