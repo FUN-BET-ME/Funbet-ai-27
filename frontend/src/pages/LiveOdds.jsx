@@ -302,9 +302,11 @@ const LiveOdds = () => {
         // CRITICAL FIX: Only replace if we have new data OR it's initial load
         if (newMatches.length > 0 || allOdds.length === 0) {
           setAllOdds(newMatches);
+          setApiError(null); // Clear errors on success
           console.log('✅ Replace complete');
         } else {
           console.log('⚠️ API returned no matches, keeping existing', allOdds.length, 'matches');
+          setApiError('No matches found. Showing cached data.');
         }
       }
       
@@ -315,6 +317,11 @@ const LiveOdds = () => {
       console.log(`✅ SUCCESS: Loaded ${newMatches.length} matches for filter="${currentFilter}"`);
     } catch (error) {
       console.error('❌ ERROR fetching odds:', error);
+      if (allOdds.length > 0) {
+        setApiError('Unable to fetch latest data. Showing cached data.');
+      } else {
+        setApiError('Unable to load matches. Please try again.');
+      }
     } finally {
       console.log('🏁 FINALLY BLOCK: Setting loading=false');
       setLoading(false);
