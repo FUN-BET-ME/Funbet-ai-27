@@ -348,8 +348,9 @@ class OddsWorker:
         asyncio.create_task(self.fetch_live_scores_job())  # Fetch live scores immediately
         
         self.scheduler.start()
-        logger.info("✅ Background worker started - 5 jobs scheduled")
+        logger.info("✅ Background worker started - 4 jobs scheduled")
         logger.info("🎯 Expected usage: ~290 API calls/day + IQ calculations + live scores")
+        logger.info("📊 Historical data: ALL matches preserved permanently (no cleanup)")
     
     def stop(self):
         """Stop the background worker"""
