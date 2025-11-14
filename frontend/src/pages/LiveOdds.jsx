@@ -428,7 +428,16 @@ const LiveOdds = () => {
           } else if (filter === 'cricket') {
             filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
           }
-          setAllOdds(filteredData);
+          
+          // CRITICAL FIX: Only update if we have data
+          if (filteredData.length > 0) {
+            setAllOdds(filteredData);
+          } else {
+            console.log('⚠️ Refresh returned no matches, keeping existing data');
+          }
+          if (!isBackgroundRefresh) setLoading(false);
+        }).catch(error => {
+          console.error('❌ Error refreshing in-play odds:', error);
           if (!isBackgroundRefresh) setLoading(false);
         });
       } else {
