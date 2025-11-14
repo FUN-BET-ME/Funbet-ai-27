@@ -258,7 +258,7 @@ class OddsWorker:
     
     async def fetch_live_scores_job(self):
         """
-        Fetch live scores every 2 minutes for football and cricket
+        Fetch live scores every 5 minutes for football and cricket
         Updates match data with real-time scores
         """
         try:
