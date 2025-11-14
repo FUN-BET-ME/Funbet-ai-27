@@ -36,7 +36,8 @@ function App() {
             <Route path="/live-odds" element={<LiveOdds />} />
             <Route path="/match/:matchId" element={<MatchDetail />} />
             <Route path="/prediction/:matchId" element={<MatchPrediction />} />
-            <Route path="/predictions" element={<Predictions />} />
+            <Route path="/funbet-iq" element={<FunBetIQ />} />
+            <Route path="/predictions" element={<FunBetIQ />} /> {/* Keep old route for backward compatibility */}
             <Route path="/prediction-history" element={<PredictionHistory />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/responsible-play" element={<ResponsiblePlay />} />
