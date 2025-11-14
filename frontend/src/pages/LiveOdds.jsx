@@ -41,6 +41,7 @@ const LiveOdds = () => {
   const [hasMore, setHasMore] = useState(false); // Pagination state
   const [loadingMore, setLoadingMore] = useState(false); // Loading more state
   const [leagueFilter, setLeagueFilter] = useState('all'); // League sub-filter
+  const [iqScores, setIqScores] = useState({}); // FunBet IQ scores by match_id
   const { toggleFollowTeam, isFollowing, isMatchFollowed} = useFavorites();
   
   // Use useMemo to filter matches by SPORT first, then by league
