@@ -1,77 +1,97 @@
 <analysis>
-The trajectory documents a multi-stage bug-fixing and refactoring process for the FunBet.ai application. The initial task was to address three user-reported issues: a duplicate FunBet.me row, suspiciously high odds for FunBet.me, and football odds failing to load.
+The trajectory details an extensive and often tumultuous development and debugging process. The initial phase focused on implementing the client-side FunBet.me odds calculation and resolving production deployment failures, which stemmed from issues with , environment variables, and FastAPI application startup logic.
 
-The investigation began by fixing an incorrect odds issue in the backend. The root cause was identified in , where outcomes were being matched by array index instead of team name, leading to swapped odds. This was corrected, and the fix was verified.
+The work then shifted to a series of user-reported bugs and feature requests. A major effort was debugging the non-functional Predictions, Stats, and News pages. This was traced back to a combination of incorrect backend URLs in the frontend's  file and a persistent, unresolved API routing issue within the preview environment, where all  calls resulted in 404 errors. The engineer correctly diagnosed this as a platform-level ingress problem.
 
-While investigating, a new bug was discovered: the FunBet.me row was missing entirely when using the All sports filter on the frontend. The engineer attempted a complex refactoring of  to solve this, which involved manipulating the bookmaker array. This led to JavaScript errors and a complicated component state.
+Simultaneously, the engineer addressed a critical data persistence bug in the , replacing a destructive  operation with an  strategy to prevent data loss during odds updates. They also managed an API usage crisis by adjusting fetch frequency, updated API keys, and extended the data window from 14 to 30 days.
 
-At this point, the user intervened with a crucial suggestion: to stop storing FunBet.me odds in the database altogether and instead calculate them dynamically on the frontend (best market odds + 5%). The engineer adopted this simpler, more robust architecture. The backend was modified to remove the FunBet generation logic. The  component was then refactored to remove the old logic and implement this new on-the-fly calculation.
-
-However, this implementation is currently incomplete. The dynamically generated FunBet.me row is not rendering on the page, and the last steps in the trajectory show an ongoing effort to debug this frontend rendering issue.
+The most challenging phase involved implementing and debugging a complex league-based sub-filtering feature on the frontend. This required multiple iterations to fix state management issues, incorrect component data flow between  and , and bugs related to empty data states not triggering UI updates. The process was marked by user frustration due to the application's instability in the preview environment, which was exacerbated by caching and the underlying API routing failure. The work concluded with the user asking to implement the FunBet IQ feature.
 </analysis>
 
 <product_requirements>
-The project is FunBet.ai, a sports betting odds aggregation platform focusing on Football and Cricket. It sources data from The Odds API and presents it to the user.
+The application, FunBet.ai, is a sports betting odds aggregator for Football and Cricket, displaying match data for a 30-day window.
 
-A central requirement is the FunBet.me bookmaker. Originally, its odds were to be generated on the backend, calculated at 5% above the best available market odds for any given outcome, and stored in the database. This FunBet.me entry must always be displayed as a distinct, top row for every match.
+**Core Features:**
+1.  **Dynamic FunBet.me Odds:** For every match, the frontend must dynamically calculate and display FunBet.me odds as the top row. This is calculated by finding the best market odds for Home, Draw, and Away, and adding a 5% markup (x1.05).
+2.  **Data Aggregation:** The backend fetches odds from the OddsAPI for 32 different football and cricket leagues every 5 minutes and stores them persistently in a MongoDB database. Historical match data is preserved indefinitely.
+3.  **Filtering System:**
+    *   **Sport Filter:** Users can filter by All, Football, or Cricket.
+    *   **League Sub-Filter:** When a sport is selected, a dropdown with relevant leagues (e.g., Premier League, IPL) allows for more granular filtering.
+    *   **Time Filter:** Users can view Live or Upcoming matches.
+4.  **UI/UX:**
+    *   The homepage features centered blocks for navigating to Football and Cricket sections.
+    *   Informative empty state messages are displayed when a selected filter yields no matches (e.g., No upcoming matches for IPL this month).
+    *   Search functionality allows users to find matches by team name within a selected sport.
 
-Recent development has shifted this architecture based on user feedback. The new requirement is to simplify the system by removing the backend generation and storage of FunBet.me odds. Instead, the frontend should dynamically calculate these odds in real-time (by finding the best market odds and adding 5%) and render the FunBet.me row on the fly. This ensures accuracy and reduces backend complexity. The platform must correctly display these dynamic odds for all sports (Football and Cricket) and across all filters.
+**Note:** The News section was implemented but later removed due to persistent API routing issues in the preview environment.
 </product_requirements>
 
 <key_technical_concepts>
-- **Full-Stack Application:**
-  - **Backend:** Python with FastAPI.
-  - **Frontend:** JavaScript with React.
-  - **Database:** MongoDB.
-- **Backend Architecture:**
-  - Background worker () for fetching data from The Odds API.
-- **Frontend Architecture:**
-  - Real-time, client-side odds calculation.
-  - Component-based UI using React Hooks (, ).
-- **Core Logic:**
-  - On-the-fly generation of FunBet.me odds with a 5% markup on the client-side.
+- **Full-Stack:** React frontend (with Hooks) and a Python FastAPI backend.
+- **Database:** MongoDB for storing odds and predictions.
+- **Asynchronous Operations:**
+  - **Backend:**  for running background jobs (odds fetching) and  for asynchronous API calls.
+  - **Frontend:**  for API calls from React components.
+- **State Management (React):** , , and  for managing filters, fetched data, and derived component state.
+- **Deployment:** Kubernetes-based environment with ingress routing rules. Debugging focused on  files, , and preview environment-specific routing failures.
 </key_technical_concepts>
 
 <code_architecture>
-The application is a monorepo with a  (React) and  (FastAPI) that communicate via a REST API. The backend fetches odds data and stores it in MongoDB, while the frontend consumes this data and handles the display logic, including the dynamic calculation of FunBet.me odds.
-
-**Directory Structure:**
+The application is a monorepo with a React frontend and a FastAPI backend.
 
 
 - ****
-  - **Importance:** This file originally contained the logic to calculate the FunBet.me odds with a 5% markup.
-  - **Changes:** The core logic was first fixed to correctly match teams by name instead of array index. Following a major architectural change, the function calls to this file from  were removed, effectively disabling server-side FunBet odds generation.
+    - **Importance:** Manages the crucial background task of fetching odds from the OddsAPI.
+    - **Changes:** The odds update logic was fundamentally changed from a destructive delete-then-insert to a safe  with . This prevents data loss. The job schedule was adjusted (from 15 min back to 5 min) and the list of fetched leagues was reverted to include all 32. All data cleanup logic was removed to preserve historical matches indefinitely. Job comments were updated to reflect the 30-day window.
 
 - ****
-  - **Importance:** Manages scheduled jobs to fetch real bookmaker odds from The Odds API.
-  - **Changes:** The code that called  to create and add FunBet.me odds to the match data before saving to the database was removed. The worker now only stores raw data from the API providers.
+    - **Importance:** The main FastAPI application file defining all API endpoints.
+    - **Changes:** The data window was extended from 14 to 30 days in relevant queries. A new endpoint  was added (though the feature was later removed from the frontend). Limits on database queries (e.g., ) were increased from 100 to 500 to support the 30-day view. The  endpoint was modified to integrate with the NewsAPI using a key from , replacing mock data.
 
 - ****
-  - **Importance:** This is the primary component for displaying all match odds and is the center of the recent work. It is responsible for fetching match data, calculating best odds, and rendering the entire odds table, including the special FunBet.me row.
-  - **Changes:** This file underwent a major refactoring.
-    1.  Initial attempts were made to fix a bug where FunBet.me was not showing in the All view. This involved complex array manipulations.
-    2.  Following user feedback, all of that logic was discarded.
-    3.  The code was heavily modified to remove any logic that expected  data from the backend.
-    4.  A new JSX block was added to dynamically calculate and render the FunBet.me row using the best odds found from other bookmakers (, , ) and applying a 1.05 multiplier. This new implementation is currently not rendering correctly.
+    - **Importance:** The primary component for displaying all odds and handling the complex filtering logic. It's the most heavily modified file.
+    - **Changes:**
+        - **Filtering Logic:** A  state and a  hook () were added to handle sport and league filtering. The logic was fixed multiple times to correctly filter by sport *and* league.
+        - **Data Fetching:** The  limit was increased from 100 to 1000. A smart upsert () was implemented to merge new data without clearing the existing view, providing a smoother refresh experience.
+        - **UI:** The Recent Results time filter was removed to simplify the UI and resolve persistent bugs. The text was updated to reflect the 30 Day window. Friendly empty state messages were added for when filters yield no results.
+        - **Component Interaction:** Logic was fixed to pass correctly filtered odds () to the child  component, with a  prop that includes  to force re-renders.
+
+- ****
+    - **Importance:** Renders the odds table for a single selected sport (e.g., when the Football filter is active).
+    - **Changes:** The component was plagued with bugs where it would ignore the data passed from its parent. The fix involved correcting the  dependency array to include  and updating the logic to correctly handle an empty  array (clearing the view instead of showing stale data). It was also updated to display league-specific empty state messages.
+
+- ** files (, )**
+    - **Importance:** Store critical environment-specific configurations and API keys.
+    - **Changes:** The  was corrected to use the proper . The  had its  and  updated with valid keys provided by the user.
 </code_architecture>
 
 <pending_tasks>
-- Implement a full-fledged AI model for FunBet IQ predictions to replace the current odds-based system.
-- Build the audit trail system to display historical prediction accuracy.
-- Fully integrate and display supplemental data from the ESPN API on the frontend.
+- **Implement FunBet IQ:** The user has requested to build the FunBet IQ points system, but the specific requirements and calculation logic need to be provided again.
+- **Resolve Preview Environment Routing:** A persistent platform-level issue prevents all  endpoints from being accessed in the preview environment, blocking testing of several pages (Predictions, Stats). This requires support intervention.
+- **Implement Audit Trail & ESPN API:** These were mentioned in the initial context but have not been worked on.
 </pending_tasks>
 
 <current_work>
-The current work is focused on implementing a major architectural simplification suggested by the user. Instead of the backend pre-calculating and storing FunBet.me odds, the frontend is now responsible for calculating them dynamically on-the-fly by taking the best market odds and adding 5%.
+The most recent work was a high-priority, multi-step debugging effort to stabilize the application's core filtering functionality, which was highly volatile and causing significant user frustration. The immediate tasks leading up to this summary were:
 
-This involved two main steps:
-1.  **Backend Modification:** The logic for generating FunBet.me odds was removed from the backend. The  script is no longer used by the , and FunBet.me data is no longer being saved to the MongoDB database. This part is complete and verified.
+1.  **Fixing Critical Sport Filtering Bug:** A major bug was discovered where selecting a sport filter (e.g., Football) did not correctly filter out other sports. The  hook in  was fixed to filter by both sport and league.
+    
 
-2.  **Frontend Refactoring ():** The component was significantly altered to implement the new client-side logic. All code that searched for or relied on a FunBet.me entry in the data fetched from the backend was removed. A new JSX block was added to render the FunBet.me row. This block uses the , , and  odds (already calculated by the component) and multiplies them by 1.05 to get the FunBet odds.
+2.  **Addressing Data Disappearance & Stale UI:** The user reported data disappearing or being incorrect after changing filters. This was traced to several compounding issues:
+    *   The  component not re-rendering when the filter was changed back to All Leagues.
+    *   The Recent Results feature causing data to be cleared, which was subsequently removed to simplify the logic.
+    *   Stale content being served by the preview environment, causing confusion about whether code changes were applied.
 
-**Current Problem:** The implementation is not yet successful. After these changes, the FunBet.me row is not appearing on the odds table at all. The last action was an attempt to debug this by inserting a test row with hardcoded values to see if the rendering block was being skipped or if there was a deeper issue in the JSX structure. The problem lies within the rendering logic of .
+3.  **Diagnosing Unresolved API Failures:** The user reported that the Predictions and Stats pages were broken again. The AI correctly re-diagnosed this not as new breakage, but as the same persistent API routing failure in the preview environment. The AI verified the backend endpoints were working correctly on  to confirm it was a platform issue.
+
+4.  **Finalizing for Deployment:** Given the preview environment's unreliability, the focus shifted to ensuring the code was production-ready. The AI confirmed all fixes were in place and advised the user to deploy to production, where the routing issues were not expected to exist. The final user interaction before this summary request was a query about implementing the FunBet IQ feature.
 </current_work>
 
 <optional_next_step>
-I will debug the  component to fix the rendering issue and ensure the dynamically calculated FunBet.me row is displayed correctly at the top of each match table as intended.
+I will ask the user to provide the specific requirements and calculation logic for the FunBet IQ feature they mentioned, as this information is not available in the current context.
 </optional_next_step>
+
+<direct_quotes>
+**User:** Can you search history where I gave instructions on how to build on top of existing stats and predictions by giving funbet iq points
+**AI Engineer:** I dont have a tool to search through our full conversation history... Could you please share those instructions again? Id be happy to implement the FunBet IQ points feature based on your requirements.
+</direct_quotes>
