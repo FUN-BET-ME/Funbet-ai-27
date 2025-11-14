@@ -196,7 +196,8 @@ const LiveOdds = () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       const response = await axios.get(`${BACKEND_URL}/api/odds/inplay`, {
-        params: { regions: 'uk,eu,us,au', markets: 'h2h' }
+        params: { regions: 'uk,eu,us,au', markets: 'h2h' },
+        timeout: 30000 // 30 second timeout
       });
       return response.data || [];
     } catch (error) {
