@@ -256,48 +256,49 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in cleanup job: {e}")
     
+    async def fetch_live_scores_job(self):
+        """
+        Fetch live scores every 2 minutes for football and cricket
+        Updates match data with real-time scores
+        """
+        try:
+            logger.info("⚽ Starting live scores fetch job...")
+            
+            from live_scores_service import live_scores_service
+            
+            # Fetch all live scores (football + cricket + basketball)
+            scores_data = await live_scores_service.get_all_live_scores()
+            
+            live_count = len(scores_data.get('live_scores', []))
+            completed_count = len(scores_data.get('completed_scores', []))
+            
+            logger.info(f"✅ Live scores fetched: {live_count} live, {completed_count} completed")
+            
+        except Exception as e:
+            logger.error(f"❌ Error in live scores job: {e}")
+    
     async def calculate_funbet_iq_job(self):
         """
         Calculate FunBet IQ for all matches every 10 minutes
+        Only calculates for matches within 30-day window
         """
         try:
-            logger.info("🧠 Starting FunBet IQ calculation...")
+            logger.info("🧠 Starting FunBet IQ calculation job...")
             
-            from funbet_iq_engine import calculate_funbet_iq
+            from funbet_iq_engine import calculate_funbet_iq_for_matches
             
-            odds_cache_collection = self.db['odds_cache']
-            iq_scores_collection = self.db['funbet_iq_scores']
+            # Calculate for all cached matches (limit increased for 30-day window)
+            result = await calculate_funbet_iq_for_matches(self.db, limit=500)
             
-            # Get all matches (increased to cover cricket + football)
-            matches = await odds_cache_collection.find({}).limit(500).to_list(length=500)
-            
-            if not matches:
-                logger.info("⚠️ No matches found for IQ calculation")
-                return
-            
-            calculated_count = 0
-            
-            for match in matches:
-                try:
-                    # Calculate IQ
-                    iq_data = await calculate_funbet_iq(match, self.db)
-                    
-                    if iq_data:
-                        # Save/update in database
-                        await iq_scores_collection.update_one(
-                            {'match_id': match.get('id')},
-                            {'$set': iq_data},
-                            upsert=True
-                        )
-                        calculated_count += 1
-                        
-                except Exception as e:
-                    logger.error(f"Error calculating IQ for {match.get('id')}: {e}")
-            
-            logger.info(f"✅ FunBet IQ calculation complete: {calculated_count}/{len(matches)} matches")
-            
+            if result:
+                logger.info(f"✅ FunBet IQ calculation complete: {result['calculated']}/{result['total_matches']} matches")
+                if result['errors']:
+                    logger.warning(f"⚠️ Errors: {len(result['errors'])} matches failed")
+            else:
+                logger.warning("⚠️ FunBet IQ calculation returned no results")
+                
         except Exception as e:
-            logger.error(f"❌ Error in FunBet IQ calculation job: {e}")
+            logger.error(f"❌ Error in FunBet IQ job: {e}")
     
     def start(self):
         """Start the background worker - EFFICIENT VERSION"""
