@@ -60,7 +60,17 @@ const LiveOdds = () => {
     
     // SECOND: Filter by specific league if selected
     if (leagueFilter !== 'all') {
-      filtered = filtered.filter(match => match.sport_key === leagueFilter);
+      const leagueFiltered = filtered.filter(match => match.sport_key === leagueFilter);
+      
+      // CRITICAL FIX: If league filter results in 0 matches, auto-reset to "all"
+      if (leagueFiltered.length === 0 && filtered.length > 0) {
+        console.log('  → ⚠️ League filter resulted in 0 matches, auto-resetting to "all"');
+        setLeagueFilter('all');
+        // Return unfiltered (by league) results
+        return filtered;
+      }
+      
+      filtered = leagueFiltered;
       console.log('  → After league filter (', leagueFilter, '):', filtered.length, 'matches');
     }
     
