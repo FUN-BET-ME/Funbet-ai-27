@@ -264,8 +264,8 @@ class OddsWorker:
             odds_cache_collection = self.db['odds_cache']
             iq_scores_collection = self.db['funbet_iq_scores']
             
-            # Get all matches (limit to upcoming/live matches)
-            matches = await odds_cache_collection.find({}).limit(100).to_list(length=100)
+            # Get all matches (increased to cover cricket + football)
+            matches = await odds_cache_collection.find({}).limit(500).to_list(length=500)
             
             if not matches:
                 logger.info("⚠️ No matches found for IQ calculation")
