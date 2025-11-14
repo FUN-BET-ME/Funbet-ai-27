@@ -1075,8 +1075,8 @@ async def trigger_funbet_iq_calculation(sport: Optional[str] = None):
             else:
                 query['sport_key'] = {'$regex': sport_pattern, '$options': 'i'}
         
-        # Get all matches
-        matches = await odds_cache_collection.find(query).limit(100).to_list(length=100)
+        # Get all matches (increased limit to cover more matches)
+        matches = await odds_cache_collection.find(query).limit(500).to_list(length=500)
         
         if not matches:
             return {
