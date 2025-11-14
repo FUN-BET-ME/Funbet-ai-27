@@ -1022,9 +1022,36 @@ frontend:
         agent: "main"
         comment: "🔍 ROOT CAUSE INVESTIGATION - useEffect at line 376-395 handles inplay filter. It calls fetchInPlayOdds() and filters by sport (lines 385-391). Previous fix attempted to pass sport filter, but user reports CORS error on /api/odds/inplay endpoint. Need to verify: (1) API endpoint is working, (2) Frontend gracefully handles API failures without clearing existing data."
 
+backend:
+  - task: "Turkish Football Leagues Integration - Data Fetching"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/background_worker.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "✅ IMPLEMENTED - Added Turkish Süper Lig (soccer_turkey_super_league) and TFF 1. Lig (soccer_turkey_1_lig) to FOOTBALL_LEAGUES list in background_worker.py (after line 70). Background worker will now fetch odds data for Turkish leagues from the-odds-api.com every scheduled run. Leagues added to same tier as other European leagues. Ready for testing when Turkish matches are available in API."
+
+frontend:
+  - task: "Turkish Football Leagues Integration - Filters & Display"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/LiveOdds.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "✅ IMPLEMENTED - Added Turkish league filters to LiveOdds.jsx footballLeagues map (lines 105-106): '🇹🇷 Süper Lig' (soccer_turkey_super_league) and '🇹🇷 TFF 1. Lig' (soccer_turkey_1_lig). Both leagues include Turkish flag emoji as requested. Leagues appear under Football filter alongside other leagues. Filtering logic automatically works via sport_key matching. Turkish matches will display when available in database. Ready for testing."
+
 test_plan:
   current_focus:
-    - "FunBet IQ Sorting on Predictions Page"
+    - "FunBet IQ Sorting on Predictions Page - COMPLETED"
+    - "Turkish Football Leagues Integration"
     - "IQ Scores Display on LiveOdds Page"
     - "LiveOdds Filter Data Loss (LIVE Now)"
   stuck_tasks: []
