@@ -338,15 +338,26 @@ async def get_all_cached_odds(
     limit: int = Query(100, ge=1, le=500),
     skip: int = Query(0, ge=0),
     sport: str = Query(None),
-    include_scores: bool = Query(True)
+    include_scores: bool = Query(True),
+    time_filter: str = Query(None, description="Filter by time: 'upcoming', 'live', or 'all'")
 ):
-    """Get all cached odds with optional live scores"""
+    """Get all cached odds with optional live scores and time filtering"""
     try:
         from live_scores_service import live_scores_service
         
         now = datetime.now(timezone.utc)
         
         query = {}
+        
+        # CRITICAL FIX: Filter by time status
+        if time_filter == 'upcoming':
+            # Only matches that haven't started yet
+            query['commence_time'] = {'$gt': now}
+        elif time_filter == 'live':
+            # Matches that started in last 3 hours (likely still live)
+            three_hours_ago = now - timedelta(hours=3)
+            query['commence_time'] = {'$gte': three_hours_ago, '$lte': now}
+        # If time_filter is None or 'all', don't filter by time
         
         # Filter by sport if provided
         if sport:
