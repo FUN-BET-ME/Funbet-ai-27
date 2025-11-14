@@ -478,18 +478,14 @@ const LiveOdds = () => {
           // CRITICAL FIX: Only update if we have data
           if (filteredData.length > 0) {
             setAllOdds(filteredData);
-            setApiError(null);
           } else {
             console.log('⚠️ Refresh returned no matches, keeping existing data');
-            if (allOdds.length > 0) {
-              setApiError('No live matches currently. Showing cached data.');
-            }
           }
           if (!isBackgroundRefresh) setLoading(false);
         }).catch(error => {
           console.error('❌ Error refreshing in-play odds:', error);
-          setApiError('Unable to refresh data. Showing cached data.');
           if (!isBackgroundRefresh) setLoading(false);
+          // Silently keep existing data
         });
       } else {
         // Refresh upcoming matches - silent refresh for background updates
