@@ -344,14 +344,14 @@ async def calculate_funbet_iq(match: Dict, db) -> Dict:
         )
         
         # Determine winner and confidence based on IQ difference
-        # Adjusted thresholds for realistic confidence levels (IQ scores typically 40-60 range)
+        # Realistic thresholds based on actual data (max diff ~6 points, avg ~1.5 points)
         iq_diff = abs(home_iq - away_iq)
-        if iq_diff >= 8:
-            confidence = 'High'  # 8+ point difference = clear favorite
-        elif iq_diff >= 4:
-            confidence = 'Medium'  # 4-7 point difference = slight edge
+        if iq_diff >= 4.5:
+            confidence = 'High'  # Top 10% of matches - clear favorite
+        elif iq_diff >= 2.0:
+            confidence = 'Medium'  # Noticeable edge
         else:
-            confidence = 'Low'  # < 4 points = toss-up
+            confidence = 'Low'  # Evenly matched (< 2 points)
         
         # Determine trend
         home_trend = '↗' if home_iq > 60 else '↘' if home_iq < 40 else '→'
