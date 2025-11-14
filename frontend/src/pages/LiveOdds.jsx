@@ -404,13 +404,18 @@ const LiveOdds = () => {
         // CRITICAL FIX: Only update if we have data, otherwise keep existing data
         if (filteredData.length > 0) {
           setAllOdds(filteredData);
+          setApiError(null); // Clear any previous errors
           console.log('✅ Updated with', filteredData.length, 'in-play matches');
         } else {
           console.log('⚠️ No in-play matches found, keeping existing data');
+          if (allOdds.length > 0) {
+            setApiError('No live matches currently. Showing cached data.');
+          }
         }
         setLoading(false);
       }).catch(error => {
         console.error('❌ Error fetching in-play odds:', error);
+        setApiError('Unable to fetch live matches. Showing cached data.');
         setLoading(false);
         // Keep existing data on error
       });
