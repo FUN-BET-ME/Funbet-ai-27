@@ -271,7 +271,12 @@ const LiveOdds = () => {
       }
 
       console.log('📡 API URL:', apiURL);
-      const response = await axios.get(apiURL);
+      const response = await axios.get(apiURL, { 
+        timeout: 30000, // 30 second timeout
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      });
       
       console.log('📥 API Response received:', {
         matchesCount: response.data?.matches?.length || 0,
