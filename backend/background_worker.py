@@ -328,12 +328,22 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # Job 4: Calculate FunBet IQ every 10 minutes
+        self.scheduler.add_job(
+            self.calculate_funbet_iq_job,
+            trigger=IntervalTrigger(minutes=10),
+            id='calculate_funbet_iq',
+            name='Calculate FunBet IQ scores',
+            replace_existing=True
+        )
+        
         # Run initial update immediately
         asyncio.create_task(self.update_odds_job())
+        asyncio.create_task(self.calculate_funbet_iq_job())  # Also run IQ calculation
         
         self.scheduler.start()
-        logger.info("✅ Background worker started - 3 jobs scheduled")
-        logger.info("🎯 Expected usage: ~290 API calls/day")
+        logger.info("✅ Background worker started - 4 jobs scheduled")
+        logger.info("🎯 Expected usage: ~290 API calls/day + IQ calculations")
     
     def stop(self):
         """Stop the background worker"""
