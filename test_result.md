@@ -960,8 +960,70 @@ frontend:
         agent: "testing"
         comment: "✅ COMPREHENSIVE SPORT FILTER TESTING COMPLETED - BUG FIX VERIFIED WORKING. Testing Results: (1) Direct Navigation: ✅ /live-odds?filter=football loads with Football button highlighted and correct backend API calls (🔍 FETCH DEBUG shows filter: football, sportFilter: soccer, ✅ Loaded 100 matches). ✅ /live-odds?filter=cricket loads with Cricket button highlighted (✅ Loaded 5 matches). ✅ /live-odds?filter=basketball loads correctly. (2) Filter Button Clicks: ✅ Clicking Football filter updates URL to ?filter=football and highlights button correctly. ✅ Clicking Cricket filter updates URL to ?filter=cricket. ✅ Clicking All filter updates URL to ?filter=all. (3) Backend Integration: ✅ Console logs confirm backend API calls working correctly with proper sport filtering. ✅ No console errors about 'queryParams' or 'useEffect dependencies' found. (4) Minor Issue: Home page uses ?sport= parameter but LiveOdds expects ?filter= parameter - this causes mismatch when navigating from home page sport tiles. However, the main bug fix is working correctly - the duplicate useEffect issue has been resolved and URL filter parameters are being read and processed correctly."
 
+backend:
+  - task: "FunBet IQ Scores API Integration"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "🔍 INVESTIGATING - User reports IQ scores not appearing on LiveOdds page. Backend endpoint /api/funbet-iq/matches exists at line 949 and is properly registered before app.include_router (line 1170). Need to test if API is returning data correctly."
+
+frontend:
+  - task: "FunBet IQ Sorting on Predictions Page"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/pages/FunBetIQ.jsx"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "🚨 USER REPORTED - FunBet IQ predictions page showing LOW confidence predictions first instead of HIGH confidence first. Should display HIGH → MEDIUM → LOW order."
+      - working: "NA"
+        agent: "main"
+        comment: "🔍 ROOT CAUSE INVESTIGATION - Line 674 has sort logic: confidenceOrder = { 'High': 3, 'Medium': 2, 'Low': 1 }, return (confidenceOrder[b.confidence] || 0) - (confidenceOrder[a.confidence] || 0). This formula (b - a) should put High(3) before Low(1). Need to verify what confidence values are actually in the data."
+
+  - task: "IQ Scores Display on LiveOdds Page"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/pages/LiveOdds.jsx"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "🚨 USER REPORTED - IQ scores not appearing next to team names on LiveOdds page (both mobile and web). Scores should display but are missing."
+      - working: "NA"
+        agent: "main"
+        comment: "🔍 ROOT CAUSE INVESTIGATION - fetchIQScores() function exists (line 331) and is called in useEffect when allOdds.length > 0 (line 430). Display logic exists (lines 923-954) showing Brain icon with home_iq vs away_iq. Issue likely: (1) API call failing with CORS/network error, (2) Match ID mismatch between odds and IQ data, or (3) Backend not returning IQ scores for matches."
+
+  - task: "LiveOdds Filter Data Loss (LIVE Now)"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/pages/LiveOdds.jsx"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "🚨 USER REPORTED - When switching to 'LIVE Now' filter, all data disappears. Previous filter data should remain or show proper empty state."
+      - working: "NA"
+        agent: "main"
+        comment: "🔍 ROOT CAUSE INVESTIGATION - useEffect at line 376-395 handles inplay filter. It calls fetchInPlayOdds() and filters by sport (lines 385-391). Previous fix attempted to pass sport filter, but user reports CORS error on /api/odds/inplay endpoint. Need to verify: (1) API endpoint is working, (2) Frontend gracefully handles API failures without clearing existing data."
+
 test_plan:
-  current_focus: []
+  current_focus:
+    - "FunBet IQ Sorting on Predictions Page"
+    - "IQ Scores Display on LiveOdds Page"
+    - "LiveOdds Filter Data Loss (LIVE Now)"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
