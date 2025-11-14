@@ -61,12 +61,12 @@ const SearchBar = () => {
       
       // Fetch only football and cricket priority (most common searches)
       const [footballRes, cricketRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/odds/football/priority`)
+        axios.get(`${BACKEND_URL}/api/odds/football/priority`, { timeout: 30000 })
           .catch((err) => {
             console.error('[Search] Football API error:', err.message, err.response?.status);
             return { data: [] };
           }),
-        axios.get(`${BACKEND_URL}/api/odds/cricket/priority`)
+        axios.get(`${BACKEND_URL}/api/odds/cricket/priority`, { timeout: 30000 })
           .catch((err) => {
             console.error('[Search] Cricket API error:', err.message, err.response?.status);
             return { data: [] };
