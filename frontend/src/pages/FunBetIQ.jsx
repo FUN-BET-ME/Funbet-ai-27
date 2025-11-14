@@ -197,6 +197,11 @@ const FunBetIQ = () => {
     fetchAIPredictions();
   }, [refreshKey]);
 
+  // Fetch AI predictions when filter changes
+  useEffect(() => {
+    fetchAIPredictions();
+  }, [filter]);
+
   const fetchAllMatches = async () => {
     setLoading(true);
     try {
