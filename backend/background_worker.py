@@ -244,18 +244,6 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in daily refresh job: {e}")
     
-    async def cleanup_old_data(self):
-        """
-        NO CLEANUP - Keep all historical data for predictions tracking
-        This method is kept for future use but does nothing
-        """
-        try:
-            logger.info(f"✅ Historical data preserved - No cleanup performed")
-            logger.info(f"📊 All match data kept permanently for predictions history & analytics")
-                
-        except Exception as e:
-            logger.error(f"❌ Error in cleanup job: {e}")
-    
     async def fetch_live_scores_job(self):
         """
         Fetch live scores every 5 minutes for football and cricket
