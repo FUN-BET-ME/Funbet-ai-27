@@ -400,6 +400,13 @@ const LiveOdds = () => {
     }
   }, [refreshKey]);
 
+  // Fetch IQ scores when odds data loads
+  useEffect(() => {
+    if (allOdds.length > 0) {
+      fetchIQScores();
+    }
+  }, [allOdds.length, fetchIQScores]);
+
   // Auto-refresh for live scores and odds
   useEffect(() => {
     if (filter === 'all') {
