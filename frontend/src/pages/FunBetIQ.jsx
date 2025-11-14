@@ -64,17 +64,20 @@ const FunBetIQ = () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       
-      // Determine sport filter
-      const sportParam = filter === 'football' ? 'football' : 
-                        filter === 'cricket' ? 'cricket' : null;
+      // Determine sport filter - don't send sport param if "all"
+      const params = { limit: 100 };
+      if (filter !== 'all') {
+        params.sport = filter === 'football' ? 'football' : 'cricket';
+      }
+      
+      console.log('🔍 Fetching IQ with params:', params);
       
       const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/matches`, {
-        params: { 
-          sport: sportParam,
-          limit: 50 
-        },
-        timeout: 10000 // 10 second timeout
+        params,
+        timeout: 10000
       });
+      
+      console.log('📦 IQ API Response:', response.data);
       
       // Transform IQ data to match card format
       const iqMatches = (response.data?.matches || []).map(match => ({
@@ -93,13 +96,16 @@ const FunBetIQ = () => {
         away_trend: match.away_trend,
         predicted_team: match.home_iq > match.away_iq ? match.home_team : match.away_team,
         win_probability: Math.round(Math.max(match.home_iq, match.away_iq)),
-        funbet_odds: (100 / Math.max(match.home_iq, match.away_iq) * 1.05).toFixed(2)
+        funbet_odds: (100 / Math.max(match.home_iq, match.away_iq) * 1.05).toFixed(2),
+        // Needed for the cards to display
+        prediction: match.verdict,
+        recommended_bet: match.home_iq > match.away_iq ? 'home' : 'away'
       }));
       
       setAiPredictions(iqMatches);
-      console.log('✅ Fetched', iqMatches.length, 'FunBet IQ matches');
+      console.log('✅ Fetched & transformed', iqMatches.length, 'FunBet IQ matches');
     } catch (error) {
-      console.error('Error fetching FunBet IQ:', error);
+      console.error('❌ Error fetching FunBet IQ:', error);
       setAiPredictions([]);
     } finally {
       setLoadingPredictions(false);
