@@ -8,7 +8,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { getTeamLogo, getCricketFlag } from '../services/teamLogos';
 import axios from 'axios';
 
-const Predictions = () => {
+const FunBetIQ = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const sportParam = queryParams.get('sport') || 'all';
