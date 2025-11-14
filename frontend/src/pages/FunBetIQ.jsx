@@ -104,6 +104,13 @@ const FunBetIQ = () => {
       
       setAiPredictions(iqMatches);
       console.log('✅ Fetched & transformed', iqMatches.length, 'FunBet IQ matches');
+      
+      // Log confidence distribution for debugging
+      const confidenceCounts = iqMatches.reduce((acc, m) => {
+        acc[m.confidence] = (acc[m.confidence] || 0) + 1;
+        return acc;
+      }, {});
+      console.log('📊 Confidence distribution:', confidenceCounts);
     } catch (error) {
       console.error('❌ Error fetching FunBet IQ:', error);
       setAiPredictions([]);
