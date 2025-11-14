@@ -333,7 +333,7 @@ class OddsWorker:
             replace_existing=True
         )
         
-        # Job 5: Calculate FunBet IQ every 10 minutes
+        # Job 4: Calculate FunBet IQ every 10 minutes
         self.scheduler.add_job(
             self.calculate_funbet_iq_job,
             trigger=IntervalTrigger(minutes=10),
