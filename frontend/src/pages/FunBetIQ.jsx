@@ -662,7 +662,13 @@ const FunBetIQ = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {aiPredictions.map((prediction, index) => {
+                {[...aiPredictions]
+                  .sort((a, b) => {
+                    // Sort by confidence: High > Medium > Low
+                    const confidenceOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
+                    return (confidenceOrder[b.confidence] || 0) - (confidenceOrder[a.confidence] || 0);
+                  })
+                  .map((prediction, index) => {
                   // Determine the sport filter for navigation
                   const sportFilter = prediction.sport_key?.includes('soccer') ? 'football' : 
                                      prediction.sport_key?.includes('cricket') ? 'cricket' : 'all';
