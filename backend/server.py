@@ -943,106 +943,8 @@ async def get_news(q: str = Query(None), pageSize: int = Query(20, le=100)):
         raise HTTPException(status_code=500, detail=str(e))
 
 # Include router
-app.include_router(api_router)
 
-# Middleware
-app.add_middleware(CORSMiddleware, allow_credentials=True, allow_origins=settings.cors_origins_list, allow_methods=["*"], allow_headers=["*"])
-app.add_middleware(SecurityHeadersMiddleware)
-app.add_middleware(RateLimitMiddleware, requests_per_minute=settings.rate_limit_per_minute)
-app.add_middleware(GZipMiddleware, minimum_size=1000)
-
-logger.info("✅ FunBet.ai server ready!")
-
-# ==========================================
-# PREDICTIONS HISTORY (with pagination)
-# ==========================================
-
-@api_router.get("/predictions/history")
-async def get_predictions_history(
-    page: int = Query(1, ge=1),
-    page_size: int = Query(20, ge=1, le=100),
-    status: str = Query(None, description="Filter by status: correct, incorrect, pending"),
-    sport: str = Query(None, description="Filter by sport: soccer, cricket")
-):
-    """
-    Get predictions history with pagination
-    Shows all predictions with their outcomes (correct/incorrect/pending)
-    This data grows over time and is never deleted
-    """
-    try:
-        # This will use a predictions collection when we implement AI predictions
-        # For now, return placeholder structure
-        
-        query = {}
-        
-        # Filter by status
-        if status:
-            query['status'] = status
-        
-        # Filter by sport
-        if sport:
-            query['sport'] = sport
-        
-        # Get from predictions collection (to be created)
-        # For now, return empty with proper structure
-        total = 0
-        predictions = []
-        
-        return {
-            "predictions": predictions,
-            "pagination": {
-                "page": page,
-                "page_size": page_size,
-                "total": total,
-                "total_pages": 0
-            },
-            "stats": {
-                "total_predictions": total,
-                "correct": 0,
-                "incorrect": 0,
-                "pending": 0,
-                "accuracy": 0.0
-            },
-            "message": "Predictions history will be populated when AI predictions are generated"
-        }
-        
-    except Exception as e:
-        logger.error(f"Error fetching predictions history: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@api_router.post("/predictions/record")
-async def record_prediction(prediction: dict):
-    """
-    Record a prediction for future tracking
-    Structure: {
-        "match_id": "...",
-        "prediction": "home/away/draw",
-        "confidence": 0.85,
-        "odds": {...},
-        "predicted_at": "...",
-        "sport": "soccer/cricket"
-    }
-    """
-    try:
-        # Add metadata
-        prediction['created_at'] = datetime.now(timezone.utc).isoformat()
-        prediction['status'] = 'pending'
-        prediction['outcome'] = None
-        
-        # Store in predictions collection
-        result = await db_instance.db.predictions.insert_one(prediction)
-        
-        logger.info(f"✅ Prediction recorded: {result.inserted_id}")
-        
-        return {
-            "success": True,
-            "prediction_id": str(result.inserted_id),
-            "message": "Prediction recorded for future tracking"
-        }
-        
-    except Exception as e:
-        logger.error(f"Error recording prediction: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+# ==================== FUNBET IQ V2 ENDPOINTS ====================
 
 @api_router.get("/funbet-iq/matches")
 async def get_funbet_iq_matches(
@@ -1264,4 +1166,106 @@ async def update_team_historical_stats(
     except Exception as e:
         logger.error(f"Error updating team stats: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+app.include_router(api_router)
+
+# Middleware
+app.add_middleware(CORSMiddleware, allow_credentials=True, allow_origins=settings.cors_origins_list, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RateLimitMiddleware, requests_per_minute=settings.rate_limit_per_minute)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+logger.info("✅ FunBet.ai server ready!")
+
+# ==========================================
+# PREDICTIONS HISTORY (with pagination)
+# ==========================================
+
+@api_router.get("/predictions/history")
+async def get_predictions_history(
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100),
+    status: str = Query(None, description="Filter by status: correct, incorrect, pending"),
+    sport: str = Query(None, description="Filter by sport: soccer, cricket")
+):
+    """
+    Get predictions history with pagination
+    Shows all predictions with their outcomes (correct/incorrect/pending)
+    This data grows over time and is never deleted
+    """
+    try:
+        # This will use a predictions collection when we implement AI predictions
+        # For now, return placeholder structure
+        
+        query = {}
+        
+        # Filter by status
+        if status:
+            query['status'] = status
+        
+        # Filter by sport
+        if sport:
+            query['sport'] = sport
+        
+        # Get from predictions collection (to be created)
+        # For now, return empty with proper structure
+        total = 0
+        predictions = []
+        
+        return {
+            "predictions": predictions,
+            "pagination": {
+                "page": page,
+                "page_size": page_size,
+                "total": total,
+                "total_pages": 0
+            },
+            "stats": {
+                "total_predictions": total,
+                "correct": 0,
+                "incorrect": 0,
+                "pending": 0,
+                "accuracy": 0.0
+            },
+            "message": "Predictions history will be populated when AI predictions are generated"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching predictions history: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/predictions/record")
+async def record_prediction(prediction: dict):
+    """
+    Record a prediction for future tracking
+    Structure: {
+        "match_id": "...",
+        "prediction": "home/away/draw",
+        "confidence": 0.85,
+        "odds": {...},
+        "predicted_at": "...",
+        "sport": "soccer/cricket"
+    }
+    """
+    try:
+        # Add metadata
+        prediction['created_at'] = datetime.now(timezone.utc).isoformat()
+        prediction['status'] = 'pending'
+        prediction['outcome'] = None
+        
+        # Store in predictions collection
+        result = await db_instance.db.predictions.insert_one(prediction)
+        
+        logger.info(f"✅ Prediction recorded: {result.inserted_id}")
+        
+        return {
+            "success": True,
+            "prediction_id": str(result.inserted_id),
+            "message": "Prediction recorded for future tracking"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error recording prediction: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
