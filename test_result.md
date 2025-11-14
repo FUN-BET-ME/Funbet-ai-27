@@ -963,15 +963,18 @@ frontend:
 backend:
   - task: "FunBet IQ Scores API Integration"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "🔍 INVESTIGATING - User reports IQ scores not appearing on LiveOdds page. Backend endpoint /api/funbet-iq/matches exists at line 949 and is properly registered before app.include_router (line 1170). Need to test if API is returning data correctly."
+      - working: true
+        agent: "testing"
+        comment: "✅ VERIFIED WORKING - FunBet IQ API endpoint /api/funbet-iq/matches?limit=20 is fully functional. Returns 200 OK with 0.04s response time. Response structure correct with 'success', 'count', and 'matches' fields. All 20 matches contain required IQ data: confidence levels (High/Medium/Low), home_iq scores, away_iq scores, match_id, team names, and calculated_at timestamps. API is providing proper data for frontend integration. The backend IQ calculation and storage system is working correctly."
 
 frontend:
   - task: "FunBet IQ Sorting on Predictions Page"
