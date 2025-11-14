@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "SPORT FILTER BUG FIX - The sport filters on LiveOdds page aren't working correctly. When users select 'Football' or 'Cricket', they get empty page or wrong matches. The MongoDB regex query in /api/odds/all-cached endpoint needs to be fixed to correctly filter matches by sport_key."
+user_problem_statement: "FUNBET IQ BUG FIXES - Three critical issues to fix: (1) FunBet IQ page sorting LOW confidence first instead of HIGH confidence first. (2) IQ scores not appearing on LiveOdds page for teams. (3) Data disappearing when changing filters on LiveOdds page (especially 'LIVE Now' filter)."
 
 backend:
   - task: "Bookmaker merge logic with deduplication"
