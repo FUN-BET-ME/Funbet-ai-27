@@ -1044,10 +1044,6 @@ async def record_prediction(prediction: dict):
         logger.error(f"Error recording prediction: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-
-
-# ==================== FUNBET IQ V2 ENDPOINTS ====================
-
 @api_router.get("/funbet-iq/matches")
 async def get_funbet_iq_matches(
     sport: Optional[str] = None,
