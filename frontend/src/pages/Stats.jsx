@@ -49,7 +49,7 @@ const Stats = () => {
         params: {
           limit: 100,
           filter: historyFilter,
-          sort_by: 'recent',
+          sort_by: historySortBy,
           _t: Date.now()
         }
       });
