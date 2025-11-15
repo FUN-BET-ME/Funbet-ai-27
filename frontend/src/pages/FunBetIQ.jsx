@@ -31,6 +31,9 @@ const FunBetIQ = () => {
   const [historyFilter, setHistoryFilter] = useState('all');
   const [historySortBy, setHistorySortBy] = useState('correct_first');
   
+  // Stats for current predictions tab
+  const [accuracyStats, setAccuracyStats] = useState(null);
+  
   const { toggleFollowTeam, isFollowing } = useFavorites();
 
   // Update filter when URL changes
