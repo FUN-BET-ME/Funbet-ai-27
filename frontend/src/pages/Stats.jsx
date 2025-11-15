@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown, Flame, Clock, ArrowRight, RefreshCw, AlertCir
 import { Button } from '../components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import TeamLogo from '../components/TeamLogo';
+import { TeamLogo } from '../components/MatchComponents';
 
 const Stats = () => {
   const navigate = useNavigate();
