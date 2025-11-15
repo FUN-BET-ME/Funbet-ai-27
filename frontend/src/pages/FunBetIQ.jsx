@@ -54,10 +54,13 @@ const FunBetIQ = () => {
     setRefreshKey(prev => prev + 1);
   };
 
-  // Fetch history when switching to history tab
+  // Fetch data when switching tabs
   useEffect(() => {
     if (activeTab === 'history') {
       fetchPredictionHistory();
+    } else {
+      // Fetch accuracy stats for current predictions tab
+      fetchAccuracyStats();
     }
   }, [activeTab, historyFilter, historySortBy]);
 
