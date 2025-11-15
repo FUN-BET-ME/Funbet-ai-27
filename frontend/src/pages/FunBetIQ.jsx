@@ -580,6 +580,49 @@ const FunBetIQ = () => {
             </div>
           </div>
 
+          {/* Performance Stats Section */}
+          {accuracyStats && (
+            <div className="mb-8 bg-gradient-to-br from-purple-900/30 to-indigo-900/30 rounded-2xl p-6 border border-[#FFD700]/20">
+              <div className="flex items-center gap-2 mb-6">
+                <TrendingUp className="w-5 h-5 text-[#FFD700]" />
+                <h3 className="text-xl font-bold text-white">Performance Stats</h3>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                {/* Total */}
+                <div className="bg-purple-900/40 rounded-xl p-4 border border-purple-500/30">
+                  <p className="text-gray-400 text-sm mb-1">Total</p>
+                  <p className="text-3xl font-bold text-white">{accuracyStats.overall?.total || 0}</p>
+                </div>
+                
+                {/* Correct */}
+                <div className="bg-green-900/40 rounded-xl p-4 border border-green-500/30">
+                  <p className="text-gray-400 text-sm mb-1">Correct ✓</p>
+                  <p className="text-3xl font-bold text-green-400">{accuracyStats.overall?.correct || 0}</p>
+                </div>
+                
+                {/* Incorrect */}
+                <div className="bg-red-900/40 rounded-xl p-4 border border-red-500/30">
+                  <p className="text-gray-400 text-sm mb-1">Incorrect ✗</p>
+                  <p className="text-3xl font-bold text-red-400">{accuracyStats.overall?.incorrect || 0}</p>
+                </div>
+                
+                {/* Pending */}
+                <div className="bg-yellow-900/40 rounded-xl p-4 border border-yellow-500/30">
+                  <p className="text-gray-400 text-sm mb-1">Pending ⏳</p>
+                  <p className="text-3xl font-bold text-yellow-400">{aiPredictions.length || 0}</p>
+                  <p className="text-xs text-gray-500 mt-1">To be completed</p>
+                </div>
+                
+                {/* Accuracy */}
+                <div className="bg-gradient-to-br from-[#FFD700]/20 to-[#FFD700]/10 rounded-xl p-4 border border-[#FFD700]/40">
+                  <p className="text-gray-400 text-sm mb-1">Accuracy</p>
+                  <p className="text-3xl font-bold text-[#FFD700]">{accuracyStats.overall?.accuracy_percentage || 0}%</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Current Tab Content */}
           <div>
           <div className="mb-8 bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl p-6 border border-[#FFD700]/20">
