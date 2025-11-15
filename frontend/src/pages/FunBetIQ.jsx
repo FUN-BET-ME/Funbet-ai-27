@@ -113,7 +113,7 @@ const FunBetIQ = () => {
       }));
       
       setAiPredictions(iqMatches);
-      console.log('✅ Fetched & transformed', iqMatches.length, 'FunBet IQ matches (Total pending:', response.data?.count, ')');
+      console.log('✅ Fetched & transformed', iqMatches.length, 'FunBet IQ matches (Total pending:', response.data?.total || response.data?.count, ')');
       
       // Log confidence distribution for debugging
       const confidenceCounts = iqMatches.reduce((acc, m) => {
