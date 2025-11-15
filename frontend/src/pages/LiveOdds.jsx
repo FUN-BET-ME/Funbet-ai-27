@@ -818,7 +818,19 @@ const LiveOdds = () => {
                       const commenceTime = new Date(match.commence_time);
                       const now = new Date();
                       const hoursSinceStart = (now - commenceTime) / (1000 * 60 * 60);
-                      // Match is live if it started in last 3 hours and not marked completed
+                      
+                      // CRICKET: Different durations based on format
+                      if (match.sport_key && match.sport_key.includes('cricket')) {
+                        if (match.sport_key.includes('test')) {
+                          // Test matches: 5 days (120 hours)
+                          return hoursSinceStart > 0 && hoursSinceStart < 120 && !match.completed;
+                        } else {
+                          // ODI/T20: 6-8 hours
+                          return hoursSinceStart > 0 && hoursSinceStart < 8 && !match.completed;
+                        }
+                      }
+                      
+                      // FOOTBALL: 2-3 hours
                       return hoursSinceStart > 0 && hoursSinceStart < 3 && !match.completed;
                     }
                     
