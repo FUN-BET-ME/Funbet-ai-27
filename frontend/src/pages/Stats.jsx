@@ -16,6 +16,7 @@ const Stats = () => {
   const [historySortBy, setHistorySortBy] = useState('recent_first');
   const [accuracyStats, setAccuracyStats] = useState(null);
   const [totalPendingCount, setTotalPendingCount] = useState(0);
+  const [iqPredictionsMap, setIqPredictionsMap] = useState({});
   
   // Betting Intelligence State
   const [trendingMatches, setTrendingMatches] = useState({
