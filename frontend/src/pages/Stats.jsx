@@ -86,6 +86,33 @@ const Stats = () => {
     }
   };
 
+  // Fetch all current IQ predictions for overlay on betting intelligence cards
+  const fetchIQPredictions = async () => {
+    try {
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/matches`, {
+        params: { limit: 200 }
+      });
+      
+      if (response.data.success && response.data.matches) {
+        // Create a map of match_id -> prediction
+        const predictionsMap = {};
+        response.data.matches.forEach(match => {
+          predictionsMap[match.match_id] = {
+            predicted_team: match.home_iq > match.away_iq ? match.home_team : match.away_team,
+            confidence: match.confidence,
+            home_iq: match.home_iq,
+            away_iq: match.away_iq
+          };
+        });
+        setIqPredictionsMap(predictionsMap);
+        console.log('✅ Loaded', Object.keys(predictionsMap).length, 'IQ predictions for overlay');
+      }
+    } catch (error) {
+      console.error('Error fetching IQ predictions:', error);
+    }
+  };
+
   const fetchData = async () => {
     setLoading(true);
     setError(null);
