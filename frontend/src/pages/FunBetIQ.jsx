@@ -134,10 +134,19 @@ const FunBetIQ = () => {
   const fetchAccuracyStats = async () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/accuracy`);
       
-      if (response.data.success) {
-        setAccuracyStats(response.data.accuracy);
+      // Fetch accuracy stats
+      const accuracyResponse = await axios.get(`${BACKEND_URL}/api/funbet-iq/accuracy`);
+      if (accuracyResponse.data.success) {
+        setAccuracyStats(accuracyResponse.data.accuracy);
+      }
+      
+      // Fetch total pending count (all sports, not filtered)
+      const pendingResponse = await axios.get(`${BACKEND_URL}/api/funbet-iq/matches`, {
+        params: { limit: 1 }  // We only need the total count, not the matches
+      });
+      if (pendingResponse.data.success) {
+        setTotalPendingCount(pendingResponse.data.total || 0);
       }
     } catch (error) {
       console.error('Error fetching accuracy stats:', error);
