@@ -86,8 +86,8 @@ const FunBetIQ = () => {
       
       console.log('📦 IQ API Response:', response.data);
       
-      // Store total count for pending stats
-      setTotalPendingCount(response.data?.count || 0);
+      // Store total count for pending stats (use 'total' field for all pending predictions)
+      setTotalPendingCount(response.data?.total || response.data?.count || 0);
       
       // Transform IQ data to match card format
       const iqMatches = (response.data?.matches || []).map(match => ({
