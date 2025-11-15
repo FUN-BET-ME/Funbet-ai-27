@@ -590,7 +590,10 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
     'CFR Cluj': 'https://upload.wikimedia.org/wikipedia/en/e/ee/CFR_Cluj_logo.svg',
     
     // BULGARIA
-    'Ludogorets': 'https://upload.wikimedia.org/wikipedia/en/3/3e/PFC_Ludogorets_Razgrad_logo.svg'
+    'Ludogorets': 'https://upload.wikimedia.org/wikipedia/en/3/3e/PFC_Ludogorets_Razgrad_logo.svg',
+    
+    // MERGE ADDITIONAL LOGOS (Championship, League One, League Two, Turkish leagues, etc.)
+    ...additionalFootballLogos
   };
   
   // Check if football team has logo mapping
