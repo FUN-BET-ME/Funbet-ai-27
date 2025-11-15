@@ -910,43 +910,29 @@ const FunBetIQ = () => {
                     <TrendingUp className="w-6 h-6 text-[#FFD700]" />
                     Performance Stats
                   </h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div className="bg-purple-900/30 rounded-lg p-4 text-center">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div className="bg-purple-900/40 rounded-xl p-4 border border-purple-500/30">
                       <p className="text-gray-400 text-sm mb-1">Total</p>
                       <p className="text-3xl font-bold text-white">{historyStats.total || 0}</p>
                     </div>
-                    <div className="bg-green-900/30 rounded-lg p-4 text-center">
+                    <div className="bg-green-900/40 rounded-xl p-4 border border-green-500/30">
                       <p className="text-gray-400 text-sm mb-1">Correct ✓</p>
                       <p className="text-3xl font-bold text-green-400">{historyStats.correct || 0}</p>
                     </div>
-                    <div className="bg-red-900/30 rounded-lg p-4 text-center">
+                    <div className="bg-red-900/40 rounded-xl p-4 border border-red-500/30">
                       <p className="text-gray-400 text-sm mb-1">Incorrect ✗</p>
                       <p className="text-3xl font-bold text-red-400">{historyStats.incorrect || 0}</p>
                     </div>
-                    <div className="bg-yellow-900/30 rounded-lg p-4 text-center">
+                    <div className="bg-yellow-900/40 rounded-xl p-4 border border-yellow-500/30">
+                      <p className="text-gray-400 text-sm mb-1">Pending ⏳</p>
+                      <p className="text-3xl font-bold text-yellow-400">{aiPredictions.length || 0}</p>
+                      <p className="text-xs text-gray-500 mt-1">To be completed</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-[#FFD700]/20 to-[#FFD700]/10 rounded-xl p-4 border border-[#FFD700]/40">
                       <p className="text-gray-400 text-sm mb-1">Accuracy</p>
                       <p className="text-3xl font-bold text-[#FFD700]">{historyStats.accuracy || 0}%</p>
                     </div>
                   </div>
-                  
-                  {/* Pending info - Prominent display */}
-                  {historyStats.pending > 0 && (
-                    <div className="mt-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                      <div className="flex items-center justify-center gap-3">
-                        <div className="flex items-center gap-2">
-                          <span className="text-2xl">⏳</span>
-                          <div className="text-center">
-                            <p className="text-sm text-gray-400 mb-1">Pending</p>
-                            <p className="text-2xl font-bold text-blue-400">{historyStats.pending}</p>
-                          </div>
-                        </div>
-                        <div className="border-l border-gray-600 h-12 mx-2"></div>
-                        <p className="text-sm text-gray-300 max-w-xs">
-                          These predictions are for matches that haven't finished yet
-                        </p>
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
 
