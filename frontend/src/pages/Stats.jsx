@@ -470,11 +470,11 @@ const Stats = () => {
           <div className="flex items-center gap-3 mb-4">
             <BarChart3 className="w-8 h-8 text-[#FFD700]" />
             <h1 className="text-3xl sm:text-4xl font-bold">
-              Betting <span className="text-[#FFD700]">Intelligence</span>
+              Stats & <span className="text-[#FFD700]">Intelligence</span>
             </h1>
           </div>
           <p className="text-gray-400 text-lg mb-6">
-            Advanced market analytics to find the best betting opportunities
+            FunBet IQ predictions and advanced market analytics
           </p>
           
           {/* Sport Filters */}
