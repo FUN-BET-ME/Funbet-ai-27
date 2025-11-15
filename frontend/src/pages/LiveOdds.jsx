@@ -1211,7 +1211,22 @@ const LiveOdds = () => {
                                   return null;
                                 })()}
                               </div>
-                              <span className="text-gray-400 text-xs sm:text-sm font-medium flex-shrink-0 px-1">vs</span>
+                              {/* FunBet IQ Prediction in center */}
+                              {(() => {
+                                const matchIQ = iqScores[match.id];
+                                if (matchIQ) {
+                                  const predictedTeam = matchIQ.home_iq > matchIQ.away_iq ? homeTeam : awayTeam;
+                                  return (
+                                    <div className="flex flex-col items-center gap-0.5 px-2 flex-shrink-0">
+                                      <Brain className="w-4 h-4 text-[#FFD700]" />
+                                      <span className="text-[#FFD700] text-xs font-bold text-center leading-tight max-w-[80px] truncate" title={predictedTeam}>
+                                        {predictedTeam}
+                                      </span>
+                                    </div>
+                                  );
+                                }
+                                return <span className="text-gray-400 text-xs sm:text-sm font-medium flex-shrink-0 px-1">vs</span>;
+                              })()}
                               <div className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0 justify-end">
                                 <span className="text-white font-semibold truncate text-right text-sm sm:text-base">{awayTeam}</span>
                                 {(() => {
