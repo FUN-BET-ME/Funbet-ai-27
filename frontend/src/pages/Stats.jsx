@@ -292,9 +292,19 @@ const Stats = () => {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 600000);
+    fetchPredictionHistory();
+    fetchAccuracyStats();
+    const interval = setInterval(() => {
+      fetchData();
+      fetchPredictionHistory();
+      fetchAccuracyStats();
+    }, 600000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    fetchPredictionHistory();
+  }, [historyFilter]);
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
