@@ -34,6 +34,7 @@ function App() {
             <Route path="/golf-odds" element={<GolfOdds />} />
             <Route path="/other-sports-odds" element={<OtherSportsOdds />} />
             <Route path="/live-odds" element={<LiveOdds />} />
+            <Route path="/odds" element={<LiveOdds />} />
             <Route path="/match/:matchId" element={<MatchDetail />} />
             <Route path="/prediction/:matchId" element={<MatchPrediction />} />
             <Route path="/funbet-iq" element={<FunBetIQ />} />
