@@ -653,23 +653,16 @@ const Stats = () => {
                         <div className="text-center">
                           <TeamLogo team={pred.home_team} sport={pred.sport_key} size="sm" />
                           <p className="text-white text-xs mt-1">{pred.home_team}</p>
-                          {pred.predicted_team === pred.home_team && (
-                            <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-[#FFD700] text-[#2E004F] rounded-full text-xs font-bold">
-                              ⚡ Pick
-                            </div>
-                          )}
                         </div>
                         <div className="text-center">
-                          <p className="text-gray-500 font-bold text-sm">VS</p>
+                          <div className="flex flex-col items-center gap-1">
+                            <Brain className="w-5 h-5 text-[#FFD700]" />
+                            <p className="text-[#FFD700] font-bold text-xs leading-tight">{pred.predicted_team}</p>
+                          </div>
                         </div>
                         <div className="text-center">
                           <TeamLogo team={pred.away_team} sport={pred.sport_key} size="sm" />
                           <p className="text-white text-xs mt-1">{pred.away_team}</p>
-                          {pred.predicted_team === pred.away_team && (
-                            <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-[#FFD700] text-[#2E004F] rounded-full text-xs font-bold">
-                              ⚡ Pick
-                            </div>
-                          )}
                         </div>
                       </div>
 
