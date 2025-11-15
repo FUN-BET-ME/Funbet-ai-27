@@ -23,6 +23,7 @@ const FunBetIQ = () => {
   const [teamLogos, setTeamLogos] = useState({});
   const [aiPredictions, setAiPredictions] = useState([]);
   const [loadingPredictions, setLoadingPredictions] = useState(false);
+  const [totalPendingCount, setTotalPendingCount] = useState(0);
   
   // History tab states
   const [historyPredictions, setHistoryPredictions] = useState([]);
