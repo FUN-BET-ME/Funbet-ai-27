@@ -12,6 +12,11 @@ const logoCache = new Map();
 export const getTeamLogo = async (teamName, sport = 'Soccer') => {
   if (!teamName) return null;
   
+  // CRICKET: Use country flags instead of logos
+  if (sport && sport.toLowerCase().includes('cricket')) {
+    return await getCricketFlag(teamName);
+  }
+  
   // Check cache first
   const cacheKey = `${teamName.toLowerCase()}_${sport.toLowerCase()}`;
   if (logoCache.has(cacheKey)) {
