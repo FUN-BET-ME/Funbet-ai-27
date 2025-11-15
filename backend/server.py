@@ -979,7 +979,7 @@ async def get_funbet_iq_matches(
     """
     try:
         db = db_instance.db
-        iq_scores_collection = db['funbet_iq_scores']
+        iq_scores_collection = db['funbet_iq_predictions']
         
         # Build query - only get unverified predictions (pending)
         query = {
