@@ -122,6 +122,20 @@ const FunBetIQ = () => {
     }
   };
 
+  // Fetch accuracy stats for current predictions tab
+  const fetchAccuracyStats = async () => {
+    try {
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/accuracy`);
+      
+      if (response.data.success) {
+        setAccuracyStats(response.data.accuracy);
+      }
+    } catch (error) {
+      console.error('Error fetching accuracy stats:', error);
+    }
+  };
+
   // Fetch prediction history
   const fetchPredictionHistory = async () => {
     setHistoryLoading(true);
