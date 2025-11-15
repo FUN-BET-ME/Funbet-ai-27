@@ -1381,7 +1381,7 @@ const LiveOdds = () => {
                                     rel="noopener noreferrer"
                                     className="inline-block"
                                   >
-                                    <span className="bg-[#FFD700] text-[#2E004F] px-5 py-2 rounded-lg font-black text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg">
+                                    <span className="bg-[#FFD700] text-[#2E004F] px-2 sm:px-5 py-1 sm:py-2 rounded-lg font-black text-base sm:text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
                                       {funbetAwayOdds}
                                     </span>
                                   </a>
