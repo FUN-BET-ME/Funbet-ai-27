@@ -1,4 +1,6 @@
 // Team Logo Service - Using reliable logo sources
+import { additionalFootballLogos } from './additionalLogos';
+
 const logoCache = new Map();
 
 /**
