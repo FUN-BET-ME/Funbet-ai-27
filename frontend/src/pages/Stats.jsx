@@ -533,6 +533,171 @@ const Stats = () => {
 
         {!loading && !error && (
           <div className="space-y-8">
+            {/* FunBet IQ Predictions Section */}
+            <section className="bg-gradient-to-br from-purple-900/20 to-indigo-900/20 rounded-2xl p-6 border-2 border-[#FFD700]/30">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <Brain className="w-8 h-8 text-[#FFD700]" />
+                  <div>
+                    <h2 className="text-2xl font-bold">🧠 FunBet IQ Predictions</h2>
+                    <p className="text-gray-400 text-sm">AI-powered match predictions with performance tracking</p>
+                  </div>
+                </div>
+                <Link 
+                  to="/funbet-iq" 
+                  className="text-[#FFD700] hover:text-[#FFD700]/80 flex items-center gap-2 text-sm font-semibold"
+                >
+                  View All <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              {/* Performance Stats */}
+              {accuracyStats && (
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                  <div className="bg-purple-900/40 rounded-xl p-4 border border-purple-500/30">
+                    <p className="text-gray-400 text-sm mb-1">Total</p>
+                    <p className="text-3xl font-bold text-white">{accuracyStats.overall?.total || 0}</p>
+                  </div>
+                  <div className="bg-green-900/40 rounded-xl p-4 border border-green-500/30">
+                    <p className="text-gray-400 text-sm mb-1">Correct ✓</p>
+                    <p className="text-3xl font-bold text-green-400">{accuracyStats.overall?.correct || 0}</p>
+                  </div>
+                  <div className="bg-red-900/40 rounded-xl p-4 border border-red-500/30">
+                    <p className="text-gray-400 text-sm mb-1">Incorrect ✗</p>
+                    <p className="text-3xl font-bold text-red-400">{accuracyStats.overall?.incorrect || 0}</p>
+                  </div>
+                  <div className="bg-yellow-900/40 rounded-xl p-4 border border-yellow-500/30">
+                    <p className="text-gray-400 text-sm mb-1">Pending ⏳</p>
+                    <p className="text-3xl font-bold text-yellow-400">{totalPendingCount || 0}</p>
+                    <p className="text-xs text-gray-500 mt-1">To complete</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-[#FFD700]/20 to-[#FFD700]/10 rounded-xl p-4 border border-[#FFD700]/40">
+                    <p className="text-gray-400 text-sm mb-1">Accuracy</p>
+                    <p className="text-3xl font-bold text-[#FFD700]">{accuracyStats.overall?.accuracy_percentage || 0}%</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Filter Buttons */}
+              <div className="flex gap-2 mb-4">
+                <Button
+                  onClick={() => setHistoryFilter('all')}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    historyFilter === 'all'
+                      ? 'bg-[#FFD700] text-[#2E004F]'
+                      : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-[#2E004F]/30'
+                  }`}
+                >
+                  All
+                </Button>
+                <Button
+                  onClick={() => setHistoryFilter('correct')}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    historyFilter === 'correct'
+                      ? 'bg-green-500 text-white'
+                      : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-[#2E004F]/30'
+                  }`}
+                >
+                  Correct ✓
+                </Button>
+                <Button
+                  onClick={() => setHistoryFilter('incorrect')}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    historyFilter === 'incorrect'
+                      ? 'bg-red-500 text-white'
+                      : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-[#2E004F]/30'
+                  }`}
+                >
+                  Incorrect ✗
+                </Button>
+              </div>
+
+              {/* Predictions Grid */}
+              {historyLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-48 bg-white/5 rounded-xl animate-pulse" />
+                  ))}
+                </div>
+              ) : historyPredictions.length === 0 ? (
+                <div className="text-center py-12 bg-[#2E004F]/30 rounded-xl">
+                  <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-400">No predictions found for this filter</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {historyPredictions.slice(0, 6).map((pred) => (
+                    <div
+                      key={pred._id || pred.match_id}
+                      className="bg-[#2E004F]/30 border border-[#2E004F]/50 rounded-xl p-4 hover:border-[#FFD700]/30 transition-all"
+                    >
+                      {/* Header */}
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-gray-400 text-xs">{pred.sport_title || 'Match'}</span>
+                        {pred.was_correct ? (
+                          <div className="flex items-center gap-1 px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-bold">
+                            <CheckCircle className="w-3 h-3" />
+                            Correct
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1 px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs font-bold">
+                            <XCircle className="w-3 h-3" />
+                            Incorrect
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Teams */}
+                      <div className="grid grid-cols-3 gap-2 items-center mb-3">
+                        <div className="text-center">
+                          <TeamLogo team={pred.home_team} sport={pred.sport_key} size="sm" />
+                          <p className="text-white text-xs mt-1">{pred.home_team}</p>
+                          {pred.predicted_team === pred.home_team && (
+                            <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-[#FFD700] text-[#2E004F] rounded-full text-xs font-bold">
+                              ⚡ Pick
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <p className="text-gray-500 font-bold text-sm">VS</p>
+                        </div>
+                        <div className="text-center">
+                          <TeamLogo team={pred.away_team} sport={pred.sport_key} size="sm" />
+                          <p className="text-white text-xs mt-1">{pred.away_team}</p>
+                          {pred.predicted_team === pred.away_team && (
+                            <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-[#FFD700] text-[#2E004F] rounded-full text-xs font-bold">
+                              ⚡ Pick
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Prediction vs Result */}
+                      <div className="bg-gradient-to-r from-[#FFD700]/10 to-[#FFD700]/5 rounded p-2 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Predicted:</span>
+                          <span className="text-[#FFD700] font-bold">{pred.predicted_team}</span>
+                        </div>
+                        <div className="flex justify-between mt-1">
+                          <span className="text-gray-400">Winner:</span>
+                          <span className={pred.was_correct ? 'text-green-400 font-bold' : 'text-red-400 font-bold'}>
+                            {pred.actual_winner}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {/* Betting Intelligence Divider */}
+            <div className="flex items-center gap-4">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#FFD700]/30 to-transparent"></div>
+              <h2 className="text-xl font-bold text-gray-400">Betting Intelligence</h2>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#FFD700]/30 to-transparent"></div>
+            </div>
+
             {/* 1. Hot Markets */}
             <section>
               <div className="flex items-center gap-2 mb-4">
