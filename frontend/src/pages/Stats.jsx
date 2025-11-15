@@ -323,10 +323,12 @@ const Stats = () => {
     fetchData();
     fetchPredictionHistory();
     fetchAccuracyStats();
+    fetchIQPredictions();
     const interval = setInterval(() => {
       fetchData();
       fetchPredictionHistory();
       fetchAccuracyStats();
+      fetchIQPredictions();
     }, 600000);
     return () => clearInterval(interval);
   }, []);
