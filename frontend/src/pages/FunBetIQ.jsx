@@ -615,7 +615,7 @@ const FunBetIQ = () => {
                 {/* Pending */}
                 <div className="bg-yellow-900/40 rounded-xl p-4 border border-yellow-500/30">
                   <p className="text-gray-400 text-sm mb-1">Pending ⏳</p>
-                  <p className="text-3xl font-bold text-yellow-400">{aiPredictions.length || 0}</p>
+                  <p className="text-3xl font-bold text-yellow-400">{totalPendingCount || 0}</p>
                   <p className="text-xs text-gray-500 mt-1">To be completed</p>
                 </div>
                 
