@@ -1160,15 +1160,40 @@ async def get_funbet_iq_track_record(
                 # Get match data for odds and scores
                 match_data = await odds_collection.find_one({'id': match_id})
                 
-                # Build track record entry
+                # Map predicted_winner to team name
+                predicted_winner = pred.get('predicted_winner', '')
+                if predicted_winner == 'home':
+                    predicted_team = pred.get('home_team')
+                elif predicted_winner == 'away':
+                    predicted_team = pred.get('away_team')
+                else:
+                    predicted_team = 'Draw'
+                
+                # Map actual_winner to team name  
+                actual_winner = pred.get('actual_winner', '')
+                if actual_winner == 'home':
+                    actual_winner_team = pred.get('home_team')
+                elif actual_winner == 'away':
+                    actual_winner_team = pred.get('away_team')
+                else:
+                    actual_winner_team = 'Draw'
+                
+                # Build track record entry with frontend-expected fields
                 entry = {
                     'match_id': match_id,
                     'home_team': pred.get('home_team'),
                     'away_team': pred.get('away_team'),
                     'sport_key': pred.get('sport_key'),
                     'sport_title': pred.get('sport_key', '').replace('_', ' ').title(),
+                    # Frontend expected fields
+                    'predicted_team': predicted_team,
+                    'actual_winner': actual_winner_team,
+                    'result_verified': True,  # All entries in track record are verified
+                    'was_correct': pred.get('prediction_correct'),
+                    'confidence_score': pred.get('confidence'),
+                    'archived_at': pred.get('verified_at') or pred.get('calculated_at'),
+                    # Backend fields for reference
                     'predicted_winner': pred.get('predicted_winner'),
-                    'actual_winner': pred.get('actual_winner'),
                     'prediction_correct': pred.get('prediction_correct'),
                     'confidence': pred.get('confidence'),
                     'home_iq': pred.get('home_iq'),
