@@ -6,13 +6,29 @@ import axios from 'axios';
 import TeamLogo from '../components/TeamLogo';
 
 const Stats = () => {
+  const navigate = useNavigate();
+  
+  // FunBet IQ Predictions State
   const [historyPredictions, setHistoryPredictions] = useState([]);
   const [historyStats, setHistoryStats] = useState(null);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyFilter, setHistoryFilter] = useState('all');
-  const [historySortBy, setHistorySortBy] = useState('recent');
   const [accuracyStats, setAccuracyStats] = useState(null);
   const [totalPendingCount, setTotalPendingCount] = useState(0);
+  
+  // Betting Intelligence State
+  const [trendingMatches, setTrendingMatches] = useState({
+    hotMarkets: [],
+    valueOpportunities: [],
+    sharpMoney: [],
+    startingSoon: [],
+    arbitrageOpportunities: []
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [filter, setFilter] = useState('all');
+  const sports = ['all', 'football', 'cricket'];
   
   const formatSportName = (sport) => {
     const sportNames = {
