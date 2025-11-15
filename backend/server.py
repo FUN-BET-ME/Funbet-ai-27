@@ -1103,6 +1103,133 @@ async def get_funbet_iq_accuracy():
         )
 
 
+@api_router.get("/funbet-iq/track-record")
+async def get_funbet_iq_track_record(
+    limit: int = Query(100, ge=1, le=500),
+    filter: str = Query('all', regex='^(all|correct|incorrect)$'),
+    sort_by: str = Query('recent_first', regex='^(recent_first|correct_first|high_confidence)$')
+):
+    """
+    Get FunBet IQ prediction track record (verified predictions with outcomes)
+    
+    Args:
+        limit: Maximum number of predictions to return
+        filter: Filter by result ('all', 'correct', 'incorrect')
+        sort_by: Sort order ('recent_first', 'correct_first', 'high_confidence')
+    
+    Returns:
+        Track record and statistics
+    """
+    try:
+        from prediction_verification_service import get_prediction_service
+        
+        db = db_instance.db
+        iq_scores_collection = db.funbet_iq_scores
+        odds_collection = db.odds_cache
+        
+        # Build query for verified predictions
+        query = {
+            'prediction_correct': {'$ne': None}  # Only verified predictions
+        }
+        
+        # Apply filter
+        if filter == 'correct':
+            query['prediction_correct'] = True
+        elif filter == 'incorrect':
+            query['prediction_correct'] = False
+        
+        # Determine sort order
+        sort_order = []
+        if sort_by == 'correct_first':
+            sort_order = [('prediction_correct', -1), ('verified_at', -1)]  # Correct first, then recent
+        elif sort_by == 'high_confidence':
+            # Create custom sort: High=3, Medium=2, Low=1
+            sort_order = [('confidence', -1), ('verified_at', -1)]
+        else:  # recent_first (default)
+            sort_order = [('verified_at', -1)]
+        
+        # Get verified predictions
+        verified_predictions = await iq_scores_collection.find(query).sort(sort_order).limit(limit).to_list(length=limit)
+        
+        # Enrich with match details and scores
+        track_record = []
+        for pred in verified_predictions:
+            try:
+                match_id = pred.get('match_id')
+                
+                # Get match data for odds and scores
+                match_data = await odds_collection.find_one({'id': match_id})
+                
+                # Build track record entry
+                entry = {
+                    'match_id': match_id,
+                    'home_team': pred.get('home_team'),
+                    'away_team': pred.get('away_team'),
+                    'sport_key': pred.get('sport_key'),
+                    'sport_title': pred.get('sport_key', '').replace('_', ' ').title(),
+                    'predicted_winner': pred.get('predicted_winner'),
+                    'actual_winner': pred.get('actual_winner'),
+                    'prediction_correct': pred.get('prediction_correct'),
+                    'confidence': pred.get('confidence'),
+                    'home_iq': pred.get('home_iq'),
+                    'away_iq': pred.get('away_iq'),
+                    'verdict': pred.get('verdict'),
+                    'calculated_at': pred.get('calculated_at'),
+                    'verified_at': pred.get('verified_at'),
+                    'match_status': pred.get('match_status', 'completed')
+                }
+                
+                # Add match scores if available
+                if match_data:
+                    entry['commence_time'] = match_data.get('commence_time')
+                    entry['scores'] = match_data.get('scores', [])
+                    
+                    # Add bookmaker count for context
+                    bookmakers = match_data.get('bookmakers', [])
+                    entry['bookmaker_count'] = len(bookmakers)
+                
+                track_record.append(entry)
+                
+            except Exception as e:
+                logger.error(f"Error enriching prediction {pred.get('_id')}: {e}")
+                continue
+        
+        # Get accuracy stats
+        verification_service = get_prediction_service(db)
+        stats = await verification_service.get_accuracy_stats()
+        
+        if stats is None:
+            stats = {
+                'overall': {
+                    'total': 0,
+                    'correct': 0,
+                    'incorrect': 0,
+                    'accuracy_percentage': 0
+                }
+            }
+        
+        logger.info(f"✅ Returned {len(track_record)} track record entries (filter={filter}, sort_by={sort_by})")
+        
+        return {
+            'success': True,
+            'track_record': track_record,
+            'stats': {
+                'accuracy': stats['overall']['accuracy_percentage'],
+                'total': stats['overall']['total'],
+                'correct': stats['overall']['correct'],
+                'incorrect': stats['overall']['incorrect'],
+                'by_confidence': stats.get('by_confidence', {})
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting track record: {e}")
+        return JSONResponse(
+            status_code=500,
+            content={"success": False, "error": str(e)}
+        )
+
+
 @api_router.post("/funbet-iq/verify")
 async def verify_predictions(hours_back: int = Query(24, ge=1, le=168)):
     """Manually trigger prediction verification"""
