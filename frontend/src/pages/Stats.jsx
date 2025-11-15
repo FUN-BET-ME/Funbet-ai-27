@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, CheckCircle, XCircle, Clock, RefreshCw, AlertCircle, BarChart3, Brain } from 'lucide-react';
+import { TrendingUp, TrendingDown, Flame, Clock, ArrowRight, RefreshCw, AlertCircle, BarChart3, Zap, Target, Gem, Activity, CheckCircle, XCircle, Brain } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TeamLogo from '../components/TeamLogo';
 
