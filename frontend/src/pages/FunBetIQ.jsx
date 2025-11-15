@@ -1045,18 +1045,32 @@ const FunBetIQ = () => {
 
                       {/* Teams */}
                       <div className="grid grid-cols-3 gap-4 items-center mb-4">
-                        <div className="text-center">
+                        <div className="text-center relative">
                           <TeamLogo team={pred.home_team} sport={pred.sport_key} size="md" />
                           <p className="text-white font-semibold mt-2 text-sm">{pred.home_team}</p>
+                          {/* Yellow badge if this team was predicted */}
+                          {pred.predicted_team === pred.home_team && (
+                            <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 bg-[#FFD700] text-[#2E004F] rounded-full text-xs font-bold">
+                              <TrendingUp className="w-3 h-3" />
+                              Our Pick
+                            </div>
+                          )}
                         </div>
                         
                         <div className="text-center">
                           <p className="text-gray-500 font-bold text-2xl">VS</p>
                         </div>
                         
-                        <div className="text-center">
+                        <div className="text-center relative">
                           <TeamLogo team={pred.away_team} sport={pred.sport_key} size="md" />
                           <p className="text-white font-semibold mt-2 text-sm">{pred.away_team}</p>
+                          {/* Yellow badge if this team was predicted */}
+                          {pred.predicted_team === pred.away_team && (
+                            <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 bg-[#FFD700] text-[#2E004F] rounded-full text-xs font-bold">
+                              <TrendingUp className="w-3 h-3" />
+                              Our Pick
+                            </div>
+                          )}
                         </div>
                       </div>
 
