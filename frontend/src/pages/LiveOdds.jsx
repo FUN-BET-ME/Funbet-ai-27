@@ -1123,20 +1123,42 @@ const LiveOdds = () => {
                               }
                               
                               // ALWAYS calculate and show elapsed time for live matches (not completed)
-                              if (!isCompleted && hoursSinceStart > 0 && hoursSinceStart < 3) {
-                                // Format elapsed time based on typical match phases
-                                if (elapsedMinutes <= 45) {
-                                  matchStatus = `${elapsedMinutes}'`; // First half (0-45 min)
-                                } else if (elapsedMinutes <= 60) {
-                                  matchStatus = 'HT'; // Half time break (45-60 min)
-                                } else if (elapsedMinutes <= 90) {
-                                  matchStatus = `${elapsedMinutes - 15}'`; // Second half (46-90 min, accounting for 15 min HT)
-                                } else if (elapsedMinutes <= 105) {
-                                  matchStatus = `90+${elapsedMinutes - 90}'`; // Injury time (90+ min)
-                                } else if (elapsedMinutes <= 120) {
-                                  matchStatus = `${elapsedMinutes - 30}'`; // Extra time (91-120 min total)
+                              // Different time limits for different sports
+                              let maxLiveHours = 3; // Default for football
+                              if (match.sport_key && match.sport_key.includes('cricket')) {
+                                if (match.sport_key.includes('test')) {
+                                  maxLiveHours = 120; // Test matches: 5 days
                                 } else {
-                                  matchStatus = `120+'`; // Penalties or late extra time
+                                  maxLiveHours = 8; // ODI/T20: 6-8 hours
+                                }
+                              }
+                              
+                              if (!isCompleted && hoursSinceStart > 0 && hoursSinceStart < maxLiveHours) {
+                                // Format elapsed time based on sport and typical match phases
+                                if (match.sport_key && match.sport_key.includes('cricket')) {
+                                  // Cricket time formatting
+                                  if (elapsedMinutes < 60) {
+                                    matchStatus = `${elapsedMinutes} min`;
+                                  } else {
+                                    const hours = Math.floor(elapsedMinutes / 60);
+                                    const mins = elapsedMinutes % 60;
+                                    matchStatus = `${hours}h ${mins}m`;
+                                  }
+                                } else {
+                                  // Football time formatting
+                                  if (elapsedMinutes <= 45) {
+                                    matchStatus = `${elapsedMinutes}'`; // First half (0-45 min)
+                                  } else if (elapsedMinutes <= 60) {
+                                    matchStatus = 'HT'; // Half time break (45-60 min)
+                                  } else if (elapsedMinutes <= 90) {
+                                    matchStatus = `${elapsedMinutes - 15}'`; // Second half (46-90 min, accounting for 15 min HT)
+                                  } else if (elapsedMinutes <= 105) {
+                                    matchStatus = `90+${elapsedMinutes - 90}'`; // Injury time (90+ min)
+                                  } else if (elapsedMinutes <= 120) {
+                                    matchStatus = `${elapsedMinutes - 30}'`; // Extra time (91-120 min total)
+                                  } else {
+                                    matchStatus = `120+'`; // Penalties or late extra time
+                                  }
                                 }
                               }
                               
