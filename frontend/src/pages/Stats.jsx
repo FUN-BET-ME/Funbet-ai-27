@@ -13,6 +13,7 @@ const Stats = () => {
   const [historyStats, setHistoryStats] = useState(null);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyFilter, setHistoryFilter] = useState('all');
+  const [historySortBy, setHistorySortBy] = useState('recent_first');
   const [accuracyStats, setAccuracyStats] = useState(null);
   const [totalPendingCount, setTotalPendingCount] = useState(0);
   
