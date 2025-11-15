@@ -981,8 +981,14 @@ async def get_funbet_iq_matches(
         db = db_instance.db
         iq_scores_collection = db['funbet_iq_scores']
         
-        # Build query
-        query = {}
+        # Build query - only get unverified predictions (pending)
+        query = {
+            '$or': [
+                {'prediction_correct': {'$exists': False}},
+                {'prediction_correct': None}
+            ]
+        }
+        
         if sport:
             sport_pattern = sport.lower()
             if sport_pattern == 'football':
@@ -991,6 +997,9 @@ async def get_funbet_iq_matches(
                 query['sport_key'] = {'$regex': '^cricket', '$options': 'i'}
             else:
                 query['sport_key'] = {'$regex': sport_pattern, '$options': 'i'}
+        
+        # Get total count of pending predictions
+        total_count = await iq_scores_collection.count_documents(query)
         
         # Fetch IQ scores and sort by confidence (High > Medium > Low)
         # MongoDB can't sort by mapped values, so we fetch and sort in Python
@@ -1004,19 +1013,20 @@ async def get_funbet_iq_matches(
         ))
         
         # Apply limit after sorting
-        iq_matches = iq_matches[:limit]
+        limited_matches = iq_matches[:limit]
         
         # Convert ObjectId to string
-        for match in iq_matches:
+        for match in limited_matches:
             if '_id' in match:
                 match['_id'] = str(match['_id'])
         
-        logger.info(f"✅ Fetched {len(iq_matches)} FunBet IQ matches (sport={sport})")
+        logger.info(f"✅ Fetched {len(limited_matches)}/{total_count} FunBet IQ matches (sport={sport})")
         
         return {
             'success': True,
-            'count': len(iq_matches),
-            'matches': iq_matches
+            'total': total_count,  # Total pending predictions
+            'count': len(limited_matches),  # Matches returned in this response
+            'matches': limited_matches
         }
         
     except Exception as e:
