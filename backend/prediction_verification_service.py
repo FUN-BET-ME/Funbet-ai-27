@@ -83,6 +83,8 @@ class PredictionVerificationService:
         """
         try:
             match_id = prediction.get('match_id')
+            home_team = prediction.get('home_team')
+            away_team = prediction.get('away_team')
             
             # Get match data from odds cache
             match_data = await self.odds_collection.find_one({'id': match_id})
@@ -90,6 +92,27 @@ class PredictionVerificationService:
             if not match_data:
                 logger.debug(f"Match {match_id} not found in odds cache")
                 return 'pending'
+            
+            # If match_data doesn't have scores, try to fetch from live scores service
+            if not match_data.get('scores'):
+                try:
+                    from live_scores_service import live_scores_service
+                    scores_data = await live_scores_service.get_all_live_scores(force_refresh=False)
+                    
+                    # Try to find scores for this match
+                    all_scores = scores_data.get('completed_scores', []) + scores_data.get('live_scores', [])
+                    
+                    for score in all_scores:
+                        # Match by team names (case-insensitive)
+                        if (score.get('home_team', '').lower() == home_team.lower() and 
+                            score.get('away_team', '').lower() == away_team.lower()):
+                            # Merge scores into match_data
+                            match_data['scores'] = score.get('scores', [])
+                            match_data['completed'] = score.get('completed', False)
+                            logger.info(f"✅ Found scores for {home_team} vs {away_team} from live scores service")
+                            break
+                except Exception as e:
+                    logger.debug(f"Could not fetch scores from live service: {e}")
             
             # Check if match has completed
             commence_time = match_data.get('commence_time')
