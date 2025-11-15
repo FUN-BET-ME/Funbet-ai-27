@@ -353,15 +353,26 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # Job 5: Verify predictions every hour (check completed matches)
+        self.scheduler.add_job(
+            self.verify_predictions_job,
+            trigger=IntervalTrigger(hours=1),
+            id='verify_predictions',
+            name='Verify FunBet IQ predictions every hour',
+            replace_existing=True
+        )
+        
         # Run initial jobs immediately
         asyncio.create_task(self.update_odds_job())
         asyncio.create_task(self.calculate_funbet_iq_job())
-        asyncio.create_task(self.fetch_live_scores_job())  # Fetch live scores immediately
+        asyncio.create_task(self.fetch_live_scores_job())
+        asyncio.create_task(self.verify_predictions_job())  # Verify predictions immediately
         
         self.scheduler.start()
-        logger.info("✅ Background worker started - 4 jobs scheduled")
-        logger.info("🎯 Expected usage: ~290 API calls/day + IQ calculations + live scores")
+        logger.info("✅ Background worker started - 5 jobs scheduled")
+        logger.info("🎯 Expected usage: ~290 API calls/day + IQ calculations + live scores + prediction verification")
         logger.info("📊 Historical data: ALL matches preserved permanently (no cleanup)")
+        logger.info("🎯 Prediction tracking: Verifying completed matches every hour")
     
     def stop(self):
         """Stop the background worker"""
