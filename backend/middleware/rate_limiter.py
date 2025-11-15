@@ -52,7 +52,18 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         self.limiter = RateLimiter(requests_per_minute)
 
     async def dispatch(self, request: Request, call_next):
-        if request.url.path in ["/api/health", "/api/"]:
+        # Exempt these paths from rate limiting
+        exempt_paths = [
+            "/api/health",
+            "/api/",
+            "/api/funbet-iq/matches",  # FunBet IQ endpoint
+            "/api/funbet-iq/match/",   # FunBet IQ detail
+            "/api/teams/logo/",         # Team logos
+            "/api/odds/all-cached",     # Odds data
+        ]
+        
+        # Check if path starts with any exempt path
+        if any(request.url.path.startswith(exempt_path) for exempt_path in exempt_paths):
             return await call_next(request)
         
         client_id = request.client.host
