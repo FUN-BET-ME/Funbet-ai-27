@@ -985,6 +985,20 @@ const Stats = () => {
                       <div className="text-white font-semibold mb-2">
                         {match.home_team} vs {match.away_team}
                       </div>
+                      
+                      {/* FunBet IQ Prediction Overlay */}
+                      {iqPredictionsMap[match.id] && (
+                        <div className="flex items-center justify-center gap-2 my-2 py-2 bg-gradient-to-r from-[#FFD700]/10 via-[#FFD700]/20 to-[#FFD700]/10 rounded-lg border border-[#FFD700]/30">
+                          <Brain className="w-4 h-4 text-[#FFD700]" />
+                          <span className="text-[#FFD700] font-bold text-sm">
+                            {iqPredictionsMap[match.id].predicted_team}
+                          </span>
+                          <span className="text-xs text-gray-400">
+                            ({iqPredictionsMap[match.id].confidence})
+                          </span>
+                        </div>
+                      )}
+                      
                       <div className="space-y-1 mb-2">
                         {match.bestOddsPerOutcome.map((outcome, i) => (
                           <div key={i} className="text-xs flex justify-between">
