@@ -288,6 +288,29 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in FunBet IQ job: {e}")
     
+    async def verify_predictions_job(self):
+        """
+        Verify FunBet IQ predictions against actual match results
+        Runs every hour to check completed matches
+        """
+        try:
+            logger.info("🎯 Starting prediction verification job...")
+            
+            from prediction_verification_service import get_prediction_service
+            
+            verification_service = get_prediction_service(self.db)
+            
+            # Verify matches completed in last 24 hours
+            result = await verification_service.verify_completed_matches(hours_back=24)
+            
+            if result:
+                logger.info(f"✅ Prediction verification complete: {result['verified']} verified ({result['correct']} correct, {result['incorrect']} incorrect)")
+            else:
+                logger.warning("⚠️ Prediction verification returned no results")
+                
+        except Exception as e:
+            logger.error(f"❌ Error in prediction verification job: {e}")
+    
     def start(self):
         """Start the background worker - EFFICIENT VERSION"""
         logger.info("🚀 Starting FunBet.ai background worker (EFFICIENT MODE)...")
