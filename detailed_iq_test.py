@@ -6,7 +6,7 @@ Detailed FunBet IQ Sorting Test
 import requests
 import json
 
-BACKEND_URL = "https://sports-intel-3.preview.emergentagent.com"
+BACKEND_URL = "https://sportfix-ai-1.preview.emergentagent.com"
 
 def test_funbet_iq_sorting_detailed():
     """Test FunBet IQ sorting in detail"""

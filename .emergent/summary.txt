@@ -1,79 +1,88 @@
 <analysis>
-The trajectory documents the complex implementation of the FunBet IQ V2 feature, a multi-layered scoring system for sports matches. The work began by interpreting the user's detailed specifications for calculating IQ scores based on market data, statistics, and momentum. The AI engineer successfully created the backend infrastructure, including a new calculation engine (), API endpoints in , and a scheduled background job in  to periodically compute and store these scores in MongoDB.
+The user's primary language is English. Future responses should be in English.
 
-A significant portion of the effort was spent on debugging. A critical backend issue was resolved where new API endpoints were not being registered because they were defined after the FastAPI router was included. On the frontend, the  page was renamed and completely refactored into  to display the new data. This involved multiple iterations to fix data fetching and rendering logic.
+This trajectory documents an intense and multifaceted development cycle focused on bug fixing and feature implementation for the FunBet.ai application. The work began with a user request to add Turkish football leagues, which was successfully implemented in both the backend data ingestion () and frontend filters ().
 
-The final phase was marked by persistent and challenging bugs. The user reported that IQ scores were not appearing on the  page and data was disappearing when filters were changed. The AI engineer correctly diagnosed these issues as a combination of Match ID synchronization problems (which were resolved by recalculating scores for all matches) and recurring, unresolved preview environment problems, specifically CORS and network errors blocking frontend API calls. The last action was an attempt to fix a filter-related data loss bug, which was also traced back to a CORS issue on the  endpoint.
+However, the majority of the effort was dedicated to resolving a cascade of critical user-reported bugs. A major focus was fixing a data loss issue on the  page, where data would disappear when filters were changed. This was addressed through multiple layers of fixes, including robust state management,  caching, and adding  timeouts to handle unresponsive API calls, a frequent problem due to a faulty preview environment.
+
+Other significant fixes included:
+1.  **FunBet IQ Sorting**: Correcting the logic that showed Low confidence predictions first. This involved adjusting the backend confidence thresholds in  to match the actual data distribution and ensuring the  endpoint sorted results correctly.
+2.  **Live Match Filtering**: Fixing a logic error where 5-day cricket test matches were not being correctly identified as LIVE.
+3.  **UI/UX**: Addressing numerous visual bugs, including missing team logos (English lower leagues, Turkish leagues, cricket country flags) and mobile CSS issues (overflowing text, misplaced elements). This required changes across , , and .
+
+A new feature, prediction accuracy tracking, was also built, involving a new backend service (), new API endpoints, and a scheduled background job.
+
+The final interaction shows the application pages were broken again. The AI engineer confirmed the backend APIs were fully functional, pointing to a frontend-specific issue (likely caching or state management), and escalated to the  for diagnosis right as the trajectory ended.
 </analysis>
 
 <product_requirements>
-The primary goal is to build and integrate FunBet IQ V2, a sophisticated odds-comparison intelligence layer for the FunBet.ai application.
+The project's primary goal is to enhance the FunBet.ai odds-comparison platform by adding new features and fixing critical bugs to improve user experience and data accuracy.
 
-**Core Feature: FunBet IQ Score**
-This feature calculates a 0-100 IQ score for each team in a match, representing a confidence level and win probability. The final score is a weighted average of four components:
-1.  **Market IQ (40%):** Derived from bookmaker odds, market movement, and volume.
-2.  **Stats IQ (35%):** Based on historical performance data (e.g., goals, xG, batting averages) from public APIs like ESPN and CricketData.
-3.  **Momentum IQ (15%):** Calculated from recent form, winning/unbeaten streaks, and short-term odds trends.
-4.  **AI Probability Boost (10%):** A small boost based on the estimated win probability.
+**Initial Implementation (FunBet IQ V2):**
+The application was built around the FunBet IQ score, a 0-100 confidence metric for match outcomes calculated from Market, Stats, and Momentum data. A backend engine () calculates these scores, which are displayed on a dedicated  page.
 
-**Implementation So Far:**
-- A backend engine calculates and stores IQ scores for all matches in the database.
-- A new dedicated FunBet IQ page () was created, replacing the old Predictions page. It successfully fetches and displays matches sorted by confidence level.
-- The homepage text was updated from 14 days to 30 days to reflect the current data window.
+**User-Requested Features & Fixes:**
+The development trajectory focused on the following user-driven requirements:
+1.  **Add Turkish Leagues**: Integrate Turkish Süper Lig and TFF 1. Lig data, including odds, filters on the  page, and team logos.
+2.  **Fix Critical Data Loss**: Resolve a high-priority bug where match data disappears on the  page when a user switches between filters like LIVE Now and Upcoming.
+3.  **Correct FunBet IQ Sorting**: Ensure the  page displays predictions with High confidence first, not Low.
+4.  **Fix Live Match Filtering**: Correctly categorize long-running events like 5-day cricket Test matches as LIVE instead of Upcoming.
+5.  **Fix UI & Logo Issues**: Add missing logos for numerous football teams (English lower leagues, Turkish leagues) and cricket national teams. Fix mobile CSS bugs causing layout issues.
+6.  **Implement Prediction Tracking**: Build a system to verify FunBet IQ predictions against actual match results and track the accuracy over time.
 </product_requirements>
 
 <key_technical_concepts>
-- **Full-Stack Development:** React frontend with Hooks (, ) and a Python FastAPI backend.
-- **Database:** MongoDB for persisting odds and the calculated FunBet IQ scores.
-- **Asynchronous Tasks:**  in the backend runs a background job to calculate IQ scores every 10 minutes.  is used for frontend API calls.
-- **API Development:** Creation of new FastAPI endpoints () and debugging routing issues.
-- **Environment Issues:** Repeatedly dealing with preview environment limitations, including API routing failures (404s), CORS errors, and network errors blocking frontend requests.
+- **Full-Stack Frameworks**: React.js frontend and a Python FastAPI backend.
+- **Database**: MongoDB for storing odds, FunBet IQ scores, and prediction accuracy results.
+- **Asynchronous Operations**:  library in the backend for scheduled jobs (fetching odds, calculating IQ, verifying predictions).  on the frontend for asynchronous API communication.
+- **State Management**: React Hooks (, , ) and  for frontend state and data persistence.
+- **API Development**: Creating and modifying FastAPI endpoints, including bug fixing related to routing and data filtering logic.
+- **Environment Troubleshooting**: Repeatedly diagnosing and working around preview environment limitations, including CORS, network errors (HTTP 405), and API timeouts.
 </key_technical_concepts>
 
 <code_architecture>
-The application is a monorepo with a React frontend and a FastAPI backend.
-
-
-- ****
-  - **Importance:** This new file is the core of the FunBet IQ feature. It contains the entire business logic for calculating the Market, Stats, and Momentum IQ scores based on the user's formula.
-  - **Changes:** Created from scratch to house the V2 logic.
+The application is a monorepo containing a React frontend and a FastAPI backend.
 
 - ****
-  - **Importance:** The main FastAPI application file. It defines all API endpoints.
-  - **Changes:** New endpoints  and  were added. A critical bug was fixed by moving the definition of these new endpoints to *before* the  line, which resolved API 404 errors. The limit for IQ calculation was also increased from 100 to 500 to cover all matches.
+  - **Importance**: The main FastAPI application file defining all API routes.
+  - **Summary of Changes**: Major fixes were implemented here. A critical bug was fixed by converting  from a string to a datetime object for correct filtering of upcoming matches. Sorting logic was added to the  endpoint to return predictions sorted by confidence. New endpoints (, ) were added for the prediction tracking feature.
 
 - ****
-  - **Importance:** Manages scheduled background tasks.
-  - **Changes:** A new job was added to the scheduler to call the FunBet IQ calculation engine every 10 minutes, ensuring the IQ scores in the database are kept up-to-date.
+  - **Importance**: Manages all scheduled background tasks using .
+  - **Summary of Changes**: The  list was updated to include Turkish leagues (, ). New scheduled jobs were added to fetch live scores every 5 minutes and to run the prediction verification service daily. A confusing and unused  job was removed.
 
 - ****
-  - **Importance:** This is the new dedicated page for displaying IQ predictions. It was renamed from .
-  - **Changes:** The file was completely rewritten to fetch data from the new  endpoint. Logic was added to handle loading states, display match predictions with IQ scores and confidence levels, and sort the results by confidence (High first). A bug where the data fetching function was never called was fixed by adding a  hook.
+  - **Importance**: Contains the core logic for calculating FunBet IQ scores.
+  - **Summary of Changes**: The confidence thresholds (, , ) were adjusted multiple times to reflect the actual distribution of IQ score differences in the dataset, solving the issue of all predictions being marked as Low. The final thresholds are: High (>= 5), Medium (>= 2.5), Low (< 2.5).
 
 - ****
-  - **Importance:** The main page for displaying live and upcoming odds. It's a critical user-facing component.
-  - **Changes:** State and fetching logic were added to get IQ scores via . The JSX was modified to display these IQ scores next to the team names in the odds table. A significant bug causing data to disappear when switching to the LIVE Now filter was diagnosed and fixed by ensuring the sport filter was passed to the  function.
+  - **Importance**: This is a new service created to fulfill the user's request for prediction accuracy tracking.
+  - **Summary of Changes**: Created from scratch, it contains logic to compare finished match results with stored FunBet IQ predictions and updates the database with a  status (True, False, or Pending).
 
-- ** & **
-  - **Importance:** Manage application routing and main navigation.
-  - **Changes:** The route was updated from  to , and the navigation link in the header was changed from Predictions to FunBet IQ.
+- ****
+  - **Importance**: The most heavily modified file, responsible for displaying live and upcoming odds.
+  - **Summary of Changes**: Addressed the critical data-disappearing bug by preventing the state from being overwritten with empty data from failed API calls. Logic was added to correctly filter 5-day cricket matches as LIVE. The  map was updated with Turkish leagues. Several CSS classes were adjusted to fix mobile layout issues (text overflow, element positioning). The Load More pagination button was re-implemented. A warning banner was added and subsequently removed per the user's request.
+
+- ****
+  - **Importance**: This service is responsible for providing the correct logo URL for a given team.
+  - **Summary of Changes**: This file was a major source of bugs. It was fixed to correctly import and merge logos from . Logic was added to the  function to check if a match is cricket and then call  to return the correct country flag, fixing the missing cricket logos.
 </code_architecture>
 
 <pending_tasks>
-- **Display IQ Scores on LiveOdds:** The primary unresolved task is to make the FunBet IQ scores appear next to team names on the  page. The code is in place, but a Network Error (likely CORS or routing) in the preview environment is blocking the API call.
-- **Fix LIVE Now Filter:** The filter for LIVE Now matches shows No data due to a CORS error on the  endpoint in the preview environment. The code fix is implemented but cannot be verified.
+- **Display Prediction Accuracy**: While the backend infrastructure for tracking prediction accuracy is complete and running, the frontend has not been updated to fetch or display these statistics. The accuracy data is available via the  endpoint but is not yet visible to the user on any page.
+- **Full End-to-End Testing**: The trajectory ended before a full frontend test could be completed. Comprehensive testing is required to verify all recent fixes, especially data loading and UI responsiveness.
 </pending_tasks>
 
 <current_work>
-The most recent work was focused on two user-reported bugs:
-1.  **Data disappearing on the LIVE Now filter:** The user reported that switching the filter on the  page to LIVE Now resulted in all data vanishing. The engineer correctly diagnosed that the  function was not respecting the currently selected sport filter (e.g., Football or Cricket).
-    A fix was implemented in  to pass the sport filter to the fetching function:
-    
-    However, testing this fix revealed a persistent  error on the  endpoint, another preview environment issue that prevents verification.
+The most recent work was a chaotic and critical debugging session where the user reported that the  and  pages were completely broken and not loading any data, providing screenshots of empty pages.
 
-2.  **IQ Scores not visible on LiveOdds:** This is a recurring issue. The code to fetch and display the scores is in place, but the API call from the frontend is failing with a Network Error due to the preview environment's routing/CORS problems. The API endpoint itself () has been confirmed to work correctly when accessed directly.
+The AI engineer's final actions were:
+1.  **API Verification**: The engineer immediately tested the relevant backend APIs ( and ) using  from the command line.
+2.  **Diagnosis**: The API calls were successful and returned data correctly. This proved that the backend was running and the database contained match data.
+3.  **Conclusion**: Based on the working APIs, the engineer concluded that the issue was not on the backend but was a 100% a frontend/browser issue preventing the application from receiving or rendering the data. The problem was suspected to be related to browser caching or a subtle frontend state management bug.
+4.  **Escalation**: As a final step, the AI engineer invoked the  to perform a deep diagnosis on the frontend and determine why it was failing to load data despite the backend being healthy. The trajectory ends while awaiting the results from the troubleshooter.
 </current_work>
 
 <optional_next_step>
-Address the LIVE Now filter data loss bug again. Although the root cause is a preview environment CORS issue, I will re-verify the frontend logic in  to ensure it gracefully handles an empty response from the API without clearing the existing view.
+Analyze the output from the  to understand the root cause of the frontend data loading failure and apply the recommended fix to resolve the broken pages.
 </optional_next_step>
