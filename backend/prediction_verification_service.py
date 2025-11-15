@@ -19,43 +19,29 @@ class PredictionVerificationService:
     
     async def verify_completed_matches(self, hours_back: int = 24):
         """
-        Verify predictions for matches completed in the last N hours
+        Verify predictions for matches that have completed
         
         Args:
-            hours_back: How many hours back to check for completed matches
+            hours_back: Look at all unverified predictions (parameter kept for API compatibility)
             
         Returns:
             dict: Statistics about verification run
         """
         try:
-            logger.info(f"🔍 Starting prediction verification for matches completed in last {hours_back} hours")
+            logger.info(f"🔍 Starting prediction verification for all unverified predictions...")
             
-            # Get time window
-            now = datetime.now(timezone.utc)
-            cutoff_time = now - timedelta(hours=hours_back)
+            # Find ALL unverified predictions (regardless of when they were calculated)
+            # We'll check if their matches have finished when we verify each one
+            query = {
+                '$or': [
+                    {'prediction_correct': {'$exists': False}},
+                    {'prediction_correct': None}
+                ]
+            }
             
-            # Find matches that need verification
-            # 1. Have IQ predictions
-            # 2. Match has finished (commenced more than 3 hours ago for football, 120 hours for cricket)
-            # 3. Not yet verified (prediction_correct is null)
+            predictions_to_verify = await self.iq_scores_collection.find(query).to_list(length=None)
             
-            pipeline = [
-                {
-                    '$match': {
-                        'calculated_at': {'$gte': cutoff_time},
-                        '$or': [
-                            {'prediction_correct': {'$exists': False}},
-                            {'prediction_correct': None}
-                        ]
-                    }
-                }
-            ]
-            
-            predictions_to_verify = await self.iq_scores_collection.find(
-                pipeline[0]['$match']
-            ).to_list(length=None)
-            
-            logger.info(f"📊 Found {len(predictions_to_verify)} predictions to verify")
+            logger.info(f"📊 Found {len(predictions_to_verify)} unverified predictions to check")
             
             verified_count = 0
             correct_count = 0
