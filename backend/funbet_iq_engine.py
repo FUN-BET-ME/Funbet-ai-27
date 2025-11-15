@@ -398,3 +398,84 @@ async def calculate_funbet_iq(match: Dict, db) -> Dict:
     except Exception as e:
         logger.error(f"Error calculating FunBet IQ: {e}")
         return None
+
+# ==================== BATCH CALCULATOR FOR BACKGROUND WORKER ====================
+
+async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
+    """
+    Calculate FunBet IQ for all matches in the database
+    This is called by the background worker every 10 minutes
+    
+    Args:
+        db: MongoDB database instance
+        limit: Maximum number of matches to process
+        
+    Returns:
+        Dict with statistics: total_matches, calculated, errors
+    """
+    try:
+        logger.info(f"🧠 Starting batch IQ calculation for up to {limit} matches...")
+        
+        # Get all matches from odds_cache that haven't started yet (upcoming matches)
+        now = datetime.now(timezone.utc)
+        now_str = now.isoformat().replace('+00:00', 'Z')
+        
+        matches_cursor = db.odds_cache.find(
+            {'commence_time': {'$gt': now_str}}
+        ).limit(limit)
+        
+        matches = await matches_cursor.to_list(length=limit)
+        total_matches = len(matches)
+        
+        if total_matches == 0:
+            logger.warning("⚠️ No upcoming matches found in database")
+            return {'total_matches': 0, 'calculated': 0, 'errors': 0}
+        
+        logger.info(f"📊 Found {total_matches} upcoming matches to calculate IQ for...")
+        
+        calculated_count = 0
+        error_count = 0
+        errors_list = []
+        
+        for match in matches:
+            try:
+                # Calculate FunBet IQ for this match
+                iq_result = await calculate_funbet_iq(match, db)
+                
+                if iq_result:
+                    # Store in funbet_iq_predictions collection (upsert)
+                    await db.funbet_iq_predictions.update_one(
+                        {'match_id': iq_result['match_id']},
+                        {'$set': iq_result},
+                        upsert=True
+                    )
+                    calculated_count += 1
+                else:
+                    error_count += 1
+                    errors_list.append(f"{match.get('home_team')} vs {match.get('away_team')}: Calculation returned None")
+                    
+            except Exception as e:
+                error_count += 1
+                errors_list.append(f"{match.get('home_team')} vs {match.get('away_team')}: {str(e)}")
+                logger.error(f"❌ Error calculating IQ for match: {e}")
+        
+        logger.info(f"✅ Batch IQ calculation complete: {calculated_count}/{total_matches} successful")
+        
+        if error_count > 0:
+            logger.warning(f"⚠️ {error_count} matches had errors during calculation")
+        
+        return {
+            'total_matches': total_matches,
+            'calculated': calculated_count,
+            'errors': error_count,
+            'error_details': errors_list[:10]  # Only return first 10 errors
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Fatal error in batch IQ calculation: {e}")
+        return {
+            'total_matches': 0,
+            'calculated': 0,
+            'errors': 1,
+            'error_details': [str(e)]
+        }
