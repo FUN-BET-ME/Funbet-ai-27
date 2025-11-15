@@ -86,6 +86,9 @@ const FunBetIQ = () => {
       
       console.log('📦 IQ API Response:', response.data);
       
+      // Store total count for pending stats
+      setTotalPendingCount(response.data?.count || 0);
+      
       // Transform IQ data to match card format
       const iqMatches = (response.data?.matches || []).map(match => ({
         match_id: match.match_id,
@@ -110,7 +113,7 @@ const FunBetIQ = () => {
       }));
       
       setAiPredictions(iqMatches);
-      console.log('✅ Fetched & transformed', iqMatches.length, 'FunBet IQ matches');
+      console.log('✅ Fetched & transformed', iqMatches.length, 'FunBet IQ matches (Total pending:', response.data?.count, ')');
       
       // Log confidence distribution for debugging
       const confidenceCounts = iqMatches.reduce((acc, m) => {
@@ -121,6 +124,7 @@ const FunBetIQ = () => {
     } catch (error) {
       console.error('❌ Error fetching FunBet IQ:', error);
       setAiPredictions([]);
+      setTotalPendingCount(0);
     } finally {
       setLoadingPredictions(false);
     }
