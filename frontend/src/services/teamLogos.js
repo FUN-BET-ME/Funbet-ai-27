@@ -592,7 +592,18 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
     // BULGARIA
     'Ludogorets': 'https://upload.wikimedia.org/wikipedia/en/3/3e/PFC_Ludogorets_Razgrad_logo.svg',
     
-    // MERGE ADDITIONAL LOGOS (Championship, League One, League Two, Turkish leagues, etc.)
+    // ENGLAND - League One & Two
+    'Barnsley': 'https://upload.wikimedia.org/wikipedia/en/c/c9/Barnsley_FC.svg',
+    'Northampton Town': 'https://upload.wikimedia.org/wikipedia/en/e/e8/Northampton_Town_FC_logo.svg',
+    'Northampton': 'https://upload.wikimedia.org/wikipedia/en/e/e8/Northampton_Town_FC_logo.svg',
+    'Bolton Wanderers': 'https://upload.wikimedia.org/wikipedia/en/8/82/Bolton_Wanderers_FC_logo.svg',
+    'Bolton': 'https://upload.wikimedia.org/wikipedia/en/8/82/Bolton_Wanderers_FC_logo.svg',
+    'Stevenage': 'https://upload.wikimedia.org/wikipedia/en/9/9c/Stevenage_FC.svg',
+    'Burton Albion': 'https://upload.wikimedia.org/wikipedia/en/5/53/Burton_Albion_FC_logo.svg',
+    'Burton': 'https://upload.wikimedia.org/wikipedia/en/5/53/Burton_Albion_FC_logo.svg',
+    'Blackpool': 'https://upload.wikimedia.org/wikipedia/en/d/df/Blackpool_FC_logo.svg',
+    
+    // MERGE ADDITIONAL LOGOS
     ...additionalFootballLogos
   };
   
