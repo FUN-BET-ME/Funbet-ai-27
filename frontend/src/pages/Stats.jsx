@@ -39,6 +39,51 @@ const Stats = () => {
     return sportNames[sport] || sport;
   };
 
+  // Fetch FunBet IQ predictions
+  const fetchPredictionHistory = async () => {
+    setHistoryLoading(true);
+    try {
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/track-record`, {
+        params: {
+          limit: 100,
+          filter: historyFilter,
+          sort_by: 'recent',
+          _t: Date.now()
+        }
+      });
+      
+      setHistoryPredictions(response.data.track_record || []);
+      setHistoryStats(response.data.stats || {});
+    } catch (error) {
+      console.error('Error fetching prediction history:', error);
+      setHistoryPredictions([]);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  // Fetch accuracy stats
+  const fetchAccuracyStats = async () => {
+    try {
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      
+      const accuracyResponse = await axios.get(`${BACKEND_URL}/api/funbet-iq/accuracy`);
+      if (accuracyResponse.data.success) {
+        setAccuracyStats(accuracyResponse.data.accuracy);
+      }
+      
+      const pendingResponse = await axios.get(`${BACKEND_URL}/api/funbet-iq/matches`, {
+        params: { limit: 1 }
+      });
+      if (pendingResponse.data.success) {
+        setTotalPendingCount(pendingResponse.data.total || 0);
+      }
+    } catch (error) {
+      console.error('Error fetching accuracy stats:', error);
+    }
+  };
+
   const fetchData = async () => {
     setLoading(true);
     setError(null);
