@@ -1,5 +1,6 @@
 """FunBet.ai - Complete Optimized Server"""
 from fastapi import FastAPI, APIRouter, HTTPException, Query
+from fastapi.responses import JSONResponse
 from fastapi.middleware.gzip import GZipMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
