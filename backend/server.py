@@ -1073,6 +1073,64 @@ async def get_funbet_iq_match(match_id: str):
         logger.error(f"Error fetching FunBet IQ for match {match_id}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.get("/funbet-iq/accuracy")
+async def get_funbet_iq_accuracy():
+    """Get FunBet IQ prediction accuracy statistics"""
+    try:
+        from prediction_verification_service import get_prediction_service
+        
+        db = db_instance.db
+        verification_service = get_prediction_service(db)
+        
+        stats = await verification_service.get_accuracy_stats()
+        
+        if stats is None:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "error": "Failed to get accuracy stats"}
+            )
+        
+        return {
+            "success": True,
+            "accuracy": stats
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting accuracy stats: {e}")
+        return JSONResponse(
+            status_code=500,
+            content={"success": False, "error": str(e)}
+        )
+
+
+@api_router.post("/funbet-iq/verify")
+async def verify_predictions(hours_back: int = Query(24, ge=1, le=168)):
+    """Manually trigger prediction verification"""
+    try:
+        from prediction_verification_service import get_prediction_service
+        
+        db = db_instance.db
+        verification_service = get_prediction_service(db)
+        
+        result = await verification_service.verify_completed_matches(hours_back)
+        
+        if result is None:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "error": "Verification failed"}
+            )
+        
+        return {
+            "success": True,
+            "verification_result": result
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in manual verification: {e}")
+        return JSONResponse(
+            status_code=500,
+            content={"success": False, "error": str(e)}
+        )
 
 @api_router.post("/funbet-iq/calculate")
 async def trigger_funbet_iq_calculation(sport: Optional[str] = None):
