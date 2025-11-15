@@ -1151,54 +1151,58 @@ const LiveOdds = () => {
                         </div>
                         
                         {/* Team names with logos and IQ scores */}
-                        <div className="flex items-center gap-2 sm:gap-3 mt-3 w-full">
-                          <TeamLogo 
-                            logoUrl={teamLogos[homeTeam]} 
-                            teamName={homeTeam}
-                            sport={match.sport_key}
-                            size="md"
-                            className="flex-shrink-0"
-                          />
-                          <div className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0">
-                            <h3 className="text-lg sm:text-xl font-bold text-white truncate">
-                              {homeTeam}
-                            </h3>
-                            {(() => {
-                              const matchIQ = iqScores[match.id];
-                              if (matchIQ) {
-                                return (
-                                  <span className="text-xs font-bold px-1.5 sm:px-2 py-1 rounded bg-purple-600/30 text-[#FFD700] flex-shrink-0">
-                                    IQ {matchIQ.home_iq}
-                                  </span>
-                                );
-                              }
-                              return null;
-                            })()}
+                        <div className="flex items-center gap-2 sm:gap-3 mt-3">
+                          <div className="flex-shrink-0">
+                            <TeamLogo 
+                              logoUrl={teamLogos[homeTeam]} 
+                              teamName={homeTeam}
+                              sport={match.sport_key}
+                              size="md"
+                            />
                           </div>
-                          <span className="text-gray-500 text-sm sm:text-lg mx-1 sm:mx-2 flex-shrink-0">vs</span>
-                          <div className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0 justify-end">
-                            <h3 className="text-lg sm:text-xl font-bold text-white truncate text-right">
-                              {awayTeam}
-                            </h3>
-                            {(() => {
-                              const matchIQ = iqScores[match.id];
-                              if (matchIQ) {
-                                return (
-                                  <span className="text-xs font-bold px-1.5 sm:px-2 py-1 rounded bg-purple-600/30 text-[#FFD700] flex-shrink-0">
-                                    IQ {matchIQ.away_iq}
-                                  </span>
-                                );
-                              }
-                              return null;
-                            })()}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-1 sm:gap-2">
+                              <div className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0">
+                                <span className="text-white font-semibold truncate text-sm sm:text-base">{homeTeam}</span>
+                                {(() => {
+                                  const matchIQ = iqScores[match.id];
+                                  if (matchIQ && matchIQ.home_iq) {
+                                    return (
+                                      <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
+                                        <Brain className="w-3 h-3 text-purple-400" />
+                                        <span className="text-purple-400 text-xs sm:text-sm font-medium">{matchIQ.home_iq}</span>
+                                      </div>
+                                    );
+                                  }
+                                  return null;
+                                })()}
+                              </div>
+                              <span className="text-gray-400 text-xs sm:text-sm font-medium flex-shrink-0 px-1">vs</span>
+                              <div className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0 justify-end">
+                                <span className="text-white font-semibold truncate text-right text-sm sm:text-base">{awayTeam}</span>
+                                {(() => {
+                                  const matchIQ = iqScores[match.id];
+                                  if (matchIQ && matchIQ.away_iq) {
+                                    return (
+                                      <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
+                                        <Brain className="w-3 h-3 text-purple-400" />
+                                        <span className="text-purple-400 text-xs sm:text-sm font-medium">{matchIQ.away_iq}</span>
+                                      </div>
+                                    );
+                                  }
+                                  return null;
+                                })()}
+                              </div>
+                            </div>
                           </div>
-                          <TeamLogo 
-                            logoUrl={teamLogos[awayTeam]} 
-                            teamName={awayTeam}
-                            sport={match.sport_key}
-                            size="md"
-                            className="flex-shrink-0"
-                          />
+                          <div className="flex-shrink-0">
+                            <TeamLogo 
+                              logoUrl={teamLogos[awayTeam]} 
+                              teamName={awayTeam}
+                              sport={match.sport_key}
+                              size="md"
+                            />
+                          </div>
                         </div>
                       </div>
                       
