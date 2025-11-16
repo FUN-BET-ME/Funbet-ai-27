@@ -505,14 +505,14 @@ async def get_inplay_odds():
         from api_football_service import fetch_api_football_live_scores
         api_football_scores = await fetch_api_football_live_scores()
         
-        # Match ESPN live scores with database matches
+        # Match API-Football live scores with database matches
         for match in matches:
-            # Try to find live score from ESPN
+            # Try to find live score from API-Football
             matched_score = None
             home_team = match.get('home_team', '').lower()
             away_team = match.get('away_team', '').lower()
             
-            for score in live_scores_service.espn_scores_cache:
+            for score in api_football_scores:
                 score_home = score.get('home_team', '').lower()
                 score_away = score.get('away_team', '').lower()
                 
@@ -523,19 +523,9 @@ async def get_inplay_odds():
             
             # Add live score data if found
             if matched_score:
-                # Extract scores from the scores array
-                home_score = '0'
-                away_score = '0'
-                if matched_score.get('scores'):
-                    for score_data in matched_score['scores']:
-                        if score_data.get('name', '').lower() == match.get('home_team', '').lower():
-                            home_score = score_data.get('score', '0')
-                        elif score_data.get('name', '').lower() == match.get('away_team', '').lower():
-                            away_score = score_data.get('score', '0')
-                
                 match['live_score'] = {
-                    'home_score': home_score,
-                    'away_score': away_score,
+                    'home_score': matched_score.get('home_score', '0'),
+                    'away_score': matched_score.get('away_score', '0'),
                     'match_status': matched_score.get('match_status'),
                     'is_live': matched_score.get('is_live', False),
                     'completed': matched_score.get('completed', False),
