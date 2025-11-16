@@ -156,9 +156,13 @@ async def fetch_api_basketball_live_scores() -> List[Dict]:
                 return []
             
             data = response.json()
-            games = data.get('response', [])
+            all_games = data.get('response', [])
             
-            logger.info(f"✅ API-Basketball: Found {len(games)} live games")
+            # Filter to only include actually live games
+            live_statuses = ['Q1', 'Q2', 'Q3', 'Q4', 'OT', 'HT', 'BT', 'LIVE']
+            games = [g for g in all_games if g.get('status', {}).get('short', '') in live_statuses]
+            
+            logger.info(f"✅ API-Basketball: Found {len(games)} live games (from {len(all_games)} total today)")
             
             # Transform to our format
             live_scores = []
