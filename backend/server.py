@@ -539,6 +539,16 @@ async def get_inplay_odds():
                     'league_logo': matched_score.get('league_logo')
                 }
             
+            # Ensure logos are at root level for frontend convenience
+            if match.get('live_score'):
+                # Copy logos from live_score to root if they exist
+                if match['live_score'].get('home_team_logo'):
+                    match['home_team_logo'] = match['live_score']['home_team_logo']
+                if match['live_score'].get('away_team_logo'):
+                    match['away_team_logo'] = match['live_score']['away_team_logo']
+                if match['live_score'].get('league_logo'):
+                    match['league_logo'] = match['live_score']['league_logo']
+            
             # Remove MongoDB _id for JSON serialization
             if '_id' in match:
                 del match['_id']
