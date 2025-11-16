@@ -246,10 +246,11 @@ const LiveOdds = () => {
       const currentSkip = loadMore ? allOdds.length : 0;
       const limit = 500; // Increased for 30 days × 32 leagues
 
-      // Map frontend filter to backend sport_key pattern - FOOTBALL & CRICKET ONLY
+      // Map frontend filter to backend sport_key pattern - FOOTBALL, CRICKET & BASKETBALL
       const sportKeyMap = {
         'football': 'soccer',
-        'cricket': 'cricket'
+        'cricket': 'cricket',
+        'basketball': 'basketball'
       };
       
       const sportFilter = currentFilter !== 'all' ? sportKeyMap[currentFilter] : null;
