@@ -1382,26 +1382,26 @@ const LiveOdds = () => {
 
                             return (
                               <tr key={bookmaker.key} className="border-b border-[#2E004F]/10 opacity-75">
-                                <td className="py-2 px-4 text-gray-400 text-sm">{bookmaker.title}</td>
-                                <td className="py-2 px-4 text-center">
-                                  <span className={`text-sm ${
-                                    isHomeBest ? 'bg-amber-400/80 text-[#2E004F] px-3 py-1 rounded font-bold shadow-sm' : 'text-gray-300 font-normal'
+                                <td className="py-2 px-2 sm:px-4 text-gray-400 text-xs sm:text-sm truncate max-w-[80px] sm:max-w-none">{bookmaker.title}</td>
+                                <td className="py-2 px-1 sm:px-4 text-center">
+                                  <span className={`text-xs sm:text-sm ${
+                                    isHomeBest ? 'bg-amber-400/80 text-[#2E004F] px-2 sm:px-3 py-1 rounded font-bold shadow-sm' : 'text-gray-300 font-normal'
                                   }`}>
                                     {homeOdds ? homeOdds.toFixed(2) : '-'}
                                   </span>
                                 </td>
                                 {showThreeOutcomes && (
-                                  <td className="py-2 px-4 text-center">
-                                    <span className={`text-sm ${
-                                      isDrawBest ? 'bg-amber-400/80 text-[#2E004F] px-3 py-1 rounded font-bold shadow-sm' : 'text-gray-300 font-normal'
+                                  <td className="py-2 px-1 sm:px-4 text-center">
+                                    <span className={`text-xs sm:text-sm ${
+                                      isDrawBest ? 'bg-amber-400/80 text-[#2E004F] px-2 sm:px-3 py-1 rounded font-bold shadow-sm' : 'text-gray-300 font-normal'
                                     }`}>
                                       {drawOdds ? drawOdds.toFixed(2) : '-'}
                                     </span>
                                   </td>
                                 )}
-                                <td className="py-2 px-4 text-center">
-                                  <span className={`text-sm ${
-                                    isAwayBest ? 'bg-amber-400/80 text-[#2E004F] px-3 py-1 rounded font-bold shadow-sm' : 'text-gray-300 font-normal'
+                                <td className="py-2 px-1 sm:px-4 text-center">
+                                  <span className={`text-xs sm:text-sm ${
+                                    isAwayBest ? 'bg-amber-400/80 text-[#2E004F] px-2 sm:px-3 py-1 rounded font-bold shadow-sm' : 'text-gray-300 font-normal'
                                   }`}>
                                     {awayOdds ? awayOdds.toFixed(2) : '-'}
                                   </span>
