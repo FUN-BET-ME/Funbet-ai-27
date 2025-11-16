@@ -878,25 +878,10 @@ const LiveOdds = () => {
                     // Must have bookmakers
                     if (!match.bookmakers || match.bookmakers.length === 0) return false;
                     
-                    // If showing "LIVE Now", only show matches that have started
+                    // If showing "LIVE Now", only show matches that are actually live
                     if (timeFilter === 'inplay') {
-                      const commenceTime = new Date(match.commence_time);
-                      const now = new Date();
-                      const hoursSinceStart = (now - commenceTime) / (1000 * 60 * 60);
-                      
-                      // CRICKET: Different durations based on format
-                      if (match.sport_key && match.sport_key.includes('cricket')) {
-                        if (match.sport_key.includes('test')) {
-                          // Test matches: 5 days (120 hours)
-                          return hoursSinceStart > 0 && hoursSinceStart < 120 && !match.completed;
-                        } else {
-                          // ODI/T20: 6-8 hours
-                          return hoursSinceStart > 0 && hoursSinceStart < 8 && !match.completed;
-                        }
-                      }
-                      
-                      // FOOTBALL: 2-3 hours
-                      return hoursSinceStart > 0 && hoursSinceStart < 3 && !match.completed;
+                      // Use the backend's live_score.is_live field which is authoritative
+                      return match.live_score && match.live_score.is_live === true;
                     }
                     
                     // If showing "Upcoming", only show matches that haven't started yet
