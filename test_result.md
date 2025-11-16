@@ -2674,3 +2674,46 @@ agent_communication:
         agent: "testing"
         comment: "🧪 COMPREHENSIVE SPORT FILTERING TEST COMPLETED - FULLY WORKING. Tested /api/odds/all-cached endpoint with sport parameter filtering using MongoDB regex queries. SUCCESS CRITERIA MET (6/6): (1) All matches endpoint: Returns 20 matches from 429 total in database, mixed sport types detected. (2) Soccer filter (sport='soccer'): Returns 20 matches from 278 total soccer matches, all sport_keys correctly start with 'soccer' (soccer_brazil_campeonato, soccer_fifa_world_cup_qualifiers_europe, soccer_uefa_champs_league_women, soccer_spain_segunda_division). (3) Cricket filter (sport='cricket'): Returns 5 matches from 5 total cricket matches, all sport_keys correctly start with 'cricket' (cricket_test_match, cricket_international_t20, cricket_odi). (4) Basketball filter (sport='basketball'): Returns 20 matches from 103 total basketball matches, all sport_keys correctly start with 'basketball' (basketball_ncaab). (5) Pagination with sport filtering: Tested soccer pagination with skip=0,5 and limit=5, no overlap between pages, pagination metadata correct. (6) Backend logs accessible: API calls logged correctly. MongoDB regex query construction working perfectly - query['sport_key'] = {'$regex': f'^{sport}', '$options': 'i'} correctly filters matches by sport_key prefix. All sport filters working correctly, no non-matching matches found in filtered results."
 
+
+  - agent: "main"
+    message: "✅ FUNBET IQ FRONTEND RENDERING BUG FIXED - ALL PHASES COMPLETE
+    
+    **Problem Identified:**
+    - IQ scores were being fetched from backend (100% coverage, 358/358 matches)
+    - Backend API working correctly, returning proper IQ data
+    - Frontend was fetching IQ scores but NOT displaying them
+    
+    **Root Cause:**
+    - useEffect hook at line 510-520 in LiveOdds.jsx had faulty dependency array
+    - Dependency array was [allOdds.length, iqScores, fetchIQScores]
+    - After first fetch, 'iqScores' was no longer empty, so condition 'Object.keys(iqScores).length === 0' failed
+    - This prevented refetching IQ scores when switching filters or loading new data
+    
+    **Fix Implemented:**
+    - Simplified useEffect condition: removed check for empty iqScores
+    - Removed 'iqScores' from dependency array
+    - Now triggers fetchIQScores() whenever allOdds.length changes
+    - Dependencies: [allOdds.length, fetchIQScores]
+    
+    **Verification:**
+    ✅ IQ scores now display correctly on LiveOdds page
+    ✅ Two-line format working as designed:
+       - Line 1: Team Names (e.g., 'Almería vs Cádiz CF')
+       - Line 2: IQ Scores + Prediction (e.g., '50 | 🧠 Cádiz CF (Medium) | 52.5')
+    ✅ Brain icon with gold color showing correctly
+    ✅ Confidence badges displaying (High/Medium/Low with color coding)
+    ✅ IQ data fetches automatically when page loads
+    ✅ 100 IQ scores fetched per API call
+    
+    **Background Worker:**
+    ✅ Verified lifespan context manager at line 36-47 in server.py
+    ✅ Background worker starts automatically via asyncio.create_task(start_worker())
+    ✅ Worker scheduled to refresh odds and calculate IQ scores on schedule
+    
+    **Database Status:**
+    ✅ 358 matches in odds_cache collection
+    ✅ 358 IQ predictions in funbet_iq_predictions collection
+    ✅ 100% IQ coverage - every match has corresponding prediction
+    ✅ All match IDs correctly aligned between collections
+    
+    **Status:** FRONTEND RENDERING BUG RESOLVED - IQ scores displaying correctly with proper two-line format and 100% match coverage"
