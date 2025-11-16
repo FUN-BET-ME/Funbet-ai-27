@@ -108,13 +108,10 @@ class OddsWorker:
     async def fetch_odds_for_sport(self, sport_key: str) -> list:
         """Fetch odds from The Odds API for a specific sport"""
         try:
-            from datetime import datetime, timedelta, timezone
-            
             url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds/"
             
-            # Calculate 30-day date range
-            now = datetime.now(timezone.utc)
-            end_date = now + timedelta(days=30)
+            # Note: The Odds API doesn't support custom date ranges for most endpoints
+            # It returns all available matches with odds (typically 1-2 weeks ahead)
             
             async with httpx.AsyncClient() as client:
                 response = await client.get(
@@ -122,10 +119,7 @@ class OddsWorker:
                     params={
                         "regions": "uk,eu,us,au",
                         "markets": "h2h",
-                        "apiKey": self.odds_api_key,
-                        "dateFormat": "iso",
-                        "commenceTimeFrom": now.isoformat(),
-                        "commenceTimeTo": end_date.isoformat()
+                        "apiKey": self.odds_api_key
                     },
                     timeout=15.0
                 )
