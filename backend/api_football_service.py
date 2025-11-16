@@ -216,6 +216,9 @@ async def fetch_api_basketball_live_scores() -> List[Dict]:
                         'completed': is_completed,
                         'home_team': home_team,
                         'away_team': away_team,
+                        'home_team_logo': teams.get('home', {}).get('logo'),
+                        'away_team_logo': teams.get('away', {}).get('logo'),
+                        'league_logo': league.get('logo'),
                         'home_score': str(home_score) if home_score is not None else '0',
                         'away_score': str(away_score) if away_score is not None else '0',
                         'scores': [
