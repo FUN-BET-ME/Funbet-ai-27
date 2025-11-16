@@ -509,14 +509,14 @@ async def get_inplay_odds():
         # Combine all live scores
         all_live_scores = api_football_scores + api_basketball_scores
         
-        # Match API-Football live scores with database matches
+        # Match API-Sports live scores with database matches
         for match in matches:
-            # Try to find live score from API-Football
+            # Try to find live score from API-Sports (football or basketball)
             matched_score = None
             home_team = match.get('home_team', '').lower()
             away_team = match.get('away_team', '').lower()
             
-            for score in api_football_scores:
+            for score in all_live_scores:
                 score_home = score.get('home_team', '').lower()
                 score_away = score.get('away_team', '').lower()
                 
