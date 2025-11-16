@@ -139,8 +139,8 @@ def test_match_id_alignment_comprehensive():
     print(f"{'='*60}")
     
     try:
-        # Get larger samples
-        odds_response = requests.get(f"{BACKEND_URL}/api/odds/all-cached?limit=100", timeout=30)
+        # Get maximum available samples
+        odds_response = requests.get(f"{BACKEND_URL}/api/odds/all-cached?limit=200&time_filter=all", timeout=30)
         iq_response = requests.get(f"{BACKEND_URL}/api/funbet-iq/matches?limit=200", timeout=30)
         
         if odds_response.status_code != 200 or iq_response.status_code != 200:
