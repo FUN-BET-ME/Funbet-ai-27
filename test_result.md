@@ -283,6 +283,24 @@ backend:
         comment: "✅ VERIFIED WORKING - New API key 32a9a6003fde37f0dd43987779689274 successfully integrated and backend logs confirm it's being used"
 
 frontend:
+  - task: "Mobile View IQ Scores Display (OddsTable Component)"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/OddsTable.jsx"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "🚨 USER REPORTED - IQ scores not visible on mobile/collapsed view of match cards on /odds page. Desktop view works perfectly but mobile view missing the IQ prediction line."
+      - working: "NA"
+        agent: "main"
+        comment: "🔍 ROOT CAUSE IDENTIFIED - OddsTable component (used for sport-filtered views like Football, Cricket) was missing the IQ scores display section. Only had team names with 'vs' separator. The inline view (filter='all') in LiveOdds.jsx had the correct two-line format, but OddsTable.jsx did not implement it."
+      - working: true
+        agent: "main"
+        comment: "✅ FIXED - Updated OddsTable.jsx to include IQ scores display matching LiveOdds.jsx structure. Restructured team names section with responsive flex layout. Added second line showing: home_iq | 🧠 Predicted Team (Confidence) | away_iq. Tested on desktop (1920px), mobile (375px), and small mobile (320px). All views working correctly: Football filter, Cricket filter, All view. Visual confirmation across multiple matches. IQ scores now visible on all screen sizes and all sport filters."
+  
   - task: "Stats page navigation to Predictions (deep insights flow)"
     implemented: true
     working: "NA"
