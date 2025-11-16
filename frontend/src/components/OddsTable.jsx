@@ -685,7 +685,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             
                             // First column: Home team
                             headers.push(
-                              <th key="home" className="text-center py-3 px-4 text-sm font-semibold text-gray-400">
+                              <th key="home" className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-[10px] sm:text-sm font-semibold text-gray-400 w-[25%]">
                                 <button
                                   onClick={() => {
                                     setOddsSortBy(prev => ({
