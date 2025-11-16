@@ -1319,7 +1319,7 @@ const LiveOdds = () => {
                           url={window.location.href}
                         />
                         <span className="text-sm text-gray-400 ml-2">
-                          {sortedBookmakers.length} bookmakers
+                          {sortedBookmakers.length + 1} bookmakers
                         </span>
                       </div>
                     </div>
