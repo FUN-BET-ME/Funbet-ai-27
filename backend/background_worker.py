@@ -712,9 +712,15 @@ class OddsWorker:
             
             updated = 0
             
+            # ONLY process COMPLETED matches (save final score ONCE)
+            completed_football = [m for m in football_data if m.get('completed')]
+            completed_basketball = [m for m in basketball_data if m.get('completed')]
+            completed_cricket = [m for m in cricket_data if m.get('completed')]
+            
+            logger.info(f"🏁 Found {len(completed_football)} football + {len(completed_basketball)} basketball + {len(completed_cricket)} cricket completed matches")
+            
             # Process football results
-            for match in football_data:
-                if match.get('completed'):
+            for match in completed_football:
                     home_score = match.get('home_score')
                     away_score = match.get('away_score')
                     
