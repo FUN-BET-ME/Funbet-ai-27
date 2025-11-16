@@ -98,7 +98,7 @@ const About = () => {
           <h2 className="text-2xl font-bold mb-4 text-white">Data Sources</h2>
           <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              FunBet.Me IQ aggregates real-time odds from The Odds API, team statistics from ESPN, 
+              FunBet.Me aggregates real-time odds from The Odds API, team statistics from ESPN, 
               and live scores from multiple reputable sources. Our proprietary FunBet IQ algorithm 
               processes this data to calculate market intelligence scores and confidence ratings.
             </p>
