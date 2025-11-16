@@ -98,7 +98,7 @@ const LiveOdds = () => {
     return filtered;
   }, [allOdds, filter, leagueFilter]);
 
-  const sports = ['all', 'football', 'cricket'];
+  const sports = ['all', 'football', 'cricket', 'basketball'];
   
   // League definitions for sub-filters (ALL 24 football + 8 cricket leagues)
   const footballLeagues = {
