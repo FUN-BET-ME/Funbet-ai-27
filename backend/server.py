@@ -1438,6 +1438,76 @@ async def update_team_historical_stats(
         logger.error(f"Error updating team stats: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
+# ==================== TEAM LOGOS & STATS ENDPOINTS ====================
+
+@api_router.get("/teams/logo/{team_name}")
+async def get_team_logo(team_name: str, sport_key: str = Query(None)):
+    """
+    Get team logo URL from cache or fetch from ESPN
+    """
+    try:
+        db = db_instance.get_db()
+        
+        # Check cache first
+        cached_logo = await db.team_logos.find_one({
+            'team_name': team_name
+        })
+        
+        if cached_logo and cached_logo.get('logo_url'):
+            return {'logo_url': cached_logo['logo_url'], 'cached': True}
+        
+        # Fetch from ESPN
+        logo_url = await fetch_team_logo_from_espn(team_name, sport_key)
+        
+        if logo_url:
+            # Cache it
+            await db.team_logos.update_one(
+                {'team_name': team_name},
+                {'$set': {
+                    'logo_url': logo_url,
+                    'sport_key': sport_key,
+                    'updated_at': datetime.now(timezone.utc).isoformat()
+                }},
+                upsert=True
+            )
+            return {'logo_url': logo_url, 'cached': False}
+        
+        return {'logo_url': None, 'cached': False}
+        
+    except Exception as e:
+        logger.error(f"Error fetching team logo: {e}")
+        return {'logo_url': None, 'error': str(e)}
+
+
+@api_router.post("/teams/logos/batch-fetch")
+async def batch_fetch_logos(limit: int = Query(100, description="Max teams to fetch")):
+    """
+    Batch fetch team logos from ESPN (Admin endpoint)
+    """
+    try:
+        db = db_instance.get_db()
+        result = await batch_fetch_team_logos(db, limit)
+        return result
+    except Exception as e:
+        logger.error(f"Error in batch logo fetch: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.post("/teams/stats/batch-fetch")
+async def batch_fetch_stats(limit: int = Query(50, description="Max teams to fetch")):
+    """
+    Batch fetch team stats from ESPN (Admin endpoint)
+    """
+    try:
+        db = db_instance.get_db()
+        result = await batch_fetch_team_stats(db, limit)
+        return result
+    except Exception as e:
+        logger.error(f"Error in batch stats fetch: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 app.include_router(api_router)
 
 # Middleware
