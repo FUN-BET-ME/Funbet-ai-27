@@ -882,7 +882,40 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
     'Vancouver Canucks': { league: 'nhl', id: 23 },
     'Vegas Golden Knights': { league: 'nhl', id: 54 },
     'Washington Capitals': { league: 'nhl', id: 15 },
-    'Winnipeg Jets': { league: 'nhl', id: 52 }
+    'Winnipeg Jets': { league: 'nhl', id: 52 },
+    
+    // NBA Teams
+    'Atlanta Hawks': { league: 'nba', id: 1 },
+    'Boston Celtics': { league: 'nba', id: 2 },
+    'Brooklyn Nets': { league: 'nba', id: 17 },
+    'Charlotte Hornets': { league: 'nba', id: 30 },
+    'Chicago Bulls': { league: 'nba', id: 4 },
+    'Cleveland Cavaliers': { league: 'nba', id: 5 },
+    'Dallas Mavericks': { league: 'nba', id: 6 },
+    'Denver Nuggets': { league: 'nba', id: 7 },
+    'Detroit Pistons': { league: 'nba', id: 8 },
+    'Golden State Warriors': { league: 'nba', id: 9 },
+    'Houston Rockets': { league: 'nba', id: 10 },
+    'Indiana Pacers': { league: 'nba', id: 11 },
+    'LA Clippers': { league: 'nba', id: 12 },
+    'Los Angeles Clippers': { league: 'nba', id: 12 },
+    'Los Angeles Lakers': { league: 'nba', id: 13 },
+    'Memphis Grizzlies': { league: 'nba', id: 29 },
+    'Miami Heat': { league: 'nba', id: 14 },
+    'Milwaukee Bucks': { league: 'nba', id: 15 },
+    'Minnesota Timberwolves': { league: 'nba', id: 16 },
+    'New Orleans Pelicans': { league: 'nba', id: 3 },
+    'New York Knicks': { league: 'nba', id: 18 },
+    'Oklahoma City Thunder': { league: 'nba', id: 25 },
+    'Orlando Magic': { league: 'nba', id: 19 },
+    'Philadelphia 76ers': { league: 'nba', id: 20 },
+    'Phoenix Suns': { league: 'nba', id: 21 },
+    'Portland Trail Blazers': { league: 'nba', id: 22 },
+    'Sacramento Kings': { league: 'nba', id: 23 },
+    'San Antonio Spurs': { league: 'nba', id: 24 },
+    'Toronto Raptors': { league: 'nba', id: 28 },
+    'Utah Jazz': { league: 'nba', id: 26 },
+    'Washington Wizards': { league: 'nba', id: 27 }
   };
   
   // Check if we have ESPN mapping
