@@ -511,12 +511,13 @@ async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
     try:
         logger.info(f"🧠 Starting batch IQ calculation for up to {limit} matches...")
         
-        # Get all matches from odds_cache that haven't started yet (upcoming matches)
+        # Get all matches from last 6 hours to future (includes live, recent, and upcoming)
         now = datetime.now(timezone.utc)
-        now_str = now.isoformat().replace('+00:00', 'Z')
+        six_hours_ago = now - timedelta(hours=6)
+        six_hours_ago_str = six_hours_ago.isoformat().replace('+00:00', 'Z')
         
         matches_cursor = db.odds_cache.find(
-            {'commence_time': {'$gt': now_str}}
+            {'commence_time': {'$gte': six_hours_ago_str}}  # Last 6 hours + future
         ).limit(limit)
         
         matches = await matches_cursor.to_list(length=limit)
