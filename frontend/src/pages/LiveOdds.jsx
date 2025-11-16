@@ -693,6 +693,16 @@ const LiveOdds = () => {
             >
               📅 Upcoming (30 Days)
             </button>
+            <button
+              onClick={() => setTimeFilter('recent-results')}
+              className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+                timeFilter === 'recent-results'
+                  ? 'bg-[#FFD700] text-[#2E004F]'
+                  : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-[#2E004F]/30'
+              }`}
+            >
+              📊 Recent Results
+            </button>
           </div>
           
           {/* Sport Filters */}
