@@ -411,11 +411,14 @@ const LiveOdds = () => {
       console.log('Fetching in-play matches...');
       if (shouldShowLoading) setLoading(true);
       fetchInPlayOdds().then(data => {
-        console.log('In-play data received:', data.length, 'matches');
+        console.log('🔴 In-play data received:', data.length, 'matches');
+        console.log('🔴 First match:', data[0]?.home_team, 'vs', data[0]?.away_team);
+        console.log('🔴 First match has live_score?', !!data[0]?.live_score);
+        console.log('🔴 First match home_score:', data[0]?.live_score?.home_score);
         
         // Don't filter here - let filteredOddsByLeague useMemo handle it
         setAllOdds(data);
-        console.log('✅ Updated with', data.length, 'in-play matches');
+        console.log('✅ Updated allOdds state with', data.length, 'in-play matches');
         setLoading(false);
       }).catch(error => {
         console.error('❌ Error fetching in-play odds:', error);
