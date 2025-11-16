@@ -218,6 +218,66 @@ class MatchLinkingService:
             logger.error(f"Error getting linked fixture: {e}")
             return None
     
+    async def link_live_score_to_match(self, live_score: Dict) -> Optional[Dict]:
+        """
+        Find and return the matching odds_cache match for a live score
+        Uses intelligent matching by team names and time
+        
+        Args:
+            live_score: Live score data from API-Football/Basketball/Cricket
+            
+        Returns:
+            Matching odds_cache document or None
+        """
+        try:
+            home_team = live_score.get('home_team', '')
+            away_team = live_score.get('away_team', '')
+            
+            if not home_team or not away_team:
+                return None
+            
+            # Normalize team names
+            norm_home = self.normalize_team_name(home_team)
+            norm_away = self.normalize_team_name(away_team)
+            
+            # Search for matches with similar team names
+            # Use regex for flexible matching
+            potential_matches = await self.db.odds_cache.find({
+                '$or': [
+                    {
+                        'home_team': {'$regex': norm_home.split()[0], '$options': 'i'},
+                        'away_team': {'$regex': norm_away.split()[0], '$options': 'i'}
+                    },
+                    {
+                        'home_team': {'$regex': home_team, '$options': 'i'},
+                        'away_team': {'$regex': away_team, '$options': 'i'}
+                    }
+                ]
+            }).to_list(length=10)
+            
+            # Find best match
+            best_match = None
+            best_score = 0.0
+            
+            for match in potential_matches:
+                match_home = match.get('home_team', '')
+                match_away = match.get('away_team', '')
+                
+                score = self.match_teams(home_team, away_team, match_home, match_away)
+                
+                if score > best_score and score >= 0.7:
+                    best_score = score
+                    best_match = match
+            
+            if best_match:
+                logger.debug(f"✅ Linked live score: {home_team} vs {away_team} → {best_match['home_team']} vs {best_match['away_team']} (score: {best_score:.2f})")
+            
+            return best_match
+            
+        except Exception as e:
+            logger.error(f"Error linking live score to match: {e}")
+            return None
+    
     async def auto_link_all_matches(self, sport_type: str = 'all') -> Dict:
         """
         Automatically link all unlinked matches in the database
