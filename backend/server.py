@@ -1500,7 +1500,7 @@ async def batch_fetch_stats(limit: int = Query(50, description="Max teams to fet
     Batch fetch team stats from ESPN (Admin endpoint)
     """
     try:
-        db = db_instance.get_db()
+        db = db_instance.db
         result = await batch_fetch_team_stats(db, limit)
         return result
     except Exception as e:
