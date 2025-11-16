@@ -38,36 +38,34 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
               <h3 className="text-white font-semibold mb-2">
-                Real-Time Odds Comparison
+                🧠 FunBet IQ Predictions
               </h3>
               <p className="text-gray-400 text-sm">
-                Compare odds from multiple bookmakers across football, cricket,
-                basketball, tennis, and more.
+                Our proprietary IQ scoring system analyzes market odds (50%), team statistics (35%), 
+                and recent momentum (15%) to identify favorites and provide confidence ratings (High/Medium/Low).
               </p>
             </div>
             <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
-              <h3 className="text-white font-semibold mb-2">Live Scores</h3>
+              <h3 className="text-white font-semibold mb-2">📊 Real-Time Odds Comparison</h3>
               <p className="text-gray-400 text-sm">
-                Get instant updates on matches happening across the globe with
-                minute-by-minute score updates.
+                Compare odds from multiple premium bookmakers across football, cricket, and other major sports. 
+                Updated every 5 minutes for accuracy.
+              </p>
+            </div>
+            <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
+              <h3 className="text-white font-semibold mb-2">⚡ Live Match Tracking</h3>
+              <p className="text-gray-400 text-sm">
+                Real-time scores, match status, and odds movements for in-play matches. 
+                Track your favorite teams and get instant notifications.
               </p>
             </div>
             <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
               <h3 className="text-white font-semibold mb-2">
-                AI-Powered Predictions
+                📈 Performance Analytics
               </h3>
               <p className="text-gray-400 text-sm">
-                Advanced algorithms analyze historical data and current form to
-                provide probability-based predictions.
-              </p>
-            </div>
-            <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
-              <h3 className="text-white font-semibold mb-2">
-                Comprehensive Statistics
-              </h3>
-              <p className="text-gray-400 text-sm">
-                League tables, head-to-head records, team form, and detailed
-                performance metrics.
+                Detailed prediction accuracy tracking, team statistics, historical performance, 
+                and comprehensive league standings.
               </p>
             </div>
           </div>
