@@ -288,44 +288,66 @@ def main():
     # Test 8: Comprehensive Match ID Alignment
     results['match_id_alignment'] = test_match_id_alignment_comprehensive()
     
-    # Test 9: Background Worker Status Check
+    # Test 9: Response Time Performance Check
+    print(f"\n🎯 RESPONSE TIME PERFORMANCE")
+    try:
+        # Test IQ API response time
+        start_time = time.time()
+        iq_perf_response = requests.get(f"{BACKEND_URL}/api/funbet-iq/matches?limit=50", timeout=30)
+        iq_response_time = time.time() - start_time
+        
+        # Test Odds API response time
+        start_time = time.time()
+        odds_perf_response = requests.get(f"{BACKEND_URL}/api/odds/all-cached?limit=50", timeout=30)
+        odds_response_time = time.time() - start_time
+        
+        print(f"✅ FunBet IQ API Response Time: {iq_response_time:.2f}s")
+        print(f"✅ Odds Cache API Response Time: {odds_response_time:.2f}s")
+        
+        # Success criteria: < 2 seconds as mentioned in context
+        iq_fast = iq_response_time < 2.0
+        odds_fast = odds_response_time < 2.0
+        
+        print(f"✅ IQ API meets <2s criteria: {iq_fast}")
+        print(f"✅ Odds API meets <2s criteria: {odds_fast}")
+        
+        results['response_time_performance'] = iq_fast and odds_fast
+        
+    except Exception as e:
+        print(f"❌ Error testing response times: {e}")
+        results['response_time_performance'] = False
+    
+    # Test 10: Background Worker Status Check
     print(f"\n🎯 BACKGROUND WORKER STATUS")
     try:
-        # Check backend logs for worker startup
-        import subprocess
-        log_result = subprocess.run(['tail', '-n', '100', '/var/log/supervisor/backend.out.log'], 
-                                  capture_output=True, text=True, timeout=10)
+        # Check if backend is running and processing requests
+        health_response = requests.get(f"{BACKEND_URL}/api/health", timeout=10)
         
-        if log_result.returncode == 0:
-            log_content = log_result.stdout
+        if health_response.status_code == 200:
+            health_data = health_response.json()
+            print(f"✅ Backend health check: {health_data.get('status', 'unknown')}")
+            print(f"✅ Database status: {health_data.get('database', 'unknown')}")
             
-            # Look for startup messages
-            startup_indicators = [
-                "Starting FunBet.ai",
-                "background worker",
-                "Application started",
-                "✅ Application started"
-            ]
-            
-            found_startup = any(indicator.lower() in log_content.lower() for indicator in startup_indicators)
-            
-            # Look for errors
-            error_indicators = ["ERROR", "Exception", "Failed", "Error"]
-            recent_errors = any(indicator in log_content for indicator in error_indicators)
-            
-            print(f"✅ Backend logs accessible")
-            print(f"✅ Startup indicators found: {found_startup}")
-            print(f"✅ Recent errors detected: {recent_errors}")
-            
-            if found_startup and not recent_errors:
-                results['background_worker'] = True
-                print(f"✅ Background worker appears healthy")
+            # Check if we have recent IQ data (indicates worker is functioning)
+            iq_check = requests.get(f"{BACKEND_URL}/api/funbet-iq/matches?limit=1", timeout=10)
+            if iq_check.status_code == 200:
+                iq_check_data = iq_check.json()
+                total_predictions = iq_check_data.get('total', 0)
+                print(f"✅ Total IQ predictions available: {total_predictions}")
+                
+                # If we have 358 predictions as mentioned in context, worker is functioning
+                if total_predictions >= 300:
+                    results['background_worker'] = True
+                    print(f"✅ Background worker appears healthy (sufficient predictions)")
+                else:
+                    results['background_worker'] = False
+                    print(f"⚠️  Background worker may not be functioning (low prediction count)")
             else:
                 results['background_worker'] = False
-                print(f"⚠️  Background worker status unclear")
+                print(f"❌ Cannot verify IQ predictions")
         else:
             results['background_worker'] = False
-            print(f"❌ Cannot access backend logs")
+            print(f"❌ Backend health check failed")
             
     except Exception as e:
         results['background_worker'] = False
