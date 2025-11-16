@@ -199,6 +199,13 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
     'Genoa': 'https://upload.wikimedia.org/wikipedia/en/7/77/Genoa_CFC_logo.svg',
     'Empoli': 'https://upload.wikimedia.org/wikipedia/en/5/55/Empoli_FC_Logo.svg',
     'Monza': 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Logo_AC_Monza.svg',
+    'Atalanta BC': 'https://upload.wikimedia.org/wikipedia/en/6/66/Atalanta_BC_logo.svg',
+    'Hellas Verona': 'https://upload.wikimedia.org/wikipedia/en/9/9b/Hellas_Verona_FC_logo.svg',
+    'Como': 'https://upload.wikimedia.org/wikipedia/commons/2/29/Como_1907_logo.svg',
+    'Venezia': 'https://upload.wikimedia.org/wikipedia/en/b/bb/Venezia_FC_logo.svg',
+    'Lecce': 'https://upload.wikimedia.org/wikipedia/en/8/89/US_Lecce_logo.svg',
+    'Parma': 'https://upload.wikimedia.org/wikipedia/en/3/3b/Parma_Calcio_1913_logo.svg',
+    'Pisa': 'https://upload.wikimedia.org/wikipedia/en/8/84/Pisa_Sporting_Club_logo.svg',
     
     // Bundesliga
     'Bayern Munich': 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/132.png',
