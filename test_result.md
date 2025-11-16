@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "FUNBET IQ BUG FIXES - Three critical issues to fix: (1) FunBet IQ page sorting LOW confidence first instead of HIGH confidence first. (2) IQ scores not appearing on LiveOdds page for teams. (3) Data disappearing when changing filters on LiveOdds page (especially 'LIVE Now' filter)."
+user_problem_statement: "TECHNICAL CLEANUP & WORLD CUP QUALIFIERS - Three tasks: (1) Fix WebSocket connection error in browser console (ws://localhost:3000/ws failed). (2) Fix Predictions API 404 error (/api/ai/predictions not found). (3) Add live Football World Cup Qualifiers to data fetching for ongoing qualification matches."
 
 backend:
   - task: "Bookmaker merge logic with deduplication"
