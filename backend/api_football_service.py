@@ -123,3 +123,122 @@ async def fetch_api_football_live_scores() -> List[Dict]:
     except Exception as e:
         logger.error(f"Error fetching API-Football live scores: {e}")
         return []
+
+
+async def fetch_api_basketball_live_scores() -> List[Dict]:
+    """Fetch all live basketball games from API-Sports Basketball"""
+    try:
+        api_key = os.environ.get('API_FOOTBALL_KEY')  # Same key works for all API-Sports
+        if not api_key:
+            logger.warning("API_FOOTBALL_KEY not found in environment")
+            return []
+        
+        logger.info("Fetching live basketball scores from API-Sports")
+        
+        async with httpx.AsyncClient() as client:
+            # Fetch all live games
+            url = "https://v1.basketball.api-sports.io/games"
+            headers = {'x-apisports-key': api_key}
+            params = {'live': 'all'}
+            
+            response = await client.get(url, headers=headers, params=params, timeout=15.0)
+            
+            if response.status_code != 200:
+                logger.error(f"API-Basketball returned status {response.status_code}")
+                return []
+            
+            data = response.json()
+            games = data.get('response', [])
+            
+            logger.info(f"✅ API-Basketball: Found {len(games)} live games")
+            
+            # Transform to our format
+            live_scores = []
+            for game in games:
+                try:
+                    # Extract game data
+                    game_id = game.get('id', '')
+                    teams = game.get('teams', {})
+                    scores = game.get('scores', {})
+                    league = game.get('league', {})
+                    status = game.get('status', {})
+                    
+                    home_team = teams.get('home', {}).get('name', '')
+                    away_team = teams.get('away', {}).get('name', '')
+                    
+                    # Get scores
+                    home_score = scores.get('home', {}).get('total', 0)
+                    away_score = scores.get('away', {}).get('total', 0)
+                    
+                    # Get status
+                    status_long = status.get('long', 'LIVE')
+                    status_short = status.get('short', '')
+                    
+                    # Determine if game is completed
+                    is_completed = status_short in ['FT', 'AOT', 'POST']
+                    is_live = status_short in ['Q1', 'Q2', 'Q3', 'Q4', 'OT', 'HT', 'BT', 'LIVE']
+                    
+                    # Format game status
+                    if status_short == 'HT':
+                        match_status = 'HT'
+                    elif status_short == 'FT':
+                        match_status = 'FT'
+                    elif status_short in ['Q1', 'Q2', 'Q3', 'Q4']:
+                        match_status = status_short
+                    elif status_short == 'OT':
+                        match_status = 'OT'
+                    else:
+                        match_status = 'Live'
+                    
+                    # Determine sport_key based on league
+                    league_name = league.get('name', '')
+                    league_type = league.get('type', '')
+                    
+                    if 'NBA' in league_name:
+                        sport_key = 'basketball_nba'
+                    elif 'NCAA' in league_name or 'NCAAB' in league_name:
+                        sport_key = 'basketball_ncaab'
+                    elif 'EuroLeague' in league_name:
+                        sport_key = 'basketball_euroleague'
+                    else:
+                        # Default based on country
+                        country = league.get('country', {}).get('name', 'unknown')
+                        sport_key = f"basketball_{country.lower().replace(' ', '_')}"
+                    
+                    score_entry = {
+                        'id': str(game_id),
+                        'sport_key': sport_key,
+                        'sport_title': league_name,
+                        'commence_time': game.get('date', ''),
+                        'completed': is_completed,
+                        'home_team': home_team,
+                        'away_team': away_team,
+                        'home_score': str(home_score) if home_score is not None else '0',
+                        'away_score': str(away_score) if away_score is not None else '0',
+                        'scores': [
+                            {
+                                'name': home_team,
+                                'score': str(home_score) if home_score is not None else '0'
+                            },
+                            {
+                                'name': away_team,
+                                'score': str(away_score) if away_score is not None else '0'
+                            }
+                        ],
+                        'last_update': datetime.now(timezone.utc).isoformat(),
+                        'match_status': match_status,
+                        'is_live': is_live
+                    }
+                    
+                    live_scores.append(score_entry)
+                    
+                except Exception as e:
+                    logger.warning(f"Error parsing basketball game: {e}")
+                    continue
+            
+            logger.info(f"✅ API-Basketball: Processed {len(live_scores)} live scores")
+            return live_scores
+            
+    except Exception as e:
+        logger.error(f"Error fetching API-Basketball live scores: {e}")
+        return []
