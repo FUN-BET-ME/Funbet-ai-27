@@ -92,11 +92,13 @@ const LiveOdds = () => {
     }
     
     if (filtered.length > 0) {
+      console.log('  → ✅ FINAL RESULT:', filtered.length, 'matches');
       console.log('  → Sample match:', filtered[0].sport_key, filtered[0].home_team);
     } else {
-      console.log('  → No matches after filtering!');
+      console.log('  → ❌ NO MATCHES AFTER FILTERING!');
     }
     
+    console.log('🔍 RETURNING from useMemo:', filtered.length, 'matches');
     return filtered;
   }, [allOdds, filter, leagueFilter]);
 
