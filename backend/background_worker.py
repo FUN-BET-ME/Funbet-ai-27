@@ -230,6 +230,27 @@ class OddsWorker:
             
             logger.info(f"✅ Cricket: {cricket_fetched} matches from {len(CRICKET_LEAGUES)} leagues")
             
+            # 3. Fetch Basketball competitions
+            basketball_fetched = 0
+            for league in BASKETBALL_LEAGUES:
+                try:
+                    league_matches = await self.fetch_odds_for_sport(league)
+                    if league_matches:
+                        # Deduplicate by match ID
+                        existing_ids = {m.get('id') for m in all_matches if m.get('id')}
+                        new_matches = [m for m in league_matches if m.get('id') not in existing_ids]
+                        if new_matches:
+                            all_matches.extend(new_matches)
+                            basketball_fetched += len(new_matches)
+                            logger.info(f"  🏀 {league}: {len(new_matches)} matches")
+                    api_calls += 1
+                    await asyncio.sleep(0.5)  # Rate limiting
+                except Exception as e:
+                    logger.warning(f"Error fetching {league}: {e}")
+                    continue
+            
+            logger.info(f"✅ Basketball: {basketball_fetched} matches from {len(BASKETBALL_LEAGUES)} leagues")
+            
             if not all_matches:
                 logger.warning("⚠️ No matches fetched")
                 return
