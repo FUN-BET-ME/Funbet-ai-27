@@ -2555,282 +2555,42 @@ backend:
         agent: "main"
         comment: "✅ FIXED - Frontend bug identified and resolved! Line 17 in LiveOdds.jsx was reading 'sport' from URL instead of 'filter'. Changed queryParams.get('sport') to queryParams.get('filter'). Frontend now correctly reads ?filter=football and sends sport=soccer to backend API. Screenshot confirms Bayern Munich vs Arsenal (soccer match) displaying correctly with filter active. SPORT FILTER NOW FULLY WORKING!"
 
-agent_communication:
-  - agent: "main"
-    message: "✨ COMPLETE FRONTEND SIMPLIFICATION IMPLEMENTED
-    
-    **User Request:**
-    - Remove all complex/fancy code and unnecessary features
-    - Make frontend load fast with simple pagination
-    - Keep it minimal - just display data from database
-    
-    **What Was Removed:**
-    ❌ Complex state management and hooks
-    ❌ Team logo N+1 API calls and caching
-    ❌ Complex sorting algorithms
-    ❌ Sport filters and time filters
-    ❌ AI predictions complex calculations
-    ❌ Odds tracking and movement detection
-    ❌ Hot markets, value opportunities, arbitrage detection
-    ❌ Sharp money tracking
-    ❌ Favorites and follow functionality
-    ❌ Complex FunBet.ME calculations
-    
-    **New Simple Implementation:**
-    ✅ LiveOdds.jsx: ~200 lines (was ~600+)
-       - Simple fetch from /api/odds/all-cached
-       - limit=50, skip for pagination
-       - Basic odds display (Home/Draw/Away)
-       - Load More button
-       - Clean card layout
-    
-    ✅ Stats.jsx: Simplified
-       - Fetch matches from database
-       - Display match info + bookmaker count
-       - Load More pagination
-    
-    ✅ Predictions.jsx: Simplified
-       - Show favorite (lowest odds) as prediction
-       - Simple confidence calculation
-       - Load More pagination
-    
-    ✅ News.jsx: Simplified
-       - Fetch and display first 50 articles
-       - Clean card layout
-    
-    **Testing Results:**
-    ✅ LiveOdds page loads instantly with 50 matches
-    ✅ Load More button working (50 → 100 matches)
-    ✅ Stats page displays correctly
-    ✅ Predictions page shows predictions with confidence
-    ✅ News page loads (backend endpoint needs check)
-    ✅ All pages fast and responsive
-    
-    **Old Files Backed Up:**
-    - LiveOdds_old_backup.jsx
-    - Stats_old_backup.jsx
-    - Predictions_old_backup.jsx
-    - News_old_backup.jsx
-    
-    **Status:** ✅ FRONTEND COMPLETELY SIMPLIFIED - Fast loading working site achieved"
-  
-  - agent: "main"
-    message: "🚀 SCALABILITY IMPLEMENTATION COMPLETE
-
-**Problem Solved:**
-- Original issue: Each user request makes live API calls → slow load times & API rate limits
-- Solution: Background worker pre-fetches odds every 10 minutes → instant responses from database
-- Impact: Can now handle 10,000-100,000 users per day without performance degradation
-
-**Implementation Details:**
-
-1. **Background Worker (background_odds_fetcher)**
-   - Runs every 10 minutes via APScheduler
-   - Fetches from 14 major football leagues
-   - Stores 223+ matches in MongoDB
-   - Sorting: time proximity → tier → exact time
-   - Execution time: ~3 seconds for all leagues
-
-2. **Database Cache (odds_cache collection)**
-   - MongoDB collection storing pre-fetched odds
-   - Replaces entire collection on each refresh (ensures fresh data)
-   - Documents include tier and time_bucket for efficient sorting
-   - Query time: ~40ms for 223 matches
-
-3. **Refactored Endpoint (/api/odds/football/priority)**
-   - Changed from live API calls to database reads
-   - Response time: 40ms vs 5-10 seconds (100x faster!)
-   - Instant responses for all users
-   - No API rate limit concerns
-   - Falls back to live APIs only if database empty (first startup)
-
-4. **Scheduler System**
-   - APScheduler with AsyncIO support
-   - Two jobs: odds fetcher (10 min) + prediction verifier (15 min)
-   - Starts on app startup
-   - Runs in background without blocking requests
-
-**Verification:**
-✅ Manual trigger endpoint tested: stored 223 matches
-✅ Database query confirmed: 223 documents in odds_cache
-✅ Endpoint tested: returns 223 matches in ~40ms
-✅ Frontend tested: Live Odds page loads instantly with database data
-✅ Sorting verified: Brazil match (1d 4h) before Champions League matches (14 days)
-✅ Scheduler logs confirmed: both jobs added and started successfully
-
-**Performance Metrics:**
-- Before: 5-10 seconds per user request (live API calls)
-- After: 40ms per user request (database read)
-- Improvement: 100-250x faster
-- Scalability: Can handle 10,000-100,000+ concurrent users
-
-**Ready for Production:**
-✅ Background worker running
-✅ Database populated
-✅ Endpoint reading from database
-✅ Frontend displaying data correctly
-✅ Scheduler operational
-
-**Next Steps:**
-- Run comprehensive backend testing via deep_testing_backend_v2
-- Verify all endpoints still working correctly
-- Test frontend data flow
-- Complete final verification"
-  
-  - agent: "testing"
-    message: "🧪 PAGINATED ENDPOINT TESTING COMPLETED - FULLY WORKING
-    
-    **Testing Summary:**
-
-  - agent: "main"
-    message: "🐛 LIVEODDS SPORT FILTER BUG FIXED
-    
-    **Problem Reported:**
-    - Sport filter on LiveOdds page not working correctly
-    - Clicking 'Football' or 'Cricket' from navigation shows empty page or loads all matches (slow)
-    - URL parameter (?filter=football) not being read by component
-    
-    **Root Cause Analysis:**
-    - LiveOdds.jsx had DUPLICATE useEffect hooks for URL filter synchronization:
-      1. Lines 26-29: CORRECT - reads 'filter' parameter from URL using getFilterFromURL()
-      2. Lines 46-49: FAULTY - tried to read 'sport' parameter using undefined 'queryParams' variable
-    - The faulty useEffect was causing an error and overriding the correct logic
-    - Component was falling back to 'all' filter, ignoring URL parameters
-    
-    **Fix Implemented:**
-    ✅ Removed duplicate/faulty useEffect (lines 46-49)
-    ✅ Kept correct URL sync logic:
-       - getFilterFromURL() reads 'filter' parameter from URL (line 18-21)
-       - Initial state set from URL on mount (line 23)
-       - useEffect syncs filter when URL changes (line 26-29)
-    
-    **Expected Behavior After Fix:**
-    1. When user navigates to /live-odds?filter=football → component loads with filter='football'
-    2. When user navigates to /live-odds?filter=cricket → component loads with filter='cricket'
-    3. Filter state correctly initialized from URL on first render
-    4. Filter updates when clicking navigation links (URL changes)
-    5. Backend receives correct 'sport' parameter (e.g., 'soccer' for football, 'cricket' for cricket)
-    6. Page loads filtered matches only, not all matches
-    
-    **Files Modified:**
-    - /app/frontend/src/pages/LiveOdds.jsx (removed lines 46-49)
-    
-    **Ready for Testing:**
-    - Backend testing: Verify /api/odds/all-cached correctly filters by sport parameter
-    - Frontend testing: Navigate to different sport pages and verify correct matches load
-    - Test flow: Home → Football → verify filtered matches load
-    - Test flow: Home → Cricket → verify filtered matches load
-    
-    **Status:** FIX IMPLEMENTED - Ready for backend and frontend testing"
-
-    ✅ Comprehensive testing of /api/odds/all-cached endpoint for simplified FunBet.AI frontend
-    ✅ All success criteria met (7/7 passed)
-    ✅ Ready for production use with Load More button functionality
-    
-    **Test Results:**
-    
-    **1. Initial Load Test (limit=50, skip=0):**
-    ✅ Returns 200 OK status
-    ✅ Response structure: {matches: [], pagination: {}}
-    ✅ Pagination metadata valid: {total: 660, has_more: true, next_skip: 50}
-    ✅ Returns exactly 50 matches as requested
-    ✅ Response time: 0.127s (well under 1s requirement)
-    
-    **2. Pagination Test (limit=50, skip=50):**
-    ✅ Returns 200 OK status
-    ✅ Skip parameter working correctly (skip=50 in response)
-    ✅ has_more logic correct (true when more data available)
-    ✅ next_skip logic correct (100 for next page)
-    ✅ Response time: 0.107s (fast database read)
-    
-    **3. Performance Test:**
-    ✅ Average response time: 0.117s
-    ✅ Meets <1 second requirement for database reads
-    ✅ Consistent fast responses across multiple calls
-    
-    **4. Data Structure Validation:**
-    ✅ All required match fields present: id, home_team, away_team, sport_title, commence_time, bookmakers
-    ✅ Bookmaker structure valid: key, title, markets
-    ✅ Market structure valid: outcomes with name and price
-    ✅ Sample outcome verified: 'Air Force Falcons @ 12.5'
-    
-    **5. Sport Filter Test:**
-    ✅ Sport filter working correctly
-    ✅ Tested with basketball_ncaab: returns 10 matches of correct sport
-    ✅ All returned matches match requested sport_key
-    
-    **6. Edge Cases:**
-    ✅ Large skip value handled correctly (returns empty array)
-    ✅ limit=0 handled correctly (returns 0 matches)
-    ✅ Invalid parameters handled gracefully
-    
-    **Sample Data Verified:**
-    - Home Team: Air Force Falcons
-    - Away Team: LIU Sharks
-    - Sport: NCAAB
-    - Time: 2025-11-11T21:00:00Z
-    - Bookmakers: 4 available
-    
-    **Database Performance:**
-    ✅ Total matches available: 660
-    ✅ Instant responses from MongoDB odds_cache collection
-    ✅ No API rate limits (reads from database)
-    ✅ Scalable for high user load
-    
-    **Status:** PAGINATED ENDPOINT FULLY WORKING AND TESTED - Ready for simplified FunBet.AI frontend implementation"
-
-  - task: "Sport Filtering with MongoDB Regex Query"
-    implemented: true
-    working: true
-    file: "/app/backend/server.py"
+backend:
+  - task: "Add World Cup Qualifiers leagues to background worker"
+    implemented: false
+    working: "NA"
+    file: "/app/backend/background_worker.py"
     stuck_count: 0
-    priority: "critical"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
       - working: "NA"
-        agent: "testing"
-        comment: "🧪 COMPREHENSIVE SPORT FILTERING TEST COMPLETED - FULLY WORKING. Tested /api/odds/all-cached endpoint with sport parameter filtering using MongoDB regex queries. SUCCESS CRITERIA MET (6/6): (1) All matches endpoint: Returns 20 matches from 429 total in database, mixed sport types detected. (2) Soccer filter (sport='soccer'): Returns 20 matches from 278 total soccer matches, all sport_keys correctly start with 'soccer' (soccer_brazil_campeonato, soccer_fifa_world_cup_qualifiers_europe, soccer_uefa_champs_league_women, soccer_spain_segunda_division). (3) Cricket filter (sport='cricket'): Returns 5 matches from 5 total cricket matches, all sport_keys correctly start with 'cricket' (cricket_test_match, cricket_international_t20, cricket_odi). (4) Basketball filter (sport='basketball'): Returns 20 matches from 103 total basketball matches, all sport_keys correctly start with 'basketball' (basketball_ncaab). (5) Pagination with sport filtering: Tested soccer pagination with skip=0,5 and limit=5, no overlap between pages, pagination metadata correct. (6) Backend logs accessible: API calls logged correctly. MongoDB regex query construction working perfectly - query['sport_key'] = {'$regex': f'^{sport}', '$options': 'i'} correctly filters matches by sport_key prefix. All sport filters working correctly, no non-matching matches found in filtered results."
+        agent: "main"
+        comment: "🔄 IMPLEMENTING - Adding World Cup Qualifier leagues: UEFA Euro Qualification, UEFA Nations League, CONMEBOL Copa América to FOOTBALL_LEAGUES list. These cover ongoing qualification matches for FIFA World Cup 2026."
 
+frontend:
+  - task: "Remove deprecated /api/ai/predictions calls"
+    implemented: false
+    working: "NA"
+    file: "/app/frontend/src/pages/LiveOdds.jsx, /app/frontend/src/components/OddsTable.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "🔄 IMPLEMENTING - Removing fetchAIPredictions() calls from LiveOdds.jsx and OddsTable.jsx since IQ scores now come bundled with odds data. This endpoint doesn't exist on backend causing 404 errors."
 
-  - agent: "main"
-    message: "✅ FUNBET IQ FRONTEND RENDERING BUG FIXED - ALL PHASES COMPLETE
-    
-    **Problem Identified:**
-    - IQ scores were being fetched from backend (100% coverage, 358/358 matches)
-    - Backend API working correctly, returning proper IQ data
-    - Frontend was fetching IQ scores but NOT displaying them
-    
-    **Root Cause:**
-    - useEffect hook at line 510-520 in LiveOdds.jsx had faulty dependency array
-    - Dependency array was [allOdds.length, iqScores, fetchIQScores]
-    - After first fetch, 'iqScores' was no longer empty, so condition 'Object.keys(iqScores).length === 0' failed
-    - This prevented refetching IQ scores when switching filters or loading new data
-    
-    **Fix Implemented:**
-    - Simplified useEffect condition: removed check for empty iqScores
-    - Removed 'iqScores' from dependency array
-    - Now triggers fetchIQScores() whenever allOdds.length changes
-    - Dependencies: [allOdds.length, fetchIQScores]
-    
-    **Verification:**
-    ✅ IQ scores now display correctly on LiveOdds page
-    ✅ Two-line format working as designed:
-       - Line 1: Team Names (e.g., 'Almería vs Cádiz CF')
-       - Line 2: IQ Scores + Prediction (e.g., '50 | 🧠 Cádiz CF (Medium) | 52.5')
-    ✅ Brain icon with gold color showing correctly
-    ✅ Confidence badges displaying (High/Medium/Low with color coding)
-    ✅ IQ data fetches automatically when page loads
-    ✅ 100 IQ scores fetched per API call
-    
-    **Background Worker:**
-    ✅ Verified lifespan context manager at line 36-47 in server.py
-    ✅ Background worker starts automatically via asyncio.create_task(start_worker())
-    ✅ Worker scheduled to refresh odds and calculate IQ scores on schedule
-    
-    **Database Status:**
-    ✅ 358 matches in odds_cache collection
-    ✅ 358 IQ predictions in funbet_iq_predictions collection
-    ✅ 100% IQ coverage - every match has corresponding prediction
-    ✅ All match IDs correctly aligned between collections
-    
-    **Status:** FRONTEND RENDERING BUG RESOLVED - IQ scores displaying correctly with proper two-line format and 100% match coverage"
+  - task: "Fix WebSocket connection error in console"
+    implemented: false
+    working: "NA"
+    file: "TBD"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "🔍 INVESTIGATING - Browser console shows ws://localhost:3000/ws connection failed. Investigating if this is React dev server hot reload or custom WebSocket code."
+
+agent_communication:
