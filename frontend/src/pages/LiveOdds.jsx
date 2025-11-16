@@ -515,7 +515,7 @@ const LiveOdds = () => {
     } else {
       console.log('⚠️  Not calling fetchIQScores - no odds data');
     }
-  }, [allOdds.length, fetchIQScores]);
+  }, [allOdds, fetchIQScores]);
 
   // Auto-refresh for live scores and odds
   useEffect(() => {
