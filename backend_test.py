@@ -11,7 +11,7 @@ from datetime import datetime
 import time
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://funbet-hoops.preview.emergentagent.com"
+BACKEND_URL = "https://funbet-live.preview.emergentagent.com"
 
 def test_api_endpoint(endpoint, description, expected_fields=None):
     """Test a single API endpoint"""
