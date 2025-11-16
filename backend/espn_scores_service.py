@@ -17,6 +17,13 @@ async def fetch_espn_football_scores() -> List[Dict]:
         
         # Major football competitions on ESPN (expanded global coverage)
         espn_leagues = [
+            # International & World Cup
+            {'id': 'fifa.world', 'name': 'FIFA World Cup'},
+            {'id': 'fifa.worldq.uefa', 'name': 'World Cup Qualifying - UEFA'},
+            {'id': 'fifa.worldq.conmebol', 'name': 'World Cup Qualifying - CONMEBOL'},
+            {'id': 'fifa.worldq.concacaf', 'name': 'World Cup Qualifying - CONCACAF'},
+            {'id': 'uefa.nations', 'name': 'UEFA Nations League'},
+            
             # UEFA Competitions
             {'id': 'uefa.champions', 'name': 'UEFA Champions League'},
             {'id': 'uefa.europa', 'name': 'UEFA Europa League'},
