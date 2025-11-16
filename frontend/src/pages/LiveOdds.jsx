@@ -495,6 +495,8 @@ const LiveOdds = () => {
             filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('soccer'));
           } else if (filter === 'cricket') {
             filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
+          } else if (filter === 'basketball') {
+            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('basketball'));
           }
           
           // CRITICAL FIX: Only update if we have data
@@ -508,6 +510,29 @@ const LiveOdds = () => {
           console.error('❌ Error refreshing in-play odds:', error);
           if (!isBackgroundRefresh) setLoading(false);
           // Silently keep existing data
+        });
+      } else if (timeFilter === 'recent-results') {
+        // Refresh recent results
+        fetchHistoricalOdds().then(data => {
+          let filteredData = data;
+          if (filter === 'football') {
+            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('soccer'));
+          } else if (filter === 'cricket') {
+            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
+          } else if (filter === 'basketball') {
+            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('basketball'));
+          }
+          
+          // Only show COMPLETED matches
+          filteredData = filteredData.filter(match => 
+            match.live_score && match.live_score.completed === true
+          );
+          
+          setAllOdds(filteredData);
+          if (!isBackgroundRefresh) setLoading(false);
+        }).catch(error => {
+          console.error('❌ Error refreshing historical odds:', error);
+          if (!isBackgroundRefresh) setLoading(false);
         });
       } else {
         // Refresh upcoming matches - silent refresh for background updates
