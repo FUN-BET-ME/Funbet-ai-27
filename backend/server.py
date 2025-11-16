@@ -571,6 +571,64 @@ async def get_inplay_odds():
         logger.error(f"Error fetching in-play odds: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.get("/match/enhanced/{match_id}")
+async def get_enhanced_match_data(match_id: str):
+    """Get comprehensive enhanced data for a match including statistics, predictions, and events"""
+    try:
+        from api_football_enhanced import api_football_enhanced
+        
+        # Get match from database
+        match = await db_instance.db.odds_cache.find_one({'id': match_id})
+        
+        if not match:
+            raise HTTPException(status_code=404, detail="Match not found")
+        
+        # Search for fixture ID in API-Football
+        fixture_id = await api_football_enhanced.search_fixture_by_teams(
+            match.get('home_team'),
+            match.get('away_team'),
+            match.get('commence_time', '')[:10]
+        )
+        
+        enhanced_data = {
+            'match': match,
+            'fixture_id': fixture_id,
+            'statistics': None,
+            'predictions': None,
+            'events': [],
+            'api_call_count': 0
+        }
+        
+        if fixture_id:
+            # Fetch all enhanced data
+            import asyncio
+            
+            stats_task = api_football_enhanced.fetch_fixture_statistics(fixture_id)
+            predictions_task = api_football_enhanced.fetch_fixture_predictions(fixture_id)
+            events_task = api_football_enhanced.fetch_fixture_events(fixture_id)
+            
+            stats, predictions, events = await asyncio.gather(
+                stats_task, predictions_task, events_task, return_exceptions=True
+            )
+            
+            enhanced_data['statistics'] = stats if not isinstance(stats, Exception) else None
+            enhanced_data['predictions'] = predictions if not isinstance(predictions, Exception) else None
+            enhanced_data['events'] = events if not isinstance(events, Exception) else []
+            enhanced_data['api_call_count'] = 3  # Used 3 API calls
+        
+        # Remove MongoDB _id
+        if '_id' in enhanced_data['match']:
+            del enhanced_data['match']['_id']
+        
+        logger.info(f"✅ Enhanced data for match {match_id}: fixture_id={fixture_id}, {enhanced_data['api_call_count']} API calls")
+        return enhanced_data
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching enhanced match data: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/odds/football/priority")
 async def get_football_priority_legacy():
     """Legacy endpoint - Get priority football matches"""
