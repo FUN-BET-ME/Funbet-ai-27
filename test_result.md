@@ -2557,7 +2557,7 @@ backend:
 
 backend:
   - task: "Add World Cup Qualifiers leagues to background worker"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "/app/backend/background_worker.py"
     stuck_count: 0
@@ -2567,6 +2567,9 @@ backend:
       - working: "NA"
         agent: "main"
         comment: "🔄 IMPLEMENTING - Adding World Cup Qualifier leagues: UEFA Euro Qualification, UEFA Nations League, CONMEBOL Copa América to FOOTBALL_LEAGUES list. These cover ongoing qualification matches for FIFA World Cup 2026."
+      - working: "NA"
+        agent: "main"
+        comment: "✅ IMPLEMENTED - Added 3 World Cup Qualifier leagues to FOOTBALL_LEAGUES (lines 33-36): (1) soccer_uefa_euro_qualification - UEFA Euro Qualification (WC Qualifier path), (2) soccer_uefa_nations_league - UEFA Nations League (WC Qualifier path), (3) soccer_conmebol_copa_america - Copa América (WC Qualifier - South America). Background worker will now fetch odds for ongoing World Cup qualification matches alongside regular leagues. Backend restarted successfully. Ready for testing."
 
 frontend:
   - task: "Remove deprecated /api/ai/predictions calls"
