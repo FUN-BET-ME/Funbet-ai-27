@@ -651,6 +651,78 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in prediction verification job: {e}")
     
+    async def fetch_final_scores_job(self):
+        """
+        Fetch and save final scores from API-Football for completed matches
+        Runs every 2 hours to get results
+        """
+        try:
+            logger.info("⚽ Fetching final scores from API-Football...")
+            
+            from api_football_service import api_football_service
+            
+            # Get live scores (includes completed matches from today)
+            football_data = await api_football_service.get_live_football_scores()
+            basketball_data = await api_football_service.get_live_basketball_scores()
+            
+            updated = 0
+            
+            # Process football results
+            for match in football_data:
+                if match.get('completed'):
+                    home_score = match.get('home_score')
+                    away_score = match.get('away_score')
+                    
+                    if home_score is not None and away_score is not None:
+                        # Find and update in database
+                        result = await self.db.odds_cache.update_many(
+                            {
+                                'home_team': match.get('home_team'),
+                                'away_team': match.get('away_team'),
+                                'live_score.completed': {'$ne': True}
+                            },
+                            {
+                                '$set': {
+                                    'live_score.home_score': home_score,
+                                    'live_score.away_score': away_score,
+                                    'live_score.completed': True,
+                                    'live_score.match_status': match.get('status', 'FT'),
+                                    'live_score.last_update': datetime.now(timezone.utc).isoformat()
+                                }
+                            }
+                        )
+                        updated += result.modified_count
+            
+            # Process basketball results
+            for match in basketball_data:
+                if match.get('completed'):
+                    home_score = match.get('home_score')
+                    away_score = match.get('away_score')
+                    
+                    if home_score is not None and away_score is not None:
+                        result = await self.db.odds_cache.update_many(
+                            {
+                                'home_team': match.get('home_team'),
+                                'away_team': match.get('away_team'),
+                                'live_score.completed': {'$ne': True}
+                            },
+                            {
+                                '$set': {
+                                    'live_score.home_score': home_score,
+                                    'live_score.away_score': away_score,
+                                    'live_score.completed': True,
+                                    'live_score.match_status': 'FT',
+                                    'live_score.last_update': datetime.now(timezone.utc).isoformat()
+                                }
+                            }
+                        )
+                        updated += result.modified_count
+            
+            logger.info(f"✅ Final scores saved: {updated} matches updated with results")
+                
+        except Exception as e:
+            logger.error(f"❌ Error in final scores job: {e}")
+    
     def start(self):
         """Start the background worker - EFFICIENT VERSION"""
         logger.info("🚀 Starting FunBet.ai background worker (EFFICIENT MODE)...")
