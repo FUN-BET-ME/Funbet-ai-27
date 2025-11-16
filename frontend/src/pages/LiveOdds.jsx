@@ -1362,14 +1362,6 @@ const LiveOdds = () => {
                               return null;
                             })()}
                           </div>
-                          <div className="flex-shrink-0">
-                            <TeamLogo 
-                              logoUrl={match.live_score?.away_team_logo || match.away_logo || teamLogos[awayTeam]} 
-                              teamName={awayTeam}
-                              sport={match.sport_key}
-                              size="md"
-                            />
-                          </div>
                         </div>
                       </div>
                       
