@@ -330,6 +330,47 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in live scores job: {e}")
     
+    async def fetch_backup_odds_for_matches_without_bookmakers(self):
+        """
+        Fetch backup odds for matches that have no bookmakers
+        """
+        try:
+            from backup_odds_service import backup_odds_service
+            
+            logger.info("🔄 Checking for matches without bookmakers...")
+            
+            # Find matches with 0 bookmakers
+            matches_no_odds = await self.db.odds_cache.find({
+                '$or': [
+                    {'bookmakers': {'$exists': False}},
+                    {'bookmakers': {'$size': 0}}
+                ]
+            }).limit(20).to_list(length=20)
+            
+            logger.info(f"📊 Found {len(matches_no_odds)} matches without odds")
+            
+            updated = 0
+            for match in matches_no_odds:
+                # Try to get backup odds
+                backup_bookmakers = await backup_odds_service.get_backup_odds(match)
+                
+                if backup_bookmakers:
+                    # Update match with backup odds
+                    await self.db.odds_cache.update_one(
+                        {'id': match['id']},
+                        {'$set': {
+                            'bookmakers': backup_bookmakers,
+                            'odds_source': 'backup'
+                        }}
+                    )
+                    updated += 1
+                    logger.info(f"✅ Added backup odds for {match['home_team']} vs {match['away_team']}")
+            
+            logger.info(f"✅ Backup odds: Updated {updated} matches")
+            
+        except Exception as e:
+            logger.error(f"❌ Error fetching backup odds: {e}")
+    
     async def calculate_funbet_iq_job(self):
         """
         Calculate FunBet IQ for all matches every 10 minutes
