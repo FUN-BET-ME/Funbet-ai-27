@@ -508,17 +508,16 @@ const LiveOdds = () => {
     }
   }, [allOdds]);
 
-  // Fetch IQ scores when odds data changes
+  // Fetch IQ scores when odds data changes OR filter changes
   useEffect(() => {
     console.log('🔥 IQ useEffect triggered - allOdds.length:', allOdds.length, 'filter:', filter);
     if (allOdds.length > 0) {
-      console.log('✅ Calling fetchIQScores because odds data changed...');
-      // Fetch immediately when odds are available
+      console.log('✅ Calling fetchIQScores because odds are available...');
       fetchIQScores();
     } else {
       console.log('⚠️  Not calling fetchIQScores - no odds data');
     }
-  }, [allOdds, fetchIQScores]);
+  }, [allOdds.length, filter, fetchIQScores]);
 
   // Auto-refresh for live scores and odds
   useEffect(() => {
