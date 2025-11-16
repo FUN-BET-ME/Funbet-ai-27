@@ -515,7 +515,7 @@ const LiveOdds = () => {
     }
   }, [allOdds]);
 
-  // Sport keys configuration - FOOTBALL & CRICKET ONLY
+  // Sport keys configuration - FOOTBALL, CRICKET & BASKETBALL
   const sportKeysMap = {
     football: [
       'soccer_epl', 'soccer_spain_la_liga', 'soccer_germany_bundesliga',
@@ -527,6 +527,13 @@ const LiveOdds = () => {
       'cricket_ipl', 'cricket_icc_world_cup', 'cricket_international_t20',
       'cricket_test_match', 'cricket_odi', 'cricket_big_bash', 'cricket_psl',
       'cricket_caribbean_premier_league'
+    ],
+    basketball: [
+      'basketball_nba', 'basketball_ncaab', 'basketball_nbl',
+      'basketball_euroleague', 'basketball_eurocup', 'basketball_spain_acb',
+      'basketball_turkey_bsl', 'basketball_italy_lega_a', 'basketball_greece_basket_league',
+      'basketball_germany_bbl', 'basketball_france_lnb', 'basketball_lithuania_lkl',
+      'basketball_serbia_kls'
     ]
   };
 
