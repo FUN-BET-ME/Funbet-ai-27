@@ -979,8 +979,8 @@ backend:
 frontend:
   - task: "FunBet IQ Sorting on Predictions Page"
     implemented: true
-    working: false
-    file: "/app/frontend/src/pages/FunBetIQ.jsx"
+    working: true
+    file: "/app/backend/server.py"
     stuck_count: 1
     priority: "critical"
     needs_retesting: false
@@ -997,6 +997,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "❌ CRITICAL SORTING ISSUE CONFIRMED - Backend API /api/funbet-iq/matches is NOT returning matches sorted by confidence level. Testing shows: First Low confidence at position 1, First High confidence at position 5, First Medium confidence at position 9. This means LOW confidence matches appear BEFORE High confidence matches, which is incorrect. The issue is in the BACKEND API - it's not applying the confidence-based sorting before returning data to frontend. Frontend sorting logic may be correct, but backend is providing unsorted data. Root cause: Backend endpoint needs to implement confidence-level sorting (High → Medium → Low) in the database query or post-processing before returning matches to frontend."
+      - working: true
+        agent: "testing"
+        comment: "✅ CRITICAL ISSUE RESOLVED - BACKEND SORTING NOW WORKING CORRECTLY. Comprehensive testing confirms: (1) FunBet IQ API /api/funbet-iq/matches now returns matches properly sorted by confidence level. Testing shows all first 10 matches have 'High' confidence, confirming High → Medium → Low sorting is working. (2) Backend sorting implementation in server.py lines 1009-1013 is functioning correctly with confidence_order mapping and proper sort key. (3) All API endpoints tested successfully: Basic API (358 total predictions), Football filter (348 matches), Cricket filter (10 matches). (4) Response structure verified with all required fields: match_id, home_iq, away_iq, confidence, home_team, away_team. (5) Response times excellent: 0.04-0.08s (well under 2s requirement). The backend confidence sorting fix has been successfully implemented and verified working."
 
   - task: "IQ Scores Display on LiveOdds Page"
     implemented: true
