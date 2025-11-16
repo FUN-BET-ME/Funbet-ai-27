@@ -548,11 +548,15 @@ class OddsWorker:
             logger.error(f"Error enriching matches with logos: {e}")
     
     async def update_live_scores_fast(self):
-        """Update live scores from API-Sports every 10 seconds"""
+        """
+        Fast live score updates - EVERY 10 SECONDS
+        Uses API-Football, API-Basketball, and Cricket API for real-time scores
+        Includes match linking across APIs
+        """
         try:
-            logger.info("⚡ Fast live score update starting...")
-            
-            from api_football_service import fetch_api_football_live_scores, fetch_api_basketball_live_scores
+            from api_football_service import api_football_service
+            from cricket_api_service import cricket_api_service
+            from match_linking_service import get_match_linking_service
             
             # Fetch live scores from API-Sports
             football_scores = await fetch_api_football_live_scores()
