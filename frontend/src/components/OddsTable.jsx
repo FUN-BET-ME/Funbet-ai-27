@@ -1171,7 +1171,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                   : ''
                               } hover:bg-white/5 transition-colors`}
                             >
-                              <td className="py-2 px-2 sm:py-3 sm:px-4 text-sm font-medium text-white">
+                              <td className="py-1.5 px-1 sm:py-3 sm:px-4 text-[10px] sm:text-sm font-medium text-white truncate max-w-[70px] sm:max-w-none">
                                 {bookmaker.title}
                               </td>
                               {outcomeNames.map((name) => {
