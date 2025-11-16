@@ -1351,8 +1351,8 @@ const LiveOdds = () => {
                             );
                           })()}
                           
-                          {/* Other bookmakers */}
-                          {displayedBookmakers.map((bookmaker) => {
+                          {/* Other bookmakers - Hidden on mobile unless expanded */}
+                          {(expandedBookmakers[matchId] || window.innerWidth >= 768) && displayedBookmakers.map((bookmaker) => {
                             const outcomes = bookmaker.markets?.[0]?.outcomes || [];
                             
                             // Match outcomes by team name, not array index
