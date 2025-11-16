@@ -1211,17 +1211,22 @@ const LiveOdds = () => {
                         
                         {/* Team names with logos - RESPONSIVE LAYOUT */}
                         <div className="mt-3">
-                          {/* MOBILE: Vertical Layout (3 rows) */}
+                          {/* MOBILE: Vertical Layout (3 rows + IQ) */}
                           <div className="md:hidden space-y-2">
                             {/* Row 1: Home Team */}
-                            <div className="flex items-center gap-2">
-                              <TeamLogo 
-                                logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
-                                teamName={homeTeam}
-                                sport={match.sport_key}
-                                size="sm"
-                              />
-                              <span className="text-white font-semibold text-sm flex-1">{homeTeam}</span>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2 flex-1">
+                                <TeamLogo 
+                                  logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
+                                  teamName={homeTeam}
+                                  sport={match.sport_key}
+                                  size="sm"
+                                />
+                                <span className="text-white font-semibold text-sm">{homeTeam}</span>
+                              </div>
+                              {match.funbet_iq && (
+                                <span className="text-purple-400 font-bold text-sm">{match.funbet_iq.home_iq}</span>
+                              )}
                             </div>
                             
                             {/* Row 2: Score or VS */}
@@ -1247,15 +1252,53 @@ const LiveOdds = () => {
                             </div>
                             
                             {/* Row 3: Away Team */}
-                            <div className="flex items-center gap-2">
-                              <TeamLogo 
-                                logoUrl={match.live_score?.away_team_logo || match.away_logo || teamLogos[awayTeam]} 
-                                teamName={awayTeam}
-                                sport={match.sport_key}
-                                size="sm"
-                              />
-                              <span className="text-white font-semibold text-sm flex-1">{awayTeam}</span>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2 flex-1">
+                                <TeamLogo 
+                                  logoUrl={match.live_score?.away_team_logo || match.away_logo || teamLogos[awayTeam]} 
+                                  teamName={awayTeam}
+                                  sport={match.sport_key}
+                                  size="sm"
+                                />
+                                <span className="text-white font-semibold text-sm">{awayTeam}</span>
+                              </div>
+                              {match.funbet_iq && (
+                                <span className="text-purple-400 font-bold text-sm">{match.funbet_iq.away_iq}</span>
+                              )}
                             </div>
+                            
+                            {/* Row 4: 1x2 IQ Format (compact) - Mobile Only */}
+                            {match.funbet_iq && (
+                              <div className="flex items-center justify-center gap-2 py-2 border-t border-white/10">
+                                {(() => {
+                                  const matchIQ = match.funbet_iq;
+                                  const isFootball = match.sport_key && match.sport_key.includes('soccer');
+                                  const hasDrawIQ = isFootball && matchIQ.draw_iq;
+                                  
+                                  return (
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-gray-400">1</span>
+                                      <span className="text-purple-400 font-bold text-sm">{matchIQ.home_iq}</span>
+                                      {hasDrawIQ && (
+                                        <>
+                                          <span className="text-xs text-gray-400 mx-1">X</span>
+                                          <span className="text-gray-400 font-bold text-sm">{matchIQ.draw_iq}</span>
+                                        </>
+                                      )}
+                                      <span className="text-xs text-gray-400 mx-1">2</span>
+                                      <span className="text-purple-400 font-bold text-sm">{matchIQ.away_iq}</span>
+                                      <span className={`ml-3 text-xs px-2 py-1 rounded ${
+                                        matchIQ.confidence === 'High' ? 'bg-green-500/20 text-green-400' :
+                                        matchIQ.confidence === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                                        'bg-gray-500/20 text-gray-400'
+                                      }`}>
+                                        {matchIQ.confidence}
+                                      </span>
+                                    </div>
+                                  );
+                                })()}
+                              </div>
+                            )}
                           </div>
                           
                           {/* DESKTOP: Horizontal Layout (1 row) */}
