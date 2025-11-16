@@ -1004,7 +1004,7 @@ frontend:
     file: "/app/frontend/src/pages/LiveOdds.jsx"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
         agent: "user"
@@ -1015,6 +1015,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ BACKEND API VERIFIED WORKING - The IQ Scores API /api/funbet-iq/matches is functioning correctly and returning proper IQ data. Backend provides 20 matches with complete IQ information including confidence levels, home_iq scores (49.9-55.0 range), away_iq scores (49.8-56.1 range), and all required metadata. The API response structure is correct with success=true, count=20, and matches array. If IQ scores are not displaying on LiveOdds page, the issue is likely in the frontend integration (API call timing, match ID mapping, or display logic) rather than backend data availability. Backend is providing the necessary data for frontend consumption."
+      - working: "NA"
+        agent: "main"
+        comment: "🔧 FIXED FRONTEND RENDERING BUG - ROOT CAUSE: useEffect dependency array at line 520 included 'iqScores', which prevented refetching when data changed. When fetchIQScores() populated iqScores, the condition 'Object.keys(iqScores).length === 0' became false, blocking subsequent fetches even when switching filters. SOLUTION: Removed 'iqScores' from dependency array, simplified condition to only check if allOdds.length > 0. Now fetchIQScores() is called every time odds data changes (based on allOdds.length changes). IQ scores now display correctly in the two-line format: Line 1 shows team names, Line 2 shows 'home_iq | 🧠 Predicted Team (Confidence) | away_iq'. Visual confirmation: Almería (50) vs Cádiz CF (52.5) with prediction 'Cádiz CF (Medium)'. Ready for comprehensive testing."
 
   - task: "LiveOdds Filter Data Loss (LIVE Now)"
     implemented: true
