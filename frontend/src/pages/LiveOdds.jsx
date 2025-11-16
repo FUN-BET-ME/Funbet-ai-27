@@ -351,6 +351,12 @@ const LiveOdds = () => {
       setLastUpdated(new Date());
       
       console.log(`✅ SUCCESS: Loaded ${newMatches.length} matches for filter="${currentFilter}"`);
+      
+      // Fetch IQ scores after successfully loading odds
+      if (newMatches.length > 0) {
+        console.log('🧠 Triggering IQ scores fetch after odds load...');
+        fetchIQScores();
+      }
     } catch (error) {
       console.error('❌ ERROR fetching odds:', error);
       // Silently keep existing data - no annoying banners
