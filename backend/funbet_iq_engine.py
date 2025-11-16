@@ -430,6 +430,13 @@ async def calculate_funbet_iq(match: Dict, db) -> Dict:
             0.10 * away_api_prediction
         )
         
+        # Calculate Draw IQ for football matches (1X2 markets)
+        draw_iq = None
+        is_football = sport_key and 'soccer' in sport_key.lower()
+        if is_football:
+            draw_iq = calculate_draw_iq(match)
+            logger.debug(f"Match {home_team} vs {away_team}: home_iq={home_iq:.1f}, draw_iq={draw_iq:.1f}, away_iq={away_iq:.1f}")
+        
         # Determine winner and confidence based on IQ difference
         # Realistic thresholds based on actual data (max diff ~6 points, avg ~1.5 points)
         iq_diff = abs(home_iq - away_iq)
