@@ -576,26 +576,64 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                     </div>
                     
                     {/* Team names with logos */}
-                    <div className="flex items-center gap-3 mt-3">
-                      <TeamLogo 
-                        logoUrl={teamLogos[match.home_team]} 
-                        teamName={match.home_team}
-                        sport={match.sport_key}
-                        size="md"
-                      />
-                      <h3 className="text-xl font-semibold">
-                        {match.home_team}
-                      </h3>
-                      <span className="text-gray-500 mx-2">vs</span>
-                      <h3 className="text-xl font-semibold">
-                        {match.away_team}
-                      </h3>
-                      <TeamLogo 
-                        logoUrl={teamLogos[match.away_team]} 
-                        teamName={match.away_team}
-                        sport={match.sport_key}
-                        size="md"
-                      />
+                    <div className="flex items-center gap-2 sm:gap-3 mt-3">
+                      <div className="flex-shrink-0">
+                        <TeamLogo 
+                          logoUrl={teamLogos[match.home_team]} 
+                          teamName={match.home_team}
+                          sport={match.sport_key}
+                          size="md"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        {/* First Line: Team Names with VS */}
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-white font-semibold truncate text-sm sm:text-base flex-1">{match.home_team}</span>
+                          <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
+                          <span className="text-white font-semibold truncate text-right text-sm sm:text-base flex-1">{match.away_team}</span>
+                        </div>
+                        
+                        {/* Second Line: FunBet IQ Scores and Prediction */}
+                        {(() => {
+                          const matchIQ = match.funbet_iq; // IQ data comes with odds now!
+                          if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
+                            const predictedTeam = matchIQ.home_iq > matchIQ.away_iq ? match.home_team : match.away_team;
+                            return (
+                              <div className="flex items-center justify-between gap-2 mt-2 text-xs sm:text-sm">
+                                {/* Home IQ Score */}
+                                <span className="text-purple-400 font-bold flex-1">{matchIQ.home_iq}</span>
+                                
+                                {/* Center: Prediction with Confidence */}
+                                <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30 flex-shrink-0">
+                                  <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-[#FFD700]" />
+                                  <span className="text-[#FFD700] font-bold truncate max-w-[100px] sm:max-w-[150px]" title={`${predictedTeam} (${matchIQ.confidence})`}>
+                                    {predictedTeam}
+                                  </span>
+                                  <span className={`text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded ${
+                                    matchIQ.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
+                                    matchIQ.confidence === 'Medium' ? 'bg-yellow-500/30 text-yellow-300' :
+                                    'bg-gray-500/30 text-gray-300'
+                                  }`}>
+                                    {matchIQ.confidence}
+                                  </span>
+                                </div>
+                                
+                                {/* Away IQ Score */}
+                                <span className="text-purple-400 font-bold text-right flex-1">{matchIQ.away_iq}</span>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+                      </div>
+                      <div className="flex-shrink-0">
+                        <TeamLogo 
+                          logoUrl={teamLogos[match.away_team]} 
+                          teamName={match.away_team}
+                          sport={match.sport_key}
+                          size="md"
+                        />
+                      </div>
                     </div>
                   </div>
                   
