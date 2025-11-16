@@ -745,29 +745,52 @@ class OddsWorker:
                         updated += result.modified_count
             
             # Process basketball results
-            for match in basketball_data:
-                if match.get('completed'):
-                    home_score = match.get('home_score')
-                    away_score = match.get('away_score')
-                    
-                    if home_score is not None and away_score is not None:
-                        result = await self.db.odds_cache.update_many(
-                            {
-                                'home_team': match.get('home_team'),
-                                'away_team': match.get('away_team'),
-                                'live_score.completed': {'$ne': True}
-                            },
-                            {
-                                '$set': {
-                                    'live_score.home_score': home_score,
-                                    'live_score.away_score': away_score,
-                                    'live_score.completed': True,
-                                    'live_score.match_status': 'FT',
-                                    'live_score.last_update': datetime.now(timezone.utc).isoformat()
-                                }
+            for match in completed_basketball:
+                home_score = match.get('home_score')
+                away_score = match.get('away_score')
+                
+                if home_score is not None and away_score is not None:
+                    result = await self.db.odds_cache.update_many(
+                        {
+                            'home_team': match.get('home_team'),
+                            'away_team': match.get('away_team'),
+                            'live_score.completed': {'$ne': True}
+                        },
+                        {
+                            '$set': {
+                                'live_score.home_score': home_score,
+                                'live_score.away_score': away_score,
+                                'live_score.completed': True,
+                                'live_score.match_status': 'FT',
+                                'live_score.last_update': datetime.now(timezone.utc).isoformat()
                             }
-                        )
-                        updated += result.modified_count
+                        }
+                    )
+                    updated += result.modified_count
+            
+            # Process cricket results
+            for match in completed_cricket:
+                home_score = match.get('home_score')
+                away_score = match.get('away_score')
+                
+                if home_score is not None and away_score is not None:
+                    result = await self.db.odds_cache.update_many(
+                        {
+                            'home_team': match.get('home_team'),
+                            'away_team': match.get('away_team'),
+                            'live_score.completed': {'$ne': True}
+                        },
+                        {
+                            '$set': {
+                                'live_score.home_score': home_score,
+                                'live_score.away_score': away_score,
+                                'live_score.completed': True,
+                                'live_score.match_status': match.get('match_status', 'FT'),
+                                'live_score.last_update': datetime.now(timezone.utc).isoformat()
+                            }
+                        }
+                    )
+                    updated += result.modified_count
             
             logger.info(f"✅ Final scores saved: {updated} matches updated with results")
                 
