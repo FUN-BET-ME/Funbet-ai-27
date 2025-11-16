@@ -535,8 +535,29 @@ async def get_inplay_odds():
             if '_id' in match:
                 del match['_id']
         
-        # Filter to only show actually live matches (not completed, not future)
-        live_matches = [m for m in matches if m.get('live_score') and not m.get('live_score', {}).get('completed')]
+        # Filter to show live matches:
+        # 1. Has ESPN live score data and is not completed, OR
+        # 2. Started within last 2.5 hours but no ESPN data yet (show as potentially live)
+        live_matches = []
+        for m in matches:
+            if m.get('live_score'):
+                # Has ESPN data - check if not completed
+                if not m.get('live_score', {}).get('completed'):
+                    live_matches.append(m)
+            else:
+                # No ESPN data yet - check if match started within last 2.5 hours (likely live)
+                commence_time = datetime.fromisoformat(m.get('commence_time', '').replace('Z', '+00:00'))
+                hours_since_start = (now - commence_time).total_seconds() / 3600
+                if 0 < hours_since_start < 2.5:  # Football matches last ~2 hours
+                    # Add a default live status
+                    m['live_score'] = {
+                        'home_score': '?',
+                        'away_score': '?',
+                        'match_status': 'Live',
+                        'is_live': True,
+                        'completed': False
+                    }
+                    live_matches.append(m)
         
         logger.info(f"✅ In-play matches: {len(live_matches)} live out of {len(matches)} recent")
         return live_matches
