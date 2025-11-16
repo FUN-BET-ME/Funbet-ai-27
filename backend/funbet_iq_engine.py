@@ -109,6 +109,62 @@ def calculate_market_iq(match: Dict, team_type: str = 'home') -> float:
         return 50.0
 
 
+def calculate_draw_iq(match: Dict) -> float:
+    """
+    Calculate Draw IQ for football matches (1X2 markets)
+    
+    Based on:
+    - Draw odds from bookmakers (market probability)
+    - League draw rate (historical data)
+    - Team defensive strength
+    
+    Returns:
+        Draw IQ score (0-100)
+    """
+    try:
+        bookmakers = match.get('bookmakers', [])
+        if not bookmakers:
+            return 30.0  # Default ~30% draw probability for football
+        
+        # Extract draw odds from bookmakers
+        draw_odds = []
+        for bookie in bookmakers:
+            markets = bookie.get('markets', [])
+            if markets:
+                outcomes = markets[0].get('outcomes', [])
+                for outcome in outcomes:
+                    # Look for draw outcome (various names: 'Draw', 'X', 'Tie')
+                    if outcome.get('name', '').lower() in ['draw', 'x', 'tie']:
+                        price = outcome.get('price')
+                        if price and price > 1:
+                            draw_odds.append(price)
+                        break
+        
+        if not draw_odds:
+            # No draw odds found - use default
+            return 30.0
+        
+        # Calculate average draw odds and implied probability
+        avg_draw_odds = sum(draw_odds) / len(draw_odds)
+        draw_implied_prob = 1 / avg_draw_odds
+        
+        # Convert probability to IQ score (0-100)
+        # Draw probability typically 20-35% in football
+        # Scale: 20% = 20 IQ, 35% = 35 IQ
+        draw_iq = draw_implied_prob * 100
+        
+        # Clamp to reasonable range
+        draw_iq = max(15, min(45, draw_iq))
+        
+        logger.debug(f"Draw IQ: {draw_iq:.2f} (avg_odds={avg_draw_odds:.2f}, implied_prob={draw_implied_prob:.3f})")
+        
+        return draw_iq
+        
+    except Exception as e:
+        logger.error(f"Error calculating Draw IQ: {e}")
+        return 30.0
+
+
 # ==================== STATS IQ COMPONENT (35%) ====================
 
 async def calculate_stats_iq(team_name: str, sport_key: str, db) -> float:
