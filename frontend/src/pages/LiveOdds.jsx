@@ -402,6 +402,8 @@ const LiveOdds = () => {
       setIqScores(iqMap);
       console.log('✅ Fetched IQ scores for', Object.keys(iqMap).length, 'matches');
       console.log('📊 Sample IQ data:', iqMap[Object.keys(iqMap)[0]]);
+      console.log('🔑 Sample IQ keys (first 5):', Object.keys(iqMap).slice(0, 5));
+      console.log('🎯 Sample match IDs from allOdds (first 5):', allOdds.slice(0, 5).map(m => m.id));
     } catch (error) {
       console.error('❌ Error fetching IQ scores:', error.message);
       console.error('❌ Full error:', error);
