@@ -1584,6 +1584,7 @@ export const preloadTeamLogos = async (teams, sport = 'Soccer') => {
 export default {
   getTeamLogo,
   getCricketFlag,
+  getCountryFlag,
   getSportIcon,
   getTeamShortCode,
   preloadTeamLogos
