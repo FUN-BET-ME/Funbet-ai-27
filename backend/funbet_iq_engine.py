@@ -1,14 +1,15 @@
 """
-FunBet IQ V2 - Advanced Intelligence Calculation Engine
+FunBet IQ V3 - Enhanced with API-Football Predictions
 
 Architecture:
 - Market IQ (40%): Odds analysis, edge calculation, movement tracking
-- Stats IQ (35%): Historical results from ESPN + CricketAPI  
-- Momentum IQ (15%): Form, streaks with custom point system
+- Stats IQ (30%): Historical results from API-Sports
+- Momentum IQ (10%): Form, streaks with custom point system
 - AI Probability Boost (10%): Combined probability analysis
+- API Predictions (10%): API-Football expert predictions
 
 Final Formula:
-FunBet IQ = 0.40 * Market_IQ + 0.35 * Stats_IQ + 0.15 * Momentum_IQ + 0.10 * AI_Boost
+FunBet IQ = 0.40 * Market_IQ + 0.30 * Stats_IQ + 0.10 * Momentum_IQ + 0.10 * AI_Boost + 0.10 * API_Predictions
 Scaled to 0-100
 """
 
