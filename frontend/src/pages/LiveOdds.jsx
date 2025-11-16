@@ -878,10 +878,10 @@ const LiveOdds = () => {
                     // Must have bookmakers
                     if (!match.bookmakers || match.bookmakers.length === 0) return false;
                     
-                    // If showing "LIVE Now", only show matches that are actually live
+                    // If showing "LIVE Now", the data already comes from /api/odds/inplay
+                    // which only returns live matches - no need to filter again
                     if (timeFilter === 'inplay') {
-                      // Use the backend's live_score.is_live field which is authoritative
-                      return match.live_score && match.live_score.is_live === true;
+                      return true; // Show all matches (they're already live from the API)
                     }
                     
                     // If showing "Upcoming", only show matches that haven't started yet
