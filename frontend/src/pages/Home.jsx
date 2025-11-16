@@ -6,43 +6,7 @@ import { Card, CardContent } from '../components/ui/card';
 import axios from 'axios';
 
 const Home = () => {
-  const [latestNews, setLatestNews] = useState([]);
   const [showAllSports, setShowAllSports] = useState(false);
-
-  useEffect(() => {
-    // Fetch latest 3 news articles for homepage
-    const fetchNews = async () => {
-      try {
-        const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-        const API = `${BACKEND_URL}/api`;
-        
-        const response = await axios.get(`${API}/news`, {
-          params: {
-            q: 'sports',
-            pageSize: 3
-          }
-        });
-        
-        const articles = response.data.articles
-          .filter(article => article.urlToImage && article.title)
-          .slice(0, 3)
-          .map(article => ({
-            id: article.url,
-            title: article.title,
-            summary: article.description,
-            date: article.publishedAt,
-            image: article.urlToImage,
-            url: article.url
-          }));
-        
-        setLatestNews(articles);
-      } catch (err) {
-        console.error('Error fetching news:', err);
-      }
-    };
-
-    fetchNews();
-  }, []);
   const sports = [
     {
       name: 'Football',
