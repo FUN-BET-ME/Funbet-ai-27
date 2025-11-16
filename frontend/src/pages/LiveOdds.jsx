@@ -899,12 +899,11 @@ const LiveOdds = () => {
                       return hoursSinceStart > 0 && hoursSinceStart < 3 && !match.completed;
                     }
                     
-                    // If showing "Upcoming", only show matches that haven't started yet
+                    // If showing "Live & Upcoming", show ALL matches (both live and upcoming)
+                    // The backend already filters out old completed matches
                     if (timeFilter === 'live-upcoming') {
-                      const commenceTime = new Date(match.commence_time);
-                      const now = new Date();
-                      // Only show matches that start in the future (haven't kicked off yet)
-                      return commenceTime > now;
+                      // Show everything - backend returns live matches first, then upcoming
+                      return true;
                     }
                     
                     // If showing "Recent Results", only show COMPLETED matches from last 48 hours
