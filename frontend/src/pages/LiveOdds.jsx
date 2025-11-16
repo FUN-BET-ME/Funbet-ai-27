@@ -1351,8 +1351,14 @@ const LiveOdds = () => {
                             );
                           })()}
                           
-                          {/* Other bookmakers - Hidden on mobile unless expanded */}
-                          {(expandedBookmakers[matchId] || window.innerWidth >= 768) && displayedBookmakers.map((bookmaker) => {
+                          {/* Other bookmakers - Show first 4 on mobile, all on desktop or when expanded */}
+                          {displayedBookmakers.map((bookmaker, index) => {
+                            // On mobile: show first 4 bookmakers, then rest only if expanded
+                            // On desktop: show all displayedBookmakers (which respects the existing expand logic)
+                            const isMobile = window.innerWidth < 768;
+                            if (isMobile && !isExpanded && index >= 4) {
+                              return null; // Skip bookmakers after first 4 on mobile when collapsed
+                            }
                             const outcomes = bookmaker.markets?.[0]?.outcomes || [];
                             
                             // Match outcomes by team name, not array index
