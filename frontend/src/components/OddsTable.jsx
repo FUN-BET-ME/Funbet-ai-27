@@ -659,7 +659,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
               {/* Odds Comparison Table */}
               <div className="p-6">
                 {match.bookmakers && match.bookmakers.length > 0 ? (
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-hidden">
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-[#2E004F]/30">
