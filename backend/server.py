@@ -380,6 +380,29 @@ async def get_all_cached_odds(
             .limit(limit) \
             .to_list(length=limit)
         
+        # Merge IQ predictions for all matches (always include)
+        if matches:
+            iq_count = 0
+            for match in matches:
+                # Fetch IQ prediction for this match
+                iq_pred = await db_instance.db.funbet_iq_predictions.find_one(
+                    {'match_id': match['id']},
+                    {'_id': 0}
+                )
+                if iq_pred:
+                    # Add IQ data directly to match object
+                    match['funbet_iq'] = {
+                        'home_iq': iq_pred.get('home_iq'),
+                        'away_iq': iq_pred.get('away_iq'),
+                        'confidence': iq_pred.get('confidence'),
+                        'verdict': iq_pred.get('verdict'),
+                        'home_components': iq_pred.get('home_components'),
+                        'away_components': iq_pred.get('away_components')
+                    }
+                    iq_count += 1
+            
+            logger.info(f"✅ all-cached: {len(matches)} matches, {iq_count} with IQ predictions")
+        
         # Merge live scores if requested
         if include_scores and matches:
             scores_data = await live_scores_service.get_all_live_scores()
@@ -398,7 +421,7 @@ async def get_all_cached_odds(
                     }
                     matched_count += 1
             
-            logger.info(f"✅ all-cached: {len(matches)} matches, {matched_count} with live scores")
+            logger.info(f"✅ all-cached: Merged {matched_count} live scores")
         else:
             logger.info(f"✅ all-cached: Returned {len(matches)} matches (scores disabled)")
         
