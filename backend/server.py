@@ -1486,7 +1486,7 @@ async def batch_fetch_logos(limit: int = Query(100, description="Max teams to fe
     Batch fetch team logos from ESPN (Admin endpoint)
     """
     try:
-        db = db_instance.get_db()
+        db = db_instance.db
         result = await batch_fetch_team_logos(db, limit)
         return result
     except Exception as e:
