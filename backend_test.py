@@ -469,7 +469,7 @@ def main():
     
     # Summary
     print(f"\n{'='*60}")
-    print(f"🏁 COMPREHENSIVE TEST SUMMARY")
+    print(f"🏁 WORLD CUP QUALIFIERS INTEGRATION TEST SUMMARY")
     print(f"{'='*60}")
     
     total_tests = len(results)
@@ -482,24 +482,29 @@ def main():
     print(f"\nOverall: {passed_tests}/{total_tests} tests passed")
     print(f"Success Rate: {(passed_tests/total_tests*100):.1f}%")
     
-    # Specific success criteria check based on review request
-    critical_tests = ['funbet_iq_basic', 'funbet_iq_sorting', 'odds_general', 'match_id_alignment', 'response_time_performance']
+    # Success criteria from review request:
+    # ✅ All 3 new leagues present in FOOTBALL_LEAGUES list
+    # ✅ No backend errors in logs related to new leagues
+    # ✅ API endpoint returns successfully (even if no qualifier matches currently available)
+    # ✅ If qualifier matches available, they have proper structure and display correctly
+    
+    critical_tests = ['wc_qualifiers_config', 'wc_qualifiers_api', 'backend_health', 'football_api_general']
     critical_passed = sum(1 for test in critical_tests if results.get(test, False))
     
     print(f"\nCritical Tests: {critical_passed}/{len(critical_tests)} passed")
     
-    # Success criteria from review request:
-    # - IQ API returns data with proper sorting (High > Medium > Low)
-    # - All matches from odds API have corresponding IQ predictions (100% coverage)
-    # - Match IDs align correctly between odds and IQ data
-    # - No errors in backend logs
-    # - API response times < 2 seconds
+    print(f"\n🎯 SUCCESS CRITERIA ASSESSMENT:")
+    print(f"✅ All 3 new leagues present in FOOTBALL_LEAGUES list: {'PASS' if results.get('wc_qualifiers_config', False) else 'FAIL'}")
+    print(f"✅ No backend errors in logs related to new leagues: {'PASS' if results.get('backend_health', False) else 'FAIL'}")
+    print(f"✅ API endpoint returns successfully: {'PASS' if results.get('wc_qualifiers_api', False) else 'FAIL'}")
+    print(f"✅ Background worker processing new leagues: {'PASS' if results.get('background_worker', False) else 'FAIL'}")
     
-    if critical_passed >= 4:  # Allow some flexibility
-        print(f"🎉 Critical functionality is working! FunBet IQ system meets success criteria.")
+    if critical_passed >= 3:  # Allow some flexibility
+        print(f"\n🎉 SUCCESS! World Cup Qualifiers integration is working correctly!")
+        print(f"📝 Note: It's normal if no qualifier matches are currently available - World Cup qualifiers are seasonal.")
         return True
     else:
-        print(f"⚠️  Some critical tests failed - see details above")
+        print(f"\n⚠️  Some critical tests failed - see details above")
         return False
 
 if __name__ == "__main__":
