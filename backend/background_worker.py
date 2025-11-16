@@ -558,13 +558,19 @@ class OddsWorker:
             from cricket_api_service import cricket_api_service
             from match_linking_service import get_match_linking_service
             
-            # Fetch live scores from API-Sports
-            football_scores = await fetch_api_football_live_scores()
-            basketball_scores = await fetch_api_basketball_live_scores()
+            logger.info("⚡ Fast live score update starting...")
             
-            all_scores = football_scores + basketball_scores
+            # Get match linking service
+            match_linking = get_match_linking_service(self.db)
             
-            logger.info(f"⚡ Fetched {len(football_scores)} football + {len(basketball_scores)} basketball = {len(all_scores)} total live scores")
+            # Fetch live scores from all APIs
+            football_scores = await api_football_service.get_live_football_scores()
+            basketball_scores = await api_football_service.get_live_basketball_scores()
+            cricket_scores = await cricket_api_service.get_live_cricket_scores()
+            
+            all_scores = football_scores + basketball_scores + cricket_scores
+            
+            logger.info(f"⚡ Fetched {len(football_scores)} football + {len(basketball_scores)} basketball + {len(cricket_scores)} cricket = {len(all_scores)} total live scores")
             
             # Update database with live scores
             updated_count = 0
