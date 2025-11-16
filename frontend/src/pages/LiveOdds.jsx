@@ -407,7 +407,7 @@ const LiveOdds = () => {
     // Only show loading if we don't have data
     const shouldShowLoading = allOdds.length === 0;
     
-    // Fetch data based on time filter (simplified - only inplay vs upcoming)
+    // Fetch data based on time filter
     if (timeFilter === 'inplay') {
       // Fetch in-play matches
       console.log('Fetching in-play matches...');
@@ -423,6 +423,9 @@ const LiveOdds = () => {
         } else if (filter === 'cricket') {
           filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
           console.log('🔎 Filtered to cricket:', filteredData.length, 'matches');
+        } else if (filter === 'basketball') {
+          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('basketball'));
+          console.log('🔎 Filtered to basketball:', filteredData.length, 'matches');
         }
         
         // CRITICAL FIX: Only update if we have data, otherwise keep existing data
@@ -437,6 +440,40 @@ const LiveOdds = () => {
         console.error('❌ Error fetching in-play odds:', error);
         setLoading(false);
         // Silently keep existing data
+      });
+    } else if (timeFilter === 'recent-results') {
+      // Fetch recent completed matches (last 48 hours)
+      console.log('Fetching recent results (completed matches from last 48 hours)...');
+      if (shouldShowLoading) setLoading(true);
+      fetchHistoricalOdds().then(data => {
+        console.log('Historical data received:', data.length, 'matches');
+        
+        // Apply sport filter to historical data
+        let filteredData = data;
+        if (filter === 'football') {
+          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('soccer'));
+          console.log('🔎 Filtered to football:', filteredData.length, 'matches');
+        } else if (filter === 'cricket') {
+          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
+          console.log('🔎 Filtered to cricket:', filteredData.length, 'matches');
+        } else if (filter === 'basketball') {
+          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('basketball'));
+          console.log('🔎 Filtered to basketball:', filteredData.length, 'matches');
+        }
+        
+        // Only show COMPLETED matches
+        filteredData = filteredData.filter(match => 
+          match.live_score && match.live_score.completed === true
+        );
+        console.log('🔎 Filtered to completed only:', filteredData.length, 'matches');
+        
+        setAllOdds(filteredData);
+        console.log('✅ Updated with', filteredData.length, 'recent results');
+        setLoading(false);
+      }).catch(error => {
+        console.error('❌ Error fetching historical odds:', error);
+        setLoading(false);
+        setAllOdds([]); // Clear data on error
       });
     } else {
       // Fetch upcoming matches (default)
