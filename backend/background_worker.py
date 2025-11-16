@@ -89,6 +89,39 @@ CRICKET_LEAGUES = [
     'cricket_psl',                            # Pakistan Super League
 ]
 
+BASKETBALL_LEAGUES = [
+    # AMERICAS
+    'basketball_nba',                         # USA - NBA (30 teams)
+    'basketball_ncaab',                       # USA - NCAA College Basketball
+    'basketball_nbl',                         # Australia/Canada NBL
+    
+    # EUROPE - Pan-European
+    'basketball_euroleague',                  # EuroLeague (Top 18 clubs)
+    'basketball_eurocup',                     # EuroCup (2nd tier)
+    
+    # EUROPE - Spain
+    'basketball_spain_acb',                   # Spain - Liga ACB
+    
+    # EUROPE - Turkey
+    'basketball_turkey_bsl',                  # Turkey - Super League
+    
+    # EUROPE - Italy
+    'basketball_italy_lega_a',                # Italy - Lega Basket Serie A
+    
+    # EUROPE - Greece
+    'basketball_greece_basket_league',        # Greece - Basket League
+    
+    # EUROPE - Germany
+    'basketball_germany_bbl',                 # Germany - Basketball Bundesliga
+    
+    # EUROPE - France
+    'basketball_france_lnb',                  # France - LNB Pro A
+    
+    # EUROPE - Others
+    'basketball_lithuania_lkl',               # Lithuania - LKL
+    'basketball_serbia_kls',                  # Serbia - KLS
+]
+
 class OddsWorker:
     def __init__(self):
         self.db = None
