@@ -508,8 +508,12 @@ const LiveOdds = () => {
 
   // Fetch IQ scores when odds data loads
   useEffect(() => {
+    console.log('🔥 IQ useEffect triggered - allOdds.length:', allOdds.length);
     if (allOdds.length > 0) {
+      console.log('✅ Calling fetchIQScores...');
       fetchIQScores();
+    } else {
+      console.log('⚠️  Not calling fetchIQScores - no odds data');
     }
   }, [allOdds.length, fetchIQScores]);
 
