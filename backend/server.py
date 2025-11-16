@@ -28,6 +28,7 @@ from espn_scores_service import fetch_all_espn_scores, match_score_to_odds
 from funbet_iq_engine import calculate_funbet_iq
 from espn_api_service import update_team_stats_from_espn
 from cricketdata_api import update_cricket_team_stats
+from espn_team_service import fetch_team_logo_from_espn, fetch_team_stats_from_espn, batch_fetch_team_logos, batch_fetch_team_stats
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
