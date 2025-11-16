@@ -53,7 +53,7 @@ const LiveOdds = () => {
   const [teamLogos, setTeamLogos] = useState({}); // Cache for team logos
   const [oddsSortBy, setOddsSortBy] = useState({}); // Track sort preference per match: {matchId: 'home'|'draw'|'away'|null}
   const [expandedBookmakers, setExpandedBookmakers] = useState({}); // Track which match cards have expanded bookmakers
-  const [aiPredictions, setAiPredictions] = useState([]); // Store AI predictions
+  // Removed aiPredictions state - IQ scores now come bundled with odds data
   const [hasMore, setHasMore] = useState(false); // Pagination state
   const [loadingMore, setLoadingMore] = useState(false); // Loading more state
   const [leagueFilter, setLeagueFilter] = useState('all'); // League sub-filter
