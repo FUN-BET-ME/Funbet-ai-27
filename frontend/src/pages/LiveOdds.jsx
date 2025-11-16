@@ -1259,7 +1259,7 @@ const LiveOdds = () => {
                                 </button>
                               </th>
                             )}
-                            <th className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-gray-400 font-medium text-[10px] sm:text-sm w-[25%]">
+                            <th className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-gray-400 font-medium text-[10px] sm:text-sm w-[24%]">
                               <button
                                 onClick={() => {
                                   setOddsSortBy(prev => ({
