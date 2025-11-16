@@ -90,6 +90,18 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
     'Blackburn Rovers': 'https://upload.wikimedia.org/wikipedia/en/0/0f/Blackburn_Rovers.svg',
     'Queens Park Rangers': 'https://upload.wikimedia.org/wikipedia/en/3/31/Queens_Park_Rangers_crest.svg',
     'QPR': 'https://upload.wikimedia.org/wikipedia/en/3/31/Queens_Park_Rangers_crest.svg',
+    'Birmingham City': 'https://upload.wikimedia.org/wikipedia/en/6/68/Birmingham_City_FC_logo.svg',
+    'Birmingham': 'https://upload.wikimedia.org/wikipedia/en/6/68/Birmingham_City_FC_logo.svg',
+    'Reading': 'https://upload.wikimedia.org/wikipedia/en/1/11/Reading_FC.svg',
+    'Norwich': 'https://upload.wikimedia.org/wikipedia/en/8/8c/Norwich_City.svg',
+    'Cardiff': 'https://upload.wikimedia.org/wikipedia/en/3/3c/Cardiff_City_crest.svg',
+    'Swansea': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Swansea_City_AFC_logo.svg',
+    'Derby': 'https://upload.wikimedia.org/wikipedia/en/4/4a/Derby_County_crest.svg',
+    'Blackburn': 'https://upload.wikimedia.org/wikipedia/en/0/0f/Blackburn_Rovers.svg',
+    'Preston': 'https://upload.wikimedia.org/wikipedia/en/8/82/Preston_North_End_FC.svg',
+    'Hull': 'https://upload.wikimedia.org/wikipedia/en/5/54/Hull_City_A.F.C._logo.svg',
+    'Coventry': 'https://upload.wikimedia.org/wikipedia/en/9/94/Coventry_City_FC_logo.svg',
+    'Plymouth': 'https://upload.wikimedia.org/wikipedia/en/a/a8/Plymouth_Argyle_F.C._logo.svg',
     
     // La Liga
     'Athletic Bilbao': 'https://upload.wikimedia.org/wikipedia/en/9/98/Club_Athletic_Bilbao_logo.svg',
