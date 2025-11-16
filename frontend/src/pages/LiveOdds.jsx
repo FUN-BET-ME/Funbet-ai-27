@@ -182,7 +182,8 @@ const LiveOdds = () => {
   const sportEmojis = {
     all: '🏆',
     football: '⚽',
-    cricket: '🏏'
+    cricket: '🏏',
+    basketball: '🏀'
   };
 
   const handleRefresh = () => {
