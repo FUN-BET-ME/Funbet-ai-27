@@ -568,15 +568,20 @@ class OddsWorker:
             basketball_scores = await fetch_api_basketball_live_scores()
             cricket_scores = await cricket_api_service.get_live_cricket_scores()
             
-            all_scores = football_scores + basketball_scores + cricket_scores
+            # ONLY get LIVE games (not completed)
+            live_football = [s for s in football_scores if s.get('is_live') and not s.get('completed')]
+            live_basketball = [s for s in basketball_scores if s.get('is_live') and not s.get('completed')]
+            live_cricket = [s for s in cricket_scores if s.get('is_live') and not s.get('completed')]
             
-            logger.info(f"⚡ Fetched {len(football_scores)} football + {len(basketball_scores)} basketball + {len(cricket_scores)} cricket = {len(all_scores)} total live scores")
+            all_live_scores = live_football + live_basketball + live_cricket
+            
+            logger.info(f"⚡ LIVE ONLY: {len(live_football)} football + {len(live_basketball)} basketball + {len(live_cricket)} cricket = {len(all_live_scores)} actively playing")
             
             # Update database with live scores using match linking
             updated_count = 0
             linked_count = 0
             
-            for score in all_scores:
+            for score in all_live_scores:
                 try:
                     # Use match linking service to find corresponding match
                     linked_match = await match_linking.link_live_score_to_match(score)
