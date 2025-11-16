@@ -267,17 +267,6 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
     'Nancy': 'https://upload.wikimedia.org/wikipedia/en/a/a8/AS_Nancy_Lorraine_logo.svg',
     'Dunkerque': 'https://upload.wikimedia.org/wikipedia/en/8/8f/USL_Dunkerque_logo.svg',
     'Boulogne': 'https://upload.wikimedia.org/wikipedia/en/4/4e/US_Boulogne_logo.svg',
-    'Monaco': 'https://upload.wikimedia.org/wikipedia/en/e/ea/AS_Monaco_FC.svg',
-    'Lille': 'https://upload.wikimedia.org/wikipedia/en/6/61/Lille_OSC_logo.svg',
-    'Nice': 'https://upload.wikimedia.org/wikipedia/en/a/a4/OGC_Nice_logo.svg',
-    'Rennes': 'https://upload.wikimedia.org/wikipedia/en/c/c8/Stade_Rennais_FC.svg',
-    'Lens': 'https://upload.wikimedia.org/wikipedia/en/8/8f/RC_Lens_logo.svg',
-    'Nantes': 'https://upload.wikimedia.org/wikipedia/en/d/d5/FC_Nantes_logo.svg',
-    'Strasbourg': 'https://upload.wikimedia.org/wikipedia/commons/7/73/Racing_Club_Strasbourg_Alsace.svg',
-    'Montpellier': 'https://upload.wikimedia.org/wikipedia/en/e/ef/Montpellier_HSC_logo.svg',
-    'Reims': 'https://upload.wikimedia.org/wikipedia/en/8/86/Stade_de_Reims_logo.svg',
-    'Toulouse': 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Toulouse_FC_logo.svg',
-    'Brest': 'https://upload.wikimedia.org/wikipedia/en/b/b3/Stade_Brestois_29_logo.svg',
     
     // Champions League / Europa League additional teams
     'Porto': 'https://upload.wikimedia.org/wikipedia/en/f/f1/FC_Porto.svg',
