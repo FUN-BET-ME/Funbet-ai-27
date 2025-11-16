@@ -315,6 +315,127 @@ export const ShareButton = ({ matchTitle, url }) => {
   );
 };
 
+/**
+ * Live/Final Score Display Component
+ * Shows current score for live matches or final score for completed matches
+ */
+export const MatchScore = ({ liveScore, homeTeam, awayTeam, size = 'md' }) => {
+  if (!liveScore || (!liveScore.home_score && !liveScore.away_score)) {
+    return null;
+  }
+
+  const isLive = liveScore.is_live;
+  const isCompleted = liveScore.completed;
+  const matchStatus = liveScore.match_status || '';
+
+  const sizeClasses = {
+    sm: 'text-sm',
+    md: 'text-lg',
+    lg: 'text-2xl'
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      {/* Home Score */}
+      <div className="flex items-center gap-2">
+        <span className={`${sizeClasses[size]} font-bold text-white`}>
+          {liveScore.home_score || '0'}
+        </span>
+      </div>
+
+      {/* Separator */}
+      <span className={`${sizeClasses[size]} text-gray-500`}>-</span>
+
+      {/* Away Score */}
+      <div className="flex items-center gap-2">
+        <span className={`${sizeClasses[size]} font-bold text-white`}>
+          {liveScore.away_score || '0'}
+        </span>
+      </div>
+
+      {/* Match Status Badge */}
+      {matchStatus && (
+        <span className={`ml-2 px-2 py-1 rounded text-xs font-bold ${
+          isLive
+            ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+            : isCompleted
+            ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+            : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+        }`}>
+          {matchStatus}
+        </span>
+      )}
+    </div>
+  );
+};
+
+/**
+ * Match Events Component
+ * Displays goal scorers, cards, substitutions for a match
+ */
+export const MatchEvents = ({ events, homeTeam, awayTeam }) => {
+  if (!events || events.length === 0) {
+    return (
+      <div className="text-center text-gray-500 text-sm py-4">
+        No match events available
+      </div>
+    );
+  }
+
+  // Group events by type
+  const goals = events.filter(e => e.type === 'Goal');
+  const cards = events.filter(e => e.type === 'Card');
+  const substitutions = events.filter(e => e.type === 'subst');
+
+  return (
+    <div className="space-y-4">
+      {/* Goals */}
+      {goals.length > 0 && (
+        <div>
+          <h4 className="text-sm font-semibold text-[#FFD700] mb-2">⚽ Goals</h4>
+          <div className="space-y-2">
+            {goals.map((event, idx) => (
+              <div key={idx} className="flex items-center justify-between text-sm bg-white/5 rounded px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400">{event.time?.elapsed}'</span>
+                  <span className="text-white font-medium">{event.player?.name}</span>
+                  {event.assist?.name && (
+                    <span className="text-gray-500 text-xs">({event.assist.name})</span>
+                  )}
+                </div>
+                <span className="text-gray-400 text-xs">
+                  {event.team?.name === homeTeam ? 'H' : 'A'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Cards */}
+      {cards.length > 0 && (
+        <div>
+          <h4 className="text-sm font-semibold text-[#FFD700] mb-2">🟨 Cards</h4>
+          <div className="space-y-2">
+            {cards.map((event, idx) => (
+              <div key={idx} className="flex items-center justify-between text-sm bg-white/5 rounded px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400">{event.time?.elapsed}'</span>
+                  <span className={event.detail === 'Red Card' ? '🟥' : '🟨'} />
+                  <span className="text-white">{event.player?.name}</span>
+                </div>
+                <span className="text-gray-400 text-xs">
+                  {event.team?.name === homeTeam ? 'H' : 'A'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default {
   TeamLogo,
   OddsMovement,
