@@ -96,15 +96,13 @@ const About = () => {
           <h2 className="text-2xl font-bold mb-4 text-white">Data Sources</h2>
           <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              FunBet.AI aggregates publicly available data from reputable sports
-              data providers and bookmakers. We use advanced data processing and
-              machine learning algorithms to analyze this information and provide
-              meaningful insights.
+              FunBet.Me IQ aggregates real-time odds from The Odds API, team statistics from ESPN, 
+              and live scores from multiple reputable sources. Our proprietary FunBet IQ algorithm 
+              processes this data to calculate market intelligence scores and confidence ratings.
             </p>
             <p className="text-gray-400 text-sm leading-relaxed">
-              While we strive for accuracy, we cannot guarantee the completeness
-              or absolute accuracy of all data. Users should verify critical
-              information independently.
+              While we update data every 5 minutes and strive for accuracy, odds change rapidly in live markets. 
+              Always verify odds and information directly with bookmakers before placing any bets.
             </p>
           </div>
         </div>
