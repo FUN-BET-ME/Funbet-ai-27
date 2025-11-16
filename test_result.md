@@ -644,6 +644,44 @@ agent_communication:
     **Status:** All critical issues resolved. System working as designed."
   
   - agent: "main"
+    message: "🎯 MOBILE VIEW IQ SCORES FIX COMPLETED
+    
+    **Problem Identified:**
+    - IQ scores were not displaying on mobile view in sport-filtered pages (Football, Cricket)
+    - The OddsTable component was missing the IQ scores display section
+    - Only the inline view (filter='all') had IQ scores visible
+    
+    **Root Cause:**
+    - OddsTable.jsx only showed team names with 'vs' in between (line 578-599)
+    - Did not include the second line showing: home_iq | 🧠 Predicted Team (Confidence) | away_iq
+    - Only had an 'IQ' button that navigated to predictions page
+    
+    **Solution Implemented:**
+    - Updated OddsTable.jsx to match LiveOdds.jsx IQ display structure
+    - Restructured team names section with flex layout for responsive design
+    - Added IQ scores second line with brain icon, prediction, and confidence badge
+    - Used responsive text sizing (text-xs sm:text-sm) and truncation for mobile
+    - Maintained two-line format: Line 1 (Team names), Line 2 (IQ scores)
+    
+    **Files Modified:**
+    - /app/frontend/src/components/OddsTable.jsx (lines 578-619)
+    
+    **Testing Results:**
+    ✅ Desktop view (1920px): IQ scores display perfectly with full team names
+    ✅ Mobile view (375px): IQ scores visible with responsive layout
+    ✅ Small mobile (320px): IQ scores still visible with text truncation
+    ✅ Football filter: Working on all screen sizes
+    ✅ Cricket filter: Working on all screen sizes
+    ✅ All view: Still working correctly (no regression)
+    
+    **Visual Confirmation:**
+    - Almería vs Cádiz CF: 53.3 | 🧠 Almería High | 34.3 ✓
+    - Sporting Gijón vs SD Eibar: 44.2 | 🧠 Sporting Gijón Medium | 41 ✓
+    - New Zealand vs West Indies: 59.1 | 🧠 New Zealand High | 38.8 ✓
+    
+    **Status:** ✅ MOBILE VIEW FIX COMPLETE - IQ scores now visible across all views and devices"
+  
+  - agent: "main"
     message: "✅ ALL TASKS COMPLETED AND VERIFIED
     
     **Implementation Summary:**
