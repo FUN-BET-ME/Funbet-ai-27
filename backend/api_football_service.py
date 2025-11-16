@@ -139,10 +139,15 @@ async def fetch_api_basketball_live_scores() -> List[Dict]:
         logger.info("Fetching live basketball scores from API-Sports")
         
         async with httpx.AsyncClient() as client:
-            # Fetch all live games
+            # Basketball API doesn't support live=all properly, fetch by date instead
             url = "https://v1.basketball.api-sports.io/games"
             headers = {'x-apisports-key': api_key}
-            params = {'live': 'all'}
+            
+            # Get today's date in UTC
+            from datetime import datetime, timezone
+            today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+            
+            params = {'date': today, 'timezone': 'UTC'}
             
             response = await client.get(url, headers=headers, params=params, timeout=15.0)
             
