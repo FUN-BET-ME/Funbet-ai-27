@@ -1303,14 +1303,12 @@ const LiveOdds = () => {
                           
                           {/* DESKTOP: Horizontal Layout (1 row) */}
                           <div className="hidden md:flex items-center gap-3">
-                            <div className="flex-shrink-0">
-                              <TeamLogo 
-                                logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
-                                teamName={homeTeam}
-                                sport={match.sport_key}
-                                size="md"
-                              />
-                            </div>
+                            <TeamLogo 
+                              logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
+                              teamName={homeTeam}
+                              sport={match.sport_key}
+                              size="md"
+                            />
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between gap-2">
                                 <span className="text-white font-semibold text-base flex-1">{homeTeam}</span>
@@ -1338,19 +1336,16 @@ const LiveOdds = () => {
                                 <span className="text-white font-semibold text-right text-base flex-1">{awayTeam}</span>
                               </div>
                             </div>
-                            </div>
-                            <div className="flex-shrink-0">
-                              <TeamLogo 
-                                logoUrl={match.live_score?.away_team_logo || match.away_logo || teamLogos[awayTeam]} 
-                                teamName={awayTeam}
-                                sport={match.sport_key}
-                                size="md"
-                              />
-                            </div>
+                            <TeamLogo 
+                              logoUrl={match.live_score?.away_team_logo || match.away_logo || teamLogos[awayTeam]} 
+                              teamName={awayTeam}
+                              sport={match.sport_key}
+                              size="md"
+                            />
                           </div>
                           
-                          {/* FunBet IQ Scores - Works for both layouts */}
-                          <div className="mt-3">
+                          {/* FunBet IQ Scores - DESKTOP ONLY */}
+                          <div className="hidden md:block mt-3">
                             {/* Second Line: FunBet IQ Scores and Prediction */}
                             {(() => {
                               const matchIQ = match.funbet_iq; // IQ data comes with odds now!
