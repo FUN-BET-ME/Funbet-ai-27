@@ -1535,7 +1535,7 @@ const LiveOdds = () => {
                 timeFilter={timeFilter}
                 preloadedOdds={filteredOddsByLeague}
                 loading={loading}
-                selectedLeague={leagueFilter !== 'all' ? (filter === 'football' ? footballLeagues[leagueFilter] : cricketLeagues[leagueFilter]) : null}
+                selectedLeague={leagueFilter !== 'all' ? (filter === 'football' ? footballLeagues[leagueFilter] : filter === 'cricket' ? cricketLeagues[leagueFilter] : basketballLeagues[leagueFilter]) : null}
               />
             </div>
           );
