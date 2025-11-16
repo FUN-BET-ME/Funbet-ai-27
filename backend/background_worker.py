@@ -810,6 +810,15 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # 10. Fetch and save final scores every 2 hours
+        self.scheduler.add_job(
+            self.fetch_final_scores_job,
+            trigger=IntervalTrigger(hours=2),
+            id='fetch_final_scores',
+            name='Fetch final scores from API-Football every 2 hours',
+            replace_existing=True
+        )
+        
         # Run initial jobs immediately
         asyncio.create_task(self.update_odds_job())
         asyncio.create_task(self.calculate_funbet_iq_job())
