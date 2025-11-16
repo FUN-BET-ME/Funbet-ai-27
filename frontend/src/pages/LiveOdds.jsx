@@ -1156,8 +1156,15 @@ const LiveOdds = () => {
                               let matchStatus = '';
                               let hasRealScores = false;
                               
-                              // First, try to get scores from match object itself (from historical data)
-                              if (match.scores && Array.isArray(match.scores) && match.scores.length > 0) {
+                              // First, check if match has live_score object (from ESPN/in-play API)
+                              if (match.live_score) {
+                                homeScore = match.live_score.home_score;
+                                awayScore = match.live_score.away_score;
+                                matchStatus = match.live_score.match_status || '';
+                                hasRealScores = true;
+                              }
+                              // Then try to get scores from match object itself (from historical data)
+                              else if (match.scores && Array.isArray(match.scores) && match.scores.length > 0) {
                                 match.scores.forEach(scoreData => {
                                   if (scoreData.name === match.home_team) {
                                     homeScore = scoreData.score;
