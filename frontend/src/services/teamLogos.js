@@ -17,6 +17,11 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
     return await getCricketFlag(teamName);
   }
   
+  // WORLD CUP QUALIFIERS: Use country flags for national teams
+  if (sport && sport.toLowerCase().includes('world_cup_qualifiers')) {
+    return await getCountryFlag(teamName);
+  }
+  
   // Check cache first
   const cacheKey = `${teamName.toLowerCase()}_${sport.toLowerCase()}`;
   if (logoCache.has(cacheKey)) {
