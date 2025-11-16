@@ -514,17 +514,8 @@ const LiveOdds = () => {
     }
   }, [allOdds]);
 
-  // Fetch IQ scores when odds data changes OR filter changes
-  useEffect(() => {
-    console.log('🔥 IQ useEffect triggered - allOdds.length:', allOdds.length, 'filter:', filter);
-    if (allOdds.length > 0) {
-      console.log('✅ Calling fetchIQScores because odds are available...');
-      fetchIQScores();
-    } else {
-      console.log('⚠️  Not calling fetchIQScores - no odds data');
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allOdds.length, filter]);
+  // IQ scores are now fetched directly in fetchAllOdds after successful odds load
+  // No useEffect needed - avoids React state batching/closure issues
 
   // Auto-refresh for live scores and odds
   useEffect(() => {
