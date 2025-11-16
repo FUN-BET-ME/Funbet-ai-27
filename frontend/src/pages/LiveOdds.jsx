@@ -879,16 +879,20 @@ const LiveOdds = () => {
                       if (filter === 'cricket' && leagueFilter !== 'all') {
                         return cricketLeagues[leagueFilter] || 'this league';
                       }
+                      if (filter === 'basketball' && leagueFilter !== 'all') {
+                        return basketballLeagues[leagueFilter] || 'this league';
+                      }
                       return null;
                     };
                     
                     const leagueName = getLeagueName();
                     const isCricket = filter === 'cricket';
+                    const isBasketball = filter === 'basketball';
                     
                     return (
                       <div className="text-center py-12 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-xl p-8 border border-purple-500/20">
                         <div className="text-6xl mb-4">
-                          {isCricket ? '🏏' : '⚽'}
+                          {isBasketball ? '🏀' : isCricket ? '🏏' : '⚽'}
                         </div>
                         <p className="text-white text-xl font-semibold mb-3">
                           {timeFilter === 'inplay'
