@@ -369,24 +369,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
   };
 
 
-  // Fetch AI predictions to know which matches have predictions available
-  const fetchAIPredictions = async () => {
-    try {
-      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/ai/predictions`, {
-        params: { limit: 50 } // Fetch more predictions to cover all visible matches
-      });
-      setAiPredictions(response.data || []);
-    } catch (error) {
-      console.error('Error fetching AI predictions:', error);
-      setAiPredictions([]);
-    }
-  };
-
-  // Check if a match has an AI prediction
-  const hasAIPrediction = (matchId) => {
-    return aiPredictions.some(pred => pred.match_id === matchId);
-  };
+  // Removed fetchAIPredictions - IQ scores now come bundled with odds data
 
   // Update oddsData when preloadedOdds changes (including when it becomes empty!)
   useEffect(() => {
