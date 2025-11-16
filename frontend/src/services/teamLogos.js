@@ -187,7 +187,7 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
     'Roma': 'https://upload.wikimedia.org/wikipedia/en/f/f7/AS_Roma_logo_%282017%29.svg',
     'Napoli': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/SSC_Neapel.svg',
     'Lazio': 'https://upload.wikimedia.org/wikipedia/en/c/ce/S.S._Lazio_badge.svg',
-    'Atalanta': 'https://upload.wikimedia.org/wikipedia/en/6/66/AtalantaBC.svg',
+    'Atalanta': 'https://upload.wikimedia.org/wikipedia/en/6/66/Atalanta_BC_logo.svg',
     'Fiorentina': 'https://upload.wikimedia.org/wikipedia/commons/d/d2/ACF_Fiorentina.svg',
     'Torino': 'https://upload.wikimedia.org/wikipedia/en/2/2e/Torino_FC_Logo.svg',
     'Udinese': 'https://upload.wikimedia.org/wikipedia/en/c/ce/Udinese_Calcio_logo.svg',
