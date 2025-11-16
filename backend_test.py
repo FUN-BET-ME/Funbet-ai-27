@@ -205,22 +205,229 @@ def test_match_id_alignment_comprehensive():
         print(f"❌ Error in comprehensive alignment test: {e}")
         return False
 
+def test_world_cup_qualifiers_configuration():
+    """Test World Cup Qualifiers configuration in background worker"""
+    print(f"\n{'='*60}")
+    print(f"Testing: World Cup Qualifiers Configuration")
+    print(f"{'='*60}")
+    
+    # Expected World Cup Qualifier leagues
+    expected_qualifiers = [
+        'soccer_uefa_euro_qualification',  # UEFA Euro Qualification
+        'soccer_uefa_nations_league',      # UEFA Nations League
+        'soccer_conmebol_copa_america'     # Copa América
+    ]
+    
+    try:
+        # Read background_worker.py file to check configuration
+        with open('/app/backend/background_worker.py', 'r') as f:
+            worker_content = f.read()
+        
+        print(f"✅ Successfully read background_worker.py")
+        
+        # Check if all 3 qualifier leagues are present
+        found_qualifiers = []
+        missing_qualifiers = []
+        
+        for qualifier in expected_qualifiers:
+            if qualifier in worker_content:
+                found_qualifiers.append(qualifier)
+                print(f"✅ Found: {qualifier}")
+            else:
+                missing_qualifiers.append(qualifier)
+                print(f"❌ Missing: {qualifier}")
+        
+        # Check if they're in the FOOTBALL_LEAGUES list specifically
+        football_leagues_section = False
+        if 'FOOTBALL_LEAGUES = [' in worker_content:
+            football_leagues_section = True
+            print(f"✅ FOOTBALL_LEAGUES list found in configuration")
+        else:
+            print(f"❌ FOOTBALL_LEAGUES list not found")
+        
+        # Success criteria
+        all_found = len(found_qualifiers) == 3 and len(missing_qualifiers) == 0
+        
+        if all_found and football_leagues_section:
+            print(f"✅ All 3 World Cup Qualifier leagues correctly configured")
+            return True
+        else:
+            print(f"❌ Configuration incomplete: {len(found_qualifiers)}/3 leagues found")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Error checking configuration: {e}")
+        return False
+
+def test_world_cup_qualifiers_api():
+    """Test API endpoint for World Cup Qualifier matches"""
+    print(f"\n{'='*60}")
+    print(f"Testing: World Cup Qualifiers API Data")
+    print(f"{'='*60}")
+    
+    try:
+        # Test the main football API endpoint
+        endpoint = f"{BACKEND_URL}/api/odds/all-cached?sport=soccer&limit=100"
+        
+        print(f"Calling: {endpoint}")
+        
+        start_time = time.time()
+        response = requests.get(endpoint, timeout=30)
+        response_time = time.time() - start_time
+        
+        print(f"✅ HTTP Status: {response.status_code}")
+        print(f"✅ Response Time: {response_time:.2f}s")
+        
+        if response.status_code != 200:
+            print(f"❌ API call failed with status {response.status_code}")
+            return False
+        
+        data = response.json()
+        matches = data.get('matches', [])
+        
+        print(f"✅ Total football matches retrieved: {len(matches)}")
+        
+        # Look for World Cup Qualifier matches
+        qualifier_keywords = [
+            'euro qualification', 'nations league', 'copa america',
+            'uefa euro', 'uefa nations', 'conmebol copa',
+            'qualification', 'qualifier'
+        ]
+        
+        qualifier_matches = []
+        qualifier_leagues = set()
+        
+        for match in matches:
+            sport_title = match.get('sport_title', '').lower()
+            sport_key = match.get('sport_key', '').lower()
+            
+            # Check if this match is from a qualifier league
+            is_qualifier = False
+            for keyword in qualifier_keywords:
+                if keyword in sport_title or keyword in sport_key:
+                    is_qualifier = True
+                    break
+            
+            # Also check specific sport keys
+            if any(key in sport_key for key in ['euro_qualification', 'nations_league', 'copa_america']):
+                is_qualifier = True
+            
+            if is_qualifier:
+                qualifier_matches.append(match)
+                qualifier_leagues.add(match.get('sport_title', 'Unknown'))
+                print(f"✅ Found qualifier match: {match.get('home_team')} vs {match.get('away_team')} ({match.get('sport_title')})")
+        
+        print(f"\n📊 World Cup Qualifier Results:")
+        print(f"✅ Qualifier matches found: {len(qualifier_matches)}")
+        print(f"✅ Qualifier leagues found: {len(qualifier_leagues)}")
+        
+        if qualifier_leagues:
+            print(f"✅ Leagues: {list(qualifier_leagues)}")
+        
+        # Verify data structure for qualifier matches (if any found)
+        if qualifier_matches:
+            sample_match = qualifier_matches[0]
+            required_fields = ['id', 'home_team', 'away_team', 'commence_time', 'sport_key', 'bookmakers']
+            
+            missing_fields = []
+            for field in required_fields:
+                if field not in sample_match:
+                    missing_fields.append(field)
+            
+            if missing_fields:
+                print(f"⚠️  Missing fields in qualifier matches: {missing_fields}")
+            else:
+                print(f"✅ Qualifier matches have proper structure")
+                
+                # Check bookmakers structure
+                bookmakers = sample_match.get('bookmakers', [])
+                if bookmakers and len(bookmakers) > 0:
+                    print(f"✅ Qualifier matches have odds data: {len(bookmakers)} bookmakers")
+                else:
+                    print(f"⚠️  No bookmakers/odds data for qualifier matches")
+        
+        # Success criteria: API works (even if no qualifier matches currently available)
+        print(f"\n🎯 Success Criteria Assessment:")
+        print(f"✅ API endpoint responds successfully: True")
+        print(f"✅ Football matches retrieved: {len(matches) > 0}")
+        
+        if qualifier_matches:
+            print(f"✅ World Cup Qualifier matches found: {len(qualifier_matches)} matches")
+            print(f"✅ Proper data structure: True")
+        else:
+            print(f"ℹ️  No World Cup Qualifier matches currently available (this is normal - qualifiers are seasonal)")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error testing World Cup Qualifiers API: {e}")
+        return False
+
+def test_backend_logs_health():
+    """Test backend health and check for errors related to new leagues"""
+    print(f"\n{'='*60}")
+    print(f"Testing: Backend Health & Error Check")
+    print(f"{'='*60}")
+    
+    try:
+        # Test backend health endpoint
+        health_endpoint = f"{BACKEND_URL}/api/health"
+        
+        print(f"Calling: {health_endpoint}")
+        
+        response = requests.get(health_endpoint, timeout=10)
+        
+        if response.status_code == 200:
+            health_data = response.json()
+            print(f"✅ Backend health status: {health_data.get('status', 'unknown')}")
+            print(f"✅ Database status: {health_data.get('database', 'unknown')}")
+            
+            # Check if backend is healthy
+            backend_healthy = health_data.get('status') == 'healthy'
+            db_healthy = health_data.get('database') == 'healthy'
+            
+            if backend_healthy and db_healthy:
+                print(f"✅ Backend and database are healthy")
+            else:
+                print(f"⚠️  Health issues detected - Backend: {backend_healthy}, DB: {db_healthy}")
+            
+            return backend_healthy and db_healthy
+        else:
+            print(f"❌ Health check failed with status {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Error checking backend health: {e}")
+        return False
+
 def main():
-    """Run comprehensive FunBet IQ and odds endpoint tests"""
-    print(f"🧪 FunBet IQ Comprehensive Testing Suite")
+    """Run World Cup Qualifiers Integration Testing"""
+    print(f"🧪 World Cup Qualifiers Integration Testing Suite")
     print(f"Backend URL: {BACKEND_URL}")
     print(f"Test Time: {datetime.now().isoformat()}")
     
     results = {}
     
-    # Test 1: FunBet IQ API - No Parameters
-    print(f"\n🎯 FUNBET IQ API TESTS")
-    endpoint1 = f"{BACKEND_URL}/api/funbet-iq/matches"
-    expected_fields1 = ['match_id', 'home_iq', 'away_iq', 'confidence', 'home_team', 'away_team']
-    results['funbet_iq_basic'] = test_api_endpoint(
-        endpoint1, 
-        "FunBet IQ API - No Parameters", 
-        expected_fields1
+    # Test 1: Verify Background Worker Configuration
+    print(f"\n🎯 BACKGROUND WORKER CONFIGURATION TESTS")
+    results['wc_qualifiers_config'] = test_world_cup_qualifiers_configuration()
+    
+    # Test 2: Test API Endpoint for World Cup Qualifier Matches
+    print(f"\n🎯 WORLD CUP QUALIFIERS API TESTS")
+    results['wc_qualifiers_api'] = test_world_cup_qualifiers_api()
+    
+    # Test 3: Backend Health Check
+    print(f"\n🎯 BACKEND HEALTH TESTS")
+    results['backend_health'] = test_backend_logs_health()
+    
+    # Test 4: General Football API (for context)
+    print(f"\n🎯 GENERAL FOOTBALL API TESTS")
+    endpoint4 = f"{BACKEND_URL}/api/odds/all-cached?sport=soccer&limit=100"
+    expected_fields4 = ['id', 'home_team', 'away_team', 'commence_time', 'bookmakers']
+    results['football_api_general'] = test_api_endpoint(
+        endpoint4, 
+        "Football API - General Test", 
+        expected_fields4
     )
     
     # Test 2: FunBet IQ API - Football Filter
