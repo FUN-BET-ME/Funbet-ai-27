@@ -397,10 +397,11 @@ async def get_all_cached_odds(
                     {'_id': 0}
                 )
                 if iq_pred:
-                    # Add IQ data directly to match object
+                    # Add IQ data directly to match object (including draw_iq for football)
                     match['funbet_iq'] = {
                         'home_iq': iq_pred.get('home_iq'),
                         'away_iq': iq_pred.get('away_iq'),
+                        'draw_iq': iq_pred.get('draw_iq'),  # For football matches (1X2)
                         'confidence': iq_pred.get('confidence'),
                         'verdict': iq_pred.get('verdict'),
                         'home_components': iq_pred.get('home_components'),
