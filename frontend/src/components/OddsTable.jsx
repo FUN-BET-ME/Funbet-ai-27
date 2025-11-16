@@ -709,7 +709,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             // Middle column: Draw/Tie-Draw (only for non-baseball sports)
                             if (shouldShow3Outcomes) {
                               headers.push(
-                                <th key="draw" className="text-center py-3 px-4 text-sm font-semibold text-gray-400">
+                                <th key="draw" className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-[10px] sm:text-sm font-semibold text-gray-400 w-[25%]">
                                   <button
                                     onClick={() => {
                                       setOddsSortBy(prev => ({
