@@ -1206,8 +1206,8 @@ const LiveOdds = () => {
                       <table className="w-full">
                         <thead className={`${!expandedBookmakers[matchId] ? 'md:table-header-group hidden' : ''}`}>
                           <tr className="border-b border-[#2E004F]/30">
-                            <th className="text-left py-3 px-4 text-gray-400 font-medium">Bookmaker</th>
-                            <th className="text-center py-3 px-4 text-gray-400 font-medium">
+                            <th className="text-left py-2 px-2 sm:py-3 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm">Bookmaker</th>
+                            <th className="text-center py-2 px-1 sm:py-3 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm">
                               <button
                                 onClick={() => {
                                   setOddsSortBy(prev => ({
