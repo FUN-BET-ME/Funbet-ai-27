@@ -1202,7 +1202,7 @@ const LiveOdds = () => {
                     </div>
 
                     {/* Odds Table */}
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-hidden">
                       <table className="w-full">
                         <thead className={`${!expandedBookmakers[matchId] ? 'md:table-header-group hidden' : ''}`}>
                           <tr className="border-b border-[#2E004F]/30">
