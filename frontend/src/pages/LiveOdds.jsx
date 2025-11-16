@@ -383,39 +383,7 @@ const LiveOdds = () => {
     }
   }, []);
 
-  // Fetch FunBet IQ scores
-  const fetchIQScores = useCallback(async () => {
-    try {
-      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      console.log('🧠 Fetching IQ scores from:', `${BACKEND_URL}/api/funbet-iq/matches`);
-      
-      const sportParam = filter === 'football' ? 'football' : filter === 'cricket' ? 'cricket' : null;
-      const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/matches`, {
-        params: { 
-          sport: sportParam,
-          limit: 100 
-        },
-        timeout: 10000 // 10 second timeout
-      });
-      
-      console.log('🧠 IQ API Response:', response.data);
-      
-      // Convert array to map for quick lookup by match_id
-      const iqMap = {};
-      (response.data?.matches || []).forEach(match => {
-        iqMap[match.match_id] = match;
-      });
-      setIqScores(iqMap);
-      console.log('✅ Fetched IQ scores for', Object.keys(iqMap).length, 'matches');
-      console.log('📊 Sample IQ data:', iqMap[Object.keys(iqMap)[0]]);
-      console.log('🔑 Sample IQ keys (first 5):', Object.keys(iqMap).slice(0, 5));
-      console.log('🎯 Sample match IDs from allOdds (first 5):', allOdds.slice(0, 5).map(m => m.id));
-    } catch (error) {
-      console.error('❌ Error fetching IQ scores:', error.message);
-      console.error('❌ Full error:', error);
-      setIqScores({});
-    }
-  }, [filter]);
+  // IQ scores now come bundled with odds data - no separate fetch needed!
 
   // Check if a match has an AI prediction
   const hasAIPrediction = (matchId) => {
