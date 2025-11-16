@@ -510,18 +510,15 @@ const LiveOdds = () => {
 
   // Fetch IQ scores when odds data changes
   useEffect(() => {
-    console.log('🔥 IQ useEffect triggered - allOdds.length:', allOdds.length);
+    console.log('🔥 IQ useEffect triggered - allOdds.length:', allOdds.length, 'filter:', filter);
     if (allOdds.length > 0) {
       console.log('✅ Calling fetchIQScores because odds data changed...');
-      // Add slight delay to ensure odds are rendered first
-      const timer = setTimeout(() => {
-        fetchIQScores();
-      }, 100);
-      return () => clearTimeout(timer);
+      // Fetch immediately when odds are available
+      fetchIQScores();
     } else {
       console.log('⚠️  Not calling fetchIQScores - no odds data');
     }
-  }, [allOdds.length, fetchIQScores]);
+  }, [allOdds, fetchIQScores]);
 
   // Auto-refresh for live scores and odds
   useEffect(() => {
