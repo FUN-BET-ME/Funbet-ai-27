@@ -6,7 +6,7 @@ Detailed FunBet IQ Sorting Test
 import requests
 import json
 
-BACKEND_URL = "https://matchiq-2.preview.emergentagent.com"
+BACKEND_URL = "https://funbetiq.preview.emergentagent.com"
 
 def test_funbet_iq_sorting_detailed():
     """Test FunBet IQ sorting in detail"""
