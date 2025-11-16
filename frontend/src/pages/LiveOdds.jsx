@@ -1038,40 +1038,8 @@ const LiveOdds = () => {
                     {/* Match Header */}
                     <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
                       <div className="flex-1">
-                        {/* First line: AI Icon (PROMINENT), Sport title, LIVE indicator, Score */}
+                        {/* First line: Sport title, LIVE indicator, Score */}
                         <div className="flex flex-wrap items-center gap-2 mb-2">
-                          {/* FunBet IQ Scores - PROMINENT HEADER POSITION */}
-                          {(() => {
-                            const matchIQ = iqScores[match.id];
-                            if (matchIQ) {
-                              return (
-                                <button
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    navigate(`/funbet-iq?match=${match.id}`);
-                                  }}
-                                  className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-lg transition-all duration-200 shadow-lg shadow-purple-500/30 group"
-                                  title="View FunBet IQ Details"
-                                >
-                                  <Brain className="w-4 h-4 text-[#FFD700] group-hover:scale-110 transition-transform" />
-                                  <div className="flex items-center gap-1 text-xs font-bold">
-                                    <span className="text-[#FFD700]">{matchIQ.home_iq}</span>
-                                    <span className="text-white/50">vs</span>
-                                    <span className="text-[#FFD700]">{matchIQ.away_iq}</span>
-                                  </div>
-                                  <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
-                                    matchIQ.confidence === 'High' ? 'bg-green-500/20 text-green-400' :
-                                    matchIQ.confidence === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                                    'bg-gray-500/20 text-gray-400'
-                                  }`}>
-                                    {matchIQ.confidence}
-                                  </span>
-                                </button>
-                              );
-                            }
-                            return null;
-                          })()}
                           <span className="text-[#FFD700] text-sm font-medium bg-[#2E004F]/50 px-3 py-1 rounded">
                             {league}
                           </span>
