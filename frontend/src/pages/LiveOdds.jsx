@@ -1417,31 +1417,6 @@ const LiveOdds = () => {
                           })}
                         </tbody>
                       </table>
-                      
-                      {/* Mobile: Show/Hide Bookmakers Button */}
-                      {sortedBookmakers.length > 0 && (
-                        <div className="md:hidden mt-3 text-center">
-                          <button
-                            onClick={() => setExpandedBookmakers(prev => ({
-                              ...prev,
-                              [matchId]: !prev[matchId]
-                            }))}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 rounded-lg transition-colors text-sm font-medium border border-[#2E004F]/30"
-                          >
-                            {expandedBookmakers[matchId] ? (
-                              <>
-                                <ChevronUp className="w-4 h-4" />
-                                Hide Bookmakers
-                              </>
-                            ) : (
-                              <>
-                                <ChevronDown className="w-4 h-4" />
-                                Show {sortedBookmakers.length} More Bookmaker{sortedBookmakers.length !== 1 ? 's' : ''}
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      )}
                     </div>
 
                     {/* No bookmakers message */}
