@@ -737,7 +737,7 @@ const LiveOdds = () => {
           </div>
 
           {/* League Sub-Filters */}
-          {(filter === 'football' || filter === 'cricket') && (
+          {(filter === 'football' || filter === 'cricket' || filter === 'basketball') && (
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
                 <label className="text-sm font-medium text-gray-400">
@@ -758,7 +758,13 @@ const LiveOdds = () => {
                         {name}
                       </option>
                     ))
-                  : Object.entries(cricketLeagues).map(([key, name]) => (
+                  : filter === 'cricket'
+                  ? Object.entries(cricketLeagues).map(([key, name]) => (
+                      <option key={key} value={key} className="bg-[#0a0012] text-white">
+                        {name}
+                      </option>
+                    ))
+                  : Object.entries(basketballLeagues).map(([key, name]) => (
                       <option key={key} value={key} className="bg-[#0a0012] text-white">
                         {name}
                       </option>
