@@ -644,7 +644,7 @@ class OddsWorker:
                     logger.warning(f"Error updating live score: {e}")
                     continue
             
-            logger.info(f"⚡ Updated {updated_count} matches with live scores (2 API calls used)")
+            logger.info(f"⚡ Updated {updated_count} matches with live scores ({linked_count} via match linking, 3 API calls used)")
             
         except Exception as e:
             logger.error(f"Error in fast live score update: {e}")
