@@ -533,7 +533,10 @@ async def get_inplay_odds():
                     'match_status': matched_score.get('match_status'),
                     'is_live': matched_score.get('is_live', False),
                     'completed': matched_score.get('completed', False),
-                    'last_update': matched_score.get('last_update')
+                    'last_update': matched_score.get('last_update'),
+                    'home_team_logo': matched_score.get('home_team_logo'),
+                    'away_team_logo': matched_score.get('away_team_logo'),
+                    'league_logo': matched_score.get('league_logo')
                 }
             
             # Remove MongoDB _id for JSON serialization
