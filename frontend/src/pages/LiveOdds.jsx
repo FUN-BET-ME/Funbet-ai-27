@@ -964,7 +964,9 @@ const LiveOdds = () => {
                     );
                   }
                   
-                  return filteredMatches.map((match) => {
+                  return (
+                    <>
+                      {filteredMatches.map((match) => {
                 const homeTeam = match.home_team;
                 const awayTeam = match.away_team;
                 const league = match.sport_title;
