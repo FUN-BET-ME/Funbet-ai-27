@@ -442,5 +442,7 @@ export default {
   CountdownTimer,
   FollowTeamButton,
   FavoriteButton,
-  ShareButton
+  ShareButton,
+  MatchScore,
+  MatchEvents
 };
