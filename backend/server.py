@@ -1447,7 +1447,7 @@ async def get_team_logo(team_name: str, sport_key: str = Query(None)):
     Get team logo URL from cache or fetch from ESPN
     """
     try:
-        db = db_instance.get_db()
+        db = db_instance.db
         
         # Check cache first
         cached_logo = await db.team_logos.find_one({
