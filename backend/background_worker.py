@@ -396,17 +396,39 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # Job 6: Fetch team logos every 6 hours
+        self.scheduler.add_job(
+            self.fetch_team_logos_job,
+            trigger=IntervalTrigger(hours=6),
+            id='fetch_team_logos',
+            name='Fetch team logos from ESPN every 6 hours',
+            replace_existing=True
+        )
+        
+        # Job 7: Fetch team stats every 6 hours
+        self.scheduler.add_job(
+            self.fetch_team_stats_job,
+            trigger=IntervalTrigger(hours=6),
+            id='fetch_team_stats',
+            name='Fetch team historical stats from ESPN every 6 hours',
+            replace_existing=True
+        )
+        
         # Run initial jobs immediately
         asyncio.create_task(self.update_odds_job())
         asyncio.create_task(self.calculate_funbet_iq_job())
         asyncio.create_task(self.fetch_live_scores_job())
         asyncio.create_task(self.verify_predictions_job())  # Verify predictions immediately
+        asyncio.create_task(self.fetch_team_logos_job())  # Fetch logos immediately
+        asyncio.create_task(self.fetch_team_stats_job())  # Fetch stats immediately
         
         self.scheduler.start()
-        logger.info("✅ Background worker started - 5 jobs scheduled")
-        logger.info("🎯 Expected usage: ~290 API calls/day + IQ calculations + live scores + prediction verification")
+        logger.info("✅ Background worker started - 7 jobs scheduled")
+        logger.info("🎯 Expected usage: ~290 API calls/day + IQ calculations + live scores + prediction verification + team data")
         logger.info("📊 Historical data: ALL matches preserved permanently (no cleanup)")
         logger.info("🎯 Prediction tracking: Verifying completed matches every hour")
+        logger.info("🎨 Team logos: Fetching from ESPN every 6 hours")
+        logger.info("📊 Team stats: Fetching historical data from ESPN every 6 hours")
     
     def stop(self):
         """Stop the background worker"""
