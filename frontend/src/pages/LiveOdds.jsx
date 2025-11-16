@@ -882,12 +882,16 @@ const LiveOdds = () => {
                         {leagueName && timeFilter === 'live-upcoming' && (
                           <div className="space-y-2">
                             <p className="text-gray-400 text-sm">
-                              {isCricket 
+                              {isBasketball
+                                ? '🏀 Basketball schedules are updated as leagues and tournaments are announced.'
+                                : isCricket 
                                 ? '🏏 Cricket schedules are updated as tournaments and series are announced.'
                                 : '⚽ Football matches will appear closer to the season/tournament start date.'}
                             </p>
                             <p className="text-gray-500 text-xs">
-                              {isCricket
+                              {isBasketball
+                                ? 'Check back for NBA, EuroLeague, NCAA Basketball, and international leagues!'
+                                : isCricket
                                 ? 'Check back for IPL, T20 Internationals, ODI series, and Test matches!'
                                 : 'We track 24+ football leagues worldwide.'}
                             </p>
