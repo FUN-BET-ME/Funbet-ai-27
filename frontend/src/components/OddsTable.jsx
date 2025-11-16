@@ -955,25 +955,26 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           // FunBet.ME row first
                           const funbetSuperBoostRow = (
                             <tr key="funbet-super-boost" className="border-b-2 border-[#FFD700] bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10">
-                              <td className="py-3 px-4 text-sm font-semibold text-white">
+                              <td className="py-2 px-1 sm:py-3 sm:px-4 text-sm font-semibold text-white">
                                 <a 
                                   href="https://funbet.me" 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-2 hover:text-[#FFD700] transition-colors"
+                                  className="flex items-center gap-1 sm:gap-2 hover:text-[#FFD700] transition-colors"
                                 >
-                                  <span className="text-[#FFD700] text-sm font-semibold">⭐ FunBet.ME</span>
+                                  <span className="text-[#FFD700] text-base sm:text-sm font-semibold leading-none">⭐</span>
+                                  <span className="text-[#FFD700] text-[10px] sm:text-sm font-semibold whitespace-nowrap leading-none">FunBet.me</span>
                                 </a>
                               </td>
                               {outcomeNames.map((name) => (
-                                <td key={name} className="py-2 px-2 sm:py-3 sm:px-4 text-center">
+                                <td key={name} className="py-2 px-0.5 sm:py-3 sm:px-4 text-center w-[25%]">
                                   <a 
                                     href="https://funbet.me" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="inline-block"
                                   >
-                                    <span className="inline-block px-2 py-1 sm:px-3 sm:py-1.5 rounded sm:rounded-lg font-bold text-sm sm:text-base bg-[#FFD700] text-[#2E004F] hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-sm sm:shadow-md">
+                                    <span className="inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-black text-xs sm:text-base bg-[#FFD700] text-[#2E004F] hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-sm">
                                       {funbetSuperBoostOdds[name] || '-'}
                                     </span>
                                   </a>
