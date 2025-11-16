@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { TrendingUp, RefreshCw, AlertCircle, ChevronDown, ChevronUp, Brain, Zap } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import OddsTable from '../components/OddsTable';
-import { TeamLogo, OddsMovement, CountdownTimer, FollowTeamButton, ShareButton } from '../components/MatchComponents';
+import { TeamLogo, OddsMovement, CountdownTimer, FollowTeamButton, ShareButton, MatchScore, MatchEvents } from '../components/MatchComponents';
 import { MatchCardSkeletonList } from '../components/SkeletonLoaders';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { getTeamLogo, getCricketFlag } from '../services/teamLogos';
