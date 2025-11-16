@@ -14,8 +14,8 @@ const Layout = ({ children }) => {
 
   const navigation = [
     { name: 'Home', path: '/', canHighlight: true },
-    { name: 'Football', path: '/live-odds?filter=football', canHighlight: false },
-    { name: 'Cricket', path: '/live-odds?filter=cricket', canHighlight: false },
+    { name: '⚽ Football', path: '/live-odds?filter=football', canHighlight: false },
+    { name: '🏏 Cricket', path: '/live-odds?filter=cricket', canHighlight: false },
     { name: '🏀 Basketball', path: '/live-odds?filter=basketball', canHighlight: false },
     { name: 'FunBet IQ', path: '/funbet-iq', canHighlight: true },
     { name: 'Stats', path: '/stats', canHighlight: true },
