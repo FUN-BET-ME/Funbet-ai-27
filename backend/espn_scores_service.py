@@ -145,7 +145,7 @@ async def fetch_espn_football_scores() -> List[Dict]:
                                 ],
                                 'last_update': datetime.now(timezone.utc).isoformat(),
                                 'match_status': status.get('displayClock', status.get('type', {}).get('description', '')),
-                                'is_live': status_type in ['STATUS_IN_PROGRESS', 'STATUS_HALFTIME', 'STATUS_END_PERIOD']
+                                'is_live': status_type in ['STATUS_IN_PROGRESS', 'STATUS_FIRST_HALF', 'STATUS_SECOND_HALF', 'STATUS_HALFTIME', 'STATUS_END_PERIOD']
                             }
                             
                             espn_scores.append(score_entry)
@@ -241,7 +241,7 @@ async def fetch_espn_basketball_scores() -> List[Dict]:
                                 ],
                                 'last_update': datetime.now(timezone.utc).isoformat(),
                                 'match_status': status.get('displayClock', status.get('type', {}).get('description', '')),
-                                'is_live': status_type in ['STATUS_IN_PROGRESS', 'STATUS_HALFTIME', 'STATUS_END_PERIOD']
+                                'is_live': status_type in ['STATUS_IN_PROGRESS', 'STATUS_FIRST_HALF', 'STATUS_SECOND_HALF', 'STATUS_HALFTIME', 'STATUS_END_PERIOD']
                             }
                             
                             basketball_scores.append(score_entry)
