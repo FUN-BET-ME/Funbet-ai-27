@@ -652,11 +652,13 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                              match.sport_title?.toLowerCase().includes('soccer') || 
                                              match.sport_title?.toLowerCase().includes('football');
                             
-                            // Check if sport allows draws
-                            const sportAllowsDraws = !match.sport_title?.toLowerCase().includes('baseball') && 
-                                                    !match.sport_title?.toLowerCase().includes('mlb');
+                            // Check if sport allows draws (only football/soccer and cricket have draws)
+                            const sportKey = match.sport_key?.toLowerCase() || '';
+                            const sportTitle = match.sport_title?.toLowerCase() || '';
+                            const sportAllowsDraws = (sportKey.includes('soccer') || sportKey.includes('cricket')) ||
+                                                    (sportTitle.includes('football') || sportTitle.includes('cricket'));
                             
-                            // For non-baseball sports, always show 3 columns
+                            // Only show 3 columns (Home-Draw-Away) for sports that allow draws
                             const shouldShow3Outcomes = sportAllowsDraws;
                             const actualOutcomeCount = outcomes.length;
                             
