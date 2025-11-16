@@ -1176,7 +1176,7 @@ const LiveOdds = () => {
                             
                             {/* Second Line: FunBet IQ Scores and Prediction */}
                             {(() => {
-                              const matchIQ = iqScores[match.id];
+                              const matchIQ = match.funbet_iq; // IQ data comes with odds now!
                               if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
                                 const predictedTeam = matchIQ.home_iq > matchIQ.away_iq ? homeTeam : awayTeam;
                                 return (
