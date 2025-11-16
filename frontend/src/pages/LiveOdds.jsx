@@ -1207,17 +1207,37 @@ const LiveOdds = () => {
                         <div className="flex items-center gap-2 sm:gap-3 mt-3">
                           <div className="flex-shrink-0">
                             <TeamLogo 
-                              logoUrl={teamLogos[homeTeam]} 
+                              logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
                               teamName={homeTeam}
                               sport={match.sport_key}
                               size="md"
                             />
                           </div>
                           <div className="flex-1 min-w-0">
-                            {/* First Line: Team Names with VS */}
+                            {/* First Line: Team Names with VS and Live Score */}
                             <div className="flex items-center justify-between gap-2">
                               <span className="text-white font-semibold truncate text-sm sm:text-base flex-1">{homeTeam}</span>
-                              <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
+                              
+                              {/* Live/Final Score in the middle */}
+                              {match.live_score && (match.live_score.home_score || match.live_score.away_score) ? (
+                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
+                                  <span className="text-white font-bold text-base">{match.live_score.home_score || '0'}</span>
+                                  <span className="text-gray-500">-</span>
+                                  <span className="text-white font-bold text-base">{match.live_score.away_score || '0'}</span>
+                                  {match.live_score.match_status && (
+                                    <span className={`ml-1 text-xs font-bold ${
+                                      match.live_score.is_live ? 'text-red-400' : 
+                                      match.live_score.completed ? 'text-green-400' : 
+                                      'text-gray-400'
+                                    }`}>
+                                      {match.live_score.match_status}
+                                    </span>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
+                              )}
+                              
                               <span className="text-white font-semibold truncate text-right text-sm sm:text-base flex-1">{awayTeam}</span>
                             </div>
                             
