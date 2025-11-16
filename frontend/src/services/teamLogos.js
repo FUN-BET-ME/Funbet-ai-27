@@ -192,7 +192,7 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
     'Torino': 'https://upload.wikimedia.org/wikipedia/en/2/2e/Torino_FC_Logo.svg',
     'Udinese': 'https://upload.wikimedia.org/wikipedia/en/c/ce/Udinese_Calcio_logo.svg',
     'Sampdoria': 'https://upload.wikimedia.org/wikipedia/en/9/96/UC_Sampdoria_logo.svg',
-    'Bologna': 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Bologna_F.C._1909_logo.svg',
+    'Bologna': 'https://upload.wikimedia.org/wikipedia/commons/c/c8/Bologna_FC_1909_logo.svg',
     'Sassuolo': 'https://upload.wikimedia.org/wikipedia/en/4/43/U.S._Sassuolo_Calcio_logo.svg',
     'Verona': 'https://upload.wikimedia.org/wikipedia/en/4/47/Hellas_Verona_FC_logo.svg',
     'Cagliari': 'https://upload.wikimedia.org/wikipedia/en/7/73/Cagliari_Calcio_1920.svg',
