@@ -405,7 +405,7 @@ class OddsWorker:
                     })
                     
                     if match:
-                        # Update with live score data
+                        # Update with live score data including logos
                         await self.db.odds_cache.update_one(
                             {'id': match['id']},
                             {'$set': {
@@ -415,7 +415,10 @@ class OddsWorker:
                                     'match_status': score.get('match_status'),
                                     'is_live': score.get('is_live'),
                                     'completed': score.get('completed'),
-                                    'last_update': score.get('last_update')
+                                    'last_update': score.get('last_update'),
+                                    'home_team_logo': score.get('home_team_logo'),
+                                    'away_team_logo': score.get('away_team_logo'),
+                                    'league_logo': score.get('league_logo')
                                 },
                                 'updated_at': datetime.now(timezone.utc).isoformat()
                             }}
