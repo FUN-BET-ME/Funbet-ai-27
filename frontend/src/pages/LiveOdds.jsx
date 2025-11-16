@@ -847,6 +847,23 @@ const LiveOdds = () => {
                       return commenceTime > now;
                     }
                     
+                    // If showing "Recent Results", only show COMPLETED matches from last 48 hours
+                    if (timeFilter === 'recent-results') {
+                      // Must have live_score data and be marked as completed
+                      if (!match.live_score || !match.live_score.completed) {
+                        return false;
+                      }
+                      
+                      // Check if match finished within last 48 hours
+                      const commenceTime = new Date(match.commence_time);
+                      const now = new Date();
+                      const hoursSinceStart = (now - commenceTime) / (1000 * 60 * 60);
+                      
+                      // Show matches completed in last 48 hours (2 days)
+                      // Football matches last ~2-3 hours, so check if match started within last 51 hours
+                      return hoursSinceStart > 0 && hoursSinceStart < 51;
+                    }
+                    
                     return true;
                   });
                   
