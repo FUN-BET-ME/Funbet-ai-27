@@ -21,28 +21,31 @@ export const TeamLogo = ({ logoUrl, teamName, team, sport, size = 'md', classNam
   React.useEffect(() => {
     let isMounted = true;
     
-    if (!logoUrl && finalTeamName && !isLoading && !fetchedLogoUrl) {
+    // Only fetch if we don't have logoUrl, have finalTeamName, and haven't fetched yet
+    if (!logoUrl && finalTeamName && !fetchedLogoUrl) {
       setIsLoading(true);
       console.log('[TeamLogo] Fetching logo for:', finalTeamName, 'Sport:', sport);
       
       getTeamLogo(finalTeamName, sport)
         .then(url => {
           console.log('[TeamLogo] Got URL:', url, 'for team:', finalTeamName);
-          if (isMounted && url) {
+          if (isMounted) {
             setFetchedLogoUrl(url);
+            setIsLoading(false);
           }
-          setIsLoading(false);
         })
         .catch(err => {
           console.error('[TeamLogo] Error fetching team logo:', err);
-          setIsLoading(false);
+          if (isMounted) {
+            setIsLoading(false);
+          }
         });
     }
     
     return () => {
       isMounted = false;
     };
-  }, [finalTeamName, sport, logoUrl, isLoading, fetchedLogoUrl]);
+  }, [finalTeamName, sport, logoUrl]);
   
   // For cricket, always try country flag first
   const isCricket = sport && sport.toLowerCase().includes('cricket');
