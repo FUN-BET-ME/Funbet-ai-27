@@ -14,7 +14,7 @@ class PredictionVerificationService:
     
     def __init__(self, db: AsyncIOMotorDatabase):
         self.db = db
-        self.iq_scores_collection = db.funbet_iq_scores
+        self.iq_scores_collection = db.funbet_iq_predictions  # Updated to use correct collection with draw_iq
         self.odds_collection = db.odds_cache
     
     async def verify_completed_matches(self, hours_back: int = 24):
