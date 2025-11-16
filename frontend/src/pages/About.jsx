@@ -43,7 +43,8 @@ const About = () => {
               </h3>
               <p className="text-gray-400 text-sm">
                 Our proprietary IQ scoring system analyzes market odds (50%), team statistics (35%), 
-                and recent momentum (15%) to identify favorites and provide confidence ratings (High/Medium/Low).
+                recent momentum (15%), and FunBet.Me AI algorithm (10%) to identify favorites and 
+                provide confidence ratings (High/Medium/Low).
               </p>
             </div>
             <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
