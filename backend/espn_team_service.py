@@ -154,49 +154,65 @@ async def fetch_team_stats_from_espn(team_name: str, sport_key: str, db) -> Dict
                 logger.warning(f"Team ID not found for {team_name}")
                 return {}
             
-            # Fetch team stats
-            stats_url = f"{ESPN_API_BASE}/{sport}/{league}/teams/{team_id}/statistics"
-            stats_response = await client.get(stats_url)
+            # Try to fetch team record from standings first
+            standings_url = f"{ESPN_API_BASE}/{sport}/{league}/standings"
+            standings_response = await client.get(standings_url)
             
-            if stats_response.status_code != 200:
-                logger.warning(f"Failed to fetch stats for team {team_id}")
-                return {}
-            
-            stats_data = stats_response.json()
-            
-            # Parse stats
-            stats = stats_data.get('team', {}).get('statistics', [])
-            
-            # Extract relevant stats
             wins = 0
             losses = 0
             draws = 0
+            total_games = 0
+            
+            if standings_response.status_code == 200:
+                standings_data = standings_response.json()
+                # Navigate the standings structure
+                standings = standings_data.get('standings', [])
+                if standings:
+                    entries = standings[0].get('entries', [])
+                    for entry in entries:
+                        if entry.get('team', {}).get('id') == team_id:
+                            stats = entry.get('stats', [])
+                            for stat in stats:
+                                name = stat.get('name', '')
+                                value = float(stat.get('value', 0))
+                                
+                                if name == 'wins':
+                                    wins = int(value)
+                                elif name == 'losses':
+                                    losses = int(value)
+                                elif name == 'ties' or name == 'draws':
+                                    draws = int(value)
+                                elif name == 'gamesPlayed':
+                                    total_games = int(value)
+                            break
+            
+            # Fallback to statistics endpoint if standings didn't work
+            if total_games == 0:
+                stats_url = f"{ESPN_API_BASE}/{sport}/{league}/teams/{team_id}/statistics"
+                stats_response = await client.get(stats_url)
+                
+                if stats_response.status_code == 200:
+                    stats_data = stats_response.json()
+                    stats = stats_data.get('team', {}).get('statistics', [])
+                    
+                    for stat in stats:
+                        name = stat.get('name', '')
+                        value = float(stat.get('value', 0))
+                        
+                        if name == 'wins':
+                            wins = int(value)
+                        elif name == 'losses':
+                            losses = int(value)
+                        elif name == 'draws' or name == 'ties':
+                            draws = int(value)
+                        elif name == 'gamesPlayed':
+                            total_games = int(value)
+            
+            # Calculate goals from schedule data
             goals_for = 0
             goals_against = 0
             home_wins = 0
             away_wins = 0
-            total_games = 0
-            
-            for stat in stats:
-                name = stat.get('name', '')
-                value = float(stat.get('value', 0))
-                
-                if name == 'wins':
-                    wins = int(value)
-                elif name == 'losses':
-                    losses = int(value)
-                elif name == 'draws' or name == 'ties':
-                    draws = int(value)
-                elif name == 'goalsFor' or name == 'points':
-                    goals_for = int(value)
-                elif name == 'goalsAgainst' or name == 'pointsAgainst':
-                    goals_against = int(value)
-                elif name == 'homeWins':
-                    home_wins = int(value)
-                elif name == 'awayWins':
-                    away_wins = int(value)
-                elif name == 'gamesPlayed':
-                    total_games = int(value)
             
             if total_games == 0:
                 total_games = wins + losses + draws
