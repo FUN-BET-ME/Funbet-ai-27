@@ -641,6 +641,15 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # 9. Enrich matches with logos every 30 minutes (ALL upcoming and completed matches)
+        self.scheduler.add_job(
+            self.enrich_matches_with_logos,
+            trigger=IntervalTrigger(minutes=30),
+            id='enrich_matches_logos',
+            name='Enrich all matches with team and league logos',
+            replace_existing=True
+        )
+        
         # Run initial jobs immediately
         asyncio.create_task(self.update_odds_job())
         asyncio.create_task(self.calculate_funbet_iq_job())
