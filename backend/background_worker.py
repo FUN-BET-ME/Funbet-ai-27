@@ -370,6 +370,67 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in team logos job: {e}")
     
+    async def update_live_scores_fast(self):
+        """Update live scores from API-Sports every 10 seconds"""
+        try:
+            logger.info("⚡ Fast live score update starting...")
+            
+            from api_football_service import fetch_api_football_live_scores, fetch_api_basketball_live_scores
+            
+            # Fetch live scores from API-Sports
+            football_scores = await fetch_api_football_live_scores()
+            basketball_scores = await fetch_api_basketball_live_scores()
+            
+            all_scores = football_scores + basketball_scores
+            
+            logger.info(f"⚡ Fetched {len(football_scores)} football + {len(basketball_scores)} basketball = {len(all_scores)} total live scores")
+            
+            # Update database with live scores
+            updated_count = 0
+            for score in all_scores:
+                try:
+                    # Find matching match in database by team names
+                    home_team = score.get('home_team', '').lower()
+                    away_team = score.get('away_team', '').lower()
+                    
+                    # Search for match in database
+                    match = await self.db.odds_cache.find_one({
+                        '$or': [
+                            {
+                                'home_team': {'$regex': home_team, '$options': 'i'},
+                                'away_team': {'$regex': away_team, '$options': 'i'}
+                            },
+                            {'id': score.get('id')}
+                        ]
+                    })
+                    
+                    if match:
+                        # Update with live score data
+                        await self.db.odds_cache.update_one(
+                            {'id': match['id']},
+                            {'$set': {
+                                'live_score': {
+                                    'home_score': score.get('home_score'),
+                                    'away_score': score.get('away_score'),
+                                    'match_status': score.get('match_status'),
+                                    'is_live': score.get('is_live'),
+                                    'completed': score.get('completed'),
+                                    'last_update': score.get('last_update')
+                                },
+                                'updated_at': datetime.now(timezone.utc).isoformat()
+                            }}
+                        )
+                        updated_count += 1
+                        
+                except Exception as e:
+                    logger.warning(f"Error updating live score: {e}")
+                    continue
+            
+            logger.info(f"⚡ Updated {updated_count} matches with live scores (2 API calls used)")
+            
+        except Exception as e:
+            logger.error(f"Error in fast live score update: {e}")
+    
     async def fetch_team_stats_job(self):
         """
         Fetch team historical stats from ESPN every 6 hours
