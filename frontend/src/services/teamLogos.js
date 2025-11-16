@@ -50,7 +50,7 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
   const footballLogos = {
     // Premier League
     'Arsenal': 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
-    'Aston Villa': 'https://upload.wikimedia.org/wikipedia/en/thumb/9/9a/Aston_Villa_logo.svg/240px-Aston_Villa_logo.svg.png',
+    'Aston Villa': 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f9/Aston_Villa_FC_crest_%282016%29.svg/195px-Aston_Villa_FC_crest_%282016%29.svg.png',
     'Bournemouth': 'https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth_%282013%29.svg',
     'Brentford': 'https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg',
     'Brighton and Hove Albion': 'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg',
