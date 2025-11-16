@@ -572,29 +572,19 @@ class OddsWorker:
             
             logger.info(f"⚡ Fetched {len(football_scores)} football + {len(basketball_scores)} basketball + {len(cricket_scores)} cricket = {len(all_scores)} total live scores")
             
-            # Update database with live scores
+            # Update database with live scores using match linking
             updated_count = 0
+            linked_count = 0
+            
             for score in all_scores:
                 try:
-                    # Find matching match in database by team names
-                    home_team = score.get('home_team', '').lower()
-                    away_team = score.get('away_team', '').lower()
+                    # Use match linking service to find corresponding match
+                    linked_match = await match_linking.link_live_score_to_match(score)
                     
-                    # Search for match in database
-                    match = await self.db.odds_cache.find_one({
-                        '$or': [
-                            {
-                                'home_team': {'$regex': home_team, '$options': 'i'},
-                                'away_team': {'$regex': away_team, '$options': 'i'}
-                            },
-                            {'id': score.get('id')}
-                        ]
-                    })
-                    
-                    if match:
+                    if linked_match:
                         # Update with live score data including logos
                         await self.db.odds_cache.update_one(
-                            {'id': match['id']},
+                            {'id': linked_match['id']},
                             {'$set': {
                                 'live_score': {
                                     'home_score': score.get('home_score'),
@@ -605,12 +595,50 @@ class OddsWorker:
                                     'last_update': score.get('last_update'),
                                     'home_team_logo': score.get('home_team_logo'),
                                     'away_team_logo': score.get('away_team_logo'),
-                                    'league_logo': score.get('league_logo')
+                                    'league_logo': score.get('league_logo'),
+                                    'api_source': score.get('api_source', 'unknown')
                                 },
-                                'updated_at': datetime.now(timezone.utc).isoformat()
+                                'updated_at': datetime.now(timezone.utc).isoformat(),
+                                'linked_at': datetime.now(timezone.utc).isoformat()
                             }}
                         )
                         updated_count += 1
+                        linked_count += 1
+                    else:
+                        # Fallback: try direct match by team names
+                        home_team = score.get('home_team', '').lower()
+                        away_team = score.get('away_team', '').lower()
+                        
+                        match = await self.db.odds_cache.find_one({
+                            '$or': [
+                                {
+                                    'home_team': {'$regex': home_team, '$options': 'i'},
+                                    'away_team': {'$regex': away_team, '$options': 'i'}
+                                },
+                                {'id': score.get('id')}
+                            ]
+                        })
+                        
+                        if match:
+                            await self.db.odds_cache.update_one(
+                                {'id': match['id']},
+                                {'$set': {
+                                    'live_score': {
+                                        'home_score': score.get('home_score'),
+                                        'away_score': score.get('away_score'),
+                                        'match_status': score.get('match_status'),
+                                        'is_live': score.get('is_live'),
+                                        'completed': score.get('completed'),
+                                        'last_update': score.get('last_update'),
+                                        'home_team_logo': score.get('home_team_logo'),
+                                        'away_team_logo': score.get('away_team_logo'),
+                                        'league_logo': score.get('league_logo'),
+                                        'api_source': score.get('api_source', 'unknown')
+                                    },
+                                    'updated_at': datetime.now(timezone.utc).isoformat()
+                                }}
+                            )
+                            updated_count += 1
                         
                 except Exception as e:
                     logger.warning(f"Error updating live score: {e}")
