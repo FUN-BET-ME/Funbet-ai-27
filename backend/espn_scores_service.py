@@ -121,7 +121,7 @@ async def fetch_espn_football_scores() -> List[Dict]:
                             is_completed = status.get('type', {}).get('completed', False)
                             
                             # Only include matches that have started (live or completed)
-                            if status_type not in ['STATUS_IN_PROGRESS', 'STATUS_HALFTIME', 'STATUS_FINAL', 'STATUS_FULL_TIME', 'STATUS_END_PERIOD']:
+                            if status_type not in ['STATUS_IN_PROGRESS', 'STATUS_FIRST_HALF', 'STATUS_SECOND_HALF', 'STATUS_HALFTIME', 'STATUS_FINAL', 'STATUS_FULL_TIME', 'STATUS_END_PERIOD']:
                                 continue
                             
                             # Build score object
