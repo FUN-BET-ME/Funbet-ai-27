@@ -62,7 +62,8 @@ const LiveOdds = () => {
   
   // Use useMemo to filter matches by SPORT first, then by league
   const filteredOddsByLeague = useMemo(() => {
-    console.log('🔍 Filtering - filter:', filter, 'leagueFilter:', leagueFilter, '| Total matches:', allOdds.length);
+    console.log('🔍 FILTER MEMO - filter:', filter, 'leagueFilter:', leagueFilter, '| Total matches in allOdds:', allOdds.length);
+    console.log('🔍 FILTER MEMO - First match in allOdds:', allOdds[0]?.home_team, 'vs', allOdds[0]?.away_team);
     
     let filtered = allOdds;
     
