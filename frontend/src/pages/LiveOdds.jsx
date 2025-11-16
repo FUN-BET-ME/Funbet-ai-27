@@ -1229,7 +1229,7 @@ const LiveOdds = () => {
                               </button>
                             </th>
                             {showThreeOutcomes && (
-                              <th className="text-center py-3 px-4 text-gray-400 font-medium">
+                              <th className="text-center py-2 px-1 sm:py-3 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm">
                                 <button
                                   onClick={() => {
                                     setOddsSortBy(prev => ({
