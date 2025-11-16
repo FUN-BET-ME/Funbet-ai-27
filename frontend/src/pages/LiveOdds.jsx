@@ -469,28 +469,14 @@ const LiveOdds = () => {
       const isBackgroundRefresh = refreshKey > 1; // First refresh is manual, rest are auto
       
       if (timeFilter === 'inplay') {
-        // Refresh in-play matches with sport filter
+        // Refresh in-play matches - let filteredOddsByLeague handle sport filtering
         fetchInPlayOdds().then(data => {
-          let filteredData = data;
-          if (filter === 'football') {
-            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('soccer'));
-          } else if (filter === 'cricket') {
-            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
-          } else if (filter === 'basketball') {
-            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('basketball'));
-          }
-          
-          // CRITICAL FIX: Only update if we have data
-          if (filteredData.length > 0) {
-            setAllOdds(filteredData);
-          } else {
-            console.log('⚠️ Refresh returned no matches, keeping existing data');
-          }
+          setAllOdds(data);
           if (!isBackgroundRefresh) setLoading(false);
         }).catch(error => {
           console.error('❌ Error refreshing in-play odds:', error);
           if (!isBackgroundRefresh) setLoading(false);
-          // Silently keep existing data
+          setAllOdds([]); // Clear data on error
         });
       } else if (timeFilter === 'recent-results') {
         // Refresh recent results
