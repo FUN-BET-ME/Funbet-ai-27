@@ -517,7 +517,8 @@ const LiveOdds = () => {
     } else {
       console.log('⚠️  Not calling fetchIQScores - no odds data');
     }
-  }, [allOdds.length, filter, fetchIQScores]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allOdds.length, filter]);
 
   // Auto-refresh for live scores and odds
   useEffect(() => {
