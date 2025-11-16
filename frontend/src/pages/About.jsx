@@ -11,7 +11,7 @@ const About = () => {
             <TrendingUp className="w-8 h-8 text-[#FFD700]" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            About <span className="text-[#FFD700]">FunBet.AI</span>
+            About <span className="text-[#FFD700]">FunBet.Me IQ</span>
           </h1>
         </div>
 
@@ -20,15 +20,14 @@ const About = () => {
           <h2 className="text-2xl font-bold mb-4 text-white">Our Mission</h2>
           <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
             <p className="text-gray-400 leading-relaxed mb-4">
-              FunBet.AI is an informational sports platform dedicated to
-              providing comprehensive odds comparison, live scores, statistics,
-              and AI-powered predictions to help sports enthusiasts make more
-              informed decisions.
+              FunBet.Me IQ is an advanced sports intelligence platform that combines real-time odds comparison, 
+              live scores, and our proprietary FunBet IQ prediction system to deliver actionable insights for 
+              sports enthusiasts.
             </p>
             <p className="text-gray-400 leading-relaxed">
-              We aggregate publicly available odds and statistical data from
-              multiple sources, presenting them in an easy-to-understand format
-              with intelligent analysis to give you the edge you need.
+              Our FunBet IQ algorithm analyzes market odds, team statistics, recent form, and momentum to 
+              calculate confidence scores for every match. We present complex data in an intuitive format, 
+              giving you the analytical edge you need to understand betting markets better.
             </p>
           </div>
         </div>
