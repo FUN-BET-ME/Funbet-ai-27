@@ -522,9 +522,19 @@ async def get_inplay_odds():
             
             # Add live score data if found
             if matched_score:
+                # Extract scores from the scores array
+                home_score = '0'
+                away_score = '0'
+                if matched_score.get('scores'):
+                    for score_data in matched_score['scores']:
+                        if score_data.get('name', '').lower() == match.get('home_team', '').lower():
+                            home_score = score_data.get('score', '0')
+                        elif score_data.get('name', '').lower() == match.get('away_team', '').lower():
+                            away_score = score_data.get('score', '0')
+                
                 match['live_score'] = {
-                    'home_score': matched_score.get('home_score'),
-                    'away_score': matched_score.get('away_score'),
+                    'home_score': home_score,
+                    'away_score': away_score,
                     'match_status': matched_score.get('match_status'),
                     'is_live': matched_score.get('is_live', False),
                     'completed': matched_score.get('completed', False),
