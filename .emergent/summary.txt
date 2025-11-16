@@ -1,0 +1,78 @@
+<analysis>
+The user's primary language is English. Future responses should be in English.
+
+The trajectory details the comprehensive integration of Basketball as a new sport into the FunBet IQ application. The initial phase involved adding basketball leagues to the backend data fetching worker and creating the basic navigation link on the frontend. However, this led to a critical bug where the basketball filter incorrectly displayed cricket matches.
+
+The core of the work involved a multi-step debugging process on the frontend. The main file, , was extensively modified to fix the filtering logic. This required adding basketball to key mapping objects (, ) and correcting a hardcoded sport prefix conditional that was defaulting to cricket.
+
+Following the initial fix, the work shifted to iterative UI/UX enhancements based on user feedback. This included adding a basketball icon (🏀) to the navigation and filter buttons, creating a promotional block on the homepage, and implementing a league sub-filter dropdown for basketball, mirroring the functionality for football and cricket. The user then reported further issues: a bug causing the league filter to reset, and a request for South American basketball leagues. Both were addressed.
+
+Finally, a critical performance issue—an infinite render loop causing the app to crash—was discovered in the  component. A troubleshooting agent was invoked, identifying a flawed  dependency array as the root cause. The AI engineer successfully applied the recommended fix, stabilizing the application. The work concluded with a final verification, summarizing that the basketball feature is stable and ready for deployment.
+</analysis>
+
+<product_requirements>
+The primary goal is to build, integrate, and refine the FunBet IQ prediction feature across a multi-sport odds comparison application. The application must support Football, Cricket, and now, Basketball.
+
+**Core Functional Requirements:**
+1.  **Prediction Integration:** Every match displayed must have an associated FunBet IQ score, calculated based on market odds and other factors.
+2.  **Data Coverage:** The system must fetch and process data for top leagues across multiple sports, including a 30-day window of upcoming games. Team logos must be displayed for a high percentage of teams.
+3.  **Accurate Filtering:** Users must be able to filter odds seamlessly by sport (Football, Cricket, Basketball) and by specific leagues within each sport.
+
+**UI/UX Requirements:**
+1.  **Optimized Mobile View:** Mobile layouts must be highly compact, showing key betting outcomes without horizontal scrolling. It should show a limited number of bookmakers by default, with an option to expand.
+2.  **Consistent Branding & Navigation:** The application must be consistently branded as FunBet.Me. Navigation must be intuitive, with clear icons and labels for each sport filter.
+</product_requirements>
+
+<key_technical_concepts>
+- **Full-Stack Architecture:** React.js frontend with a Python FastAPI backend.
+- **Data Persistence:** MongoDB for caching odds, IQ predictions, and team data.
+- **Background Data Fetching:** An -based worker () periodically fetches data from external sports APIs.
+- **Responsive UI:** Heavy use of Tailwind CSS to create adaptive and compact layouts, especially for mobile data tables.
+- **Centralized State Management:** Frontend logic is designed to work with a consolidated API endpoint that serves both odds and pre-calculated IQ scores.
+</key_technical_concepts>
+
+<code_architecture>
+The application is a monorepo with a React frontend and a FastAPI backend.
+
+-   ****
+    -   **Importance:** This is the most critical frontend file, managing the display, filtering logic, and UI state for the odds pages.
+    -   **Summary of Changes:** Extensively modified to integrate Basketball. Changes include: adding 'basketball' to  and ; fixing the sport filtering logic to correctly use a  prefix; implementing the league sub-filter dropdown UI and logic for basketball; adding  and  objects; and removing an aggressive  that caused the league filter to reset.
+
+-   ****
+    -   **Importance:** Contains reusable components for the match view, including the  component.
+    -   **Summary of Changes:** A critical bug fix was applied here. The  hook inside the  component had  and  in its dependency array while also setting them inside the effect, causing an infinite re-render loop and crashing the app. The dependencies were removed to fix this.
+
+-   ****
+    -   **Importance:** Manages the scheduled jobs that fetch odds data from external APIs.
+    -   **Summary of Changes:** The  list was expanded to include top-tier European, American, and later, South American (Brazil's NBB, Argentina's LNB) leagues, increasing data coverage as requested by the user.
+
+-   ****
+    -   **Importance:** Contains the main site navigation structure.
+    -   **Summary of Changes:** The  array was updated to include a new entry for Basketball with a  link and a 🏀 emoji for better visual identification.
+
+-   ****
+    -   **Importance:** The application's landing page, featuring promotional blocks for different sports.
+    -   **Summary of Changes:** A new  component instance was added for Basketball, with an orange-red gradient, a 🏀 icon, and a link to the basketball odds page to promote the new feature.
+</code_architecture>
+
+<pending_tasks>
+- **Resolve WebSocket Error:** The browser console shows a . This does not block core functionality but should be investigated.
+- **Resolve Predictions API Error:** The console logs a  error for the  endpoint. This appears to be an optional or deprecated feature but should be cleaned up.
+</pending_tasks>
+
+<current_work>
+The most recent work involved fully integrating Basketball as a new sport, including fixing several bugs and responding to user feedback. The final state of the application is stable and feature-complete regarding the basketball integration.
+
+**Completed Tasks:**
+1.  **Basketball Filtering Fixed:** The primary bug causing the basketball filter to show cricket matches was resolved by correcting data mappings and conditional logic in .
+2.  **UI/UX Elements Added:** The UI now includes a Basketball link with a 🏀 icon in the main navigation, a promotional block on the homepage, and a 🏀 icon on the filter button.
+3.  **League Sub-filters Implemented:** A fully functional league dropdown for basketball was added, allowing users to filter by 15 different leagues, including newly added South American leagues (Brazil NBB, Argentina LNB).
+4.  **Dropdown Bug Fixed:** A bug that caused the league filter to aggressively reset to All has been fixed, and the selection now persists correctly.
+5.  **Infinite Loop Resolved:** A critical performance bug causing the  component to enter an infinite render loop has been fixed by correcting the  dependency array in .
+
+The FunBet IQ engine was confirmed to be calculating scores for basketball matches without any changes needed. The application is now considered ready for a final user review before deployment.
+</current_work>
+
+<optional_next_step>
+Wait for the user's final confirmation on deployment readiness after they have reviewed the implemented features and bug fixes.
+</optional_next_step>
