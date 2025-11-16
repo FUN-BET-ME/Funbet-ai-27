@@ -18,7 +18,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
   const [expandedMatches, setExpandedMatches] = useState({});
   const [teamLogos, setTeamLogos] = useState({});
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [aiPredictions, setAiPredictions] = useState([]); // Store AI predictions
+  // Removed aiPredictions state - IQ scores now come bundled with odds data
   const [oddsSortBy, setOddsSortBy] = useState({}); // Track sort preference per match: {matchId: 'home'|'draw'|'away'|null}
   const { toggleFollowTeam, isFollowing } = useFavorites();
   
