@@ -934,6 +934,15 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # 11. Fetch backup odds for matches without bookmakers (every 6 hours)
+        self.scheduler.add_job(
+            self.fetch_backup_odds_for_matches_without_bookmakers,
+            trigger=IntervalTrigger(hours=6),
+            id='fetch_backup_odds',
+            name='Fetch backup odds for matches without bookmakers',
+            replace_existing=True
+        )
+        
         # Run initial jobs immediately
         asyncio.create_task(self.update_odds_job())
         asyncio.create_task(self.calculate_funbet_iq_job())
