@@ -152,10 +152,13 @@ const LiveOdds = () => {
   
   const basketballLeagues = {
     'all': '🏀 All Basketball',
-    // Americas
+    // Americas - North America
     'basketball_nba': '🇺🇸 NBA',
     'basketball_ncaab': '🎓 NCAA Basketball',
     'basketball_nbl': '🌎 NBL (Australia/Canada)',
+    // Americas - South America
+    'basketball_brazil_nbb': '🇧🇷 NBB (Brazil)',
+    'basketball_argentina_lnb': '🇦🇷 LNB (Argentina)',
     // Europe - Pan-European
     'basketball_euroleague': '🏆 EuroLeague',
     'basketball_eurocup': '🏆 EuroCup',
