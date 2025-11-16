@@ -1344,12 +1344,13 @@ const LiveOdds = () => {
                             />
                           </div>
                           
-                          {/* FunBet IQ Scores - DESKTOP ONLY */}
-                          <div className="hidden md:block mt-3">
-                            {/* Second Line: FunBet IQ Scores and Prediction */}
-                            {(() => {
-                              const matchIQ = match.funbet_iq; // IQ data comes with odds now!
-                              if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
+                        </div>
+                        
+                        {/* FunBet IQ Scores - DESKTOP ONLY */}
+                        <div className="hidden md:block mt-3">
+                          {(() => {
+                            const matchIQ = match.funbet_iq;
+                            if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
                                 const isFootball = match.sport_key && match.sport_key.includes('soccer');
                                 const hasDrawIQ = isFootball && matchIQ.draw_iq;
                                 
