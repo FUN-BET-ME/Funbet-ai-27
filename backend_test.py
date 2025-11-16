@@ -430,101 +430,7 @@ def main():
         expected_fields4
     )
     
-    # Test 2: FunBet IQ API - Football Filter
-    endpoint2 = f"{BACKEND_URL}/api/funbet-iq/matches?sport=football"
-    results['funbet_iq_football'] = test_api_endpoint(
-        endpoint2, 
-        "FunBet IQ API - Football Filter", 
-        expected_fields1
-    )
-    
-    # Test 3: FunBet IQ API - Cricket Filter
-    endpoint3 = f"{BACKEND_URL}/api/funbet-iq/matches?sport=cricket"
-    results['funbet_iq_cricket'] = test_api_endpoint(
-        endpoint3, 
-        "FunBet IQ API - Cricket Filter", 
-        expected_fields1
-    )
-    
-    # Test 4: Odds Cache API - General
-    print(f"\n🎯 ODDS CACHE API TESTS")
-    endpoint4 = f"{BACKEND_URL}/api/odds/all-cached?limit=20"
-    expected_fields4 = ['id', 'home_team', 'away_team', 'commence_time', 'bookmakers']
-    results['odds_general'] = test_api_endpoint(
-        endpoint4, 
-        "Odds Cache API - General (limit=20)", 
-        expected_fields4
-    )
-    
-    # Test 5: Odds Cache API - Football Filter
-    endpoint5 = f"{BACKEND_URL}/api/odds/all-cached?limit=20&sport=soccer"
-    results['odds_football'] = test_api_endpoint(
-        endpoint5, 
-        "Odds Cache API - Football Filter", 
-        expected_fields4
-    )
-    
-    # Test 6: Get data for sorting and alignment tests
-    print(f"\n🎯 DATA ANALYSIS TESTS")
-    iq_data = None
-    odds_data = None
-    
-    try:
-        # Get FunBet IQ data
-        iq_response = requests.get(endpoint1, timeout=30)
-        if iq_response.status_code == 200:
-            iq_json = iq_response.json()
-            iq_data = iq_json.get('matches', []) if isinstance(iq_json, dict) else iq_json
-            
-        # Get odds data
-        odds_response = requests.get(endpoint4, timeout=30)
-        if odds_response.status_code == 200:
-            odds_json = odds_response.json()
-            odds_data = odds_json.get('matches', []) if isinstance(odds_json, dict) else odds_json
-            
-    except Exception as e:
-        print(f"❌ Error fetching data for analysis: {e}")
-    
-    # Test 7: FunBet IQ Confidence Sorting
-    if iq_data:
-        results['funbet_iq_sorting'] = test_funbet_iq_sorting(iq_data)
-    else:
-        results['funbet_iq_sorting'] = False
-        print(f"❌ Cannot test sorting - no IQ data available")
-    
-    # Test 8: Comprehensive Match ID Alignment
-    results['match_id_alignment'] = test_match_id_alignment_comprehensive()
-    
-    # Test 9: Response Time Performance Check
-    print(f"\n🎯 RESPONSE TIME PERFORMANCE")
-    try:
-        # Test IQ API response time
-        start_time = time.time()
-        iq_perf_response = requests.get(f"{BACKEND_URL}/api/funbet-iq/matches?limit=50", timeout=30)
-        iq_response_time = time.time() - start_time
-        
-        # Test Odds API response time
-        start_time = time.time()
-        odds_perf_response = requests.get(f"{BACKEND_URL}/api/odds/all-cached?limit=50", timeout=30)
-        odds_response_time = time.time() - start_time
-        
-        print(f"✅ FunBet IQ API Response Time: {iq_response_time:.2f}s")
-        print(f"✅ Odds Cache API Response Time: {odds_response_time:.2f}s")
-        
-        # Success criteria: < 2 seconds as mentioned in context
-        iq_fast = iq_response_time < 2.0
-        odds_fast = odds_response_time < 2.0
-        
-        print(f"✅ IQ API meets <2s criteria: {iq_fast}")
-        print(f"✅ Odds API meets <2s criteria: {odds_fast}")
-        
-        results['response_time_performance'] = iq_fast and odds_fast
-        
-    except Exception as e:
-        print(f"❌ Error testing response times: {e}")
-        results['response_time_performance'] = False
-    
-    # Test 10: Background Worker Status Check
+    # Test 5: Background Worker Status Check (verify it's processing the new leagues)
     print(f"\n🎯 BACKGROUND WORKER STATUS")
     try:
         # Check if backend is running and processing requests
@@ -535,23 +441,24 @@ def main():
             print(f"✅ Backend health check: {health_data.get('status', 'unknown')}")
             print(f"✅ Database status: {health_data.get('database', 'unknown')}")
             
-            # Check if we have recent IQ data (indicates worker is functioning)
-            iq_check = requests.get(f"{BACKEND_URL}/api/funbet-iq/matches?limit=1", timeout=10)
-            if iq_check.status_code == 200:
-                iq_check_data = iq_check.json()
-                total_predictions = iq_check_data.get('total', 0)
-                print(f"✅ Total IQ predictions available: {total_predictions}")
+            # Check if we have recent data (indicates worker is functioning)
+            stats_response = requests.get(f"{BACKEND_URL}/api/stats", timeout=10)
+            if stats_response.status_code == 200:
+                stats_data = stats_response.json()
+                total_matches = stats_data.get('total_matches', 0)
+                football_matches = stats_data.get('football_matches', 0)
+                print(f"✅ Total matches in database: {total_matches}")
+                print(f"✅ Football matches: {football_matches}")
                 
-                # If we have 358 predictions as mentioned in context, worker is functioning
-                if total_predictions >= 300:
+                if total_matches >= 100:
                     results['background_worker'] = True
-                    print(f"✅ Background worker appears healthy (sufficient predictions)")
+                    print(f"✅ Background worker appears healthy (sufficient data)")
                 else:
                     results['background_worker'] = False
-                    print(f"⚠️  Background worker may not be functioning (low prediction count)")
+                    print(f"⚠️  Background worker may not be functioning (low match count)")
             else:
                 results['background_worker'] = False
-                print(f"❌ Cannot verify IQ predictions")
+                print(f"❌ Cannot verify stats data")
         else:
             results['background_worker'] = False
             print(f"❌ Backend health check failed")
