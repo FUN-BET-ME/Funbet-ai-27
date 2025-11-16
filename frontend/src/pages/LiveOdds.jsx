@@ -413,31 +413,14 @@ const LiveOdds = () => {
       fetchInPlayOdds().then(data => {
         console.log('In-play data received:', data.length, 'matches');
         
-        // Apply sport filter to in-play data
-        let filteredData = data;
-        if (filter === 'football') {
-          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('soccer'));
-          console.log('🔎 Filtered to football:', filteredData.length, 'matches');
-        } else if (filter === 'cricket') {
-          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
-          console.log('🔎 Filtered to cricket:', filteredData.length, 'matches');
-        } else if (filter === 'basketball') {
-          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('basketball'));
-          console.log('🔎 Filtered to basketball:', filteredData.length, 'matches');
-        }
-        
-        // CRITICAL FIX: Only update if we have data, otherwise keep existing data
-        if (filteredData.length > 0) {
-          setAllOdds(filteredData);
-          console.log('✅ Updated with', filteredData.length, 'in-play matches');
-        } else {
-          console.log('⚠️ No in-play matches found, keeping existing data');
-        }
+        // Don't filter here - let filteredOddsByLeague useMemo handle it
+        setAllOdds(data);
+        console.log('✅ Updated with', data.length, 'in-play matches');
         setLoading(false);
       }).catch(error => {
         console.error('❌ Error fetching in-play odds:', error);
         setLoading(false);
-        // Silently keep existing data
+        setAllOdds([]); // Clear data on error
       });
     } else if (timeFilter === 'recent-results') {
       // Fetch recent completed matches (last 48 hours)
