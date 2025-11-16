@@ -1295,7 +1295,19 @@ const LiveOdds = () => {
                                 <span className="text-white font-semibold text-right text-base flex-1">{awayTeam}</span>
                               </div>
                             </div>
-                            
+                            </div>
+                            <div className="flex-shrink-0">
+                              <TeamLogo 
+                                logoUrl={match.live_score?.away_team_logo || match.away_logo || teamLogos[awayTeam]} 
+                                teamName={awayTeam}
+                                sport={match.sport_key}
+                                size="md"
+                              />
+                            </div>
+                          </div>
+                          
+                          {/* FunBet IQ Scores - Works for both layouts */}
+                          <div className="mt-3">
                             {/* Second Line: FunBet IQ Scores and Prediction */}
                             {(() => {
                               const matchIQ = match.funbet_iq; // IQ data comes with odds now!
