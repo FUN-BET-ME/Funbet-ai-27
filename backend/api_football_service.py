@@ -1,6 +1,6 @@
 """
-API-Football Live Scores Service
-Fetches live scores from API-Football.com for comprehensive football coverage
+API-Sports Live Scores Service
+Fetches live scores from API-Sports.io for comprehensive football and basketball coverage
 """
 import httpx
 import logging
