@@ -480,6 +480,71 @@ async def get_recent_historical_odds():
         logger.error(f"Error fetching recent historical odds: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.get("/odds/inplay")
+async def get_inplay_odds():
+    """Get currently in-play (live) matches with ESPN live scores"""
+    try:
+        from live_scores_service import live_scores_service
+        
+        now = datetime.now(timezone.utc)
+        three_hours_ago = now - timedelta(hours=3)
+        
+        # Query for matches that started within last 3 hours (likely still live)
+        query = {
+            'commence_time': {
+                '$gte': three_hours_ago.isoformat(),
+                '$lte': now.isoformat()
+            }
+        }
+        
+        # Fetch matches from database
+        cursor = db_instance.db.odds_cache.find(query).sort('commence_time', -1).limit(200)
+        matches = await cursor.to_list(length=None)
+        
+        # Fetch ESPN live scores
+        await live_scores_service.fetch_espn_live_scores()
+        
+        # Match ESPN live scores with database matches
+        for match in matches:
+            # Try to find live score from ESPN
+            matched_score = None
+            home_team = match.get('home_team', '').lower()
+            away_team = match.get('away_team', '').lower()
+            
+            for score in live_scores_service.espn_scores_cache:
+                score_home = score.get('home_team', '').lower()
+                score_away = score.get('away_team', '').lower()
+                
+                if (home_team in score_home or score_home in home_team) and \
+                   (away_team in score_away or score_away in away_team):
+                    matched_score = score
+                    break
+            
+            # Add live score data if found
+            if matched_score:
+                match['live_score'] = {
+                    'home_score': matched_score.get('home_score'),
+                    'away_score': matched_score.get('away_score'),
+                    'match_status': matched_score.get('match_status'),
+                    'is_live': matched_score.get('is_live', False),
+                    'completed': matched_score.get('completed', False),
+                    'last_update': matched_score.get('last_update')
+                }
+            
+            # Remove MongoDB _id for JSON serialization
+            if '_id' in match:
+                del match['_id']
+        
+        # Filter to only show actually live matches (not completed, not future)
+        live_matches = [m for m in matches if m.get('live_score') and not m.get('live_score', {}).get('completed')]
+        
+        logger.info(f"✅ In-play matches: {len(live_matches)} live out of {len(matches)} recent")
+        return live_matches
+        
+    except Exception as e:
+        logger.error(f"Error fetching in-play odds: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/odds/football/priority")
 async def get_football_priority_legacy():
     """Legacy endpoint - Get priority football matches"""
