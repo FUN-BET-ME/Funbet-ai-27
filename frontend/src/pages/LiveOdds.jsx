@@ -511,7 +511,11 @@ const LiveOdds = () => {
     console.log('🔥 IQ useEffect triggered - allOdds.length:', allOdds.length);
     if (allOdds.length > 0) {
       console.log('✅ Calling fetchIQScores because odds data changed...');
-      fetchIQScores();
+      // Add slight delay to ensure odds are rendered first
+      const timer = setTimeout(() => {
+        fetchIQScores();
+      }, 100);
+      return () => clearTimeout(timer);
     } else {
       console.log('⚠️  Not calling fetchIQScores - no odds data');
     }
