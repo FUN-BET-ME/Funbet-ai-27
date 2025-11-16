@@ -560,7 +560,7 @@ class OddsWorker:
         
         self.scheduler.start()
         logger.info("✅ Background worker started - 8 jobs scheduled")
-        logger.info("🎯 Expected usage: ~290 API calls/day + IQ calculations + live scores + prediction verification + team data")
+        logger.info("🎯 Expected usage: ~290 API calls/day (odds) + ~17,280 calls/day (live scores every 10s) = ~17,570 total")
         logger.info("📊 Historical data: ALL matches preserved permanently (no cleanup)")
         logger.info("🎯 Prediction tracking: Verifying completed matches every hour")
         logger.info("🎨 Team logos: Fetching from ESPN every 6 hours")
