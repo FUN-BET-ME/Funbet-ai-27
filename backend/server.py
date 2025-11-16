@@ -501,8 +501,9 @@ async def get_inplay_odds():
         cursor = db_instance.db.odds_cache.find(query).sort('commence_time', -1).limit(200)
         matches = await cursor.to_list(length=None)
         
-        # Fetch ESPN live scores
-        await live_scores_service.fetch_espn_live_scores()
+        # Fetch API-Football live scores
+        from api_football_service import fetch_api_football_live_scores
+        api_football_scores = await fetch_api_football_live_scores()
         
         # Match ESPN live scores with database matches
         for match in matches:
