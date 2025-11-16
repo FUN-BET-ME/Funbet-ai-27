@@ -370,6 +370,95 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in team logos job: {e}")
     
+    async def enrich_matches_with_logos(self):
+        """Enrich all matches in database with team and league logos from API-Football"""
+        try:
+            logger.info("🎨 Enriching matches with logos from API-Football...")
+            
+            from api_football_enhanced import api_football_enhanced
+            from datetime import datetime, timezone, timedelta
+            
+            # Get matches from today and next 7 days that don't have logos yet
+            today = datetime.now(timezone.utc)
+            next_week = today + timedelta(days=7)
+            
+            # Find matches without logos
+            matches = await self.db.odds_cache.find({
+                'commence_time': {
+                    '$gte': today.isoformat(),
+                    '$lte': next_week.isoformat()
+                },
+                '$or': [
+                    {'home_team_logo': {'$exists': False}},
+                    {'home_team_logo': None}
+                ]
+            }).limit(100).to_list(length=None)
+            
+            logger.info(f"🎨 Found {len(matches)} matches without logos")
+            
+            enriched_count = 0
+            api_calls = 0
+            
+            for match in matches:
+                try:
+                    # Search for fixture ID
+                    fixture_date = match.get('commence_time', '')[:10]
+                    fixture_id = await api_football_enhanced.search_fixture_by_teams(
+                        match.get('home_team'),
+                        match.get('away_team'),
+                        fixture_date
+                    )
+                    
+                    api_calls += 1
+                    
+                    if fixture_id:
+                        # Fetch fixture details to get logos
+                        import httpx
+                        url = f"https://v3.football.api-sports.io/fixtures"
+                        headers = {'x-apisports-key': api_football_enhanced.api_key}
+                        params = {'id': fixture_id}
+                        
+                        async with httpx.AsyncClient() as client:
+                            response = await client.get(url, headers=headers, params=params, timeout=10.0)
+                            
+                            if response.status_code == 200:
+                                data = response.json()
+                                fixtures = data.get('response', [])
+                                
+                                if fixtures:
+                                    fixture = fixtures[0]
+                                    teams = fixture.get('teams', {})
+                                    league = fixture.get('league', {})
+                                    
+                                    # Update match with logos
+                                    await self.db.odds_cache.update_one(
+                                        {'id': match['id']},
+                                        {'$set': {
+                                            'home_team_logo': teams.get('home', {}).get('logo'),
+                                            'away_team_logo': teams.get('away', {}).get('logo'),
+                                            'league_logo': league.get('logo'),
+                                            'fixture_id': fixture_id,
+                                            'logo_enriched_at': datetime.now(timezone.utc).isoformat()
+                                        }}
+                                    )
+                                    enriched_count += 1
+                                    
+                        api_calls += 1
+                        
+                        # Rate limiting - max 30 per minute
+                        if api_calls >= 30:
+                            logger.info(f"🎨 Rate limit: pausing after {api_calls} API calls")
+                            break
+                            
+                except Exception as e:
+                    logger.warning(f"Error enriching match {match.get('id')}: {e}")
+                    continue
+            
+            logger.info(f"🎨 Enriched {enriched_count} matches with logos ({api_calls} API calls)")
+            
+        except Exception as e:
+            logger.error(f"Error enriching matches with logos: {e}")
+    
     async def update_live_scores_fast(self):
         """Update live scores from API-Sports every 10 seconds"""
         try:
