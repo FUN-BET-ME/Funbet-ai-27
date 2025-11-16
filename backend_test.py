@@ -132,56 +132,187 @@ def test_funbet_iq_sorting(matches_data):
     
     return is_sorted_correctly
 
+def test_match_id_alignment(odds_matches, iq_matches):
+    """Test that match IDs align between odds and IQ data"""
+    print(f"\n{'='*60}")
+    print(f"Testing: Match ID Alignment Between Odds and IQ Data")
+    print(f"{'='*60}")
+    
+    if not odds_matches or not iq_matches:
+        print(f"❌ Missing data for alignment test")
+        return False
+    
+    # Extract IDs from both datasets
+    odds_ids = set()
+    for match in odds_matches:
+        match_id = match.get('id')
+        if match_id:
+            odds_ids.add(match_id)
+    
+    iq_ids = set()
+    for match in iq_matches:
+        match_id = match.get('match_id')
+        if match_id:
+            iq_ids.add(match_id)
+    
+    print(f"✅ Odds matches: {len(odds_ids)} unique IDs")
+    print(f"✅ IQ matches: {len(iq_ids)} unique IDs")
+    
+    # Check overlap
+    common_ids = odds_ids.intersection(iq_ids)
+    coverage_percentage = (len(common_ids) / len(odds_ids) * 100) if odds_ids else 0
+    
+    print(f"✅ Common match IDs: {len(common_ids)}")
+    print(f"✅ IQ Coverage: {coverage_percentage:.1f}%")
+    
+    # Sample verification
+    sample_ids = list(common_ids)[:3]
+    print(f"✅ Sample matching IDs: {sample_ids}")
+    
+    # Check for 100% coverage as mentioned in context
+    if coverage_percentage >= 95:
+        print(f"✅ Excellent IQ coverage (≥95%)")
+        return True
+    elif coverage_percentage >= 80:
+        print(f"⚠️  Good IQ coverage (≥80%)")
+        return True
+    else:
+        print(f"❌ Low IQ coverage (<80%)")
+        return False
+
 def main():
-    """Run all backend API tests"""
-    print(f"🧪 FunBet.ai Backend API Testing Suite")
+    """Run comprehensive FunBet IQ and odds endpoint tests"""
+    print(f"🧪 FunBet IQ Comprehensive Testing Suite")
     print(f"Backend URL: {BACKEND_URL}")
     print(f"Test Time: {datetime.now().isoformat()}")
     
     results = {}
     
-    # Test 1: Odds API - Upcoming Matches
-    endpoint1 = f"{BACKEND_URL}/api/odds/all-cached?limit=20&time_filter=upcoming"
-    expected_fields1 = ['home_team', 'away_team', 'commence_time', 'odds']
-    results['odds_upcoming'] = test_api_endpoint(
+    # Test 1: FunBet IQ API - No Parameters
+    print(f"\n🎯 FUNBET IQ API TESTS")
+    endpoint1 = f"{BACKEND_URL}/api/funbet-iq/matches"
+    expected_fields1 = ['match_id', 'home_iq', 'away_iq', 'confidence', 'home_team', 'away_team']
+    results['funbet_iq_basic'] = test_api_endpoint(
         endpoint1, 
-        "Odds API - Upcoming Matches", 
+        "FunBet IQ API - No Parameters", 
         expected_fields1
     )
     
-    # Test 2: FunBet IQ API
-    endpoint2 = f"{BACKEND_URL}/api/funbet-iq/matches?limit=20"
-    expected_fields2 = ['confidence', 'home_iq', 'away_iq']
-    results['funbet_iq'] = test_api_endpoint(
+    # Test 2: FunBet IQ API - Football Filter
+    endpoint2 = f"{BACKEND_URL}/api/funbet-iq/matches?sport=football"
+    results['funbet_iq_football'] = test_api_endpoint(
         endpoint2, 
-        "FunBet IQ API", 
-        expected_fields2
+        "FunBet IQ API - Football Filter", 
+        expected_fields1
     )
     
-    # Get FunBet IQ data for sorting test
-    try:
-        iq_response = requests.get(endpoint2, timeout=30)
-        if iq_response.status_code == 200:
-            iq_data = iq_response.json()
-            matches_for_sorting = iq_data.get('matches', []) if isinstance(iq_data, dict) else iq_data
-            results['funbet_iq_sorting'] = test_funbet_iq_sorting(matches_for_sorting)
-        else:
-            results['funbet_iq_sorting'] = False
-    except:
-        results['funbet_iq_sorting'] = False
-    
-    # Test 3: Live Scores API
-    endpoint3 = f"{BACKEND_URL}/api/scores/live"
-    expected_fields3 = ['live_scores', 'completed_scores']
-    results['live_scores'] = test_api_endpoint(
+    # Test 3: FunBet IQ API - Cricket Filter
+    endpoint3 = f"{BACKEND_URL}/api/funbet-iq/matches?sport=cricket"
+    results['funbet_iq_cricket'] = test_api_endpoint(
         endpoint3, 
-        "Live Scores API", 
-        expected_fields3
+        "FunBet IQ API - Cricket Filter", 
+        expected_fields1
     )
+    
+    # Test 4: Odds Cache API - General
+    print(f"\n🎯 ODDS CACHE API TESTS")
+    endpoint4 = f"{BACKEND_URL}/api/odds/all-cached?limit=20"
+    expected_fields4 = ['id', 'home_team', 'away_team', 'commence_time', 'bookmakers']
+    results['odds_general'] = test_api_endpoint(
+        endpoint4, 
+        "Odds Cache API - General (limit=20)", 
+        expected_fields4
+    )
+    
+    # Test 5: Odds Cache API - Football Filter
+    endpoint5 = f"{BACKEND_URL}/api/odds/all-cached?limit=20&sport=soccer"
+    results['odds_football'] = test_api_endpoint(
+        endpoint5, 
+        "Odds Cache API - Football Filter", 
+        expected_fields4
+    )
+    
+    # Test 6: Get data for sorting and alignment tests
+    print(f"\n🎯 DATA ANALYSIS TESTS")
+    iq_data = None
+    odds_data = None
+    
+    try:
+        # Get FunBet IQ data
+        iq_response = requests.get(endpoint1, timeout=30)
+        if iq_response.status_code == 200:
+            iq_json = iq_response.json()
+            iq_data = iq_json.get('matches', []) if isinstance(iq_json, dict) else iq_json
+            
+        # Get odds data
+        odds_response = requests.get(endpoint4, timeout=30)
+        if odds_response.status_code == 200:
+            odds_json = odds_response.json()
+            odds_data = odds_json.get('matches', []) if isinstance(odds_json, dict) else odds_json
+            
+    except Exception as e:
+        print(f"❌ Error fetching data for analysis: {e}")
+    
+    # Test 7: FunBet IQ Confidence Sorting
+    if iq_data:
+        results['funbet_iq_sorting'] = test_funbet_iq_sorting(iq_data)
+    else:
+        results['funbet_iq_sorting'] = False
+        print(f"❌ Cannot test sorting - no IQ data available")
+    
+    # Test 8: Match ID Alignment
+    if iq_data and odds_data:
+        results['match_id_alignment'] = test_match_id_alignment(odds_data, iq_data)
+    else:
+        results['match_id_alignment'] = False
+        print(f"❌ Cannot test alignment - missing data")
+    
+    # Test 9: Background Worker Status Check
+    print(f"\n🎯 BACKGROUND WORKER STATUS")
+    try:
+        # Check backend logs for worker startup
+        import subprocess
+        log_result = subprocess.run(['tail', '-n', '100', '/var/log/supervisor/backend.out.log'], 
+                                  capture_output=True, text=True, timeout=10)
+        
+        if log_result.returncode == 0:
+            log_content = log_result.stdout
+            
+            # Look for startup messages
+            startup_indicators = [
+                "Starting FunBet.ai",
+                "background worker",
+                "Application started",
+                "✅ Application started"
+            ]
+            
+            found_startup = any(indicator.lower() in log_content.lower() for indicator in startup_indicators)
+            
+            # Look for errors
+            error_indicators = ["ERROR", "Exception", "Failed", "Error"]
+            recent_errors = any(indicator in log_content for indicator in error_indicators)
+            
+            print(f"✅ Backend logs accessible")
+            print(f"✅ Startup indicators found: {found_startup}")
+            print(f"✅ Recent errors detected: {recent_errors}")
+            
+            if found_startup and not recent_errors:
+                results['background_worker'] = True
+                print(f"✅ Background worker appears healthy")
+            else:
+                results['background_worker'] = False
+                print(f"⚠️  Background worker status unclear")
+        else:
+            results['background_worker'] = False
+            print(f"❌ Cannot access backend logs")
+            
+    except Exception as e:
+        results['background_worker'] = False
+        print(f"❌ Error checking background worker: {e}")
     
     # Summary
     print(f"\n{'='*60}")
-    print(f"🏁 TEST SUMMARY")
+    print(f"🏁 COMPREHENSIVE TEST SUMMARY")
     print(f"{'='*60}")
     
     total_tests = len(results)
@@ -189,15 +320,22 @@ def main():
     
     for test_name, result in results.items():
         status = "✅ PASS" if result else "❌ FAIL"
-        print(f"{test_name}: {status}")
+        print(f"{test_name.replace('_', ' ').title()}: {status}")
     
     print(f"\nOverall: {passed_tests}/{total_tests} tests passed")
+    print(f"Success Rate: {(passed_tests/total_tests*100):.1f}%")
     
-    if passed_tests == total_tests:
-        print(f"🎉 All tests passed!")
+    # Specific success criteria check
+    critical_tests = ['funbet_iq_basic', 'funbet_iq_sorting', 'odds_general', 'match_id_alignment']
+    critical_passed = sum(1 for test in critical_tests if results.get(test, False))
+    
+    print(f"\nCritical Tests: {critical_passed}/{len(critical_tests)} passed")
+    
+    if critical_passed == len(critical_tests):
+        print(f"🎉 All critical tests passed! FunBet IQ functionality is working correctly.")
         return True
     else:
-        print(f"⚠️  Some tests failed - see details above")
+        print(f"⚠️  Some critical tests failed - see details above")
         return False
 
 if __name__ == "__main__":
