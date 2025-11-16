@@ -29,8 +29,11 @@ FOOTBALL_LEAGUES = [
     'soccer_uefa_europa_league',              # UEFA Europa League
     'soccer_uefa_europa_conference_league',   # UEFA Conference League
     
-    # FIFA
+    # FIFA & World Cup Qualifiers
     'soccer_fifa_world_cup',                  # FIFA World Cup
+    'soccer_uefa_euro_qualification',         # UEFA Euro Qualification (WC Qualifier path)
+    'soccer_uefa_nations_league',             # UEFA Nations League (WC Qualifier path)
+    'soccer_conmebol_copa_america',           # Copa América (WC Qualifier - South America)
     
     # England - 4 divisions
     'soccer_epl',                             # Premier League
