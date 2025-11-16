@@ -549,10 +549,10 @@ async def get_inplay_odds():
                 commence_time = datetime.fromisoformat(m.get('commence_time', '').replace('Z', '+00:00'))
                 hours_since_start = (now - commence_time).total_seconds() / 3600
                 if 0 < hours_since_start < 2.5:  # Football matches last ~2 hours
-                    # Add a default live status
+                    # Add default live status with 0-0 score (will update when ESPN has data)
                     m['live_score'] = {
-                        'home_score': '?',
-                        'away_score': '?',
+                        'home_score': '0',
+                        'away_score': '0',
                         'match_status': 'Live',
                         'is_live': True,
                         'completed': False
