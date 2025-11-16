@@ -470,7 +470,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                       <span className="text-xs font-semibold text-[#FFD700] bg-[#FFD700]/10 px-2 py-1 rounded">
                         {match.sport_title}
                       </span>
-                      <CountdownTimer commenceTime={match.commence_time} completed={match.completed} />
+                      <CountdownTimer commenceTime={match.commence_time} completed={match.live_score?.completed} />
                       {new Date(match.commence_time) < new Date() && (() => {
                         // For recent results, scores are in match.scores
                         // For live/upcoming, scores are in separate scores array
