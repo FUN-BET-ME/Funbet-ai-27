@@ -2588,9 +2588,9 @@ frontend:
         comment: "✅ IMPLEMENTED - Removed all deprecated /api/ai/predictions calls from frontend: (1) LiveOdds.jsx: Removed aiPredictions state, fetchAIPredictions function, and hasAIPrediction function - not used in render. (2) OddsTable.jsx: Removed aiPredictions state, fetchAIPredictions function, hasAIPrediction function, and removed fetchAIPredictions() calls from useEffect (lines 414, 420, 424). IQ scores are now correctly bundled with odds data from backend, eliminating need for separate API call. This fixes 404 errors in browser console. Frontend restarted successfully. Ready for testing."
 
   - task: "Fix WebSocket connection error in console"
-    implemented: false
+    implemented: true
     working: "NA"
-    file: "TBD"
+    file: "/app/frontend/.env"
     stuck_count: 0
     priority: "low"
     needs_retesting: true
@@ -2598,5 +2598,8 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "🔍 INVESTIGATING - Browser console shows ws://localhost:3000/ws connection failed. Investigating if this is React dev server hot reload or custom WebSocket code."
+      - working: "NA"
+        agent: "main"
+        comment: "✅ IMPLEMENTED - Identified root cause: Webpack Dev Server (WDS) hot reload WebSocket trying to connect to ws://localhost:3000/ws instead of correct host. Frontend .env had WDS_SOCKET_PORT=443 but missing host configuration. Added WDS_SOCKET_HOST=funbet-hoops.preview.emergentagent.com and WDS_SOCKET_PATH=/ws to .env file. This configures the hot reload WebSocket to use the correct Kubernetes ingress host instead of localhost. Frontend restarted successfully. WebSocket should now connect correctly or fail silently without console errors. Ready for testing."
 
 agent_communication:
