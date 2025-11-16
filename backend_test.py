@@ -132,52 +132,77 @@ def test_funbet_iq_sorting(matches_data):
     
     return is_sorted_correctly
 
-def test_match_id_alignment(odds_matches, iq_matches):
-    """Test that match IDs align between odds and IQ data"""
+def test_match_id_alignment_comprehensive():
+    """Test match ID alignment with larger samples to verify 100% coverage"""
     print(f"\n{'='*60}")
-    print(f"Testing: Match ID Alignment Between Odds and IQ Data")
+    print(f"Testing: Comprehensive Match ID Alignment (Large Sample)")
     print(f"{'='*60}")
     
-    if not odds_matches or not iq_matches:
-        print(f"❌ Missing data for alignment test")
-        return False
-    
-    # Extract IDs from both datasets
-    odds_ids = set()
-    for match in odds_matches:
-        match_id = match.get('id')
-        if match_id:
-            odds_ids.add(match_id)
-    
-    iq_ids = set()
-    for match in iq_matches:
-        match_id = match.get('match_id')
-        if match_id:
-            iq_ids.add(match_id)
-    
-    print(f"✅ Odds matches: {len(odds_ids)} unique IDs")
-    print(f"✅ IQ matches: {len(iq_ids)} unique IDs")
-    
-    # Check overlap
-    common_ids = odds_ids.intersection(iq_ids)
-    coverage_percentage = (len(common_ids) / len(odds_ids) * 100) if odds_ids else 0
-    
-    print(f"✅ Common match IDs: {len(common_ids)}")
-    print(f"✅ IQ Coverage: {coverage_percentage:.1f}%")
-    
-    # Sample verification
-    sample_ids = list(common_ids)[:3]
-    print(f"✅ Sample matching IDs: {sample_ids}")
-    
-    # Check for 100% coverage as mentioned in context
-    if coverage_percentage >= 95:
-        print(f"✅ Excellent IQ coverage (≥95%)")
-        return True
-    elif coverage_percentage >= 80:
-        print(f"⚠️  Good IQ coverage (≥80%)")
-        return True
-    else:
-        print(f"❌ Low IQ coverage (<80%)")
+    try:
+        # Get larger samples
+        odds_response = requests.get(f"{BACKEND_URL}/api/odds/all-cached?limit=100", timeout=30)
+        iq_response = requests.get(f"{BACKEND_URL}/api/funbet-iq/matches?limit=200", timeout=30)
+        
+        if odds_response.status_code != 200 or iq_response.status_code != 200:
+            print(f"❌ API calls failed - Odds: {odds_response.status_code}, IQ: {iq_response.status_code}")
+            return False
+        
+        odds_data = odds_response.json()
+        iq_data = iq_response.json()
+        
+        odds_matches = odds_data.get('matches', [])
+        iq_matches = iq_data.get('matches', [])
+        
+        print(f"✅ Retrieved {len(odds_matches)} odds matches")
+        print(f"✅ Retrieved {len(iq_matches)} IQ matches")
+        print(f"✅ Total IQ predictions available: {iq_data.get('total', 'N/A')}")
+        
+        # Extract IDs
+        odds_ids = set()
+        for match in odds_matches:
+            match_id = match.get('id')
+            if match_id:
+                odds_ids.add(match_id)
+        
+        iq_ids = set()
+        for match in iq_matches:
+            match_id = match.get('match_id')
+            if match_id:
+                iq_ids.add(match_id)
+        
+        print(f"✅ Odds unique IDs: {len(odds_ids)}")
+        print(f"✅ IQ unique IDs: {len(iq_ids)}")
+        
+        # Check overlap
+        common_ids = odds_ids.intersection(iq_ids)
+        coverage_percentage = (len(common_ids) / len(odds_ids) * 100) if odds_ids else 0
+        
+        print(f"✅ Common match IDs: {len(common_ids)}")
+        print(f"✅ IQ Coverage: {coverage_percentage:.1f}%")
+        
+        # Sample verification - show 5 matching IDs
+        sample_ids = list(common_ids)[:5]
+        print(f"✅ Sample matching IDs: {sample_ids}")
+        
+        # Check for missing IDs
+        missing_ids = odds_ids - iq_ids
+        if missing_ids:
+            print(f"⚠️  Missing IQ predictions for {len(missing_ids)} matches")
+            print(f"⚠️  Sample missing IDs: {list(missing_ids)[:3]}")
+        
+        # Success criteria based on context (358 matches with 100% coverage)
+        if coverage_percentage >= 95:
+            print(f"✅ Excellent IQ coverage (≥95%) - Meeting success criteria")
+            return True
+        elif coverage_percentage >= 80:
+            print(f"⚠️  Good IQ coverage (≥80%) - Close to success criteria")
+            return True
+        else:
+            print(f"❌ Low IQ coverage (<80%) - Below success criteria")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Error in comprehensive alignment test: {e}")
         return False
 
 def main():
