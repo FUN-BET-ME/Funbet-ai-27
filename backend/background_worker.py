@@ -370,6 +370,94 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in team logos job: {e}")
     
+    async def update_completed_matches(self):
+        """Update recently completed matches with final scores and mark as completed"""
+        try:
+            logger.info("📊 Updating completed matches with final scores...")
+            
+            from datetime import datetime, timezone, timedelta
+            from api_football_service import fetch_api_football_live_scores, fetch_api_basketball_live_scores
+            
+            # Get matches from last 24 hours that might be completed
+            yesterday = datetime.now(timezone.utc) - timedelta(hours=24)
+            
+            # Find recent matches that might need final score updates
+            matches = await self.db.odds_cache.find({
+                'commence_time': {
+                    '$gte': yesterday.isoformat(),
+                    '$lte': datetime.now(timezone.utc).isoformat()
+                }
+            }).limit(200).to_list(length=None)
+            
+            # Fetch completed games from API-Football
+            import httpx
+            api_key = os.environ.get('API_FOOTBALL_KEY')
+            
+            async with httpx.AsyncClient() as client:
+                # Get yesterday and today's completed fixtures
+                for days_ago in [0, 1]:
+                    date = (datetime.now(timezone.utc) - timedelta(days=days_ago)).strftime('%Y-%m-%d')
+                    
+                    # Football completed fixtures
+                    url = "https://v3.football.api-sports.io/fixtures"
+                    headers = {'x-apisports-key': api_key}
+                    params = {'date': date, 'status': 'FT'}
+                    
+                    response = await client.get(url, headers=headers, params=params, timeout=15.0)
+                    
+                    if response.status_code == 200:
+                        data = response.json()
+                        completed_fixtures = data.get('response', [])
+                        
+                        logger.info(f"📊 Found {len(completed_fixtures)} completed football fixtures on {date}")
+                        
+                        # Update database with final scores
+                        for fixture in completed_fixtures:
+                            try:
+                                teams = fixture.get('teams', {})
+                                goals = fixture.get('goals', {})
+                                status = fixture.get('fixture', {}).get('status', {})
+                                
+                                home_team = teams.get('home', {}).get('name', '').lower()
+                                away_team = teams.get('away', {}).get('name', '').lower()
+                                
+                                # Find matching match in database
+                                for match in matches:
+                                    match_home = match.get('home_team', '').lower()
+                                    match_away = match.get('away_team', '').lower()
+                                    
+                                    if (home_team in match_home or match_home in home_team) and \
+                                       (away_team in match_away or match_away in away_team):
+                                        
+                                        # Update with final score
+                                        await self.db.odds_cache.update_one(
+                                            {'id': match['id']},
+                                            {'$set': {
+                                                'live_score': {
+                                                    'home_score': str(goals.get('home', 0)),
+                                                    'away_score': str(goals.get('away', 0)),
+                                                    'match_status': 'FT',
+                                                    'is_live': False,
+                                                    'completed': True,
+                                                    'last_update': datetime.now(timezone.utc).isoformat(),
+                                                    'home_team_logo': teams.get('home', {}).get('logo'),
+                                                    'away_team_logo': teams.get('away', {}).get('logo')
+                                                },
+                                                'completed': True,
+                                                'final_score_updated_at': datetime.now(timezone.utc).isoformat()
+                                            }}
+                                        )
+                                        break
+                                        
+                            except Exception as e:
+                                logger.warning(f"Error updating completed fixture: {e}")
+                                continue
+            
+            logger.info(f"📊 Completed matches updated with final scores")
+            
+        except Exception as e:
+            logger.error(f"Error updating completed matches: {e}")
+    
     async def enrich_matches_with_logos(self):
         """Enrich all matches in database with team and league logos from API-Football"""
         try:
