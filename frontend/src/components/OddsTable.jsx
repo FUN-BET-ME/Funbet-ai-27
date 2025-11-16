@@ -1203,8 +1203,8 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                 if (!outcome) {
                                   // If bookmaker doesn't have this outcome, show '-'
                                   return (
-                                    <td key={name} className="py-2 px-2 sm:py-3 sm:px-4 text-center">
-                                      <span className="inline-block px-2 py-1 sm:px-3 sm:py-1.5 rounded font-bold text-xs sm:text-sm text-gray-500">
+                                    <td key={name} className="py-1.5 px-0.5 sm:py-3 sm:px-4 text-center w-[25%]">
+                                      <span className="inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-bold text-[10px] sm:text-sm text-gray-500">
                                         -
                                       </span>
                                     </td>
@@ -1216,10 +1216,10 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                 return (
                                   <td
                                     key={name}
-                                    className="py-2 px-2 sm:py-3 sm:px-4 text-center"
+                                    className="py-1.5 px-0.5 sm:py-3 sm:px-4 text-center w-[25%]"
                                   >
                                     <span
-                                      className={`inline-block px-2 py-1 sm:px-3 sm:py-1.5 rounded font-bold text-xs sm:text-base ${
+                                      className={`inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-bold text-[10px] sm:text-base ${
                                         isBest
                                           ? 'bg-amber-400/80 text-[#2E004F] shadow-sm'
                                           : 'text-white'
