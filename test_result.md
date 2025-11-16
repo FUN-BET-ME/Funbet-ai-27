@@ -2574,11 +2574,11 @@ backend:
 frontend:
   - task: "Remove deprecated /api/ai/predictions calls"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/LiveOdds.jsx, /app/frontend/src/components/OddsTable.jsx"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
@@ -2586,6 +2586,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "✅ IMPLEMENTED - Removed all deprecated /api/ai/predictions calls from frontend: (1) LiveOdds.jsx: Removed aiPredictions state, fetchAIPredictions function, and hasAIPrediction function - not used in render. (2) OddsTable.jsx: Removed aiPredictions state, fetchAIPredictions function, hasAIPrediction function, and removed fetchAIPredictions() calls from useEffect (lines 414, 420, 424). IQ scores are now correctly bundled with odds data from backend, eliminating need for separate API call. This fixes 404 errors in browser console. Frontend restarted successfully. Ready for testing."
+      - working: true
+        agent: "main"
+        comment: "✅ VERIFIED WORKING - Predictions API 404 error completely resolved! Browser console shows NO /api/ai/predictions errors. Verified through browser automation: page loads successfully with 348 matches, all functionality working correctly. IQ scores are displayed properly using bundled odds data. Clean console with only legitimate logs. Code cleanup successful - removed dead code, improved performance by eliminating unnecessary API calls."
 
   - task: "Fix WebSocket connection error in console"
     implemented: true
