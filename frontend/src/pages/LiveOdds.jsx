@@ -158,6 +158,26 @@ const LiveOdds = () => {
     'cricket_psl': '🇵🇰 Pakistan Super League',
     'cricket_icc_world_cup': '🏆 ICC World Cup',
   };
+  
+  const basketballLeagues = {
+    'all': '🏀 All Basketball',
+    // Americas
+    'basketball_nba': '🇺🇸 NBA',
+    'basketball_ncaab': '🎓 NCAA Basketball',
+    'basketball_nbl': '🌎 NBL (Australia/Canada)',
+    // Europe - Pan-European
+    'basketball_euroleague': '🏆 EuroLeague',
+    'basketball_eurocup': '🏆 EuroCup',
+    // Europe - National Leagues
+    'basketball_spain_acb': '🇪🇸 Liga ACB (Spain)',
+    'basketball_turkey_bsl': '🇹🇷 BSL (Turkey)',
+    'basketball_italy_lega_a': '🇮🇹 Lega Basket Serie A (Italy)',
+    'basketball_greece_basket_league': '🇬🇷 Basket League (Greece)',
+    'basketball_germany_bbl': '🇩🇪 BBL (Germany)',
+    'basketball_france_lnb': '🇫🇷 LNB Pro A (France)',
+    'basketball_lithuania_lkl': '🇱🇹 LKL (Lithuania)',
+    'basketball_serbia_kls': '🇷🇸 KLS (Serbia)',
+  };
 
   const sportEmojis = {
     all: '🏆',
