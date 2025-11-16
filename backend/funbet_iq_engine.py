@@ -61,31 +61,45 @@ def calculate_market_iq(match: Dict, team_type: str = 'home') -> float:
         if not team_odds:
             return 50.0
         
-        # Market implied probability
-        best_odds = max(team_odds)
+        # Calculate market metrics
+        best_odds = max(team_odds)  # Best price available
         avg_odds = statistics.mean(team_odds)
+        
+        # Market implied probability (CORE SIGNAL)
+        # Lower odds = higher probability = FAVORITE
+        # Examples: 1.50 odds = 66.7% prob, 3.00 odds = 33.3% prob
         market_implied_prob = 1 / avg_odds if avg_odds > 0 else 0
         
-        # Market edge: how much better is best odds vs average
-        market_edge = (best_odds - avg_odds) / avg_odds if avg_odds > 0 else 0
+        # Convert probability to IQ score (0-100 scale)
+        # Probability ranges: 0.10 (10%) to 0.90 (90%)
+        # Scale to IQ: 10% prob = 10 IQ, 90% prob = 90 IQ
+        base_market_iq = market_implied_prob * 100
         
-        # Movement score: variance in odds indicates market uncertainty/movement
-        movement_score = 0
+        # Bonus adjustments (up to +10 points total)
+        
+        # 1. Best odds bonus: reward teams with better prices available (+0 to +5)
+        # Higher best_odds relative to average = better value
+        odds_value_bonus = 0
+        if avg_odds > 0:
+            odds_value_ratio = (best_odds - avg_odds) / avg_odds
+            odds_value_bonus = min(odds_value_ratio * 10, 5.0)  # Cap at +5
+        
+        # 2. Market certainty bonus: low variance = market agreement (+0 to +5)
+        # Low variance means bookmakers agree on the price = more confident prediction
+        certainty_bonus = 0
         if len(team_odds) > 1:
             odds_variance = statistics.variance(team_odds)
-            # Normalize variance to 0-1 scale (higher variance = more movement)
-            movement_score = min(odds_variance / 0.5, 1.0)  # Cap at 1.0
+            # Invert variance: low variance = high certainty
+            certainty_score = max(0, 1 - (odds_variance / 0.5))
+            certainty_bonus = certainty_score * 5  # Up to +5 for very low variance
         
-        # Volume score: more bookmakers = more liquidity (proxy for volume)
-        volume_score = min(len(team_odds) / 20.0, 1.0)  # Normalize, cap at 20 bookies
-        
-        # Calculate Market IQ
-        market_iq = 50 + (20 * market_edge) + (10 * movement_score) + (10 * volume_score)
+        # Calculate final Market IQ
+        market_iq = base_market_iq + odds_value_bonus + certainty_bonus
         
         # Clamp to 0-100
         market_iq = max(0, min(100, market_iq))
         
-        logger.debug(f"Market IQ for {team_type}: {market_iq:.2f} (edge={market_edge:.3f}, movement={movement_score:.3f}, volume={volume_score:.3f})")
+        logger.debug(f"Market IQ for {team_type}: {market_iq:.2f} (prob={market_implied_prob:.3f}, base={base_market_iq:.1f}, value_bonus={odds_value_bonus:.1f}, certainty_bonus={certainty_bonus:.1f}, avg_odds={avg_odds:.2f})")
         
         return market_iq
         
