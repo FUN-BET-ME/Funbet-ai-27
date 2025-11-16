@@ -90,10 +90,14 @@ CRICKET_LEAGUES = [
 ]
 
 BASKETBALL_LEAGUES = [
-    # AMERICAS
+    # AMERICAS - North America
     'basketball_nba',                         # USA - NBA (30 teams)
     'basketball_ncaab',                       # USA - NCAA College Basketball
     'basketball_nbl',                         # Australia/Canada NBL
+    
+    # AMERICAS - South America
+    'basketball_brazil_nbb',                  # Brazil - Novo Basquete Brasil (NBB)
+    'basketball_argentina_lnb',               # Argentina - Liga Nacional de Básquet
     
     # EUROPE - Pan-European
     'basketball_euroleague',                  # EuroLeague (Top 18 clubs)
