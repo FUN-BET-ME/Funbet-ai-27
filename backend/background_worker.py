@@ -479,6 +479,15 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # 8. Update LIVE scores every 10 seconds (API-Sports Football & Basketball)
+        self.scheduler.add_job(
+            self.update_live_scores_fast,
+            trigger=IntervalTrigger(seconds=10),
+            id='update_live_scores_fast',
+            name='Update live football & basketball scores every 10 seconds',
+            replace_existing=True
+        )
+        
         # Run initial jobs immediately
         asyncio.create_task(self.update_odds_job())
         asyncio.create_task(self.calculate_funbet_iq_job())
@@ -486,9 +495,10 @@ class OddsWorker:
         asyncio.create_task(self.verify_predictions_job())  # Verify predictions immediately
         asyncio.create_task(self.fetch_team_logos_job())  # Fetch logos immediately
         asyncio.create_task(self.fetch_team_stats_job())  # Fetch stats immediately
+        asyncio.create_task(self.update_live_scores_fast())  # Start fast live updates immediately
         
         self.scheduler.start()
-        logger.info("✅ Background worker started - 7 jobs scheduled")
+        logger.info("✅ Background worker started - 8 jobs scheduled")
         logger.info("🎯 Expected usage: ~290 API calls/day + IQ calculations + live scores + prediction verification + team data")
         logger.info("📊 Historical data: ALL matches preserved permanently (no cleanup)")
         logger.info("🎯 Prediction tracking: Verifying completed matches every hour")
