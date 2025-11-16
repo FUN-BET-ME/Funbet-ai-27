@@ -104,7 +104,13 @@ const LiveOdds = () => {
   // League definitions for sub-filters (ALL 24 football + 8 cricket leagues)
   const footballLeagues = {
     'all': '🏆 All Football Leagues',
-    // UEFA
+    // World Cup & International
+    'soccer_fifa_world_cup': '🌍 FIFA World Cup',
+    'soccer_fifa_world_cup_qualifiers_europe': '🌍 World Cup Qualifiers - Europe',
+    'soccer_uefa_euro_qualification': '🇪🇺 Euro 2028 Qualification',
+    'soccer_uefa_nations_league': '🇪🇺 UEFA Nations League',
+    'soccer_conmebol_copa_america': '🏆 Copa América',
+    // UEFA Club Competitions
     'soccer_uefa_champs_league': '🏆 Champions League',
     'soccer_uefa_europa_league': '🏆 Europa League',
     'soccer_uefa_europa_conference_league': '🏆 Conference League',
