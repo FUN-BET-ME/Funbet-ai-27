@@ -1449,7 +1449,7 @@ const LiveOdds = () => {
                           ) : (
                             <>
                               <ChevronDown className="w-4 h-4" />
-                              Show {sortedBookmakers.length - 4} More Bookmakers
+                              Show {sortedBookmakers.length - (window.innerWidth < 768 ? 4 : 4)} More Bookmaker{sortedBookmakers.length - 4 !== 1 ? 's' : ''}
                             </>
                           )}
                         </button>
