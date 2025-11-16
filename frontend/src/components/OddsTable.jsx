@@ -1269,14 +1269,16 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
       {!loading && !error && oddsData.length === 0 && (
         <div className="text-center py-16 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-xl p-12 border border-purple-500/20">
           <div className="text-7xl mb-6">
-            {sportTitle === 'Cricket' ? '🏏' : '⚽'}
+            {sportTitle === 'Basketball' ? '🏀' : sportTitle === 'Cricket' ? '🏏' : '⚽'}
           </div>
           <p className="text-white text-2xl font-semibold mb-4">
             No Upcoming Matches for {selectedLeague || sportTitle}
           </p>
           <div className="space-y-3 max-w-md mx-auto">
             <p className="text-gray-400">
-              {sportTitle === 'Cricket' 
+              {sportTitle === 'Basketball'
+                ? '🏀 Basketball schedules are updated as leagues and tournaments are announced.'
+                : sportTitle === 'Cricket' 
                 ? '🏏 Cricket schedules are updated as tournaments and series are announced.'
                 : '⚽ Football matches will appear closer to the season start date.'}
             </p>
@@ -1284,7 +1286,9 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
               ⏰ We will update close to the season/tournament start
             </p>
             <p className="text-gray-500 text-sm">
-              {sportTitle === 'Cricket'
+              {sportTitle === 'Basketball'
+                ? 'Check back for NBA, EuroLeague, NCAA Basketball, and international leagues!'
+                : sportTitle === 'Cricket'
                 ? 'Check back for IPL, T20 Internationals, ODI series, and Test matches!'
                 : 'We track 24+ football leagues from around the world.'}
             </p>
