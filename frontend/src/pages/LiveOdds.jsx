@@ -297,11 +297,9 @@ const LiveOdds = () => {
       // Build URL with query params manually
       let apiURL = `${BACKEND_URL}/api/odds/all-cached?limit=${limit}&skip=${currentSkip}`;
       
-      // CRITICAL FIX: Add time filter to only get upcoming matches (exclude live)
-      if (timeFilter === 'live-upcoming') {
-        apiURL += '&time_filter=upcoming';
-        console.log('✅ Fetching UPCOMING matches only (excluding live)');
-      }
+      // NO TIME FILTER for 'live-upcoming' - we want BOTH live and upcoming matches!
+      // The time_filter parameter defaults to 'all' (both live and upcoming)
+      // Only use time_filter if we specifically want to exclude one or the other
       
       // Add sport filter if specified
       if (sportFilter) {
