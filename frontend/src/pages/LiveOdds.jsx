@@ -1335,17 +1335,6 @@ const LiveOdds = () => {
                               >
                                 <div className="flex items-center gap-2">
                                   <span>{awayTeam}</span>
-                                  {(() => {
-                                    const matchIQ = iqScores[match.id];
-                                    if (matchIQ && matchIQ.away_iq) {
-                                      return (
-                                        <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-purple-600/40 text-[#FFD700]">
-                                          IQ {matchIQ.away_iq}
-                                        </span>
-                                      );
-                                    }
-                                    return null;
-                                  })()}
                                 </div>
                                 {oddsSortBy[matchId] === 'away' ? (
                                   <ChevronDown className="w-4 h-4 text-[#FFD700]" />
