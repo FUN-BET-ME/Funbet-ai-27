@@ -466,6 +466,7 @@ async def calculate_funbet_iq(match: Dict, db) -> Dict:
             'sport_key': sport_key,
             'home_iq': round(home_iq, 1),
             'away_iq': round(away_iq, 1),
+            'draw_iq': round(draw_iq, 1) if draw_iq is not None else None,
             'confidence': confidence,
             'verdict': verdict,
             'home_components': {
