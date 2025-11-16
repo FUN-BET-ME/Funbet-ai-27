@@ -66,11 +66,21 @@ const LiveOdds = () => {
     
     let filtered = allOdds;
     
-    // FIRST: Filter by sport (football vs cricket) if not "all"
+    // FIRST: Filter by sport (football vs cricket vs basketball) if not "all"
     if (filter !== 'all') {
-      const sportPrefix = filter === 'football' ? 'soccer_' : 'cricket_';
-      filtered = filtered.filter(match => match.sport_key?.startsWith(sportPrefix));
-      console.log('  → After sport filter (', filter, '):', filtered.length, 'matches');
+      let sportPrefix;
+      if (filter === 'football') {
+        sportPrefix = 'soccer_';
+      } else if (filter === 'cricket') {
+        sportPrefix = 'cricket_';
+      } else if (filter === 'basketball') {
+        sportPrefix = 'basketball_';
+      }
+      
+      if (sportPrefix) {
+        filtered = filtered.filter(match => match.sport_key?.startsWith(sportPrefix));
+        console.log('  → After sport filter (', filter, '):', filtered.length, 'matches');
+      }
     }
     
     // SECOND: Filter by specific league if selected
