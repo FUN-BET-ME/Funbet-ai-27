@@ -363,7 +363,12 @@ async def get_all_cached_odds(
             three_hours_ago_str = three_hours_ago.isoformat().replace('+00:00', 'Z')
             now_str = now.isoformat().replace('+00:00', 'Z')
             query['commence_time'] = {'$gte': three_hours_ago_str, '$lte': now_str}
-        # If time_filter is None or 'all', don't filter by time
+        else:
+            # Default behavior (no time_filter or 'all'): exclude OLD matches (>6 hours ago)
+            # Show matches from 6 hours ago to future (covers live + upcoming)
+            six_hours_ago = now - timedelta(hours=6)
+            six_hours_ago_str = six_hours_ago.isoformat().replace('+00:00', 'Z')
+            query['commence_time'] = {'$gte': six_hours_ago_str}
         
         # Filter by sport if provided
         if sport:
