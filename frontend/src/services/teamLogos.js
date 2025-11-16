@@ -26,7 +26,7 @@ export const getTeamLogo = async (teamName, sport = 'Soccer') => {
   // Use backend API (automatically fetches and caches logos)
   try {
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
-    const response = await fetch(`${BACKEND_URL}/api/teams/logo/${encodeURIComponent(teamName)}`);
+    const response = await fetch(`${BACKEND_URL}/api/teams/logo/${encodeURIComponent(teamName)}?sport_key=${sport || ''}`);
     
     if (response.ok) {
       const data = await response.json();
