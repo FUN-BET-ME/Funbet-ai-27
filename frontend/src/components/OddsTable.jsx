@@ -663,7 +663,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-[#2E004F]/30">
-                          <th className="text-left py-3 px-4 text-sm font-semibold text-gray-400">
+                          <th className="text-left py-1.5 px-1 sm:py-3 sm:px-4 text-[10px] sm:text-sm font-semibold text-gray-400">
                             Bookmaker
                           </th>
                           {(() => {
