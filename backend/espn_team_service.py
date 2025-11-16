@@ -5,6 +5,7 @@ ESPN Team Service
 """
 import logging
 import httpx
+import asyncio
 from typing import Dict, Optional, List
 from datetime import datetime, timezone
 
