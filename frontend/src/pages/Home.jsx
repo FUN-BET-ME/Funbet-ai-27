@@ -21,6 +21,13 @@ const Home = () => {
       description: 'IPL, World Cup, Test Matches, ODI, T20 & International Cricket',
       link: '/live-odds?filter=cricket',
       color: 'from-blue-500/20 to-cyan-500/20'
+    },
+    {
+      name: 'Basketball',
+      icon: '🏀',
+      description: 'NBA, EuroLeague, NCAA & Top European leagues - Real-time odds',
+      link: '/live-odds?filter=basketball',
+      color: 'from-orange-500/20 to-red-500/20'
     }
   ];
 
