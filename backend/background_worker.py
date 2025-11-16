@@ -288,6 +288,40 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in FunBet IQ job: {e}")
     
+    async def fetch_team_logos_job(self):
+        """
+        Fetch team logos from ESPN every 6 hours
+        Only fetches for teams without logos
+        """
+        try:
+            logger.info("🎨 Starting team logos fetch job...")
+            
+            from espn_team_service import batch_fetch_team_logos
+            
+            result = await batch_fetch_team_logos(self.db, limit=100)
+            
+            logger.info(f"✅ Team logos fetch complete: {result['fetched']} new, {result['cached']} cached, {result['errors']} errors")
+                
+        except Exception as e:
+            logger.error(f"❌ Error in team logos job: {e}")
+    
+    async def fetch_team_stats_job(self):
+        """
+        Fetch team historical stats from ESPN every 6 hours
+        Updates stats for recent performance
+        """
+        try:
+            logger.info("📊 Starting team stats fetch job...")
+            
+            from espn_team_service import batch_fetch_team_stats
+            
+            result = await batch_fetch_team_stats(self.db, limit=50)
+            
+            logger.info(f"✅ Team stats fetch complete: {result['fetched']} updated, {result['cached']} cached, {result['errors']} errors")
+                
+        except Exception as e:
+            logger.error(f"❌ Error in team stats job: {e}")
+    
     async def verify_predictions_job(self):
         """
         Verify FunBet IQ predictions against actual match results
