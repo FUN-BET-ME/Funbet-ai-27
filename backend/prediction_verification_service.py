@@ -153,16 +153,24 @@ class PredictionVerificationService:
                 logger.debug(f"Cannot determine winner for match {match_id}")
                 return 'pending'
             
-            # Get predicted winner from IQ scores
+            # Get predicted winner from IQ scores (consider draw_iq for football)
             home_iq = prediction.get('home_iq', 0)
             away_iq = prediction.get('away_iq', 0)
+            draw_iq = prediction.get('draw_iq', 0)  # Will be 0 for non-football sports
             
-            if home_iq > away_iq:
+            # Find the highest IQ score to determine prediction
+            max_iq = max(home_iq, away_iq, draw_iq)
+            
+            if draw_iq > 0 and draw_iq == max_iq:
+                # Draw has highest IQ (only possible for football)
+                predicted_winner = 'draw'
+            elif home_iq == max_iq:
                 predicted_winner = 'home'
-            elif away_iq > home_iq:
+            elif away_iq == max_iq:
                 predicted_winner = 'away'
             else:
-                predicted_winner = 'draw'  # Tie in IQ scores
+                # Fallback (should never happen)
+                predicted_winner = 'home' if home_iq > away_iq else 'away'
             
             # Compare prediction with actual result
             is_correct = (predicted_winner == actual_winner)
