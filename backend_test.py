@@ -285,12 +285,8 @@ def main():
         results['funbet_iq_sorting'] = False
         print(f"❌ Cannot test sorting - no IQ data available")
     
-    # Test 8: Match ID Alignment
-    if iq_data and odds_data:
-        results['match_id_alignment'] = test_match_id_alignment(odds_data, iq_data)
-    else:
-        results['match_id_alignment'] = False
-        print(f"❌ Cannot test alignment - missing data")
+    # Test 8: Comprehensive Match ID Alignment
+    results['match_id_alignment'] = test_match_id_alignment_comprehensive()
     
     # Test 9: Background Worker Status Check
     print(f"\n🎯 BACKGROUND WORKER STATUS")
