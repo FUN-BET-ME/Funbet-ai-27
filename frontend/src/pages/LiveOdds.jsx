@@ -555,6 +555,7 @@ const LiveOdds = () => {
     ],
     basketball: [
       'basketball_nba', 'basketball_ncaab', 'basketball_nbl',
+      'basketball_brazil_nbb', 'basketball_argentina_lnb',
       'basketball_euroleague', 'basketball_eurocup', 'basketball_spain_acb',
       'basketball_turkey_bsl', 'basketball_italy_lega_a', 'basketball_greece_basket_league',
       'basketball_germany_bbl', 'basketball_france_lnb', 'basketball_lithuania_lkl',
