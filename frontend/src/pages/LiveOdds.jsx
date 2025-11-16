@@ -506,18 +506,16 @@ const LiveOdds = () => {
     }
   }, [allOdds]);
 
-  // Fetch IQ scores when odds data loads
+  // Fetch IQ scores when odds data changes
   useEffect(() => {
     console.log('🔥 IQ useEffect triggered - allOdds.length:', allOdds.length);
-    if (allOdds.length > 0 && Object.keys(iqScores).length === 0) {
-      console.log('✅ Calling fetchIQScores...');
+    if (allOdds.length > 0) {
+      console.log('✅ Calling fetchIQScores because odds data changed...');
       fetchIQScores();
-    } else if (allOdds.length === 0) {
-      console.log('⚠️  Not calling fetchIQScores - no odds data');
     } else {
-      console.log('ℹ️  IQ scores already loaded');
+      console.log('⚠️  Not calling fetchIQScores - no odds data');
     }
-  }, [allOdds.length, iqScores, fetchIQScores]);
+  }, [allOdds.length, fetchIQScores]);
 
   // Auto-refresh for live scores and odds
   useEffect(() => {
