@@ -1298,51 +1298,51 @@ const LiveOdds = () => {
                             
                             return (
                               <tr className="border-b-2 border-[#FFD700] bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10">
-                                <td className="py-3 px-2 sm:py-4 sm:px-4">
+                                <td className="py-2 px-1 sm:py-4 sm:px-4">
                                   <a 
                                     href="https://funbet.me" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="flex items-center gap-1 sm:gap-2 hover:opacity-80 transition-opacity"
                                   >
-                                    <span className="text-[#FFD700] text-lg sm:text-2xl">⭐</span>
-                                    <span className="text-[#FFD700] font-bold text-xs sm:text-lg whitespace-nowrap">FunBet.me</span>
+                                    <span className="text-[#FFD700] text-base sm:text-2xl leading-none">⭐</span>
+                                    <span className="text-[#FFD700] font-bold text-[10px] sm:text-lg whitespace-nowrap leading-none">FunBet.me</span>
                                   </a>
                                 </td>
-                                <td className="py-3 px-1 sm:py-4 sm:px-4 text-center">
+                                <td className="py-2 px-0.5 sm:py-4 sm:px-4 text-center w-[25%]">
                                   <a 
                                     href="https://funbet.me" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="inline-block"
                                   >
-                                    <span className="bg-[#FFD700] text-[#2E004F] px-2 py-1 sm:px-5 sm:py-2 rounded-lg font-black text-sm sm:text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
+                                    <span className="bg-[#FFD700] text-[#2E004F] px-1.5 py-0.5 sm:px-5 sm:py-2 rounded font-black text-xs sm:text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
                                       {funbetHomeOdds}
                                     </span>
                                   </a>
                                 </td>
                                 {showThreeOutcomes && (
-                                  <td className="py-3 px-1 sm:py-4 sm:px-4 text-center">
+                                  <td className="py-2 px-0.5 sm:py-4 sm:px-4 text-center w-[25%]">
                                     <a 
                                       href="https://funbet.me" 
                                       target="_blank" 
                                       rel="noopener noreferrer"
                                       className="inline-block"
                                     >
-                                      <span className="bg-[#FFD700] text-[#2E004F] px-2 py-1 sm:px-5 sm:py-2 rounded-lg font-black text-sm sm:text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
+                                      <span className="bg-[#FFD700] text-[#2E004F] px-1.5 py-0.5 sm:px-5 sm:py-2 rounded font-black text-xs sm:text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
                                         {funbetDrawOdds || '-'}
                                       </span>
                                     </a>
                                   </td>
                                 )}
-                                <td className="py-3 px-1 sm:py-4 sm:px-4 text-center">
+                                <td className="py-2 px-0.5 sm:py-4 sm:px-4 text-center w-[25%]">
                                   <a 
                                     href="https://funbet.me" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="inline-block"
                                   >
-                                    <span className="bg-[#FFD700] text-[#2E004F] px-2 py-1 sm:px-5 sm:py-2 rounded-lg font-black text-sm sm:text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
+                                    <span className="bg-[#FFD700] text-[#2E004F] px-1.5 py-0.5 sm:px-5 sm:py-2 rounded font-black text-xs sm:text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
                                       {funbetAwayOdds}
                                     </span>
                                   </a>
