@@ -391,27 +391,7 @@ const LiveOdds = () => {
   };
   
   // Removed logo fetching for speed - using sport icons instead
-
-  // Fetch AI predictions to know which matches have predictions available
-  const fetchAIPredictions = useCallback(async () => {
-    try {
-      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/ai/predictions`, {
-        params: { limit: 50 } // Fetch more predictions to cover all visible matches
-      });
-      setAiPredictions(response.data || []);
-    } catch (error) {
-      console.error('Error fetching AI predictions:', error);
-      setAiPredictions([]);
-    }
-  }, []);
-
-  // IQ scores now come bundled with odds data - no separate fetch needed!
-
-  // Check if a match has an AI prediction
-  const hasAIPrediction = (matchId) => {
-    return aiPredictions.some(pred => pred.match_id === matchId);
-  };
+  // Removed fetchAIPredictions - IQ scores now come bundled with odds data
 
   // Load data on mount and when filters change
   // Load data when filter changes
