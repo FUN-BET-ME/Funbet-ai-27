@@ -1209,27 +1209,28 @@ const LiveOdds = () => {
                           })()}
                         </div>
                         
-                        {/* Team names with logos */}
-                        <div className="flex items-center gap-2 sm:gap-3 mt-3">
-                          <div className="flex-shrink-0">
-                            <TeamLogo 
-                              logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
-                              teamName={homeTeam}
-                              sport={match.sport_key}
-                              size="md"
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            {/* First Line: Team Names with VS and Live Score */}
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="text-white font-semibold truncate text-sm sm:text-base flex-1">{homeTeam}</span>
-                              
-                              {/* Live/Final Score in the middle */}
+                        {/* Team names with logos - MOBILE: Vertical 3-row layout */}
+                        <div className="mt-3">
+                          {/* MOBILE ONLY: Vertical 3-row layout */}
+                          <div className="md:hidden space-y-2">
+                            {/* Row 1: Home Team */}
+                            <div className="flex items-center gap-2">
+                              <TeamLogo 
+                                logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
+                                teamName={homeTeam}
+                                sport={match.sport_key}
+                                size="sm"
+                              />
+                              <span className="text-white font-semibold text-base">{homeTeam}</span>
+                            </div>
+                            
+                            {/* Row 2: VS or Score */}
+                            <div className="flex items-center justify-center py-1">
                               {match.live_score && (match.live_score.home_score || match.live_score.away_score) ? (
-                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
-                                  <span className="text-white font-bold text-base">{match.live_score.home_score || '0'}</span>
+                                <div className="flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
+                                  <span className="text-white font-bold text-lg">{match.live_score.home_score || '0'}</span>
                                   <span className="text-gray-500">-</span>
-                                  <span className="text-white font-bold text-base">{match.live_score.away_score || '0'}</span>
+                                  <span className="text-white font-bold text-lg">{match.live_score.away_score || '0'}</span>
                                   {match.live_score.match_status && (
                                     <span className={`ml-1 text-xs font-bold ${
                                       match.live_score.is_live ? 'text-red-400' : 
@@ -1241,11 +1242,59 @@ const LiveOdds = () => {
                                   )}
                                 </div>
                               ) : (
-                                <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
+                                <span className="text-gray-400 text-sm font-medium px-3 py-1 bg-white/5 rounded">vs</span>
                               )}
-                              
-                              <span className="text-white font-semibold truncate text-right text-sm sm:text-base flex-1">{awayTeam}</span>
                             </div>
+                            
+                            {/* Row 3: Away Team */}
+                            <div className="flex items-center gap-2">
+                              <TeamLogo 
+                                logoUrl={match.live_score?.away_team_logo || match.away_logo || teamLogos[awayTeam]} 
+                                teamName={awayTeam}
+                                sport={match.sport_key}
+                                size="sm"
+                              />
+                              <span className="text-white font-semibold text-base">{awayTeam}</span>
+                            </div>
+                          </div>
+
+                          {/* DESKTOP: Original horizontal layout */}
+                          <div className="hidden md:flex items-center gap-2 sm:gap-3">
+                            <div className="flex-shrink-0">
+                              <TeamLogo 
+                                logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
+                                teamName={homeTeam}
+                                sport={match.sport_key}
+                                size="md"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              {/* First Line: Team Names with VS and Live Score */}
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-white font-semibold truncate text-sm sm:text-base flex-1">{homeTeam}</span>
+                                
+                                {/* Live/Final Score in the middle */}
+                                {match.live_score && (match.live_score.home_score || match.live_score.away_score) ? (
+                                  <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
+                                    <span className="text-white font-bold text-base">{match.live_score.home_score || '0'}</span>
+                                    <span className="text-gray-500">-</span>
+                                    <span className="text-white font-bold text-base">{match.live_score.away_score || '0'}</span>
+                                    {match.live_score.match_status && (
+                                      <span className={`ml-1 text-xs font-bold ${
+                                        match.live_score.is_live ? 'text-red-400' : 
+                                        match.live_score.completed ? 'text-green-400' : 
+                                        'text-gray-400'
+                                      }`}>
+                                        {match.live_score.match_status}
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
+                                )}
+                                
+                                <span className="text-white font-semibold truncate text-right text-sm sm:text-base flex-1">{awayTeam}</span>
+                              </div>
                             
                             {/* Second Line: FunBet IQ Scores and Prediction */}
                             {(() => {
