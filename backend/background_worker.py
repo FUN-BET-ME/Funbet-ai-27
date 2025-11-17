@@ -706,7 +706,7 @@ class OddsWorker:
                     linked_match = await match_linking.link_live_score_to_match(score)
                     
                     if linked_match:
-                        # Save final score - mark as completed and won't update again
+                        # Save final score - mark as completed at ROOT level and in live_score
                         await self.db.odds_cache.update_one(
                             {'id': linked_match['id']},
                             {'$set': {
@@ -722,6 +722,7 @@ class OddsWorker:
                                     'league_logo': score.get('league_logo'),
                                     'api_source': score.get('api_source', 'unknown')
                                 },
+                                'completed': True,  # CRITICAL: Mark at root level for verification
                                 'final_score_saved': True,
                                 'updated_at': datetime.now(timezone.utc).isoformat()
                             }}
