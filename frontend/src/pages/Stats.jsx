@@ -30,13 +30,14 @@ const Stats = () => {
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [filter, setFilter] = useState('all');
-  const sports = ['all', 'football', 'cricket'];
+  const sports = ['all', 'football', 'cricket', 'basketball'];
   
   const formatSportName = (sport) => {
     const sportNames = {
       'all': 'All',
       'football': 'Football',
-      'cricket': 'Cricket'
+      'cricket': 'Cricket',
+      'basketball': 'Basketball'
     };
     return sportNames[sport] || sport;
   };
