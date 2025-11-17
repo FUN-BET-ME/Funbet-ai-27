@@ -85,7 +85,12 @@ const About = () => {
               <p className="text-gray-400 text-sm">
                 Our AI-powered IQ system predicts match outcomes with confidence scores. When matches finish, 
                 we automatically verify predictions and display results publicly: ✅ Correct or ❌ Incorrect. 
-                View all verified predictions with final scores on our Stats page. Currently 82.9% accurate.
+                View all verified predictions with final scores on our Stats page.{' '}
+                {!stats.loading && stats.total > 0 && (
+                  <span className="text-[#FFD700] font-semibold">
+                    Currently {stats.accuracy}% accurate across {stats.total} predictions.
+                  </span>
+                )}
               </p>
             </div>
             <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
