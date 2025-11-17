@@ -105,6 +105,18 @@
 user_problem_statement: "FINAL SCORE & PREDICTION VERIFICATION DISPLAY - For COMPLETED matches (status=FINAL), the UI MUST display: (1) Final score (e.g., '4-1') instead of 'vs', (2) What FunBet IQ predicted (Home/Draw/Away), (3) Whether the prediction was Correct ✅ or Incorrect ❌. User has reported this issue 3 TIMES."
 
 backend:
+  - task: "Final Score & Prediction Verification Data in API"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "🔄 IMPLEMENTED - Added prediction verification fields to /api/odds/all-cached endpoint (lines 401-414). Now includes prediction_correct, predicted_winner, actual_winner, and verified_at in the funbet_iq object for each match. This allows frontend to show if FunBet IQ prediction was correct or incorrect for completed matches. Ready for backend testing."
+
   - task: "Bookmaker merge logic with deduplication"
     implemented: true
     working: true
