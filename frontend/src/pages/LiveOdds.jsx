@@ -853,10 +853,17 @@ const LiveOdds = () => {
                     // Must have bookmakers
                     if (!match.bookmakers || match.bookmakers.length === 0) return false;
                     
-                    // If showing "LIVE Now", the data already comes from /api/odds/inplay
-                    // which only returns live matches - no need to filter again
+                    // If showing "LIVE Now", only show matches that are ACTUALLY live
                     if (timeFilter === 'inplay') {
-                      return true; // Show all matches (they're already live from the API)
+                      const commenceTime = new Date(match.commence_time);
+                      const now = new Date();
+                      const hoursSinceStart = (now - commenceTime) / (1000 * 60 * 60);
+                      
+                      // Match must have started (hoursSinceStart > 0) AND less than 3 hours ago AND have live score data
+                      const isActuallyLive = hoursSinceStart > 0 && hoursSinceStart < 3 && 
+                        (match.live_score?.is_live === true || (match.live_score?.home_score !== null && match.live_score?.home_score !== undefined));
+                      
+                      return isActuallyLive;
                     }
                     
                     // If showing "Upcoming", exclude completed matches and live matches
