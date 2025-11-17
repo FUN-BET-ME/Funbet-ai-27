@@ -39,35 +39,37 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
               <h3 className="text-white font-semibold mb-2">
-                🧠 FunBet IQ Predictions
+                🧠 FunBet IQ Predictions + Verification
               </h3>
               <p className="text-gray-400 text-sm">
-                Our proprietary IQ scoring system analyzes market odds (50%), team statistics (35%), 
-                recent momentum (15%), and FunBet.Me AI algorithm (10%) to identify favorites and 
-                provide confidence ratings (High/Medium/Low).
+                Our AI-powered IQ system predicts match outcomes with confidence scores. When matches finish, 
+                we automatically verify predictions and display results publicly: ✅ Correct or ❌ Incorrect. 
+                View all verified predictions with final scores on our Stats page. Currently 82.9% accurate.
               </p>
             </div>
             <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
-              <h3 className="text-white font-semibold mb-2">📊 Real-Time Odds Comparison</h3>
+              <h3 className="text-white font-semibold mb-2">📊 40+ Bookmaker Odds Comparison</h3>
               <p className="text-gray-400 text-sm">
-                Compare odds from multiple premium bookmakers across football, cricket, and other major sports. 
-                Updated every 5 minutes for accuracy.
+                Real-time odds from 40+ premium bookmakers across Football (Premier League, La Liga, Bundesliga), 
+                Basketball (NBA, NCAAB), and Cricket (IPL, T20, ODI, Test). Find the best value instantly.
               </p>
             </div>
             <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
-              <h3 className="text-white font-semibold mb-2">⚡ Live Match Tracking</h3>
+              <h3 className="text-white font-semibold mb-2">⚡ Live Scores + Final Results</h3>
               <p className="text-gray-400 text-sm">
-                Real-time scores, match status, and odds movements for in-play matches. 
-                Track your favorite teams and get instant notifications.
+                Live match tracking with real-time scores, match status (Q1, HT, 45', etc.), and automatic 
+                final score display. See completed matches with final scores like "130-128 FINAL" and our 
+                prediction verification result.
               </p>
             </div>
             <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
               <h3 className="text-white font-semibold mb-2">
-                📈 Performance Analytics
+                📈 Transparent Accuracy Tracking
               </h3>
               <p className="text-gray-400 text-sm">
-                Detailed prediction accuracy tracking, team statistics, historical performance, 
-                and comprehensive league standings.
+                Full transparency: Track our prediction accuracy in real-time. Every completed match shows 
+                predicted winner vs actual winner with final score. No hidden stats, no cherry-picking - 
+                see our complete track record on the Stats page.
               </p>
             </div>
           </div>
