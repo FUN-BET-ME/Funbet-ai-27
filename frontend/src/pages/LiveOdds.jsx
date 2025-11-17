@@ -1251,8 +1251,12 @@ const LiveOdds = () => {
                             {(() => {
                               const matchIQ = match.funbet_iq;
                               if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
-                                const isFootball = match.sport_key && match.sport_key.includes('soccer');
-                                const hasDrawIQ = isFootball && matchIQ.draw_iq;
+                                // ONLY football/soccer can have draws - NOT basketball or cricket test
+                                const isFootball = match.sport_key && (
+                                  match.sport_key.includes('soccer') || 
+                                  match.sport_key.includes('football')
+                                );
+                                const hasDrawIQ = isFootball && matchIQ.draw_iq && matchIQ.draw_iq > 0;
                                 
                                 let predictedOutcome = homeTeam;
                                 let maxIQ = matchIQ.home_iq;
