@@ -11,7 +11,7 @@ const About = () => {
             <TrendingUp className="w-8 h-8 text-[#FFD700]" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            About <span className="text-[#FFD700]">FunBet.Me</span>
+            About <span className="text-[#FFD700]">FunBet.AI</span>
           </h1>
         </div>
 
