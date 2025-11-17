@@ -796,58 +796,39 @@ class OddsWorker:
             # Link and save final scores
             match_linking = get_match_linking_service(self.db)
             updated = 0
-            completed_cricket = [m for m in cricket_data if m.get('completed')]
             
-            logger.info(f"🏁 Found {len(completed_football)} football + {len(completed_basketball)} basketball + {len(completed_cricket)} cricket completed matches")
-            
-            # Process football results
-            for match in completed_football:
-                    home_score = match.get('home_score')
-                    away_score = match.get('away_score')
+            # Process completed football matches
+            for score in completed_football:
+                try:
+                    # Use match linking to find the match in our database
+                    linked_match = await match_linking.link_live_score_to_match(score)
                     
-                    if home_score is not None and away_score is not None:
-                        # Find and update in database
-                        result = await self.db.odds_cache.update_many(
-                            {
-                                'home_team': match.get('home_team'),
-                                'away_team': match.get('away_team'),
-                                'live_score.completed': {'$ne': True}
-                            },
-                            {
-                                '$set': {
-                                    'live_score.home_score': home_score,
-                                    'live_score.away_score': away_score,
-                                    'live_score.completed': True,
-                                    'live_score.match_status': match.get('status', 'FT'),
-                                    'live_score.last_update': datetime.now(timezone.utc).isoformat()
-                                }
-                            }
+                    if linked_match:
+                        # Save final score permanently
+                        result = await self.db.odds_cache.update_one(
+                            {'id': linked_match['id']},
+                            {'$set': {
+                                'live_score': {
+                                    'home_score': score.get('home_score'),
+                                    'away_score': score.get('away_score'),
+                                    'match_status': 'FT',
+                                    'is_live': False,
+                                    'completed': True,
+                                    'last_update': score.get('last_update'),
+                                    'home_team_logo': score.get('home_team_logo'),
+                                    'away_team_logo': score.get('away_team_logo'),
+                                    'league_logo': score.get('league_logo'),
+                                    'api_source': 'api-football'
+                                },
+                                'final_score_saved': True,
+                                'updated_at': datetime.now(timezone.utc).isoformat()
+                            }}
                         )
-                        updated += result.modified_count
-            
-            # Process basketball results
-            for match in completed_basketball:
-                home_score = match.get('home_score')
-                away_score = match.get('away_score')
-                
-                if home_score is not None and away_score is not None:
-                    result = await self.db.odds_cache.update_many(
-                        {
-                            'home_team': match.get('home_team'),
-                            'away_team': match.get('away_team'),
-                            'live_score.completed': {'$ne': True}
-                        },
-                        {
-                            '$set': {
-                                'live_score.home_score': home_score,
-                                'live_score.away_score': away_score,
-                                'live_score.completed': True,
-                                'live_score.match_status': 'FT',
-                                'live_score.last_update': datetime.now(timezone.utc).isoformat()
-                            }
-                        }
-                    )
-                    updated += result.modified_count
+                        if result.modified_count > 0:
+                            updated += 1
+                except Exception as e:
+                    logger.warning(f"Error saving final score: {e}")
+                    continue
             
             # Process cricket results
             for match in completed_cricket:
