@@ -20,15 +20,15 @@ const About = () => {
           <h2 className="text-2xl font-bold mb-4 text-white">Our Mission</h2>
           <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
             <p className="text-gray-400 leading-relaxed mb-4">
-              FunBet.Me is an advanced sports intelligence platform that combines real-time odds comparison, 
-              live scores, and our proprietary FunBet IQ prediction system to deliver actionable insights for 
-              sports enthusiasts.
+              FunBet.AI is the world's first AI-powered sports intelligence platform that delivers verified predictions 
+              with transparent accuracy tracking. We combine real-time odds comparison across 40+ bookmakers, live scores 
+              from Football, Basketball, and Cricket, with our proprietary FunBet IQ prediction engine.
             </p>
             <p className="text-gray-400 leading-relaxed">
-              Our FunBet IQ algorithm analyzes market odds (50%), team statistics (35%), recent momentum (15%), 
-              and our proprietary AI boost (10%) to calculate confidence scores for every match. We present 
-              complex data in an intuitive format, giving you the analytical edge you need to understand 
-              betting markets better.
+              What sets us apart? We verify EVERY prediction we make. When matches complete, we automatically compare 
+              our FunBet IQ prediction against the actual result and publicly display whether we were Correct ✅ or 
+              Incorrect ❌. Currently achieving <strong className="text-[#FFD700]">82.9% accuracy</strong> across 
+              35 verified predictions. No hidden results, no cherry-picking - complete transparency.
             </p>
           </div>
         </div>
