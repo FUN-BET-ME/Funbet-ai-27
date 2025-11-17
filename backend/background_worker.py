@@ -609,14 +609,21 @@ class OddsWorker:
             basketball_scores = await fetch_api_basketball_live_scores()
             cricket_scores = await cricket_api_service.get_live_cricket_scores()
             
-            # ONLY get LIVE games (not completed)
+            # Get LIVE games (not completed) AND newly COMPLETED games
             live_football = [s for s in football_scores if s.get('is_live') and not s.get('completed')]
             live_basketball = [s for s in basketball_scores if s.get('is_live') and not s.get('completed')]
             live_cricket = [s for s in cricket_scores if s.get('is_live') and not s.get('completed')]
             
-            all_live_scores = live_football + live_basketball + live_cricket
+            # Get COMPLETED games to save final scores
+            completed_football = [s for s in football_scores if s.get('completed')]
+            completed_basketball = [s for s in basketball_scores if s.get('completed')]
+            completed_cricket = [s for s in cricket_scores if s.get('completed')]
             
-            logger.info(f"⚡ LIVE ONLY: {len(live_football)} football + {len(live_basketball)} basketball + {len(live_cricket)} cricket = {len(all_live_scores)} actively playing")
+            all_live_scores = live_football + live_basketball + live_cricket
+            all_completed_scores = completed_football + completed_basketball + completed_cricket
+            
+            logger.info(f"⚡ LIVE: {len(live_football)} football + {len(live_basketball)} basketball + {len(live_cricket)} cricket = {len(all_live_scores)} playing")
+            logger.info(f"🏁 COMPLETED: {len(completed_football)} football + {len(completed_basketball)} basketball + {len(completed_cricket)} cricket = {len(all_completed_scores)} finished")
             
             # Update database with live scores using match linking
             updated_count = 0
