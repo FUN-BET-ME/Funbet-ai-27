@@ -1419,10 +1419,25 @@ async def get_funbet_iq_track_record(
                     'match_status': pred.get('match_status', 'completed')
                 }
                 
-                # Add match scores if available
+                # Add match scores if available (check both scores array and live_score)
                 if match_data:
                     entry['commence_time'] = match_data.get('commence_time')
-                    entry['scores'] = match_data.get('scores', [])
+                    
+                    # Get scores from either scores array or live_score object
+                    scores = match_data.get('scores', [])
+                    if not scores and match_data.get('live_score'):
+                        live_score = match_data.get('live_score')
+                        home_score = live_score.get('home_score')
+                        away_score = live_score.get('away_score')
+                        if home_score is not None and away_score is not None:
+                            scores = [
+                                {'name': pred.get('home_team'), 'score': str(home_score)},
+                                {'name': pred.get('away_team'), 'score': str(away_score)}
+                            ]
+                    
+                    entry['scores'] = scores
+                    entry['home_score'] = scores[0].get('score') if len(scores) > 0 else None
+                    entry['away_score'] = scores[1].get('score') if len(scores) > 1 else None
                     
                     # Add bookmaker count for context
                     bookmakers = match_data.get('bookmakers', [])
