@@ -1,7 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, TrendingUp } from 'lucide-react';
+import axios from 'axios';
 
 const About = () => {
+  const [stats, setStats] = useState({
+    total: 0,
+    correct: 0,
+    accuracy: 0,
+    loading: true
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+        const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/track-record?limit=1`);
+        
+        const total = response.data.stats?.total_verified || 0;
+        const correct = response.data.stats?.correct || 0;
+        const accuracy = total > 0 ? ((correct / total) * 100).toFixed(1) : 0;
+        
+        setStats({
+          total,
+          correct,
+          accuracy,
+          loading: false
+        });
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+        setStats({ total: 0, correct: 0, accuracy: 0, loading: false });
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <div className="py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
