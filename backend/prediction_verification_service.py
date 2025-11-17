@@ -128,25 +128,18 @@ class PredictionVerificationService:
             now = datetime.now(timezone.utc)
             hours_since_start = (now - commence_dt).total_seconds() / 3600
             
-            # Check if match should be completed based on sport
-            sport_key = prediction.get('sport_key', '')
+            # Check if match is marked as completed by API
+            is_completed = (
+                match_data.get('completed') == True or 
+                match_data.get('live_score', {}).get('completed') == True
+            )
             
-            if 'cricket' in sport_key.lower():
-                if 'test' in sport_key.lower():
-                    # Test matches: 5 days (120 hours)
-                    if hours_since_start < 120:
-                        return 'pending'
-                else:
-                    # ODI/T20: 8 hours
-                    if hours_since_start < 8:
-                        return 'pending'
-            else:
-                # Football: 3 hours
-                if hours_since_start < 3:
-                    return 'pending'
+            if not is_completed:
+                # Match not completed yet - wait for API to mark it
+                logger.debug(f"Match {match_id} not marked as completed yet")
+                return 'pending'
             
-            # Match should be completed by now
-            # Try to get actual result from match_data
+            # Match is completed - try to get actual result from match_data
             actual_winner = self._determine_actual_winner(match_data)
             
             if actual_winner is None:
