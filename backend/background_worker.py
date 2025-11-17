@@ -1012,7 +1012,7 @@ class OddsWorker:
         asyncio.create_task(self.enrich_matches_with_logos())  # Enrich all matches with logos immediately
         
         self.scheduler.start()
-        logger.info("✅ Background worker started - 9 jobs scheduled")
+        logger.info("✅ Background worker started - 10 jobs scheduled")
         logger.info("🎯 Expected usage: ~290 API calls/day (odds) + ~17,280 calls/day (live scores every 10s) = ~17,570 total")
         logger.info("📊 Historical data: ALL matches preserved permanently (no cleanup)")
         logger.info("🎯 Prediction tracking: Verifying completed matches every 15 minutes")
