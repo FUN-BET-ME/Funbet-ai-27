@@ -1209,28 +1209,27 @@ const LiveOdds = () => {
                           })()}
                         </div>
                         
-                        {/* Team names with logos - MOBILE: Vertical 3-row layout */}
-                        <div className="mt-3">
-                          {/* MOBILE ONLY: Vertical 3-row layout */}
-                          <div className="md:hidden space-y-2">
-                            {/* Row 1: Home Team */}
-                            <div className="flex items-center gap-2">
-                              <TeamLogo 
-                                logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
-                                teamName={homeTeam}
-                                sport={match.sport_key}
-                                size="sm"
-                              />
-                              <span className="text-white font-semibold text-base">{homeTeam}</span>
-                            </div>
-                            
-                            {/* Row 2: VS or Score */}
-                            <div className="flex items-center justify-center py-1">
+                        {/* Team names with logos */}
+                        <div className="flex items-center gap-2 sm:gap-3 mt-3">
+                          <div className="flex-shrink-0">
+                            <TeamLogo 
+                              logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
+                              teamName={homeTeam}
+                              sport={match.sport_key}
+                              size="md"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            {/* First Line: Team Names with VS and Live Score */}
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-white font-semibold truncate text-sm sm:text-base flex-1">{homeTeam}</span>
+                              
+                              {/* Live/Final Score in the middle */}
                               {match.live_score && (match.live_score.home_score || match.live_score.away_score) ? (
-                                <div className="flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
-                                  <span className="text-white font-bold text-lg">{match.live_score.home_score || '0'}</span>
+                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
+                                  <span className="text-white font-bold text-base">{match.live_score.home_score || '0'}</span>
                                   <span className="text-gray-500">-</span>
-                                  <span className="text-white font-bold text-lg">{match.live_score.away_score || '0'}</span>
+                                  <span className="text-white font-bold text-base">{match.live_score.away_score || '0'}</span>
                                   {match.live_score.match_status && (
                                     <span className={`ml-1 text-xs font-bold ${
                                       match.live_score.is_live ? 'text-red-400' : 
@@ -1242,118 +1241,11 @@ const LiveOdds = () => {
                                   )}
                                 </div>
                               ) : (
-                                <span className="text-gray-400 text-sm font-medium px-3 py-1 bg-white/5 rounded">vs</span>
+                                <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
                               )}
+                              
+                              <span className="text-white font-semibold truncate text-right text-sm sm:text-base flex-1">{awayTeam}</span>
                             </div>
-                            
-                            {/* Row 3: Away Team */}
-                            <div className="flex items-center gap-2">
-                              <TeamLogo 
-                                logoUrl={match.live_score?.away_team_logo || match.away_logo || teamLogos[awayTeam]} 
-                                teamName={awayTeam}
-                                sport={match.sport_key}
-                                size="sm"
-                              />
-                              <span className="text-white font-semibold text-base">{awayTeam}</span>
-                            </div>
-                            
-                            {/* Row 4 & 5: IQ Scores and Prediction - MOBILE ONLY */}
-                            {(() => {
-                              const matchIQ = match.funbet_iq;
-                              if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
-                                const isFootball = match.sport_key && match.sport_key.includes('soccer');
-                                const hasDrawIQ = isFootball && matchIQ.draw_iq;
-                                
-                                let predictedOutcome = homeTeam;
-                                let maxIQ = matchIQ.home_iq;
-                                
-                                if (hasDrawIQ && matchIQ.draw_iq > maxIQ) {
-                                  predictedOutcome = 'Draw';
-                                  maxIQ = matchIQ.draw_iq;
-                                }
-                                if (matchIQ.away_iq > maxIQ) {
-                                  predictedOutcome = awayTeam;
-                                }
-                                
-                                return (
-                                  <div className="mt-3 space-y-2">
-                                    {/* Row 4: IQ Scores with better spacing */}
-                                    <div className="flex items-center justify-between px-3 py-2 bg-purple-900/20 rounded-lg border border-purple-500/20">
-                                      <div className="flex flex-col items-center flex-1">
-                                        <span className="text-xs text-gray-400 mb-1">Home</span>
-                                        <span className="text-purple-400 font-bold text-lg">{matchIQ.home_iq}</span>
-                                      </div>
-                                      
-                                      {hasDrawIQ && (
-                                        <div className="flex flex-col items-center flex-1">
-                                          <span className="text-xs text-gray-400 mb-1">Draw</span>
-                                          <span className="text-gray-300 font-bold text-lg">{matchIQ.draw_iq}</span>
-                                        </div>
-                                      )}
-                                      
-                                      <div className="flex flex-col items-center flex-1">
-                                        <span className="text-xs text-gray-400 mb-1">Away</span>
-                                        <span className="text-purple-400 font-bold text-lg">{matchIQ.away_iq}</span>
-                                      </div>
-                                    </div>
-                                    
-                                    {/* Row 5: Prediction Verdict */}
-                                    <div className="flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30">
-                                      <Brain className="w-4 h-4 text-[#FFD700]" />
-                                      <span className="text-white font-medium text-sm">Predicted:</span>
-                                      <span className="text-[#FFD700] font-bold text-base">{predictedOutcome}</span>
-                                      <span className={`text-xs font-medium px-2 py-0.5 rounded ${
-                                        matchIQ.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
-                                        matchIQ.confidence === 'Medium' ? 'bg-yellow-500/30 text-yellow-300' :
-                                        'bg-gray-500/30 text-gray-300'
-                                      }`}>
-                                        {matchIQ.confidence}
-                                      </span>
-                                    </div>
-                                  </div>
-                                );
-                              }
-                              return null;
-                            })()}
-                          </div>
-
-                          {/* DESKTOP: Original horizontal layout */}
-                          <div className="hidden md:flex items-center gap-2 sm:gap-3">
-                            <div className="flex-shrink-0">
-                              <TeamLogo 
-                                logoUrl={match.live_score?.home_team_logo || match.home_logo || teamLogos[homeTeam]} 
-                                teamName={homeTeam}
-                                sport={match.sport_key}
-                                size="md"
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              {/* First Line: Team Names with VS and Live Score */}
-                              <div className="flex items-center justify-between gap-2">
-                                <span className="text-white font-semibold truncate text-sm sm:text-base flex-1">{homeTeam}</span>
-                                
-                                {/* Live/Final Score in the middle */}
-                                {match.live_score && (match.live_score.home_score || match.live_score.away_score) ? (
-                                  <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
-                                    <span className="text-white font-bold text-base">{match.live_score.home_score || '0'}</span>
-                                    <span className="text-gray-500">-</span>
-                                    <span className="text-white font-bold text-base">{match.live_score.away_score || '0'}</span>
-                                    {match.live_score.match_status && (
-                                      <span className={`ml-1 text-xs font-bold ${
-                                        match.live_score.is_live ? 'text-red-400' : 
-                                        match.live_score.completed ? 'text-green-400' : 
-                                        'text-gray-400'
-                                      }`}>
-                                        {match.live_score.match_status}
-                                      </span>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
-                                )}
-                                
-                                <span className="text-white font-semibold truncate text-right text-sm sm:text-base flex-1">{awayTeam}</span>
-                              </div>
                             
                             {/* Second Line: FunBet IQ Scores and Prediction */}
                             {(() => {
@@ -1697,7 +1589,7 @@ const LiveOdds = () => {
                   })
                 })()}
               </div>
-            )
+            )}
           </div>
         )}
 
