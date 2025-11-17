@@ -1282,6 +1282,11 @@ const LiveOdds = () => {
                                   predictedOutcome = awayTeam;
                                 }
                                 
+                                // Check if match is completed and has verification result
+                                const isCompleted = match.completed || match.live_score?.completed || 
+                                  (match.scores && Array.isArray(match.scores) && match.scores.length === 2);
+                                const hasVerification = matchIQ.prediction_correct !== null && matchIQ.prediction_correct !== undefined;
+                                
                                 return (
                                   <div className="mt-2 space-y-1">
                                     {/* Row 1: Home IQ | Draw IQ (center) | Away IQ - ALL SAME SIZE */}
@@ -1301,20 +1306,36 @@ const LiveOdds = () => {
                                       <span className="text-purple-400 font-bold text-xs sm:text-sm text-right flex-1">{matchIQ.away_iq}</span>
                                     </div>
                                     
-                                    {/* Row 2: Prediction Verdict */}
-                                    <div className="flex items-center justify-center gap-1 px-2 py-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30">
-                                      <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-[#FFD700]" />
-                                      <span className="text-[#FFD700] font-bold text-xs truncate max-w-[120px]" title={`${predictedOutcome} (${matchIQ.confidence})`}>
-                                        {predictedOutcome}
-                                      </span>
-                                      <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
-                                        matchIQ.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
-                                        matchIQ.confidence === 'Medium' ? 'bg-yellow-500/30 text-yellow-300' :
-                                        'bg-gray-500/30 text-gray-300'
+                                    {/* Row 2: Prediction Verdict OR Verification Result for Completed Matches */}
+                                    {isCompleted && hasVerification ? (
+                                      <div className={`flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg border ${
+                                        matchIQ.prediction_correct 
+                                          ? 'bg-gradient-to-r from-green-600/30 to-emerald-600/30 border-green-500/30' 
+                                          : 'bg-gradient-to-r from-red-600/30 to-rose-600/30 border-red-500/30'
                                       }`}>
-                                        {matchIQ.confidence}
-                                      </span>
-                                    </div>
+                                        <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-[#FFD700]" />
+                                        <span className="text-white text-xs font-medium">
+                                          Predicted: <span className="font-bold text-[#FFD700]">{matchIQ.predicted_winner === 'home' ? homeTeam : matchIQ.predicted_winner === 'away' ? awayTeam : 'Draw'}</span>
+                                        </span>
+                                        <span className={`text-sm font-bold ${matchIQ.prediction_correct ? 'text-green-300' : 'text-red-300'}`}>
+                                          {matchIQ.prediction_correct ? '✅ Correct' : '❌ Incorrect'}
+                                        </span>
+                                      </div>
+                                    ) : (
+                                      <div className="flex items-center justify-center gap-1 px-2 py-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30">
+                                        <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-[#FFD700]" />
+                                        <span className="text-[#FFD700] font-bold text-xs truncate max-w-[120px]" title={`${predictedOutcome} (${matchIQ.confidence})`}>
+                                          {predictedOutcome}
+                                        </span>
+                                        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
+                                          matchIQ.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
+                                          matchIQ.confidence === 'Medium' ? 'bg-yellow-500/30 text-yellow-300' :
+                                          'bg-gray-500/30 text-gray-300'
+                                        }`}>
+                                          {matchIQ.confidence}
+                                        </span>
+                                      </div>
+                                    )}
                                   </div>
                                 );
                               }
