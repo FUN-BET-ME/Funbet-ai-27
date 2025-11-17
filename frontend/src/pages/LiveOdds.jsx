@@ -451,9 +451,9 @@ const LiveOdds = () => {
           console.log('🔎 Filtered to basketball:', filteredData.length, 'matches');
         }
         
-        // Only show COMPLETED matches
+        // Only show COMPLETED matches (check both root level and live_score)
         filteredData = filteredData.filter(match => 
-          match.live_score && match.live_score.completed === true
+          match.completed === true || match.live_score?.completed === true
         );
         console.log('🔎 Filtered to completed only:', filteredData.length, 'matches');
         
