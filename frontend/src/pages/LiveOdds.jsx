@@ -1158,18 +1158,10 @@ const LiveOdds = () => {
                                 matchStatus = matchScore.match_status || '';
                               }
                               
-                              // ALWAYS calculate and show elapsed time for live matches (not completed)
-                              // Different time limits for different sports
-                              let maxLiveHours = 3; // Default for football
-                              if (match.sport_key && match.sport_key.includes('cricket')) {
-                                if (match.sport_key.includes('test')) {
-                                  maxLiveHours = 120; // Test matches: 5 days
-                                } else {
-                                  maxLiveHours = 8; // ODI/T20: 6-8 hours
-                                }
-                              }
+                              // Show elapsed time ONLY for matches that API says are live (not completed)
+                              const isLive = match.live_score?.is_live === true;
                               
-                              if (!isCompleted && hoursSinceStart > 0 && hoursSinceStart < maxLiveHours) {
+                              if (!isCompleted && isLive && hoursSinceStart > 0) {
                                 // Format elapsed time based on sport and typical match phases
                                 if (match.sport_key && match.sport_key.includes('cricket')) {
                                   // Cricket time formatting
