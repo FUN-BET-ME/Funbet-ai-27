@@ -780,24 +780,22 @@ class OddsWorker:
     async def fetch_final_scores_job(self):
         """
         Fetch and save FINAL SCORES ONCE for completed matches
-        Runs every 2 hours to get results
+        Runs every 5 minutes to get results from last 2 days
         """
         try:
             logger.info("🏁 Fetching final scores for completed matches...")
             
-            from api_football_service import fetch_api_football_live_scores, fetch_api_basketball_live_scores
-            from cricket_api_service import cricket_api_service
+            from api_football_service import fetch_api_football_completed_matches
+            from match_linking_service import get_match_linking_service
             
-            # Get all scores (includes completed matches)
-            football_data = await fetch_api_football_live_scores()
-            basketball_data = await fetch_api_basketball_live_scores()
-            cricket_data = await cricket_api_service.get_live_cricket_scores()
+            # Get completed matches from last 2 days
+            completed_football = await fetch_api_football_completed_matches(days_back=2)
             
+            logger.info(f"🏁 Found {len(completed_football)} completed football matches from last 2 days")
+            
+            # Link and save final scores
+            match_linking = get_match_linking_service(self.db)
             updated = 0
-            
-            # ONLY process COMPLETED matches (save final score ONCE)
-            completed_football = [m for m in football_data if m.get('completed')]
-            completed_basketball = [m for m in basketball_data if m.get('completed')]
             completed_cricket = [m for m in cricket_data if m.get('completed')]
             
             logger.info(f"🏁 Found {len(completed_football)} football + {len(completed_basketball)} basketball + {len(completed_cricket)} cricket completed matches")
