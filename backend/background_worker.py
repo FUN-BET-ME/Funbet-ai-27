@@ -938,6 +938,15 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # Job 10: Cleanup old stuck matches every hour
+        self.scheduler.add_job(
+            self.cleanup_stuck_matches,
+            trigger=IntervalTrigger(hours=1),
+            id='cleanup_stuck_matches',
+            name='Cleanup old stuck matches every hour',
+            replace_existing=True
+        )
+        
         # Job 6: Fetch team logos every 6 hours
         self.scheduler.add_job(
             self.fetch_team_logos_job,
