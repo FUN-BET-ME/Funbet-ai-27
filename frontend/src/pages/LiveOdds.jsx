@@ -213,14 +213,14 @@ const LiveOdds = () => {
     }
   };
 
-  // Fetch historical odds for Recent Results
+  // Fetch historical odds for Recent Results (completed matches with IQ scores)
   const fetchHistoricalOdds = async () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/odds/historical/recent`, {
+      const response = await axios.get(`${BACKEND_URL}/api/odds/all-cached?time_filter=recent&limit=100&include_scores=true`, {
         timeout: 30000 // 30 second timeout
       });
-      return response.data || [];
+      return response.data?.matches || [];
     } catch (error) {
       console.error('Error fetching historical odds:', error);
       return [];
