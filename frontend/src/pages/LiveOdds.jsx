@@ -1297,6 +1297,18 @@ const LiveOdds = () => {
                                   (match.scores && Array.isArray(match.scores) && match.scores.length === 2);
                                 const hasVerification = matchIQ.prediction_correct !== null && matchIQ.prediction_correct !== undefined;
                                 
+                                // DEBUG: Log verification data for Santos match
+                                if (match.home_team === 'Santos' || match.away_team === 'Santos') {
+                                  console.log('🔍 SANTOS MATCH DEBUG:', {
+                                    teams: `${match.home_team} vs ${match.away_team}`,
+                                    isCompleted,
+                                    hasVerification,
+                                    prediction_correct: matchIQ.prediction_correct,
+                                    predicted_winner: matchIQ.predicted_winner,
+                                    actual_winner: matchIQ.actual_winner
+                                  });
+                                }
+                                
                                 return (
                                   <div className="mt-2 space-y-1">
                                     {/* Row 1: Home IQ | Draw IQ (center) | Away IQ - ALL SAME SIZE */}
