@@ -1273,7 +1273,7 @@ const LiveOdds = () => {
                                     
                                     {/* Draw IQ (for football only) */}
                                     {hasDrawIQ && (
-                                      <span className="text-gray-300 font-bold text-sm sm:text-base" title="Draw IQ">
+                                      <span className="text-yellow-400 font-bold text-base sm:text-lg mx-2" title="Draw IQ">
                                         {matchIQ.draw_iq}
                                       </span>
                                     )}
