@@ -1339,7 +1339,7 @@ async def get_funbet_iq_track_record(
         from prediction_verification_service import get_prediction_service
         
         db = db_instance.db
-        iq_scores_collection = db.funbet_iq_scores
+        iq_predictions_collection = db.funbet_iq_predictions  # Use correct collection
         odds_collection = db.odds_cache
         
         # Build query for verified predictions
