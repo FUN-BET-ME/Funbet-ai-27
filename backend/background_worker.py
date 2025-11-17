@@ -699,6 +699,41 @@ class OddsWorker:
             
             logger.info(f"⚡ Updated {updated_count} matches with live scores ({linked_count} via match linking, 3 API calls used)")
             
+            # Process COMPLETED matches - save final scores permanently
+            completed_saved = 0
+            for score in all_completed_scores:
+                try:
+                    linked_match = await match_linking.link_live_score_to_match(score)
+                    
+                    if linked_match:
+                        # Save final score - mark as completed and won't update again
+                        await self.db.odds_cache.update_one(
+                            {'id': linked_match['id']},
+                            {'$set': {
+                                'live_score': {
+                                    'home_score': score.get('home_score'),
+                                    'away_score': score.get('away_score'),
+                                    'match_status': 'FT',
+                                    'is_live': False,
+                                    'completed': True,
+                                    'last_update': score.get('last_update'),
+                                    'home_team_logo': score.get('home_team_logo'),
+                                    'away_team_logo': score.get('away_team_logo'),
+                                    'league_logo': score.get('league_logo'),
+                                    'api_source': score.get('api_source', 'unknown')
+                                },
+                                'final_score_saved': True,
+                                'updated_at': datetime.now(timezone.utc).isoformat()
+                            }}
+                        )
+                        completed_saved += 1
+                except Exception as e:
+                    logger.warning(f"Error saving completed match: {e}")
+                    continue
+            
+            if completed_saved > 0:
+                logger.info(f"🏁 Saved {completed_saved} completed matches with final scores")
+            
         except Exception as e:
             logger.error(f"Error in fast live score update: {e}")
     
