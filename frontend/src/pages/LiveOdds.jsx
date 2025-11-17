@@ -1199,7 +1199,8 @@ const LiveOdds = () => {
                                       {homeScore} - {awayScore}
                                     </span>
                                   ) : null}
-                                  {matchStatus && (
+                                  {/* Only show match status for LIVE matches, not completed ones */}
+                                  {matchStatus && !isCompleted && (
                                     <span className="text-yellow-400 text-xs font-medium bg-yellow-400/10 px-2 py-1 rounded border border-yellow-400/30">
                                       {matchStatus}
                                     </span>
