@@ -1246,11 +1246,22 @@ const LiveOdds = () => {
                                 /* Show final score from match.live_score.scores or match.scores for completed matches */
                                 (() => {
                                   const scoresArray = match.live_score?.scores || match.scores;
+                                  // Find scores with flexible team name matching (handles "Estudiantes" vs "Estudiantes de La Plata")
+                                  const homeScore = scoresArray.find(s => 
+                                    s.name === homeTeam || 
+                                    s.name.includes(homeTeam) || 
+                                    homeTeam.includes(s.name)
+                                  )?.score || scoresArray[0]?.score || '0';
+                                  const awayScore = scoresArray.find(s => 
+                                    s.name === awayTeam || 
+                                    s.name.includes(awayTeam) || 
+                                    awayTeam.includes(s.name)
+                                  )?.score || scoresArray[1]?.score || '0';
                                   return (
                                     <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded border border-green-500/20 flex-shrink-0">
-                                      <span className="text-white font-bold text-base">{scoresArray.find(s => s.name === homeTeam)?.score || '0'}</span>
+                                      <span className="text-white font-bold text-base">{homeScore}</span>
                                       <span className="text-gray-500">-</span>
-                                      <span className="text-white font-bold text-base">{scoresArray.find(s => s.name === awayTeam)?.score || '0'}</span>
+                                      <span className="text-white font-bold text-base">{awayScore}</span>
                                       <span className="ml-1 text-xs font-bold text-green-400">FINAL</span>
                                     </div>
                                   );
