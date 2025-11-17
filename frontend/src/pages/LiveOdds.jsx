@@ -1276,21 +1276,21 @@ const LiveOdds = () => {
                                 
                                 return (
                                   <div className="mt-2 space-y-1">
-                                    {/* Row 1: Home IQ | Draw IQ (center) | Away IQ */}
-                                    <div className="flex items-center justify-between gap-2 text-xs sm:text-sm">
-                                      <span className="text-purple-400 font-bold flex-1">{matchIQ.home_iq}</span>
+                                    {/* Row 1: Home IQ | Draw IQ (center) | Away IQ - ALL SAME SIZE */}
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className="text-purple-400 font-bold text-xs sm:text-sm flex-1">{matchIQ.home_iq}</span>
                                       
-                                      {/* Draw IQ in center (ONLY for football - same purple color) */}
+                                      {/* Draw IQ in center (ONLY for football - same purple color and size) */}
                                       {hasDrawIQ ? (
                                         <div className="flex flex-col items-center flex-shrink-0">
                                           <span className="text-[10px] text-gray-500 mb-0.5">Draw</span>
-                                          <span className="text-purple-400 font-bold text-sm">{matchIQ.draw_iq}</span>
+                                          <span className="text-purple-400 font-bold text-xs sm:text-sm">{matchIQ.draw_iq}</span>
                                         </div>
                                       ) : (
                                         <span className="text-gray-600 text-xs flex-shrink-0 px-2">-</span>
                                       )}
                                       
-                                      <span className="text-purple-400 font-bold text-right flex-1">{matchIQ.away_iq}</span>
+                                      <span className="text-purple-400 font-bold text-xs sm:text-sm text-right flex-1">{matchIQ.away_iq}</span>
                                     </div>
                                     
                                     {/* Row 2: Prediction Verdict */}
