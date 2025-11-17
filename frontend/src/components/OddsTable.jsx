@@ -1203,10 +1203,10 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                 return (
                                   <td
                                     key={name}
-                                    className="py-1.5 px-0.5 sm:py-3 sm:px-4 text-center w-[25%]"
+                                    className="py-1.5 px-0.5 sm:py-3 sm:px-4 text-center"
                                   >
                                     <span
-                                      className={`inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-bold text-[10px] sm:text-base ${
+                                      className={`inline-block px-1 py-0.5 sm:px-3 sm:py-1.5 rounded font-bold text-[9px] sm:text-base ${
                                         isBest
                                           ? 'bg-amber-400/80 text-[#2E004F] shadow-sm'
                                           : 'text-white'
