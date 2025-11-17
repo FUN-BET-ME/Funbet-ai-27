@@ -43,12 +43,13 @@ const FunBetIQ = () => {
     setFilter(sport);
   }, [location.search]);
 
-  const sports = ['all', 'football', 'cricket'];
+  const sports = ['all', 'football', 'cricket', 'basketball'];
 
   const sportEmojis = {
     all: '🏆',
     football: '⚽',
-    cricket: '🏏'
+    cricket: '🏏',
+    basketball: '🏀'
   };
 
   const handleRefresh = () => {
