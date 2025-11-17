@@ -892,12 +892,12 @@ class OddsWorker:
             replace_existing=True
         )
         
-        # Job 5: Verify predictions every hour (check completed matches)
+        # Job 5: Verify predictions every 15 minutes (check completed matches)
         self.scheduler.add_job(
             self.verify_predictions_job,
-            trigger=IntervalTrigger(hours=1),
+            trigger=IntervalTrigger(minutes=15),
             id='verify_predictions',
-            name='Verify FunBet IQ predictions every hour',
+            name='Verify FunBet IQ predictions every 15 minutes',
             replace_existing=True
         )
         
