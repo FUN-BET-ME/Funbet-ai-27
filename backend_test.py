@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 FunBet.ai Backend API Testing Suite
-Tests critical APIs for the review request
+CRITICAL TESTING: Final Score & Prediction Verification API
+Tests for completed matches showing final scores and prediction verification
 """
 
 import requests
