@@ -882,22 +882,11 @@ const LiveOdds = () => {
                       return !hasStarted && !isCompleted && !hasLiveScoreData;
                     }
                     
-                    // If showing "Recent Results", only show COMPLETED matches from last 48 hours
+                    // If showing "Recent Results", the data is already filtered by backend
+                    // Backend returns only completed matches from last 48 hours with time_filter=recent
                     if (timeFilter === 'recent-results') {
-                      // Check if match is marked as completed (either at root or in live_score)
-                      const isCompleted = match.completed === true || match.live_score?.completed === true;
-                      
-                      if (!isCompleted) {
-                        return false;
-                      }
-                      
-                      // Check if match finished within last 48 hours
-                      const commenceTime = new Date(match.commence_time);
-                      const now = new Date();
-                      const hoursSinceStart = (now - commenceTime) / (1000 * 60 * 60);
-                      
-                      // Show matches completed in last 48 hours (2 days)
-                      return hoursSinceStart > 0 && hoursSinceStart < 51;
+                      // Just show all matches - backend already filtered them
+                      return true;
                     }
                     
                     return true;
