@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "TECHNICAL CLEANUP & WORLD CUP QUALIFIERS - Three tasks: (1) Fix WebSocket connection error in browser console (ws://localhost:3000/ws failed). (2) Fix Predictions API 404 error (/api/ai/predictions not found). (3) Add live Football World Cup Qualifiers to data fetching for ongoing qualification matches."
+user_problem_statement: "FINAL SCORE & PREDICTION VERIFICATION DISPLAY - For COMPLETED matches (status=FINAL), the UI MUST display: (1) Final score (e.g., '4-1') instead of 'vs', (2) What FunBet IQ predicted (Home/Draw/Away), (3) Whether the prediction was Correct ✅ or Incorrect ❌. User has reported this issue 3 TIMES."
 
 backend:
   - task: "Bookmaker merge logic with deduplication"
