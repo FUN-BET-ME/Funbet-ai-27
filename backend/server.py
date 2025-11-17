@@ -1363,8 +1363,8 @@ async def get_funbet_iq_track_record(
         else:  # recent_first (default)
             sort_order = [('verified_at', -1)]
         
-        # Get verified predictions
-        verified_predictions = await iq_scores_collection.find(query).sort(sort_order).limit(limit).to_list(length=limit)
+        # Get verified predictions from correct collection
+        verified_predictions = await iq_predictions_collection.find(query).sort(sort_order).limit(limit).to_list(length=limit)
         
         # Enrich with match details and scores
         track_record = []
