@@ -237,6 +237,71 @@ const MatchDetail = () => {
           </div>
         </div>
 
+        {/* FunBet IQ Predictions */}
+        {match.funbet_iq && match.funbet_iq.home_iq && match.funbet_iq.away_iq && (
+          <div className="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 border border-purple-500/30 rounded-xl p-6">
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <Brain className="w-6 h-6 text-[#FFD700]" />
+              FunBet IQ Prediction
+            </h3>
+            
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              {/* Home IQ */}
+              <div className="text-center bg-white/5 rounded-lg p-4">
+                <div className="text-sm text-gray-400 mb-2">Home</div>
+                <div className="text-3xl font-bold text-purple-400">{match.funbet_iq.home_iq}</div>
+                <div className="text-xs text-gray-500 mt-1">{homeTeam}</div>
+              </div>
+              
+              {/* Draw IQ (if applicable) */}
+              {match.sport_key?.includes('soccer') && match.funbet_iq.draw_iq && (
+                <div className="text-center bg-white/5 rounded-lg p-4">
+                  <div className="text-sm text-gray-400 mb-2">Draw</div>
+                  <div className="text-3xl font-bold text-gray-300">{match.funbet_iq.draw_iq}</div>
+                  <div className="text-xs text-gray-500 mt-1">Tie</div>
+                </div>
+              )}
+              
+              {/* Away IQ */}
+              <div className="text-center bg-white/5 rounded-lg p-4">
+                <div className="text-sm text-gray-400 mb-2">Away</div>
+                <div className="text-3xl font-bold text-purple-400">{match.funbet_iq.away_iq}</div>
+                <div className="text-xs text-gray-500 mt-1">{awayTeam}</div>
+              </div>
+            </div>
+            
+            {/* Prediction Verdict */}
+            <div className="bg-gradient-to-r from-purple-600/40 to-indigo-600/40 rounded-lg p-4 text-center">
+              <div className="text-sm text-gray-300 mb-1">Predicted Winner</div>
+              <div className="text-2xl font-bold text-[#FFD700] mb-2">
+                {(() => {
+                  const isFootball = match.sport_key?.includes('soccer');
+                  const hasDrawIQ = isFootball && match.funbet_iq.draw_iq;
+                  let predicted = homeTeam;
+                  let maxIQ = match.funbet_iq.home_iq;
+                  
+                  if (hasDrawIQ && match.funbet_iq.draw_iq > maxIQ) {
+                    predicted = 'Draw';
+                    maxIQ = match.funbet_iq.draw_iq;
+                  }
+                  if (match.funbet_iq.away_iq > maxIQ) {
+                    predicted = awayTeam;
+                  }
+                  
+                  return predicted;
+                })()}
+              </div>
+              <div className={`inline-block px-4 py-1 rounded-full text-sm font-medium ${
+                match.funbet_iq.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
+                match.funbet_iq.confidence === 'Medium' ? 'bg-yellow-500/30 text-yellow-300' :
+                'bg-gray-500/30 text-gray-300'
+              }`}>
+                {match.funbet_iq.confidence} Confidence
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Odds Comparison */}
         <div className="bg-white/5 border border-[#2E004F]/30 rounded-xl overflow-hidden">
           <div className="p-4 bg-[#2E004F]/20 border-b border-[#2E004F]/30">
