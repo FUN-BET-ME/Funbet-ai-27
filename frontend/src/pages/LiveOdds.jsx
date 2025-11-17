@@ -1115,11 +1115,11 @@ const LiveOdds = () => {
                             const elapsedMs = now - commenceTime;
                             const elapsedMinutes = Math.floor(elapsedMs / (1000 * 60));
                             
-                            // Determine if match is completed
-                            const isCompleted = match.completed || hoursSinceStart > 2;
+                            // Determine if match is completed based on API status ONLY
+                            const isCompleted = match.completed === true || match.live_score?.completed === true;
                             
-                            // Show status for matches within last 35 hours (for recent results view)
-                            if (hoursSinceStart < 35) {
+                            // Show status for matches within last 48 hours (for recent results view)
+                            if (hoursSinceStart < 48) {
                               let homeScore = null;
                               let awayScore = null;
                               let matchStatus = '';
