@@ -1242,14 +1242,19 @@ const LiveOdds = () => {
                                     </span>
                                   )}
                                 </div>
-                              ) : match.scores && Array.isArray(match.scores) && match.scores.length === 2 ? (
-                                /* Show final score from match.scores for completed matches */
-                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded border border-green-500/20 flex-shrink-0">
-                                  <span className="text-white font-bold text-base">{match.scores.find(s => s.name === homeTeam)?.score || '0'}</span>
-                                  <span className="text-gray-500">-</span>
-                                  <span className="text-white font-bold text-base">{match.scores.find(s => s.name === awayTeam)?.score || '0'}</span>
-                                  <span className="ml-1 text-xs font-bold text-green-400">FINAL</span>
-                                </div>
+                              ) : (match.live_score?.scores && Array.isArray(match.live_score.scores) && match.live_score.scores.length === 2) || (match.scores && Array.isArray(match.scores) && match.scores.length === 2) ? (
+                                /* Show final score from match.live_score.scores or match.scores for completed matches */
+                                (() => {
+                                  const scoresArray = match.live_score?.scores || match.scores;
+                                  return (
+                                    <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded border border-green-500/20 flex-shrink-0">
+                                      <span className="text-white font-bold text-base">{scoresArray.find(s => s.name === homeTeam)?.score || '0'}</span>
+                                      <span className="text-gray-500">-</span>
+                                      <span className="text-white font-bold text-base">{scoresArray.find(s => s.name === awayTeam)?.score || '0'}</span>
+                                      <span className="ml-1 text-xs font-bold text-green-400">FINAL</span>
+                                    </div>
+                                  );
+                                })()
                               ) : (
                                 <span className="text-gray-400 text-xs sm:text-sm font-medium px-2 flex-shrink-0">vs</span>
                               )}
