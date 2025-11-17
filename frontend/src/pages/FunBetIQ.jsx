@@ -75,7 +75,7 @@ const FunBetIQ = () => {
       // Determine sport filter - don't send sport param if "all"
       const params = { limit: 100 };
       if (filter !== 'all') {
-        params.sport = filter === 'football' ? 'football' : 'cricket';
+        params.sport = filter === 'football' ? 'football' : filter === 'cricket' ? 'cricket' : 'basketball';
       }
       
       console.log('🔍 Fetching IQ with params:', params);
