@@ -133,6 +133,92 @@ async def fetch_api_football_live_scores() -> List[Dict]:
         return []
 
 
+async def fetch_api_football_completed_matches(days_back: int = 2) -> List[Dict]:
+    """Fetch completed football matches from last X days"""
+    try:
+        api_key = os.environ.get('API_FOOTBALL_KEY')
+        if not api_key:
+            logger.warning("No API_FOOTBALL_KEY found")
+            return []
+        
+        from datetime import datetime, timezone, timedelta
+        
+        async with httpx.AsyncClient() as client:
+            url = "https://v3.football.api-sports.io/fixtures"
+            headers = {'x-apisports-key': api_key}
+            
+            all_completed = []
+            
+            # Fetch completed matches from last N days
+            for day in range(days_back):
+                date = (datetime.now(timezone.utc) - timedelta(days=day)).strftime('%Y-%m-%d')
+                params = {
+                    'date': date,
+                    'status': 'FT',  # Full Time - completed matches only
+                    'timezone': 'UTC'
+                }
+                
+                response = await client.get(url, headers=headers, params=params, timeout=15.0)
+                
+                if response.status_code != 200:
+                    logger.error(f"API-Football returned status {response.status_code} for {date}")
+                    continue
+                
+                data = response.json()
+                fixtures = data.get('response', [])
+                
+                logger.info(f"✅ API-Football: Found {len(fixtures)} completed matches on {date}")
+                
+                # Transform to our format
+                for fixture in fixtures:
+                    try:
+                        if not isinstance(fixture, dict):
+                            continue
+                        
+                        fixture_data = fixture.get('fixture', {})
+                        teams = fixture.get('teams', {})
+                        goals = fixture.get('goals', {})
+                        league = fixture.get('league', {})
+                        
+                        home_team = teams.get('home', {}).get('name', '')
+                        away_team = teams.get('away', {}).get('name', '')
+                        home_score = goals.get('home')
+                        away_score = goals.get('away')
+                        
+                        # Build score entry
+                        score_entry = {
+                            'id': str(fixture_data.get('id', '')),
+                            'sport_key': f"soccer_{league.get('country', 'international').lower().replace(' ', '_')}",
+                            'sport_title': league.get('name', 'Football'),
+                            'commence_time': fixture_data.get('date', ''),
+                            'completed': True,
+                            'is_live': False,
+                            'home_team': home_team,
+                            'away_team': away_team,
+                            'home_score': str(home_score) if home_score is not None else '0',
+                            'away_score': str(away_score) if away_score is not None else '0',
+                            'match_status': 'FT',
+                            'home_team_logo': teams.get('home', {}).get('logo', ''),
+                            'away_team_logo': teams.get('away', {}).get('logo', ''),
+                            'league_logo': league.get('logo', ''),
+                            'last_update': datetime.now(timezone.utc).isoformat(),
+                            'api_source': 'api-football'
+                        }
+                        
+                        all_completed.append(score_entry)
+                        
+                    except Exception as e:
+                        logger.warning(f"Error parsing completed fixture: {e}")
+                        continue
+            
+            logger.info(f"✅ API-Football: Processed {len(all_completed)} completed matches from last {days_back} days")
+            return all_completed
+            
+    except Exception as e:
+        logger.error(f"Error fetching completed football matches: {e}")
+        return []
+
+
 async def fetch_api_basketball_live_scores() -> List[Dict]:
     """Fetch all live basketball games from API-Sports Basketball"""
     try:
