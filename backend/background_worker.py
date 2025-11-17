@@ -758,7 +758,7 @@ class OddsWorker:
     async def verify_predictions_job(self):
         """
         Verify FunBet IQ predictions against actual match results
-        Runs every hour to check completed matches
+        Runs every 15 minutes to check completed matches
         """
         try:
             logger.info("🎯 Starting prediction verification job...")
