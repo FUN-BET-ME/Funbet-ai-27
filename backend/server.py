@@ -405,7 +405,12 @@ async def get_all_cached_odds(
                         'confidence': iq_pred.get('confidence'),
                         'verdict': iq_pred.get('verdict'),
                         'home_components': iq_pred.get('home_components'),
-                        'away_components': iq_pred.get('away_components')
+                        'away_components': iq_pred.get('away_components'),
+                        # Add prediction verification results for completed matches
+                        'prediction_correct': iq_pred.get('prediction_correct'),
+                        'predicted_winner': iq_pred.get('predicted_winner'),
+                        'actual_winner': iq_pred.get('actual_winner'),
+                        'verified_at': iq_pred.get('verified_at')
                     }
                     iq_count += 1
             
