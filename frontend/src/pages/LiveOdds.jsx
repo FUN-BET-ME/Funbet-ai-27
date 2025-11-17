@@ -1251,16 +1251,14 @@ const LiveOdds = () => {
                             {(() => {
                               const matchIQ = match.funbet_iq;
                               if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
-                                // ONLY football/soccer and cricket TEST can have draws
-                                // ODI and T20 cricket CANNOT draw
+                                // Football/soccer and ALL cricket formats can have draws/ties
+                                // Cricket: Test can draw, ODI/T20 can tie (then super over)
                                 const isFootball = match.sport_key && (
                                   match.sport_key.includes('soccer') || 
                                   match.sport_key.includes('football')
                                 );
-                                const isCricketTest = match.sport_key && 
-                                  match.sport_key.includes('cricket') && 
-                                  match.sport_key.includes('test');
-                                const canHaveDraw = isFootball || isCricketTest;
+                                const isCricket = match.sport_key && match.sport_key.includes('cricket');
+                                const canHaveDraw = isFootball || isCricket;
                                 const hasDrawIQ = canHaveDraw && matchIQ.draw_iq && matchIQ.draw_iq > 0;
                                 
                                 let predictedOutcome = homeTeam;
