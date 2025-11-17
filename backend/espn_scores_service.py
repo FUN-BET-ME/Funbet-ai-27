@@ -133,6 +133,8 @@ async def fetch_espn_football_scores() -> List[Dict]:
                                 'completed': is_completed,
                                 'home_team': home_team.get('team', {}).get('displayName', ''),
                                 'away_team': away_team.get('team', {}).get('displayName', ''),
+                                'home_score': str(home_score),
+                                'away_score': str(away_score),
                                 'scores': [
                                     {
                                         'name': home_team.get('team', {}).get('displayName', ''),
