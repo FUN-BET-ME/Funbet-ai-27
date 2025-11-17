@@ -220,7 +220,21 @@ const LiveOdds = () => {
       const response = await axios.get(`${BACKEND_URL}/api/odds/all-cached?time_filter=recent&limit=100&include_scores=true`, {
         timeout: 30000 // 30 second timeout
       });
-      return response.data?.matches || [];
+      const matches = response.data?.matches || [];
+      
+      // DEBUG: Check Santos match for verification data
+      const santosMatch = matches.find(m => m.home_team === 'Santos' || m.away_team === 'Santos');
+      if (santosMatch) {
+        console.log('🔍 SANTOS API DATA:', {
+          teams: `${santosMatch.home_team} vs ${santosMatch.away_team}`,
+          completed: santosMatch.completed,
+          hasFunbetIQ: !!santosMatch.funbet_iq,
+          prediction_correct: santosMatch.funbet_iq?.prediction_correct,
+          predicted_winner: santosMatch.funbet_iq?.predicted_winner
+        });
+      }
+      
+      return matches;
     } catch (error) {
       console.error('Error fetching historical odds:', error);
       return [];
