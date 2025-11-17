@@ -1236,12 +1236,9 @@ const LiveOdds = () => {
                                   <span className="text-white font-bold text-base">{match.live_score.home_score || '0'}</span>
                                   <span className="text-gray-500">-</span>
                                   <span className="text-white font-bold text-base">{match.live_score.away_score || '0'}</span>
-                                  {match.live_score.match_status && (
-                                    <span className={`ml-1 text-xs font-bold ${
-                                      match.live_score.is_live ? 'text-red-400' : 
-                                      match.live_score.completed ? 'text-green-400' : 
-                                      'text-gray-400'
-                                    }`}>
+                                  {/* Only show match status for LIVE matches, not completed */}
+                                  {match.live_score.match_status && match.live_score.is_live && !match.live_score.completed && (
+                                    <span className="ml-1 text-xs font-bold text-red-400">
                                       {match.live_score.match_status}
                                     </span>
                                   )}
