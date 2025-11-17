@@ -822,9 +822,9 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           
                           // Determine if sport allows draws (only football/soccer and cricket)
                           const sportKey = match.sport_key?.toLowerCase() || '';
-                          const sportTitle = match.sport_title?.toLowerCase() || '';
+                          const matchSportTitle = match.sport_title?.toLowerCase() || '';
                           const sportAllowsDraws = (sportKey.includes('soccer') || sportKey.includes('cricket')) ||
-                                                  (sportTitle.includes('football') || sportTitle.includes('cricket'));
+                                                  (matchSportTitle.includes('football') || matchSportTitle.includes('cricket'));
                           
                           // Calculate best odds from ALL unique bookmakers by matching team names
                           const bestOdds = {};
