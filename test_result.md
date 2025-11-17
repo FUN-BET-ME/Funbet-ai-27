@@ -107,15 +107,18 @@ user_problem_statement: "FINAL SCORE & PREDICTION VERIFICATION DISPLAY - For COM
 backend:
   - task: "Final Score & Prediction Verification Data in API"
     implemented: true
-    working: "NA"
-    file: "/app/backend/server.py"
+    working: "PARTIAL"
+    file: "/app/backend/server.py, /app/backend/background_worker.py"
     stuck_count: 0
     priority: "critical"
     needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "🔄 IMPLEMENTED - Added prediction verification fields to /api/odds/all-cached endpoint (lines 401-414). Now includes prediction_correct, predicted_winner, actual_winner, and verified_at in the funbet_iq object for each match. This allows frontend to show if FunBet IQ prediction was correct or incorrect for completed matches. Ready for backend testing."
+        comment: "🔄 IMPLEMENTED - (1) server.py lines 401-414: Added prediction verification fields to /api/odds/all-cached endpoint. Now includes prediction_correct, predicted_winner, actual_winner, and verified_at in the funbet_iq object. (2) background_worker.py lines 806-831: Updated fetch_final_scores_job to save scores in BOTH live_score and scores array format for consistency."
+      - working: "PARTIAL"
+        agent: "main"
+        comment: "✅ API ENRICHMENT WORKING - Verification fields successfully added to API response. Manual verification via /api/funbet-iq/verify verified 3 matches correctly. ⚠️ SCORE PERSISTENCE ISSUE - Background worker's fetch_final_scores_job scheduled to run every 5 minutes but scores not being permanently saved to odds_cache. Database shows live_score.completed=false and no scores for Auburn vs Houston match, despite API-Football returning completed match data. Issue likely: fetch_final_scores_job not running automatically or match linking failing. Needs investigation of background worker execution and match linking service."
 
   - task: "Bookmaker merge logic with deduplication"
     implemented: true
