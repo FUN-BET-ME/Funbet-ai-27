@@ -1337,7 +1337,7 @@ const LiveOdds = () => {
                           url={window.location.href}
                         />
                         <span className="text-sm text-gray-400 ml-2">
-                          {sortedBookmakers.length > 0 ? `${sortedBookmakers.length - 1} + 1 bookmakers` : '0 bookmakers'}
+                          {sortedBookmakers.length} bookmakers
                         </span>
                       </div>
                     </div>
