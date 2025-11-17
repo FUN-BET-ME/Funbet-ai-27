@@ -1324,7 +1324,7 @@ const LiveOdds = () => {
                           matchTitle={`${homeTeam} vs ${awayTeam}`}
                           url={window.location.href}
                         />
-                        <span className="text-sm text-gray-400 ml-2">
+                        <span className="text-sm text-yellow-400 ml-2 font-bold">
                           {(() => {
                             const funbetCount = sortedBookmakers.filter(b => b.title?.toLowerCase().includes('funbet') || b.key === 'funbet').length;
                             const otherCount = sortedBookmakers.length - funbetCount;
