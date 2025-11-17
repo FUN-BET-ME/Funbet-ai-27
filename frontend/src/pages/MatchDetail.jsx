@@ -242,7 +242,11 @@ const MatchDetail = () => {
           <div className="p-4 bg-[#2E004F]/20 border-b border-[#2E004F]/30">
             <h3 className="text-xl font-bold flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-[#FFD700]" />
-              Odds Comparison - {sortedBookmakers.length} Bookmakers
+              Odds Comparison - {(() => {
+                const funbetCount = sortedBookmakers.filter(b => b.title?.toLowerCase().includes('funbet')).length;
+                const otherCount = sortedBookmakers.length - funbetCount;
+                return funbetCount > 0 ? `${otherCount} + 1 Bookmakers` : `${sortedBookmakers.length} Bookmakers`;
+              })()} 
             </h3>
           </div>
 
