@@ -60,8 +60,16 @@ const About = () => {
             <p className="text-gray-400 leading-relaxed">
               What sets us apart? We verify EVERY prediction we make. When matches complete, we automatically compare 
               our FunBet IQ prediction against the actual result and publicly display whether we were Correct ✅ or 
-              Incorrect ❌. Currently achieving <strong className="text-[#FFD700]">82.9% accuracy</strong> across 
-              35 verified predictions. No hidden results, no cherry-picking - complete transparency.
+              Incorrect ❌. {stats.loading ? (
+                <span>Loading stats...</span>
+              ) : stats.total > 0 ? (
+                <>
+                  Currently achieving <strong className="text-[#FFD700]">{stats.accuracy}% accuracy</strong> across{' '}
+                  <strong className="text-[#FFD700]">{stats.total} verified predictions</strong>.
+                </>
+              ) : (
+                <span>Building our verified prediction track record.</span>
+              )} No hidden results, no cherry-picking - complete transparency.
             </p>
           </div>
         </div>
