@@ -1222,11 +1222,11 @@ const LiveOdds = () => {
                           <div className="flex-1 min-w-0">
                             {/* First Line: Team Names with VS and Live Score */}
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-white font-semibold truncate text-sm sm:text-base flex-1">{homeTeam}</span>
+                              <span className="text-white font-semibold text-sm sm:text-base flex-1 break-words leading-tight">{homeTeam}</span>
                               
                               {/* Live/Final Score in the middle */}
                               {match.live_score && (match.live_score.home_score || match.live_score.away_score) ? (
-                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
+                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20 flex-shrink-0">
                                   <span className="text-white font-bold text-base">{match.live_score.home_score || '0'}</span>
                                   <span className="text-gray-500">-</span>
                                   <span className="text-white font-bold text-base">{match.live_score.away_score || '0'}</span>
@@ -1241,10 +1241,10 @@ const LiveOdds = () => {
                                   )}
                                 </div>
                               ) : (
-                                <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
+                                <span className="text-gray-400 text-xs sm:text-sm font-medium px-2 flex-shrink-0">vs</span>
                               )}
                               
-                              <span className="text-white font-semibold truncate text-right text-sm sm:text-base flex-1">{awayTeam}</span>
+                              <span className="text-white font-semibold text-right text-sm sm:text-base flex-1 break-words leading-tight">{awayTeam}</span>
                             </div>
                             
                             {/* Second Line: FunBet IQ Scores with Draw IQ below VS */}
