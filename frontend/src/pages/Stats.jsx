@@ -696,13 +696,23 @@ const Stats = () => {
                         </div>
                       </div>
 
-                      {/* Prediction vs Result */}
-                      <div className="bg-gradient-to-r from-[#FFD700]/10 to-[#FFD700]/5 rounded p-2 text-xs">
+                      {/* Prediction vs Result with Final Score */}
+                      <div className="bg-gradient-to-r from-[#FFD700]/10 to-[#FFD700]/5 rounded p-2 text-xs space-y-1">
+                        {/* Final Score */}
+                        {pred.home_score !== null && pred.home_score !== undefined && pred.away_score !== null && pred.away_score !== undefined && (
+                          <div className="flex justify-center items-center gap-2 pb-2 border-b border-gray-700/50">
+                            <span className="text-white font-bold text-base">{pred.home_score}</span>
+                            <span className="text-gray-500">-</span>
+                            <span className="text-white font-bold text-base">{pred.away_score}</span>
+                            <span className="text-xs text-green-400 ml-1">FINAL</span>
+                          </div>
+                        )}
+                        
                         <div className="flex justify-between">
                           <span className="text-gray-400">Predicted:</span>
                           <span className="text-[#FFD700] font-bold">{pred.predicted_team}</span>
                         </div>
-                        <div className="flex justify-between mt-1">
+                        <div className="flex justify-between">
                           <span className="text-gray-400">Winner:</span>
                           <span className={pred.was_correct ? 'text-green-400 font-bold' : 'text-red-400 font-bold'}>
                             {pred.actual_winner}
