@@ -1247,14 +1247,13 @@ const LiveOdds = () => {
                               <span className="text-white font-semibold truncate text-right text-sm sm:text-base flex-1">{awayTeam}</span>
                             </div>
                             
-                            {/* Second Line: FunBet IQ Scores and Prediction */}
+                            {/* Second Line: FunBet IQ Scores with Draw IQ below VS */}
                             {(() => {
-                              const matchIQ = match.funbet_iq; // IQ data comes with odds now!
+                              const matchIQ = match.funbet_iq;
                               if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
                                 const isFootball = match.sport_key && match.sport_key.includes('soccer');
                                 const hasDrawIQ = isFootball && matchIQ.draw_iq;
                                 
-                                // Determine prediction (include draw for football)
                                 let predictedOutcome = homeTeam;
                                 let maxIQ = matchIQ.home_iq;
                                 
@@ -1267,24 +1266,31 @@ const LiveOdds = () => {
                                 }
                                 
                                 return (
-                                  <div className="flex items-center justify-between gap-2 mt-2 text-xs sm:text-sm">
-                                    {/* Home IQ Score */}
-                                    <span className="text-purple-400 font-bold flex-1">{matchIQ.home_iq}</span>
+                                  <div className="mt-2 space-y-1">
+                                    {/* Row 1: Home IQ | Draw IQ (center) | Away IQ */}
+                                    <div className="flex items-center justify-between gap-2 text-xs sm:text-sm">
+                                      <span className="text-purple-400 font-bold flex-1">{matchIQ.home_iq}</span>
+                                      
+                                      {/* Draw IQ in center (for football) */}
+                                      {hasDrawIQ ? (
+                                        <div className="flex flex-col items-center flex-shrink-0">
+                                          <span className="text-[10px] text-gray-500 mb-0.5">Draw</span>
+                                          <span className="text-yellow-400 font-bold text-sm">{matchIQ.draw_iq}</span>
+                                        </div>
+                                      ) : (
+                                        <span className="text-gray-600 text-xs flex-shrink-0 px-2">-</span>
+                                      )}
+                                      
+                                      <span className="text-purple-400 font-bold text-right flex-1">{matchIQ.away_iq}</span>
+                                    </div>
                                     
-                                    {/* Draw IQ (for football only) */}
-                                    {hasDrawIQ && (
-                                      <span className="text-yellow-400 font-bold text-base sm:text-lg mx-2" title="Draw IQ">
-                                        {matchIQ.draw_iq}
-                                      </span>
-                                    )}
-                                    
-                                    {/* Center: Prediction with Confidence */}
-                                    <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30 flex-shrink-0">
+                                    {/* Row 2: Prediction Verdict */}
+                                    <div className="flex items-center justify-center gap-1 px-2 py-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30">
                                       <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-[#FFD700]" />
-                                      <span className="text-[#FFD700] font-bold truncate max-w-[100px] sm:max-w-[150px]" title={`${predictedOutcome} (${matchIQ.confidence})`}>
+                                      <span className="text-[#FFD700] font-bold text-xs truncate max-w-[120px]" title={`${predictedOutcome} (${matchIQ.confidence})`}>
                                         {predictedOutcome}
                                       </span>
-                                      <span className={`text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded ${
+                                      <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
                                         matchIQ.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
                                         matchIQ.confidence === 'Medium' ? 'bg-yellow-500/30 text-yellow-300' :
                                         'bg-gray-500/30 text-gray-300'
@@ -1292,9 +1298,6 @@ const LiveOdds = () => {
                                         {matchIQ.confidence}
                                       </span>
                                     </div>
-                                    
-                                    {/* Away IQ Score */}
-                                    <span className="text-purple-400 font-bold text-right flex-1">{matchIQ.away_iq}</span>
                                   </div>
                                 );
                               }
