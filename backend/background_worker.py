@@ -844,48 +844,38 @@ class OddsWorker:
     
     async def cleanup_stuck_matches(self):
         """
-        Cleanup old stuck matches that have been marked as live for too long
-        Marks matches as completed if they've been is_live=true for more than 4 hours
+        Cleanup matches stuck as 'live' for too long
+        Marks them as completed if >4 hours old
         """
         try:
-            logger.info("🧹 Starting cleanup of stuck matches...")
+            logger.info("🧹 Cleaning up stuck matches...")
             
-            from datetime import datetime, timezone, timedelta
-            
-            # Find matches that have been live for more than 4 hours
             four_hours_ago = datetime.now(timezone.utc) - timedelta(hours=4)
             
+            # Find matches with is_live=true that started >4 hours ago
             stuck_matches = await self.db.odds_cache.find({
                 'live_score.is_live': True,
-                'linked_at': {'$lt': four_hours_ago.isoformat()}
-            }).to_list(length=None)
+                'commence_time': {'$lt': four_hours_ago.isoformat()}
+            }).to_list(length=100)
             
-            logger.info(f"🧹 Found {len(stuck_matches)} matches stuck as live for >4 hours")
-            
-            cleaned_count = 0
+            cleaned = 0
             for match in stuck_matches:
-                try:
-                    # Mark as completed and no longer live
-                    await self.db.odds_cache.update_one(
-                        {'id': match['id']},
-                        {'$set': {
-                            'live_score.is_live': False,
-                            'live_score.completed': True,
-                            'live_score.match_status': 'FT',
-                            'completed': True,
-                            'cleaned_up_at': datetime.now(timezone.utc).isoformat()
-                        }}
-                    )
-                    cleaned_count += 1
-                    logger.info(f"🧹 Cleaned up stuck match: {match.get('home_team')} vs {match.get('away_team')}")
-                except Exception as e:
-                    logger.warning(f"Error cleaning up match {match.get('id')}: {e}")
-                    continue
+                await self.db.odds_cache.update_one(
+                    {'id': match['id']},
+                    {'$set': {
+                        'live_score.is_live': False,
+                        'live_score.completed': True,
+                        'completed': True,
+                        'cleaned_up_at': datetime.now(timezone.utc).isoformat()
+                    }}
+                )
+                cleaned += 1
             
-            logger.info(f"✅ Cleanup complete: {cleaned_count} stuck matches marked as completed")
+            if cleaned > 0:
+                logger.info(f"✅ Cleaned {cleaned} stuck matches")
                 
         except Exception as e:
-            logger.error(f"❌ Error in cleanup stuck matches job: {e}")
+            logger.error(f"Error in cleanup: {e}")
     
     def start(self):
         """Start the background worker - EFFICIENT VERSION"""
