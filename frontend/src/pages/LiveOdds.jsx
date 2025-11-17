@@ -1222,12 +1222,12 @@ const LiveOdds = () => {
                             />
                           </div>
                           <div className="flex-1 min-w-0">
-                            {/* First Line: Team Names with VS and Live Score */}
+                            {/* First Line: Team Names with VS and Live/Final Score */}
                             <div className="flex items-center justify-between gap-2">
                               <span className="text-white font-semibold text-sm sm:text-base flex-1 break-words leading-tight">{homeTeam}</span>
                               
                               {/* Live/Final Score in the middle */}
-                              {match.live_score && (match.live_score.home_score || match.live_score.away_score) ? (
+                              {match.live_score && (match.live_score.home_score !== null || match.live_score.home_score !== undefined) ? (
                                 <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20 flex-shrink-0">
                                   <span className="text-white font-bold text-base">{match.live_score.home_score || '0'}</span>
                                   <span className="text-gray-500">-</span>
@@ -1241,6 +1241,14 @@ const LiveOdds = () => {
                                       {match.live_score.match_status}
                                     </span>
                                   )}
+                                </div>
+                              ) : match.scores && Array.isArray(match.scores) && match.scores.length === 2 ? (
+                                /* Show final score from match.scores for completed matches */
+                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded border border-green-500/20 flex-shrink-0">
+                                  <span className="text-white font-bold text-base">{match.scores.find(s => s.name === homeTeam)?.score || '0'}</span>
+                                  <span className="text-gray-500">-</span>
+                                  <span className="text-white font-bold text-base">{match.scores.find(s => s.name === awayTeam)?.score || '0'}</span>
+                                  <span className="ml-1 text-xs font-bold text-green-400">FINAL</span>
                                 </div>
                               ) : (
                                 <span className="text-gray-400 text-xs sm:text-sm font-medium px-2 flex-shrink-0">vs</span>
