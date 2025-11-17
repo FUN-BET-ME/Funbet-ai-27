@@ -217,7 +217,7 @@ const LiveOdds = () => {
   const fetchHistoricalOdds = async () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/odds/all-cached?time_filter=recent&limit=100&include_scores=true`, {
+      const response = await axios.get(`${BACKEND_URL}/api/odds/all-cached?time_filter=recent&limit=100&include_scores=true&_t=${Date.now()}`, {
         timeout: 30000 // 30 second timeout
       });
       const matches = response.data?.matches || [];
