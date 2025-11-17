@@ -925,12 +925,12 @@ class OddsWorker:
             replace_existing=True
         )
         
-        # 10. Fetch and save final scores every 2 hours
+        # 10. Fetch and save final scores every 5 minutes
         self.scheduler.add_job(
             self.fetch_final_scores_job,
-            trigger=IntervalTrigger(hours=2),
+            trigger=IntervalTrigger(minutes=5),
             id='fetch_final_scores',
-            name='Fetch final scores from API-Football every 2 hours',
+            name='Fetch final scores from API-Football every 5 minutes',
             replace_existing=True
         )
         
