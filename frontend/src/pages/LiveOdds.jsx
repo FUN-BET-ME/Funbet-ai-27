@@ -1267,71 +1267,35 @@ const LiveOdds = () => {
                                 }
                                 
                                 return (
-                                  <>
-                                    {/* MOBILE: Stacked IQ layout with better spacing */}
-                                    <div className="md:hidden mt-3 space-y-2">
-                                      {/* IQ Scores Row */}
-                                      <div className="flex items-center justify-between px-4 py-2 bg-purple-900/20 rounded-lg border border-purple-500/20">
-                                        <div className="flex flex-col items-center flex-1">
-                                          <span className="text-xs text-gray-400 mb-1">Home</span>
-                                          <span className="text-purple-400 font-bold text-base">{matchIQ.home_iq}</span>
-                                        </div>
-                                        
-                                        {hasDrawIQ && (
-                                          <div className="flex flex-col items-center flex-1">
-                                            <span className="text-xs text-gray-400 mb-1">Draw</span>
-                                            <span className="text-gray-300 font-bold text-base">{matchIQ.draw_iq}</span>
-                                          </div>
-                                        )}
-                                        
-                                        <div className="flex flex-col items-center flex-1">
-                                          <span className="text-xs text-gray-400 mb-1">Away</span>
-                                          <span className="text-purple-400 font-bold text-base">{matchIQ.away_iq}</span>
-                                        </div>
-                                      </div>
-                                      
-                                      {/* Prediction Verdict Row */}
-                                      <div className="flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30">
-                                        <Brain className="w-4 h-4 text-[#FFD700]" />
-                                        <span className="text-white font-medium text-sm">Predicted:</span>
-                                        <span className="text-[#FFD700] font-bold text-sm">{predictedOutcome}</span>
-                                        <span className={`text-xs font-medium px-2 py-0.5 rounded ${
-                                          matchIQ.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
-                                          matchIQ.confidence === 'Medium' ? 'bg-yellow-500/30 text-yellow-300' :
-                                          'bg-gray-500/30 text-gray-300'
-                                        }`}>
-                                          {matchIQ.confidence}
-                                        </span>
-                                      </div>
+                                  <div className="flex items-center justify-between gap-2 mt-2 text-xs sm:text-sm">
+                                    {/* Home IQ Score */}
+                                    <span className="text-purple-400 font-bold flex-1">{matchIQ.home_iq}</span>
+                                    
+                                    {/* Draw IQ (for football only) */}
+                                    {hasDrawIQ && (
+                                      <span className="text-gray-400 font-bold text-xs" title="Draw IQ">
+                                        {matchIQ.draw_iq}
+                                      </span>
+                                    )}
+                                    
+                                    {/* Center: Prediction with Confidence */}
+                                    <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30 flex-shrink-0">
+                                      <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-[#FFD700]" />
+                                      <span className="text-[#FFD700] font-bold truncate max-w-[100px] sm:max-w-[150px]" title={`${predictedOutcome} (${matchIQ.confidence})`}>
+                                        {predictedOutcome}
+                                      </span>
+                                      <span className={`text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded ${
+                                        matchIQ.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
+                                        matchIQ.confidence === 'Medium' ? 'bg-yellow-500/30 text-yellow-300' :
+                                        'bg-gray-500/30 text-gray-300'
+                                      }`}>
+                                        {matchIQ.confidence}
+                                      </span>
                                     </div>
                                     
-                                    {/* DESKTOP: Original horizontal layout */}
-                                    <div className="hidden md:flex items-center justify-between gap-2 mt-2 text-xs sm:text-sm">
-                                      <span className="text-purple-400 font-bold flex-1">{matchIQ.home_iq}</span>
-                                      
-                                      {hasDrawIQ && (
-                                        <span className="text-gray-400 font-bold text-xs" title="Draw IQ">
-                                          {matchIQ.draw_iq}
-                                        </span>
-                                      )}
-                                      
-                                      <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30 flex-shrink-0">
-                                        <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-[#FFD700]" />
-                                        <span className="text-[#FFD700] font-bold truncate max-w-[100px] sm:max-w-[150px]" title={`${predictedOutcome} (${matchIQ.confidence})`}>
-                                          {predictedOutcome}
-                                        </span>
-                                        <span className={`text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded ${
-                                          matchIQ.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
-                                          matchIQ.confidence === 'Medium' ? 'bg-yellow-500/30 text-yellow-300' :
-                                          'bg-gray-500/30 text-gray-300'
-                                        }`}>
-                                          {matchIQ.confidence}
-                                        </span>
-                                      </div>
-                                      
-                                      <span className="text-purple-400 font-bold text-right flex-1">{matchIQ.away_iq}</span>
-                                    </div>
-                                  </>
+                                    {/* Away IQ Score */}
+                                    <span className="text-purple-400 font-bold text-right flex-1">{matchIQ.away_iq}</span>
+                                  </div>
                                 );
                               }
                               return null;
