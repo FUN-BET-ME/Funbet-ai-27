@@ -747,10 +747,45 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in team stats job: {e}")
     
+    async def cleanup_stuck_matches(self):
+        """
+        Cleanup matches stuck as 'live' for too long
+        Marks them as completed if >4 hours old
+        """
+        try:
+            logger.info("🧹 Cleaning up stuck matches...")
+            
+            four_hours_ago = datetime.now(timezone.utc) - timedelta(hours=4)
+            
+            # Find matches with is_live=true that started >4 hours ago
+            stuck_matches = await self.db.odds_cache.find({
+                'live_score.is_live': True,
+                'commence_time': {'$lt': four_hours_ago.isoformat()}
+            }).to_list(length=100)
+            
+            cleaned = 0
+            for match in stuck_matches:
+                await self.db.odds_cache.update_one(
+                    {'id': match['id']},
+                    {'$set': {
+                        'live_score.is_live': False,
+                        'live_score.completed': True,
+                        'completed': True,
+                        'cleaned_up_at': datetime.now(timezone.utc).isoformat()
+                    }}
+                )
+                cleaned += 1
+            
+            if cleaned > 0:
+                logger.info(f"✅ Cleaned {cleaned} stuck matches")
+                
+        except Exception as e:
+            logger.error(f"Error in cleanup: {e}")
+    
     async def verify_predictions_job(self):
         """
         Verify FunBet IQ predictions against actual match results
-        Runs every 15 minutes to check completed matches
+        Runs every hour to check completed matches
         """
         try:
             logger.info("🎯 Starting prediction verification job...")
