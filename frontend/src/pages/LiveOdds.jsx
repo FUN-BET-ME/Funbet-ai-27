@@ -1256,6 +1256,65 @@ const LiveOdds = () => {
                               />
                               <span className="text-white font-semibold text-base">{awayTeam}</span>
                             </div>
+                            
+                            {/* Row 4 & 5: IQ Scores and Prediction - MOBILE ONLY */}
+                            {(() => {
+                              const matchIQ = match.funbet_iq;
+                              if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
+                                const isFootball = match.sport_key && match.sport_key.includes('soccer');
+                                const hasDrawIQ = isFootball && matchIQ.draw_iq;
+                                
+                                let predictedOutcome = homeTeam;
+                                let maxIQ = matchIQ.home_iq;
+                                
+                                if (hasDrawIQ && matchIQ.draw_iq > maxIQ) {
+                                  predictedOutcome = 'Draw';
+                                  maxIQ = matchIQ.draw_iq;
+                                }
+                                if (matchIQ.away_iq > maxIQ) {
+                                  predictedOutcome = awayTeam;
+                                }
+                                
+                                return (
+                                  <div className="mt-3 space-y-2">
+                                    {/* Row 4: IQ Scores with better spacing */}
+                                    <div className="flex items-center justify-between px-3 py-2 bg-purple-900/20 rounded-lg border border-purple-500/20">
+                                      <div className="flex flex-col items-center flex-1">
+                                        <span className="text-xs text-gray-400 mb-1">Home</span>
+                                        <span className="text-purple-400 font-bold text-lg">{matchIQ.home_iq}</span>
+                                      </div>
+                                      
+                                      {hasDrawIQ && (
+                                        <div className="flex flex-col items-center flex-1">
+                                          <span className="text-xs text-gray-400 mb-1">Draw</span>
+                                          <span className="text-gray-300 font-bold text-lg">{matchIQ.draw_iq}</span>
+                                        </div>
+                                      )}
+                                      
+                                      <div className="flex flex-col items-center flex-1">
+                                        <span className="text-xs text-gray-400 mb-1">Away</span>
+                                        <span className="text-purple-400 font-bold text-lg">{matchIQ.away_iq}</span>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Row 5: Prediction Verdict */}
+                                    <div className="flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30">
+                                      <Brain className="w-4 h-4 text-[#FFD700]" />
+                                      <span className="text-white font-medium text-sm">Predicted:</span>
+                                      <span className="text-[#FFD700] font-bold text-base">{predictedOutcome}</span>
+                                      <span className={`text-xs font-medium px-2 py-0.5 rounded ${
+                                        matchIQ.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
+                                        matchIQ.confidence === 'Medium' ? 'bg-yellow-500/30 text-yellow-300' :
+                                        'bg-gray-500/30 text-gray-300'
+                                      }`}>
+                                        {matchIQ.confidence}
+                                      </span>
+                                    </div>
+                                  </div>
+                                );
+                              }
+                              return null;
+                            })()}
                           </div>
 
                           {/* DESKTOP: Original horizontal layout */}
