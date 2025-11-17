@@ -6,6 +6,7 @@ FunBet.ai Background Worker
 """
 import logging
 import asyncio
+import re
 from datetime import datetime, timezone, timedelta
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
