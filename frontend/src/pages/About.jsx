@@ -82,10 +82,10 @@ const About = () => {
           </h2>
           <div className="bg-gradient-to-r from-[#2E004F]/30 to-[#4a0080]/20 border border-[#2E004F]/30 rounded-lg p-6">
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              <strong className="text-white">FunBet.Me is informational only.</strong>
+              <strong className="text-white">FunBet.AI is informational only.</strong>
               {' '}We do not offer betting services, accept deposits, or facilitate
-              any form of gambling or money gaming. All predictions, odds comparisons, and data are
-              provided for educational, analytical, and comparison purposes only.
+              any form of gambling or money gaming. All predictions, odds comparisons, live scores, 
+              and verified results are provided for educational, analytical, and comparison purposes only.
             </p>
             <p className="text-gray-400 text-sm leading-relaxed">
               Users must be 18 years or older. We promote responsible gambling
