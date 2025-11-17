@@ -16,9 +16,9 @@ const About = () => {
         const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
         const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/track-record?limit=1`);
         
-        const total = response.data.stats?.total_verified || 0;
+        const total = response.data.stats?.total || 0;
         const correct = response.data.stats?.correct || 0;
-        const accuracy = total > 0 ? ((correct / total) * 100).toFixed(1) : 0;
+        const accuracy = response.data.stats?.accuracy || 0;
         
         setStats({
           total,
