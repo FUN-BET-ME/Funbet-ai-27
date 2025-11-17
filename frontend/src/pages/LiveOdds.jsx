@@ -1289,6 +1289,7 @@ const LiveOdds = () => {
                                 
                                 // Check if match is completed and has verification result
                                 const isCompleted = match.completed || match.live_score?.completed || 
+                                  (match.live_score?.scores && Array.isArray(match.live_score.scores) && match.live_score.scores.length === 2) ||
                                   (match.scores && Array.isArray(match.scores) && match.scores.length === 2);
                                 const hasVerification = matchIQ.prediction_correct !== null && matchIQ.prediction_correct !== undefined;
                                 
