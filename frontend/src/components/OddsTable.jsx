@@ -718,7 +718,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             
                             // Last column: Away team
                             headers.push(
-                              <th key="away" className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-[10px] sm:text-sm font-semibold text-gray-400 w-[25%]">
+                              <th key="away" className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-[9px] sm:text-sm font-semibold text-gray-400 w-[24%] sm:w-auto">
                                 <button
                                   onClick={() => {
                                     setOddsSortBy(prev => ({
