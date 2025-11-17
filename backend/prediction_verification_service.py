@@ -211,24 +211,37 @@ class PredictionVerificationService:
             'home', 'away', 'draw', or None if cannot determine
         """
         try:
-            # Check if match has scores
-            scores = match_data.get('scores')
+            home_score = None
+            away_score = None
             
+            # First, try to get scores from 'scores' array
+            scores = match_data.get('scores')
             if scores and isinstance(scores, list) and len(scores) == 2:
                 home_score = scores[0].get('score')
                 away_score = scores[1].get('score')
-                
-                if home_score is not None and away_score is not None:
+            
+            # If no scores array, try to get from live_score object
+            if home_score is None or away_score is None:
+                live_score = match_data.get('live_score')
+                if live_score:
+                    home_score = live_score.get('home_score')
+                    away_score = live_score.get('away_score')
+            
+            # Convert scores to integers for comparison
+            if home_score is not None and away_score is not None:
+                try:
+                    home_score = int(home_score)
+                    away_score = int(away_score)
+                    
                     if home_score > away_score:
                         return 'home'
                     elif away_score > home_score:
                         return 'away'
                     else:
                         return 'draw'
-            
-            # Alternative: Check bookmaker odds movement
-            # If final odds heavily favor one side, might indicate result
-            # (This is less reliable but can be a fallback)
+                except (ValueError, TypeError):
+                    logger.warning(f"Could not convert scores to int: {home_score}, {away_score}")
+                    return None
             
             return None
             
