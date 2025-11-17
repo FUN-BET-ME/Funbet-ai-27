@@ -295,6 +295,21 @@ backend:
         comment: "✅ VERIFIED WORKING - New API key 32a9a6003fde37f0dd43987779689274 successfully integrated and backend logs confirm it's being used"
 
 frontend:
+  - task: "Final Score & Prediction Verification Display for Completed Matches"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/LiveOdds.jsx"
+    stuck_count: 3
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "🚨 USER REPORTED (3RD TIME) - FINAL matches still showing 'vs' instead of actual final score. No indication of whether FunBet IQ prediction was correct or incorrect. User provided screenshots showing matches like 'Estudiantes vs Argentinos Juniors' and 'Israel vs Moldova' with FINAL badge but no final score displayed."
+      - working: "NA"
+        agent: "main"
+        comment: "🔄 IMPLEMENTED - Updated LiveOdds.jsx to display final scores and prediction verification for completed matches. Changes: (1) Lines 1230-1244: Added logic to display final score from match.scores array instead of 'vs' for completed matches. Shows score in green badge with 'FINAL' label. (2) Lines 1252-1280: Modified IQ display section to show prediction verification result when match is completed. For completed matches with verification data, displays: 'FunBet IQ Predicted: [Team] - ✅ Correct' or '❌ Incorrect' in green/red badge. Backend enrichment already implemented (server.py lines 401-414) to include prediction_correct, predicted_winner, actual_winner fields. Ready for testing."
+
   - task: "Mobile View IQ Scores Display (OddsTable Component)"
     implemented: true
     working: true
