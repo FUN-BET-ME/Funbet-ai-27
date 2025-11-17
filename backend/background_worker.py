@@ -1034,11 +1034,16 @@ if __name__ == "__main__":
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
     
+    async def run():
+        await start_worker()
+        # Keep the event loop running forever
+        try:
+            await asyncio.Event().wait()  # Wait indefinitely
+        except (KeyboardInterrupt, SystemExit):
+            print("\n🛑 Shutting down background worker...")
+            await stop_worker()
+    
     try:
-        asyncio.run(start_worker())
-        # Keep running forever
-        while True:
-            asyncio.get_event_loop().run_forever()
+        asyncio.run(run())
     except KeyboardInterrupt:
-        print("\n🛑 Shutting down background worker...")
-        asyncio.run(stop_worker())
+        print("\n🛑 Background worker stopped")
