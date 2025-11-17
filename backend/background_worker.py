@@ -804,13 +804,16 @@ class OddsWorker:
                     linked_match = await match_linking.link_live_score_to_match(score)
                     
                     if linked_match:
-                        # Save final score permanently
+                        # Save final score permanently in BOTH live_score and scores format
+                        home_score_str = str(score.get('home_score', '0'))
+                        away_score_str = str(score.get('away_score', '0'))
+                        
                         result = await self.db.odds_cache.update_one(
                             {'id': linked_match['id']},
                             {'$set': {
                                 'live_score': {
-                                    'home_score': score.get('home_score'),
-                                    'away_score': score.get('away_score'),
+                                    'home_score': home_score_str,
+                                    'away_score': away_score_str,
                                     'match_status': 'FT',
                                     'is_live': False,
                                     'completed': True,
@@ -820,6 +823,17 @@ class OddsWorker:
                                     'league_logo': score.get('league_logo'),
                                     'api_source': 'api-football'
                                 },
+                                'scores': [
+                                    {
+                                        'name': linked_match['home_team'],
+                                        'score': home_score_str
+                                    },
+                                    {
+                                        'name': linked_match['away_team'],
+                                        'score': away_score_str
+                                    }
+                                ],
+                                'completed': True,
                                 'final_score_saved': True,
                                 'updated_at': datetime.now(timezone.utc).isoformat()
                             }}
