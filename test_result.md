@@ -297,7 +297,7 @@ backend:
 frontend:
   - task: "Final Score & Prediction Verification Display for Completed Matches"
     implemented: true
-    working: "NA"
+    working: "PARTIAL"
     file: "/app/frontend/src/pages/LiveOdds.jsx"
     stuck_count: 3
     priority: "critical"
@@ -308,7 +308,10 @@ frontend:
         comment: "🚨 USER REPORTED (3RD TIME) - FINAL matches still showing 'vs' instead of actual final score. No indication of whether FunBet IQ prediction was correct or incorrect. User provided screenshots showing matches like 'Estudiantes vs Argentinos Juniors' and 'Israel vs Moldova' with FINAL badge but no final score displayed."
       - working: "NA"
         agent: "main"
-        comment: "🔄 IMPLEMENTED - Updated LiveOdds.jsx to display final scores and prediction verification for completed matches. Changes: (1) Lines 1230-1244: Added logic to display final score from match.scores array instead of 'vs' for completed matches. Shows score in green badge with 'FINAL' label. (2) Lines 1252-1280: Modified IQ display section to show prediction verification result when match is completed. For completed matches with verification data, displays: 'FunBet IQ Predicted: [Team] - ✅ Correct' or '❌ Incorrect' in green/red badge. Backend enrichment already implemented (server.py lines 401-414) to include prediction_correct, predicted_winner, actual_winner fields. Ready for testing."
+        comment: "🔄 IMPLEMENTED - Updated LiveOdds.jsx to display final scores and prediction verification for completed matches. Changes: (1) Lines 1230-1260: Fixed logic error (changed OR to AND) and added fallback to check both live_score.scores and scores arrays. Now correctly displays final score from match.live_score.scores. (2) Lines 1277-1295: Modified IQ display section to show prediction verification result when match is completed AND has verification data. Backend enrichment implemented (server.py lines 401-414) to include prediction_correct, predicted_winner, actual_winner fields."
+      - working: "PARTIAL"
+        agent: "main"
+        comment: "✅ FINAL SCORE DISPLAY WORKING - Screenshot confirms final score '72-73 FINAL' now displays correctly for Auburn vs Houston match instead of 'vs'. Score extracted from live_score.scores array. ⚠️ PREDICTION VERIFICATION PENDING - Verification display logic implemented correctly but data is null because background worker's fetch_final_scores_job hasn't saved scores to odds_cache permanently. Scores are only merged at API query time by live_scores_service. Manual verification API call verified 3 matches successfully but Auburn match wasn't included (database record has live_score.completed=false and no scores). Next: Need to ensure background_worker's fetch_final_scores_job runs and saves scores to database permanently."
 
   - task: "Mobile View IQ Scores Display (OddsTable Component)"
     implemented: true
