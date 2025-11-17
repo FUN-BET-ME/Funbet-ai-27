@@ -1,0 +1,82 @@
+<analysis>
+The user's primary language is English. Future responses should be in English.
+
+The trajectory documents a chaotic and reactive development sprint, driven by a stream of urgent user bug reports and UI feedback. The work began by resolving a critical, persistent JSX syntax error in  that crashed the application. This debugging was a painful, circular process involving multiple attempts to fix incorrect closing tags, rollbacks to previous commits, and wrestling with caching issues, which severely frustrated the user.
+
+Once the application was renderable, the focus shifted to a rapid-fire sequence of fixes and feature tweaks. Key issues addressed include: implementing Draw IQ for football and then all cricket formats, fixing the mobile UI layout multiple times (team name wrapping, odds table overflow), correcting the display logic for the bookmaker count, ensuring basketball matches do not show a Draw column or Draw IQ, and standardizing the font size and color of IQ scores.
+
+A significant portion of the work involved the backend data pipeline. The engineer discovered the background worker was not configured to run, leading to an empty database. They manually ran jobs to populate the odds cache, generate IQ predictions, and fetch final scores. This revealed bugs in the score-fetching logic (using the wrong API endpoint for completed games) and data normalization, which were subsequently fixed.
+
+The trajectory ends with the user, for the third time, demanding the implementation of a core requirement: for completed matches, the UI must display the final score and the result of the prediction verification (i.e., whether the FunBet IQ prediction was correct or incorrect). The AI had just acknowledged this repeated failure.
+</analysis>
+
+<product_requirements>
+The goal is to build a comprehensive, real-time sports data application named FunBet IQ, focusing on data accuracy and a seamless, mobile-first user experience.
+
+**Core Functional Requirements:**
+1.  **Data Integrity & Display:** The application must correctly display live, upcoming, and completed matches for Football, Basketball, and Cricket. Completed matches are the highest priority and **must** show the final score (e.g., 4-1) and a verification status (Correct ✅ or Incorrect ❌) of the FunBet IQ prediction.
+2.  **Live Experience:** Live games must be prioritized in lists, showing real-time scores.
+3.  **IQ Predictions:** The FunBet IQ algorithm must provide Home, Draw, and Away predictions for Football and all formats of Cricket. Basketball should only have Home/Away predictions.
+4.  **Prediction Tracking:** A stats page must track prediction accuracy. This relies on a backend verification service that compares predictions to final results.
+
+**UI/UX Requirements:**
+1.  **Responsive Design:** The UI must be fully optimized for mobile devices, with no horizontal scrolling, overflowing elements, or truncated text. Team names should wrap to a new line if long.
+2.  **Visual Consistency:** All IQ scores (Home, Draw, Away) should have the same font size and color.
+3.  **Logical Filtering:** Filters for LIVE, Upcoming, and Recent Results must correctly show or hide matches based on their status (e.g., no FINAL matches in the Upcoming view).
+4.  **Bookmaker Display:** The count of bookmakers should be displayed as a total number (e.g., 44 bookmakers).
+</product_requirements>
+
+<key_technical_concepts>
+- **Frameworks**: React (frontend), FastAPI (backend), MongoDB (database).
+- **Architecture**: Monorepo with a background worker process for asynchronous tasks.
+- **Data Integration**: Merges data from three sources: a primary odds API, API-Football (for football/soccer), and a Cricket API.
+- **Async Tasks**:  in  runs jobs for fetching odds, calculating IQ, and verifying predictions against final scores.
+- **UI**: Tailwind CSS for styling and responsive design (, , flexbox).
+</key_technical_concepts>
+
+<code_architecture>
+The application is a monorepo containing a Python/FastAPI backend and a React frontend.
+
+
+
+- ****: This is the main page and the source of most UI bugs.
+    - **Summary:** Renders the list of live, upcoming, and recent matches. It contains complex conditional rendering logic for different sports, match statuses, and screen sizes.
+    - **Changes:** This file has been heavily modified. The initial critical syntax error that crashed the app was fixed here after numerous failed attempts. Subsequent edits fixed: filtering logic to hide completed games from the Upcoming tab, made team names wrap instead of truncating, unified IQ score font sizes, corrected the bookmaker count display, and added logic to display Draw IQ for football and cricket. The final task is to modify this file to show final scores and prediction verification results.
+
+- ****: Renders the table of bookmaker odds for a specific match.
+    - **Summary:** This component is displayed within  and . It shows a list of bookmakers and their odds for Home, Draw, and Away outcomes.
+    - **Changes:** It was modified to correctly hide the Draw column for basketball matches. It was also edited to be more compact on mobile to prevent horizontal overflow.
+
+- ****: Contains the logic for calculating the FunBet IQ prediction scores.
+    - **Summary:** This service calculates , , and  scores based on various factors.
+    - **Changes:** The logic was updated to calculate  for all cricket formats, not just test matches, per the user's request. It was also verified that it correctly calculates  for football and excludes it for basketball.
+
+- ****: Manages all scheduled background tasks.
+    - **Summary:** Uses  to run jobs like fetching new odds, calculating IQs, and verifying final scores. It was discovered this worker was not configured in  and thus was not running automatically.
+    - **Changes:** The  was updated to run every 5 minutes instead of 2 hours. Logic was added to the live score update job to also process and save matches as soon as they are marked completed.
+
+- ****: Service to interact with the API-Football.
+    - **Summary:** Fetches live and historical data for football matches.
+    - **Changes:** A new function, , was added to specifically fetch matches by date with a FT (Finished) status, as the  endpoint did not include them.
+</code_architecture>
+
+<pending_tasks>
+- **Implement Final Score & Verification Display**: For completed matches, modify  to show the final score (e.g., 4-1) instead of vs, and display if the IQ prediction was Correct ✅ or Incorrect ❌.
+- **Configure Background Worker**: Add the  script to the  file so that data fetching and processing jobs run automatically without manual intervention.
+- **Fix Data Persistence**: The  collection was repeatedly found to be empty, indicating a potential issue with the data population script not saving to the database correctly. This needs to be stabilized.
+</pending_tasks>
+
+<current_work>
+The AI engineer was being corrected by the user for repeatedly failing to implement a key requirement for completed matches. The user provided screenshots showing that a FINAL match still displayed vs instead of the final score, and lacked any indication of whether the FunBet IQ prediction was correct or incorrect.
+
+The trajectory shows that the backend work to support this feature is partially done:
+1.  A function to fetch final scores from API-Football now exists ( in ).
+2.  A background job ( in ) has been updated to use this function and runs every 5 minutes (though it must be run manually as the worker is not in supervisor).
+3.  A  exists to determine if a prediction was correct.
+
+However, the final scores are not being correctly saved or linked to the matches displayed on the frontend. The immediate task is to bridge this gap by ensuring final scores are stored in the database and then displayed correctly in the  component, along with the prediction verification status. The last user message was a direct and frustrated order to implement this feature.
+</current_work>
+
+<optional_next_step>
+Fix the display for completed matches in  to show the final score and the prediction verification status (Correct/Incorrect), as per the user's explicit and repeated final instruction.
+</optional_next_step>

@@ -27,11 +27,11 @@ print('User ID: ' + userId);
 ## Step 2: Test Backend API
 ```bash
 # Test auth endpoint
-curl -X GET "https://sportiq-revive.preview.emergentagent.com/api/auth/me" \
+curl -X GET "https://livescore-verify.preview.emergentagent.com/api/auth/me" \
   -H "Authorization: Bearer YOUR_SESSION_TOKEN"
 
 # Test protected endpoints  
-curl -X GET "https://sportiq-revive.preview.emergentagent.com/api/user/favorites" \
+curl -X GET "https://livescore-verify.preview.emergentagent.com/api/user/favorites" \
   -H "Authorization: Bearer YOUR_SESSION_TOKEN"
 ```
 
@@ -47,7 +47,7 @@ await page.context.add_cookies([{
     "secure": true,
     "sameSite": "None"
 }]);
-await page.goto("https://sportiq-revive.preview.emergentagent.com");
+await page.goto("https://livescore-verify.preview.emergentagent.com");
 ```
 
 ## Critical: ID Schema
