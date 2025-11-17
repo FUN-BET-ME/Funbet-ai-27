@@ -100,13 +100,15 @@ const About = () => {
           <h2 className="text-2xl font-bold mb-4 text-white">Data Sources</h2>
           <div className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-6">
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              FunBet.Me aggregates real-time odds from The Odds API, team statistics from ESPN, 
-              and live scores from multiple reputable sources. Our proprietary FunBet IQ algorithm 
-              processes this data to calculate market intelligence scores and confidence ratings.
+              FunBet.AI aggregates real-time odds from The Odds API (40+ bookmakers), live scores from 
+              API-Football, API-Basketball, and Cricket APIs, plus team statistics from ESPN. Our FunBet IQ 
+              algorithm analyzes this data using AI to generate predictions. When matches complete, we 
+              automatically verify predictions against official final scores.
             </p>
             <p className="text-gray-400 text-sm leading-relaxed">
-              While we update data every 5 minutes and strive for accuracy, odds change rapidly in live markets. 
-              Always verify odds and information directly with bookmakers before placing any bets.
+              Live scores update every 10 seconds. Odds update every 5 minutes. Prediction verification runs 
+              every 15 minutes for completed matches. While we strive for accuracy, always verify odds and 
+              information directly with bookmakers before making any decisions.
             </p>
           </div>
         </div>
