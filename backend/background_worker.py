@@ -1025,3 +1025,20 @@ async def start_worker():
 async def stop_worker():
     """Stop the worker"""
     worker.stop()
+
+if __name__ == "__main__":
+    """Run the background worker"""
+    import logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    try:
+        asyncio.run(start_worker())
+        # Keep running forever
+        while True:
+            asyncio.get_event_loop().run_forever()
+    except KeyboardInterrupt:
+        print("\n🛑 Shutting down background worker...")
+        asyncio.run(stop_worker())
