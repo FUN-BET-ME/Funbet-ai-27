@@ -142,15 +142,12 @@ const About = () => {
 
         {/* Powered By */}
         <div className="mt-12 text-center">
-          <p className="text-gray-400 text-sm mb-2">Powered by</p>
-          <a
-            href="https://funbet.me/en"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-            className="text-[#FFD700] hover:underline font-bold text-lg"
-          >
-            FunBet.Me
-          </a>
+          <p className="text-gray-400 text-sm mb-2">
+            FunBet.AI - AI-Powered Sports Intelligence with Verified Predictions
+          </p>
+          <p className="text-[#FFD700] font-semibold text-sm">
+            Transparent. Accurate. Verifiable.
+          </p>
         </div>
       </div>
     </div>
