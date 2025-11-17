@@ -1325,7 +1325,11 @@ const LiveOdds = () => {
                           url={window.location.href}
                         />
                         <span className="text-sm text-gray-400 ml-2">
-                          {sortedBookmakers.length + 1} bookmakers
+                          {(() => {
+                            const funbetCount = sortedBookmakers.filter(b => b.title?.toLowerCase().includes('funbet') || b.key === 'funbet').length;
+                            const otherCount = sortedBookmakers.length - funbetCount;
+                            return funbetCount > 0 ? `${otherCount} + 1 bookmakers` : `${sortedBookmakers.length} bookmakers`;
+                          })()}
                         </span>
                       </div>
                     </div>
