@@ -870,17 +870,15 @@ const LiveOdds = () => {
                     if (timeFilter === 'live-upcoming') {
                       const commenceTime = new Date(match.commence_time);
                       const now = new Date();
-                      const hoursSinceStart = (now - commenceTime) / (1000 * 60 * 60);
                       
-                      // Match is completed if marked as completed OR started more than 3 hours ago (for most sports)
-                      const isCompleted = match.live_score?.completed === true || hoursSinceStart > 3;
+                      // Match is completed if API says it's completed
+                      const isCompleted = match.completed === true || match.live_score?.completed === true;
                       
-                      // Match is ACTUALLY live if: started (hoursSinceStart > 0) AND less than 3 hours ago AND has live score data
-                      const isActuallyLive = hoursSinceStart > 0 && hoursSinceStart < 3 && 
-                        (match.live_score?.is_live === true || (match.live_score?.home_score !== null && match.live_score?.home_score !== undefined));
+                      // Match is ACTUALLY live if: API says it's live OR has live score data with is_live flag
+                      const isActuallyLive = match.live_score?.is_live === true;
                       
-                      // Only show matches that haven't started yet (future matches)
-                      return hoursSinceStart < 0 && !isCompleted;
+                      // Only show matches that haven't started yet AND not completed AND not live
+                      return commenceTime > now && !isCompleted && !isActuallyLive;
                     }
                     
                     // If showing "Recent Results", only show COMPLETED matches from last 48 hours
