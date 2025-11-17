@@ -154,9 +154,14 @@ class PredictionVerificationService:
                 return 'pending'
             
             # Get predicted winner from IQ scores (consider draw_iq for football)
-            home_iq = prediction.get('home_iq', 0)
-            away_iq = prediction.get('away_iq', 0)
-            draw_iq = prediction.get('draw_iq', 0)  # Will be 0 for non-football sports
+            home_iq = prediction.get('home_iq', 0) or 0
+            away_iq = prediction.get('away_iq', 0) or 0
+            draw_iq = prediction.get('draw_iq', 0) or 0  # Will be 0 for non-football sports
+            
+            # Convert to float to handle any type issues
+            home_iq = float(home_iq) if home_iq else 0
+            away_iq = float(away_iq) if away_iq else 0
+            draw_iq = float(draw_iq) if draw_iq else 0
             
             # Find the highest IQ score to determine prediction
             max_iq = max(home_iq, away_iq, draw_iq)
