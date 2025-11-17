@@ -499,9 +499,9 @@ const LiveOdds = () => {
             filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('basketball'));
           }
           
-          // Only show COMPLETED matches
+          // Only show COMPLETED matches (check both root and live_score)
           filteredData = filteredData.filter(match => 
-            match.live_score && match.live_score.completed === true
+            match.completed === true || match.live_score?.completed === true
           );
           
           setAllOdds(filteredData);
