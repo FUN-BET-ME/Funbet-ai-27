@@ -1158,8 +1158,8 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                   : ''
                               } hover:bg-white/5 transition-colors`}
                             >
-                              <td className="py-1.5 px-1 sm:py-3 sm:px-4 text-[10px] sm:text-sm font-medium text-white truncate max-w-[70px] sm:max-w-none">
-                                {bookmaker.title}
+                              <td className="py-1.5 px-0.5 sm:py-3 sm:px-4 text-[8px] sm:text-sm font-medium text-white">
+                                <div className="truncate max-w-[90px] sm:max-w-none">{bookmaker.title}</div>
                               </td>
                               {outcomeNames.map((name) => {
                                 // Find the matching outcome from bookmaker by team name ONLY
