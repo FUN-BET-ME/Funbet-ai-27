@@ -969,7 +969,7 @@ class OddsWorker:
         logger.info("✅ Background worker started - 9 jobs scheduled")
         logger.info("🎯 Expected usage: ~290 API calls/day (odds) + ~17,280 calls/day (live scores every 10s) = ~17,570 total")
         logger.info("📊 Historical data: ALL matches preserved permanently (no cleanup)")
-        logger.info("🎯 Prediction tracking: Verifying completed matches every hour")
+        logger.info("🎯 Prediction tracking: Verifying completed matches every 15 minutes")
         logger.info("🎨 Team logos: Fetching from ESPN every 6 hours")
         logger.info("📊 Team stats: Fetching historical data from ESPN every 6 hours")
     
