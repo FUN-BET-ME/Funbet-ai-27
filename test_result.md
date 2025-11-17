@@ -111,7 +111,7 @@ backend:
     file: "/app/backend/server.py, /app/backend/funbet_iq_engine.py, /app/backend/prediction_verification_service.py"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
@@ -119,6 +119,9 @@ backend:
       - working: true
         agent: "main"
         comment: "✅ BACKFILL COMPLETE & VERIFIED - MAJOR FIX: Discovered 7 completed matches WITHOUT IQ predictions (including Santos vs Palmeiras shown in user screenshot). Root cause: These matches were added to odds_cache after they started, so IQ engine never calculated predictions for them. SOLUTION: (1) Created and ran backfill script using calculate_funbet_iq() to generate predictions for 6/7 missing matches (1 had no bookmaker odds). (2) Ran PredictionVerificationService to verify all 6 backfilled predictions. SANTOS RESULT: Home IQ 40.7, Away IQ 45.5, Predicted: Palmeiras (away), Actual: Santos won 1-0, Prediction INCORRECT ❌. API now returns complete data: prediction_correct=False, predicted_winner='away', actual_winner='home', verified_at='2025-11-17T17:23:11.950000'. Tested via curl - API response confirmed working. Database: 436 total IQ predictions, 42 verified (was 36, added 6). Ready for frontend testing."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETED - ALL SUCCESS CRITERIA MET (6/6): (1) GET /api/odds/all-cached?time_filter=recent&limit=10 returns 10 completed matches from last 48 hours, all with completed=true. (2) All matches have scores array with final scores (e.g., Santos 1-0 Palmeiras). (3) All matches have funbet_iq object with complete structure. (4) SANTOS VS PALMEIRAS VERIFIED: Match ID 576abf4fe795f6f613030939451e673a found with exact expected data - Final Score: Santos 1-0 Palmeiras, prediction_correct=False, predicted_winner='away' (Palmeiras), actual_winner='home' (Santos), verified_at='2025-11-17T17:23:11.950000'. (5) VERIFICATION COVERAGE: 100% - 37/37 matches with IQ predictions have verification data (prediction_correct not null). (6) FunBet IQ data structure complete: home_iq, away_iq, draw_iq (football), confidence, verdict, prediction_correct, predicted_winner, actual_winner, verified_at all present. Backend health: healthy. API response time: 5.15s. CRITICAL USER ISSUE RESOLVED - completed matches now display final scores and prediction verification correctly."
 
   - task: "Bookmaker merge logic with deduplication"
     implemented: true
