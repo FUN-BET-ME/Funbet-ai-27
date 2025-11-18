@@ -1059,7 +1059,18 @@ const FunBetIQ = () => {
                         </div>
                         
                         <div className="text-center">
-                          <p className="text-gray-500 font-bold text-2xl">VS</p>
+                          {pred.scores && pred.scores.length === 2 ? (
+                            <div className="flex flex-col items-center gap-1">
+                              <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600/30 to-emerald-600/30 rounded-lg border border-green-500/30">
+                                <span className="text-white font-bold text-2xl">{pred.scores[0].score}</span>
+                                <span className="text-gray-400 font-bold text-xl">-</span>
+                                <span className="text-white font-bold text-2xl">{pred.scores[1].score}</span>
+                              </div>
+                              <span className="text-xs text-green-400 font-semibold">FINAL</span>
+                            </div>
+                          ) : (
+                            <p className="text-gray-500 font-bold text-2xl">VS</p>
+                          )}
                         </div>
                         
                         <div className="text-center relative">
