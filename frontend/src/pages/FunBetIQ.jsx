@@ -73,7 +73,7 @@ const FunBetIQ = () => {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       
       // Determine sport filter - don't send sport param if "all"
-      const params = { limit: 100 };
+      const params = {};  // NO LIMIT - fetch ALL predictions
       if (filter !== 'all') {
         params.sport = filter === 'football' ? 'football' : filter === 'cricket' ? 'cricket' : 'basketball';
       }
