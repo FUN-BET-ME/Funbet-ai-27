@@ -803,8 +803,18 @@ const Stats = () => {
                   </div>
                 ))}
               </div>
-              {filterMatches(trendingMatches.hotMarkets).length === 0 && (
+              {filterMatches(trendingMatches.hotMarkets).length === 0 ? (
                 <p className="text-gray-500 text-center py-4">No hot markets found for selected sport</p>
+              ) : filterMatches(trendingMatches.hotMarkets).length > 10 && (
+                <div className="flex justify-center mt-6">
+                  <button
+                    onClick={() => setShowAllHotMarkets(!showAllHotMarkets)}
+                    className="px-6 py-2 bg-[#FFD700] text-[#2E004F] rounded-lg font-bold hover:bg-[#FFD700]/90 transition-all flex items-center gap-2"
+                  >
+                    {showAllHotMarkets ? 'Show Less' : `View More (${filterMatches(trendingMatches.hotMarkets).length - 10} more)`}
+                    <ArrowRight className={`w-4 h-4 transition-transform ${showAllHotMarkets ? 'rotate-90' : ''}`} />
+                  </button>
+                </div>
               )}
             </section>
 
