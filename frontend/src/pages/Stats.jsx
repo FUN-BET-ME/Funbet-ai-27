@@ -663,8 +663,9 @@ const Stats = () => {
                   <p className="text-gray-400">No predictions found for this filter</p>
                 </div>
               ) : (
+                <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {historyPredictions.slice(0, 6).map((pred) => (
+                  {historyPredictions.slice(0, showAllHistory ? historyPredictions.length : 10).map((pred) => (
                     <div
                       key={pred._id || pred.match_id}
                       className="bg-[#2E004F]/30 border border-[#2E004F]/50 rounded-xl p-4 hover:border-[#FFD700]/30 transition-all"
