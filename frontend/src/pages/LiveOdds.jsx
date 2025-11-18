@@ -365,12 +365,21 @@ const LiveOdds = () => {
       } else if (allOdds.length > 0 && !loading) {
         // Background refresh: intelligently merge without disruption
         console.log('🔄 Smart merge mode: Preserving', allOdds.length, 'existing matches, updating with', newMatches.length, 'new');
+        
+        // CRITICAL FIX: Filter out completed matches for Upcoming tab
+        let filteredMatches = newMatches;
+        if (timeFilter !== 'recent-results' && timeFilter !== 'inplay') {
+          // Upcoming tab: exclude completed matches
+          filteredMatches = newMatches.filter(match => !match.completed && !match.live_score?.completed);
+          console.log(`🔎 Filtered out completed matches in merge: ${newMatches.length} → ${filteredMatches.length}`);
+        }
+        
         setAllOdds(prev => {
           const merged = [...prev];
           const existingIds = new Set(prev.map(m => m.id));
           
           // Update existing matches and add new ones
-          newMatches.forEach(newMatch => {
+          filteredMatches.forEach(newMatch => {
             const existingIndex = merged.findIndex(m => m.id === newMatch.id);
             if (existingIndex >= 0) {
               // Update existing match (odds may have changed)
@@ -381,8 +390,13 @@ const LiveOdds = () => {
             }
           });
           
-          console.log('✅ Smart merge complete: Updated/added matches, total:', merged.length);
-          return merged;
+          // CRITICAL FIX: Remove any completed matches from merged array for Upcoming tab
+          const finalMerged = timeFilter !== 'recent-results' && timeFilter !== 'inplay'
+            ? merged.filter(m => !m.completed && !m.live_score?.completed)
+            : merged;
+          
+          console.log('✅ Smart merge complete: Updated/added matches, total:', finalMerged.length);
+          return finalMerged;
         });
       } else {
         // Initial load or explicit refresh: replace all
