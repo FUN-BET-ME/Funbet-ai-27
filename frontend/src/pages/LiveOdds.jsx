@@ -1314,7 +1314,16 @@ const LiveOdds = () => {
                                 );
                                 const isCricket = match.sport_key && match.sport_key.includes('cricket');
                                 const canHaveDraw = isFootball || isCricket;
-                                const hasDrawIQ = canHaveDraw && matchIQ.draw_iq && matchIQ.draw_iq > 0;
+                                const hasDrawIQ = canHaveDraw && matchIQ.draw_iq != null && matchIQ.draw_iq > 0;
+                                
+                                // DEBUG: Log draw IQ issues
+                                if (canHaveDraw && !hasDrawIQ) {
+                                  console.log('⚠️ Draw IQ missing for:', match.home_team, 'vs', match.away_team, {
+                                    draw_iq: matchIQ.draw_iq,
+                                    canHaveDraw,
+                                    hasDrawIQ
+                                  });
+                                }
                                 
                                 let predictedOutcome = homeTeam;
                                 let maxIQ = matchIQ.home_iq;
