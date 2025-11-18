@@ -160,12 +160,7 @@ const FunBetIQ = () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/track-record`, {
-        params: {
-          limit: 100,
-          filter: historyFilter,
-          sort_by: historySortBy,
-          _t: Date.now() // Cache buster
-        },
+        params: {}  // NO LIMIT - fetch ALL history,
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache',
