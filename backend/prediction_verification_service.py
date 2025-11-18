@@ -173,18 +173,33 @@ class PredictionVerificationService:
             # Compare prediction with actual result
             is_correct = (predicted_winner == actual_winner)
             
-            # Update prediction in database
+            # Get final scores to save permanently
+            final_scores = match_data.get('scores', [])
+            if not final_scores or len(final_scores) != 2:
+                # Try to get from live_score
+                live_score = match_data.get('live_score', {})
+                if live_score.get('home_score') and live_score.get('away_score'):
+                    final_scores = [
+                        {'name': match_data.get('home_team'), 'score': str(live_score['home_score'])},
+                        {'name': match_data.get('away_team'), 'score': str(live_score['away_score'])}
+                    ]
+            
+            # Update prediction in database with final scores
+            update_data = {
+                'actual_winner': actual_winner,
+                'predicted_winner': predicted_winner,
+                'prediction_correct': is_correct,
+                'match_status': 'completed',
+                'verified_at': now
+            }
+            
+            # Save final scores permanently (won't change)
+            if final_scores and len(final_scores) == 2:
+                update_data['scores'] = final_scores
+            
             await self.iq_scores_collection.update_one(
                 {'_id': prediction['_id']},
-                {
-                    '$set': {
-                        'actual_winner': actual_winner,
-                        'predicted_winner': predicted_winner,
-                        'prediction_correct': is_correct,
-                        'match_status': 'completed',
-                        'verified_at': now
-                    }
-                }
+                {'$set': update_data}
             )
             
             result_emoji = '✅' if is_correct else '❌'
