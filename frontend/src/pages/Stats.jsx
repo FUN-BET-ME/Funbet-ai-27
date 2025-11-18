@@ -32,6 +32,12 @@ const Stats = () => {
   const [filter, setFilter] = useState('all');
   const sports = ['all', 'football', 'cricket', 'basketball'];
   
+  // View More state for each section
+  const [showAllHistory, setShowAllHistory] = useState(false);
+  const [showAllHotMarkets, setShowAllHotMarkets] = useState(false);
+  const [showAllValue, setShowAllValue] = useState(false);
+  const [showAllSharp, setShowAllSharp] = useState(false);
+  
   const formatSportName = (sport) => {
     const sportNames = {
       'all': 'All',
