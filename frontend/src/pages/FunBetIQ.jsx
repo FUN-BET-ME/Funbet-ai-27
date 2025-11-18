@@ -1108,13 +1108,22 @@ const FunBetIQ = () => {
                             : 'bg-red-900/20 border-red-500/50'
                         }`}>
                           <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-xs text-gray-400 mb-1">Actual Winner</p>
-                              <p className={`font-bold text-lg ${
-                                pred.was_correct ? 'text-green-400' : 'text-red-400'
-                              }`}>
-                                {pred.actual_winner || 'Unknown'}
-                              </p>
+                            <div className="flex-1">
+                              <p className="text-xs text-gray-400 mb-1">Actual Result</p>
+                              <div className="flex items-center gap-3">
+                                <p className={`font-bold text-lg ${
+                                  pred.was_correct ? 'text-green-400' : 'text-red-400'
+                                }`}>
+                                  Winner: {pred.actual_winner || 'Unknown'}
+                                </p>
+                                {pred.scores && pred.scores.length === 2 && (
+                                  <div className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded border border-white/20">
+                                    <span className="text-white font-bold text-sm">{pred.scores[0].score}</span>
+                                    <span className="text-gray-400">-</span>
+                                    <span className="text-white font-bold text-sm">{pred.scores[1].score}</span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                             <div>
                               {pred.was_correct ? (
