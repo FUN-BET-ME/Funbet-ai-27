@@ -899,7 +899,7 @@ const Stats = () => {
                 Unusual volatility patterns indicating significant betting pressure
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {filterMatches(trendingMatches.sharpMoney).slice(0, 6).map(match => (
+                {filterMatches(trendingMatches.sharpMoney).slice(0, showAllSharp ? filterMatches(trendingMatches.sharpMoney).length : 10).map(match => (
                   <div 
                     key={match.id} 
                     className="bg-white/5 border border-[#2E004F]/30 rounded-lg p-4 hover:border-[#FFD700]/30 hover:bg-white/10 transition-all cursor-pointer transform hover:scale-[1.02]"
