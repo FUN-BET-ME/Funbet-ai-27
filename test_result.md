@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "FINAL SCORE & PREDICTION VERIFICATION DISPLAY - For COMPLETED matches (status=FINAL), the UI MUST display: (1) Final score (e.g., '4-1') instead of 'vs', (2) What FunBet IQ predicted (Home/Draw/Away), (3) Whether the prediction was Correct ✅ or Incorrect ❌. User has reported this issue MULTIPLE TIMES."
+user_problem_statement: "TWO CRITICAL BUGS: (1) COMPLETED matches showing in UPCOMING tab (e.g., Albania vs England FINAL 0-2 appears in Upcoming). (2) DRAW IQ missing for football matches (only Home/Away IQ shown, no Draw IQ in middle)."
 
 backend:
   - task: "Final Score & Prediction Verification Data in API"
