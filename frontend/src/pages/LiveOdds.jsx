@@ -329,6 +329,9 @@ const LiveOdds = () => {
         console.log('⚠️  Fetching ALL sports');
       }
 
+      // Add cache-busting timestamp
+      apiURL += `&_t=${Date.now()}`;
+
       console.log('📡 API URL:', apiURL);
       const response = await axios.get(apiURL, { 
         timeout: 30000, // 30 second timeout
