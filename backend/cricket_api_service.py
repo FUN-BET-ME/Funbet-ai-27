@@ -100,12 +100,21 @@ class CricketAPIService:
                                     except:
                                         pass
                             
+                            # Create scores array for consistency with other sports
+                            scores_array = []
+                            if home_score and away_score:
+                                scores_array = [
+                                    {'name': home_team, 'score': home_score},
+                                    {'name': away_team, 'score': away_score}
+                                ]
+                            
                             matches.append({
                                 'match_id': match_id,
                                 'home_team': home_team,
                                 'away_team': away_team,
                                 'home_score': home_score,
                                 'away_score': away_score,
+                                'scores': scores_array,  # Add scores array for completed matches
                                 'is_live': is_live,
                                 'completed': is_completed,
                                 'match_status': match_status,
