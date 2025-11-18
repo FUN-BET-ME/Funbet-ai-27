@@ -301,13 +301,13 @@ backend:
         comment: "✅ VERIFIED WORKING - New API key 32a9a6003fde37f0dd43987779689274 successfully integrated and backend logs confirm it's being used"
 
 frontend:
-  - task: "Final Score & Prediction Verification Display for Completed Matches"
+  - task: "Fix Completed Matches in Upcoming Tab + Draw IQ Display"
     implemented: true
-    working: true
+    working: "NA"
     file: "/app/frontend/src/pages/LiveOdds.jsx"
-    stuck_count: 3
+    stuck_count: 0
     priority: "critical"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
         agent: "user"
