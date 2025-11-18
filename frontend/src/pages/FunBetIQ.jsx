@@ -1034,12 +1034,12 @@ const FunBetIQ = () => {
                         ) : pred.was_correct ? (
                           <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-lg text-sm">
                             <CheckCircle className="w-5 h-5" />
-                            <span className="font-bold">Correct ✓</span>
+                            <span className="font-bold">Correct</span>
                           </div>
                         ) : (
                           <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 text-red-400 rounded-lg text-sm">
                             <XCircle className="w-5 h-5" />
-                            <span className="font-semibold">Incorrect ✗</span>
+                            <span className="font-semibold">Incorrect</span>
                           </div>
                         )}
                       </div>
