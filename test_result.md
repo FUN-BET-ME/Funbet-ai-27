@@ -303,11 +303,11 @@ backend:
 frontend:
   - task: "Fix Completed Matches in Upcoming Tab + Draw IQ Display"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/LiveOdds.jsx"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "user"
@@ -324,6 +324,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ COMPREHENSIVE E2E TESTING COMPLETED - ALL SUCCESS CRITERIA MET (5/5): (1) Recent Results tab loads correctly with 38 completed matches and proper yellow/gold highlighting. (2) Santos vs Palmeiras match displays perfectly: Final score '1-0' (not 'vs'), green FINAL badge, IQ scores Santos 40.7 & Palmeiras 45.5. (3) Prediction verification working: '🧠 Predicted: Palmeiras ❌ Incorrect' with red gradient background indicating incorrect prediction. (4) Console logs confirm 38 matches loaded successfully with Santos as first match. (5) Frontend code in LiveOdds.jsx lines 1318-1331 rendering verification data correctly. CRITICAL USER ISSUE RESOLVED - completed matches now show final scores, IQ predictions, and verification status (✅/❌) as requested. The user's multiple reports about missing verification display have been fully addressed."
+      - working: true
+        agent: "testing"
+        comment: "✅ CRITICAL BUG FIXES VERIFIED WORKING - COMPREHENSIVE TESTING COMPLETED (5/5 SUCCESS CRITERIA MET): **BUG #1 FIXED**: Upcoming tab shows ZERO completed matches (0 FINAL badges found). Console logs confirm filtering working: '🔎 Filtered out completed matches in merge: 334 → 331'. **BUG #2 FIXED**: Football Draw IQ display working perfectly - found 331 matches with Draw IQ indicators, 329 matches showing Draw odds pattern, all football matches display 3 IQ values (Home, Draw, Away). Screenshots confirm: (1) Upcoming tab clean with no completed matches, (2) Football matches show proper Draw column with odds like 'Draw 6.13', (3) Recent Results properly shows completed matches with FINAL badges, (4) Sporting Gijón vs SD Eibar displays Home IQ 34.5, Draw IQ 1.30, Away IQ 32.3 as expected. Console shows no Draw IQ error messages. BOTH CRITICAL USER ISSUES FULLY RESOLVED."
 
   - task: "Mobile View IQ Scores Display (OddsTable Component)"
     implemented: true
