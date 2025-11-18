@@ -947,8 +947,18 @@ const Stats = () => {
                   </div>
                 ))}
               </div>
-              {filterMatches(trendingMatches.sharpMoney).length === 0 && (
+              {filterMatches(trendingMatches.sharpMoney).length === 0 ? (
                 <p className="text-gray-500 text-center py-4">No sharp money indicators for selected sport</p>
+              ) : filterMatches(trendingMatches.sharpMoney).length > 10 && (
+                <div className="flex justify-center mt-6">
+                  <button
+                    onClick={() => setShowAllSharp(!showAllSharp)}
+                    className="px-6 py-2 bg-[#FFD700] text-[#2E004F] rounded-lg font-bold hover:bg-[#FFD700]/90 transition-all flex items-center gap-2"
+                  >
+                    {showAllSharp ? 'Show Less' : `View More (${filterMatches(trendingMatches.sharpMoney).length - 10} more)`}
+                    <ArrowRight className={`w-4 h-4 transition-transform ${showAllSharp ? 'rotate-90' : ''}`} />
+                  </button>
+                </div>
               )}
             </section>
 
