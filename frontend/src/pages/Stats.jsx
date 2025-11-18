@@ -55,7 +55,7 @@ const Stats = () => {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/track-record`, {
         params: {
-          limit: 100,
+          // NO LIMIT - fetch ALL predictions
           filter: historyFilter,
           sort_by: historySortBy,
           _t: Date.now()
