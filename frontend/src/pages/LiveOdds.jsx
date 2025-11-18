@@ -1305,6 +1305,16 @@ const LiveOdds = () => {
                             {/* Second Line: FunBet IQ Scores with Draw IQ below VS */}
                             {(() => {
                               const matchIQ = match.funbet_iq;
+                              
+                              // Log missing predictions for debugging
+                              if (!matchIQ || !matchIQ.home_iq || !matchIQ.away_iq) {
+                                console.log('⚠️ Missing IQ prediction for:', match.home_team, 'vs', match.away_team, {
+                                  has_iq: !!matchIQ,
+                                  home_iq: matchIQ?.home_iq,
+                                  away_iq: matchIQ?.away_iq
+                                });
+                              }
+                              
                               if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
                                 // Football/soccer and ALL cricket formats can have draws/ties
                                 // Cricket: Test can draw, ODI/T20 can tie (then super over)
