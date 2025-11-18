@@ -730,6 +730,18 @@ const Stats = () => {
                     </div>
                   ))}
                 </div>
+                {historyPredictions.length > 10 && (
+                  <div className="flex justify-center mt-6">
+                    <button
+                      onClick={() => setShowAllHistory(!showAllHistory)}
+                      className="px-6 py-2 bg-[#FFD700] text-[#2E004F] rounded-lg font-bold hover:bg-[#FFD700]/90 transition-all flex items-center gap-2"
+                    >
+                      {showAllHistory ? 'Show Less' : `View More (${historyPredictions.length - 10} more)`}
+                      <ArrowRight className={`w-4 h-4 transition-transform ${showAllHistory ? 'rotate-90' : ''}`} />
+                    </button>
+                  </div>
+                )}
+                </>
               )}
             </section>
 
