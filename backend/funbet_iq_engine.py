@@ -453,8 +453,23 @@ async def calculate_funbet_iq(match: Dict, db) -> Dict:
         home_trend = '↗' if home_iq > 60 else '↘' if home_iq < 40 else '→'
         away_trend = '↗' if away_iq > 60 else '↘' if away_iq < 40 else '→'
         
+        # Determine predicted winner (including draw possibility)
+        predicted_winner = 'home'
+        if draw_iq is not None:
+            # Check all three outcomes for sports that can draw
+            if draw_iq > home_iq and draw_iq > away_iq:
+                predicted_winner = 'draw'
+            elif away_iq > home_iq:
+                predicted_winner = 'away'
+        else:
+            # Only home vs away for sports without draws
+            if away_iq > home_iq:
+                predicted_winner = 'away'
+        
         # Generate verdict
-        if home_iq > away_iq + 5:
+        if draw_iq is not None and draw_iq > home_iq and draw_iq > away_iq:
+            verdict = "Draw likely"
+        elif home_iq > away_iq + 5:
             verdict = f"{home_team} favoured"
         elif away_iq > home_iq + 5:
             verdict = f"{away_team} favoured"
@@ -469,6 +484,7 @@ async def calculate_funbet_iq(match: Dict, db) -> Dict:
             'home_iq': round(home_iq, 1),
             'away_iq': round(away_iq, 1),
             'draw_iq': round(draw_iq, 1) if draw_iq is not None else None,
+            'predicted_winner': predicted_winner,
             'confidence': confidence,
             'verdict': verdict,
             'home_components': {
