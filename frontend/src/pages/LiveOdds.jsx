@@ -388,9 +388,17 @@ const LiveOdds = () => {
         // Initial load or explicit refresh: replace all
         console.log('🔄 Full replace mode: Setting', newMatches.length, 'matches (was:', allOdds.length, ')');
         
+        // CRITICAL FIX: Filter out completed matches for Upcoming tab
+        let filteredMatches = newMatches;
+        if (timeFilter !== 'recent-results' && timeFilter !== 'inplay') {
+          // Upcoming tab: exclude completed matches
+          filteredMatches = newMatches.filter(match => !match.completed && !match.live_score?.completed);
+          console.log(`🔎 Filtered out completed matches: ${newMatches.length} → ${filteredMatches.length}`);
+        }
+        
         // CRITICAL FIX: Only replace if we have new data OR it's initial load
-        if (newMatches.length > 0 || allOdds.length === 0) {
-          setAllOdds(newMatches);
+        if (filteredMatches.length > 0 || allOdds.length === 0) {
+          setAllOdds(filteredMatches);
           console.log('✅ Replace complete');
         } else {
           console.log('⚠️ API returned no matches, keeping existing', allOdds.length, 'matches');
