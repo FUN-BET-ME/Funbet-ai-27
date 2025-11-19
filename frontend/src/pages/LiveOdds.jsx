@@ -1614,7 +1614,7 @@ const LiveOdds = () => {
                                     href="https://funbet.me" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-1 sm:gap-2 hover:opacity-80 transition-opacity"
+                                    className="flex items-center gap-1 sm:gap-2 hover:opacity-80 transition-opacity cursor-pointer"
                                   >
                                     <span className="text-[#FFD700] text-base sm:text-2xl leading-none">⭐</span>
                                     <span className="text-[#FFD700] font-bold text-[10px] sm:text-lg whitespace-nowrap leading-none">FunBet.me</span>
