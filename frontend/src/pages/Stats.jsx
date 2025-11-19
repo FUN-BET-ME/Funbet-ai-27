@@ -777,7 +777,7 @@ const Stats = () => {
                         {match.bookmakerCount} bookmakers
                       </span>
                     </div>
-                    <div className="text-white font-semibold mb-1 break-words leading-tight">
+                    <div className="text-white font-semibold mb-1 overflow-wrap-anywhere leading-tight">
                       {match.home_team} vs {match.away_team}
                     </div>
                     
@@ -861,7 +861,7 @@ const Stats = () => {
                         {match.bestValue.difference}% difference
                       </span>
                     </div>
-                    <div className="text-white font-semibold mb-1 break-words leading-tight">
+                    <div className="text-white font-semibold mb-1 overflow-wrap-anywhere leading-tight">
                       {match.home_team} vs {match.away_team}
                     </div>
                     
@@ -1041,7 +1041,7 @@ const Stats = () => {
                         Starts in {Math.round((new Date(match.commence_time) - new Date()) / (1000 * 60))}m
                       </span>
                     </div>
-                    <div className="text-white font-semibold mb-1 break-words leading-tight">
+                    <div className="text-white font-semibold mb-1 overflow-wrap-anywhere leading-tight">
                       {match.home_team} vs {match.away_team}
                     </div>
                     
