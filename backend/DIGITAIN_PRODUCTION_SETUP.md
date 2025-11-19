@@ -78,10 +78,10 @@ asyncio.run(test_production())
 
 ```bash
 # Test live endpoint
-curl "https://predview.preview.emergentagent.com/api/digitain/live" | jq '.data[] | select(.sport_title | contains("Cricket"))'
+curl "https://predict-score.preview.emergentagent.com/api/digitain/live" | jq '.data[] | select(.sport_title | contains("Cricket"))'
 
 # Test prematch endpoint
-curl "https://predview.preview.emergentagent.com/api/digitain/prematch?days_ahead=7" | jq '.data[] | select(.sport_title | contains("Cricket"))'
+curl "https://predict-score.preview.emergentagent.com/api/digitain/prematch?days_ahead=7" | jq '.data[] | select(.sport_title | contains("Cricket"))'
 ```
 
 ## Expected Results with Production

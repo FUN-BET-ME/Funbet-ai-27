@@ -12,7 +12,7 @@ from datetime import datetime
 import time
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://predview.preview.emergentagent.com"
+BACKEND_URL = "https://predict-score.preview.emergentagent.com"
 
 def test_api_endpoint(endpoint, description, expected_fields=None):
     """Test a single API endpoint"""
