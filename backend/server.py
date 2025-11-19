@@ -392,10 +392,16 @@ async def get_all_cached_odds(
             else:
                 query['sport_key'] = {'$regex': f'^{sport}_', '$options': 'i'}
         
-        # Get all matches with smart sorting: live matches first, then by start time
-        # Sort by: 1) live_score.is_live (desc - true first), 2) commence_time (asc - soonest first)
+        # Get all matches with smart sorting
+        # For recent results: sort by completed_at (newest first)
+        # For others: live matches first, then by start time
+        if time_filter == 'recent':
+            sort_criteria = [('completed_at', -1), ('commence_time', -1)]  # Newest completed first
+        else:
+            sort_criteria = [('live_score.is_live', -1), ('commence_time', 1)]  # Live first, then upcoming
+        
         matches = await db_instance.db.odds_cache.find(query, {'_id': 0}) \
-            .sort([('live_score.is_live', -1), ('commence_time', 1)]) \
+            .sort(sort_criteria) \
             .skip(skip) \
             .limit(limit) \
             .to_list(length=limit)
