@@ -1433,13 +1433,13 @@ const LiveOdds = () => {
                                         <span className="text-purple-400 font-bold text-xs sm:text-sm">{matchIQ.home_iq}</span>
                                       </div>
                                       
-                                      {/* DRAW IQ - CENTER (below VS position) - For Football & Cricket */}
-                                      {canHaveDraw && matchIQ.draw_iq != null ? (
-                                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '60px'}}>
-                                          <span style={{fontSize: '10px', color: '#9ca3af', marginBottom: '2px'}}>Draw</span>
-                                          <span className="text-purple-400 font-bold text-xs sm:text-sm">{matchIQ.draw_iq}</span>
+                                      {/* DRAW IQ - CENTER - ALWAYS SHOW FOR FOOTBALL & CRICKET */}
+                                      {canHaveDraw && (
+                                        <div className="flex flex-col items-center min-w-[70px]">
+                                          <span className="text-[10px] text-gray-400 mb-0.5">Draw</span>
+                                          <span className="text-purple-400 font-bold text-xs sm:text-sm">{matchIQ.draw_iq || '—'}</span>
                                         </div>
-                                      ) : null}
+                                      )}
                                       
                                       {/* AWAY IQ - RIGHT */}
                                       <div className="flex-1 text-right">
