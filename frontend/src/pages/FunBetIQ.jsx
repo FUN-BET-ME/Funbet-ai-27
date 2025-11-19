@@ -806,7 +806,7 @@ const FunBetIQ = () => {
                     {/* Teams */}
                     <div className="mb-3">
                       <p className="text-sm text-gray-400 mb-1">Match</p>
-                      <p className="text-white font-medium overflow-wrap-anywhere leading-tight">{prediction.home_team} vs {prediction.away_team}</p>
+                      <p className="text-white font-semibold text-base sm:text-lg overflow-wrap-anywhere leading-tight">{prediction.home_team} vs {prediction.away_team}</p>
                       
                       {/* IQ Scores Row - Home | Draw | Away - ALWAYS SHOW */}
                       <div className="flex items-center justify-between gap-2 mt-2">
