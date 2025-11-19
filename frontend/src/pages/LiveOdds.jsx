@@ -1429,18 +1429,22 @@ const LiveOdds = () => {
                                     {/* Row 1: Home IQ | Draw IQ (center below VS) | Away IQ - ALL SAME ROW */}
                                     <div className="flex items-center justify-between gap-2">
                                       {/* HOME IQ - LEFT */}
-                                      <span className="text-purple-400 font-bold text-xs sm:text-sm flex-1">{matchIQ.home_iq}</span>
+                                      <div className="flex-1 text-left">
+                                        <span className="text-purple-400 font-bold text-xs sm:text-sm">{matchIQ.home_iq}</span>
+                                      </div>
                                       
                                       {/* DRAW IQ - CENTER (below VS position) - For Football & Cricket */}
-                                      {canHaveDraw && matchIQ.draw_iq != null && (
-                                        <div className="flex flex-col items-center flex-shrink-0 min-w-[60px]">
-                                          <span className="text-[10px] text-gray-500 mb-0.5">Draw</span>
+                                      {canHaveDraw && matchIQ.draw_iq != null ? (
+                                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '60px'}}>
+                                          <span style={{fontSize: '10px', color: '#9ca3af', marginBottom: '2px'}}>Draw</span>
                                           <span className="text-purple-400 font-bold text-xs sm:text-sm">{matchIQ.draw_iq}</span>
                                         </div>
-                                      )}
+                                      ) : null}
                                       
                                       {/* AWAY IQ - RIGHT */}
-                                      <span className="text-purple-400 font-bold text-xs sm:text-sm text-right flex-1">{matchIQ.away_iq}</span>
+                                      <div className="flex-1 text-right">
+                                        <span className="text-purple-400 font-bold text-xs sm:text-sm">{matchIQ.away_iq}</span>
+                                      </div>
                                     </div>
                                     
                                     {/* Row 2: Prediction Verdict OR Verification Result for Completed Matches */}
