@@ -486,16 +486,20 @@ const LiveOdds = () => {
       });
     } else if (timeFilter === 'recent-results') {
       // Fetch recent completed matches (last 48 hours)
-      console.log('Fetching recent results (completed matches from last 48 hours)...');
+      console.log('🔄 Fetching recent results (completed matches from last 48 hours)...');
+      console.log('🔄 Current filter:', filter);
       if (shouldShowLoading) setLoading(true);
       fetchHistoricalOdds().then(data => {
         console.log('📊 Historical data received:', data.length, 'matches');
-        console.log('📊 API already filtered by sport, setting allOdds directly');
+        if (data.length > 0) {
+          console.log('📊 First match:', data[0].home_team, 'vs', data[0].away_team);
+          console.log('📊 First match has funbet_iq:', !!data[0].funbet_iq);
+          console.log('📊 First match draw_iq:', data[0].funbet_iq?.draw_iq);
+        }
         
         // Backend already filters by sport via API parameter, no need to filter again
-        // Just set the data directly - filteredOddsByLeague useMemo will handle any additional filtering if needed
         setAllOdds(data);
-        console.log('✅ Updated allOdds with', data.length, 'recent results');
+        console.log('✅ Set allOdds with', data.length, 'recent results');
         setLoading(false);
       }).catch(error => {
         console.error('❌ Error fetching historical odds:', error);
