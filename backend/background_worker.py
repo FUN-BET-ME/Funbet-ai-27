@@ -699,6 +699,7 @@ class OddsWorker:
                     
                     if linked_match:
                         # Save final score - mark as completed at ROOT level and in live_score
+                        now = datetime.now(timezone.utc)
                         await self.db.odds_cache.update_one(
                             {'id': linked_match['id']},
                             {'$set': {
@@ -715,8 +716,9 @@ class OddsWorker:
                                     'api_source': score.get('api_source', 'unknown')
                                 },
                                 'completed': True,  # CRITICAL: Mark at root level for verification
+                                'completed_at': now.isoformat(),  # ACTUAL completion time (not scheduled commence_time)
                                 'final_score_saved': True,
-                                'updated_at': datetime.now(timezone.utc).isoformat()
+                                'updated_at': now.isoformat()
                             }}
                         )
                         completed_saved += 1
