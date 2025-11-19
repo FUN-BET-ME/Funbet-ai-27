@@ -791,7 +791,9 @@ const LiveOdds = () => {
                 <button
                   key={sport}
                   onClick={() => {
-                    navigate(`/live-odds?filter=${sport}`);
+                    // CRITICAL FIX: Preserve timeFilter when changing sport filter
+                    const timeParam = timeFilter !== 'live-upcoming' ? `&time=${timeFilter}` : '';
+                    navigate(`/live-odds?filter=${sport}${timeParam}`);
                     setLeagueFilter('all'); // Reset league filter when sport changes
                   }}
                   className={`px-4 py-2 rounded-lg font-medium transition-all capitalize flex items-center gap-2 ${
