@@ -1115,7 +1115,7 @@ const Stats = () => {
                           +{match.profitMargin}% profit
                         </span>
                       </div>
-                      <div className="text-white font-semibold mb-2">
+                      <div className="text-white font-semibold mb-2 break-words leading-tight">
                         {match.home_team} vs {match.away_team}
                       </div>
                       
