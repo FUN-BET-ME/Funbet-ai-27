@@ -489,29 +489,13 @@ const LiveOdds = () => {
       console.log('Fetching recent results (completed matches from last 48 hours)...');
       if (shouldShowLoading) setLoading(true);
       fetchHistoricalOdds().then(data => {
-        console.log('Historical data received:', data.length, 'matches');
+        console.log('📊 Historical data received:', data.length, 'matches');
+        console.log('📊 API already filtered by sport, setting allOdds directly');
         
-        // Apply sport filter to historical data
-        let filteredData = data;
-        if (filter === 'football') {
-          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('soccer'));
-          console.log('🔎 Filtered to football:', filteredData.length, 'matches');
-        } else if (filter === 'cricket') {
-          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
-          console.log('🔎 Filtered to cricket:', filteredData.length, 'matches');
-        } else if (filter === 'basketball') {
-          filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('basketball'));
-          console.log('🔎 Filtered to basketball:', filteredData.length, 'matches');
-        }
-        
-        // Only show COMPLETED matches (check both root level and live_score)
-        filteredData = filteredData.filter(match => 
-          match.completed === true || match.live_score?.completed === true
-        );
-        console.log('🔎 Filtered to completed only:', filteredData.length, 'matches');
-        
-        setAllOdds(filteredData);
-        console.log('✅ Updated with', filteredData.length, 'recent results');
+        // Backend already filters by sport via API parameter, no need to filter again
+        // Just set the data directly - filteredOddsByLeague useMemo will handle any additional filtering if needed
+        setAllOdds(data);
+        console.log('✅ Updated allOdds with', data.length, 'recent results');
         setLoading(false);
       }).catch(error => {
         console.error('❌ Error fetching historical odds:', error);
