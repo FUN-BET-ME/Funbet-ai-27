@@ -364,14 +364,14 @@ async def get_all_cached_odds(
             now_str = now.isoformat().replace('+00:00', 'Z')
             query['commence_time'] = {'$gte': three_hours_ago_str, '$lte': now_str}
         elif time_filter == 'recent':
-            # Recent Results: completed matches from last 48 hours
-            # Use completed_at (actual finish time) if available, fallback to commence_time
+            # Recent Results: ONLY completed matches from last 48 hours, EXCLUDE live matches
             forty_eight_hours_ago = now - timedelta(hours=48)
             forty_eight_hours_ago_str = forty_eight_hours_ago.isoformat().replace('+00:00', 'Z')
             now_str = now.isoformat().replace('+00:00', 'Z')
             
-            # Query: completed matches that finished in last 48 hours
+            # Query: completed matches that finished in last 48 hours (NOT live)
             query['completed'] = True
+            query['live_score.is_live'] = {'$ne': True}  # EXCLUDE live matches
             query['$or'] = [
                 {'completed_at': {'$gte': forty_eight_hours_ago_str, '$lte': now_str}},  # New matches with completed_at
                 {'completed_at': {'$exists': False}, 'commence_time': {'$gte': forty_eight_hours_ago_str, '$lte': now_str}}  # Old matches without completed_at
