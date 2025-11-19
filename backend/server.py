@@ -1333,6 +1333,7 @@ async def get_funbet_iq_accuracy():
 @api_router.get("/funbet-iq/track-record")
 async def get_funbet_iq_track_record(
     limit: int = Query(100, ge=1, le=500),
+    sport: str = Query(None, description="Filter by sport: football, basketball, cricket, etc."),
     filter: str = Query('all', regex='^(all|correct|incorrect)$'),
     sort_by: str = Query('recent_first', regex='^(recent_first|correct_first|high_confidence)$')
 ):
