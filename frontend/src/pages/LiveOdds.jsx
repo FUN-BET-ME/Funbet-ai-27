@@ -1289,12 +1289,41 @@ const LiveOdds = () => {
                                     s.name.includes(awayTeam) || 
                                     awayTeam.includes(s.name)
                                   )?.score || scoresArray[1]?.score || '0';
+                                  // Format completion time
+                                  const commenceTime = match.commence_time;
+                                  let timeAgo = '';
+                                  if (commenceTime) {
+                                    try {
+                                      const dt = new Date(commenceTime);
+                                      const now = new Date();
+                                      const diffHours = Math.floor((now - dt) / (1000 * 60 * 60));
+                                      const diffDays = Math.floor(diffHours / 24);
+                                      
+                                      if (diffHours < 1) {
+                                        timeAgo = 'Just now';
+                                      } else if (diffHours < 24) {
+                                        timeAgo = `${diffHours}h ago`;
+                                      } else if (diffDays < 7) {
+                                        timeAgo = `${diffDays}d ago`;
+                                      } else {
+                                        timeAgo = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                                      }
+                                    } catch (e) {
+                                      timeAgo = '';
+                                    }
+                                  }
+                                  
                                   return (
-                                    <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded border border-green-500/20 flex-shrink-0">
-                                      <span className="text-white font-bold text-base">{homeScore}</span>
-                                      <span className="text-gray-500">-</span>
-                                      <span className="text-white font-bold text-base">{awayScore}</span>
-                                      <span className="ml-1 text-xs font-bold text-green-400">FINAL</span>
+                                    <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                                      <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded border border-green-500/20">
+                                        <span className="text-white font-bold text-base">{homeScore}</span>
+                                        <span className="text-gray-500">-</span>
+                                        <span className="text-white font-bold text-base">{awayScore}</span>
+                                        <span className="ml-1 text-xs font-bold text-green-400">FINAL</span>
+                                      </div>
+                                      {timeAgo && (
+                                        <span className="text-xs text-gray-500">{timeAgo}</span>
+                                      )}
                                     </div>
                                   );
                                 })()
