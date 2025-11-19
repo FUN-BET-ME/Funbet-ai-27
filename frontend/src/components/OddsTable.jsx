@@ -1110,7 +1110,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                   href="https://funbet.me" 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-2 hover:text-[#FFD700] transition-colors"
+                                  className="flex items-center gap-2 hover:text-[#FFD700] transition-colors cursor-pointer"
                                 >
                                   <span className="text-[#FFD700] text-base">🚀</span>
                                   <span className="text-[#FFD700] font-semibold">FunBet.ME Boost</span>
@@ -1140,7 +1140,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                   href="https://funbet.me" 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-2 hover:text-[#FFD700] transition-colors"
+                                  className="flex items-center gap-2 hover:text-[#FFD700] transition-colors cursor-pointer"
                                 >
                                   <span className="text-[#FFD700] text-base">📊</span>
                                   <span className="text-[#FFD700] font-semibold">FunBet.ME Standard</span>
