@@ -977,7 +977,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                     href="https://funbet.me" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="inline-block"
+                                    className="inline-block cursor-pointer"
                                   >
                                     <span className="inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-black text-xs sm:text-base bg-[#FFD700] text-[#2E004F] hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-sm">
                                       {funbetSuperBoostOdds[name] || '-'}
@@ -1122,7 +1122,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                     href="https://funbet.me" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="inline-block"
+                                    className="inline-block cursor-pointer"
                                   >
                                     <span className="inline-block px-3 py-1.5 rounded-lg font-bold text-base bg-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/40 transition-all border border-[#FFD700]/40">
                                       {funbetBoostOdds[name] || '-'}
@@ -1155,7 +1155,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                     href="https://funbet.me" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="inline-block"
+                                    className="inline-block cursor-pointer"
                                   >
                                     <span className="inline-block px-3 py-1.5 rounded-lg font-bold text-base bg-[#FFD700]/20 text-[#FFD700] hover:bg-[#FFD700]/30 transition-all border border-[#FFD700]/30">
                                       {digitainStandardOdds[name] || '-'}
