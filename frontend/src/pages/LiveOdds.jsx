@@ -28,8 +28,22 @@ const LiveOdds = () => {
     setFilter(urlFilter);
     // CRITICAL FIX: Reset league filter when sport filter changes to prevent no matches
     setLeagueFilter('all');
+    
+    // CRITICAL FIX: Restore timeFilter from URL parameter
+    const params = new URLSearchParams(location.search);
+    const timeParam = params.get('time');
+    if (timeParam && ['live-upcoming', 'inplay', 'recent-results'].includes(timeParam)) {
+      setTimeFilter(timeParam);
+    }
   }, [location.search]);
-  const [timeFilter, setTimeFilter] = useState('live-upcoming'); // 'live-upcoming', 'inplay', 'recent-results'
+  const [timeFilter, setTimeFilter] = useState(() => {
+    // Initialize timeFilter from URL if present
+    const params = new URLSearchParams(window.location.search);
+    const timeParam = params.get('time');
+    return (timeParam && ['live-upcoming', 'inplay', 'recent-results'].includes(timeParam)) 
+      ? timeParam 
+      : 'live-upcoming';
+  });
   const [refreshKey, setRefreshKey] = useState(0);
   // CRITICAL FIX: Initialize from localStorage to prevent data loss on refresh
   const [allOdds, setAllOdds] = useState(() => {
