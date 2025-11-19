@@ -568,9 +568,9 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                       <div className="flex-1 min-w-0">
                         {/* First Line: Team Names with VS - Natural wrap only when needed */}
                         <div className="flex items-center gap-2">
-                          <span className="text-white font-semibold text-sm sm:text-base flex-1 overflow-wrap-anywhere leading-tight">{match.home_team}</span>
-                          <span className="text-gray-400 text-xs sm:text-sm font-medium px-2 flex-shrink-0">vs</span>
-                          <span className="text-white font-semibold text-sm sm:text-base flex-1 text-right overflow-wrap-anywhere leading-tight">{match.away_team}</span>
+                          <span className="text-white font-semibold text-base sm:text-lg flex-1 overflow-wrap-anywhere leading-tight">{match.home_team}</span>
+                          <span className="text-gray-400 text-sm font-medium px-2 flex-shrink-0">vs</span>
+                          <span className="text-white font-semibold text-base sm:text-lg flex-1 text-right overflow-wrap-anywhere leading-tight">{match.away_team}</span>
                         </div>
                         
                         {/* Second Line: FunBet IQ Scores with Draw IQ for Football/Cricket */}
