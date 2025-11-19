@@ -253,11 +253,11 @@ const MatchDetail = () => {
                 <div className="text-xs text-gray-500 mt-1">{homeTeam}</div>
               </div>
               
-              {/* Draw IQ (if applicable) */}
-              {match.sport_key?.includes('soccer') && match.funbet_iq.draw_iq && (
+              {/* Draw IQ (for Football & Cricket) */}
+              {(match.sport_key?.includes('soccer') || match.sport_key?.includes('football') || match.sport_key?.includes('cricket')) && (
                 <div className="text-center bg-white/5 rounded-lg p-4">
                   <div className="text-sm text-gray-400 mb-2">Draw</div>
-                  <div className="text-3xl font-bold text-gray-300">{match.funbet_iq.draw_iq}</div>
+                  <div className="text-3xl font-bold text-purple-400">{match.funbet_iq.draw_iq || '—'}</div>
                   <div className="text-xs text-gray-500 mt-1">Tie</div>
                 </div>
               )}
