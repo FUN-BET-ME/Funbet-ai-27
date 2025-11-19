@@ -109,7 +109,8 @@ const Stats = () => {
             predicted_team: match.home_iq > match.away_iq ? match.home_team : match.away_team,
             confidence: match.confidence,
             home_iq: match.home_iq,
-            away_iq: match.away_iq
+            away_iq: match.away_iq,
+            draw_iq: match.draw_iq
           };
         });
         setIqPredictionsMap(predictionsMap);
