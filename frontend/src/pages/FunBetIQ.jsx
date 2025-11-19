@@ -808,28 +808,26 @@ const FunBetIQ = () => {
                       <p className="text-sm text-gray-400 mb-1">Match</p>
                       <p className="text-white font-medium">{prediction.home_team} vs {prediction.away_team}</p>
                       
-                      {/* IQ Scores Row - Home | Draw | Away */}
-                      {prediction.home_iq && prediction.away_iq && (
-                        <div className="flex items-center justify-between gap-2 mt-2">
-                          {/* HOME IQ */}
-                          <div className="flex-1 text-left">
-                            <span className="text-purple-400 font-bold text-xs sm:text-sm">{prediction.home_iq}</span>
-                          </div>
-                          
-                          {/* DRAW IQ - For Football & Cricket */}
-                          {((prediction.sport_key?.includes('soccer') || prediction.sport_key?.includes('football') || prediction.sport_key?.includes('cricket'))) && (
-                            <div className="flex flex-col items-center min-w-[70px]">
-                              <span className="text-[10px] text-gray-400 mb-0.5">Draw</span>
-                              <span className="text-purple-400 font-bold text-xs sm:text-sm">{prediction.draw_iq || '—'}</span>
-                            </div>
-                          )}
-                          
-                          {/* AWAY IQ */}
-                          <div className="flex-1 text-right">
-                            <span className="text-purple-400 font-bold text-xs sm:text-sm">{prediction.away_iq}</span>
-                          </div>
+                      {/* IQ Scores Row - Home | Draw | Away - ALWAYS SHOW */}
+                      <div className="flex items-center justify-between gap-2 mt-2">
+                        {/* HOME IQ */}
+                        <div className="flex-1 text-left">
+                          <span className="text-purple-400 font-bold text-xs sm:text-sm">{prediction.home_iq || '—'}</span>
                         </div>
-                      )}
+                        
+                        {/* DRAW IQ - For Football & Cricket */}
+                        {(prediction.sport_key?.includes('soccer') || prediction.sport_key?.includes('football') || prediction.sport_key?.includes('cricket')) && (
+                          <div className="flex flex-col items-center min-w-[70px]">
+                            <span className="text-[10px] text-gray-400 mb-0.5">Draw</span>
+                            <span className="text-purple-400 font-bold text-xs sm:text-sm">{prediction.draw_iq || '—'}</span>
+                          </div>
+                        )}
+                        
+                        {/* AWAY IQ */}
+                        <div className="flex-1 text-right">
+                          <span className="text-purple-400 font-bold text-xs sm:text-sm">{prediction.away_iq || '—'}</span>
+                        </div>
+                      </div>
                     </div>
                     
                     {/* Prediction */}
