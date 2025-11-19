@@ -573,21 +573,42 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           <span className="text-white font-semibold truncate text-right text-sm sm:text-base flex-1">{match.away_team}</span>
                         </div>
                         
-                        {/* Second Line: FunBet IQ Scores and Prediction */}
+                        {/* Second Line: FunBet IQ Scores with Draw IQ for Football/Cricket */}
                         {(() => {
-                          const matchIQ = match.funbet_iq; // IQ data comes with odds now!
+                          const matchIQ = match.funbet_iq;
                           if (matchIQ && matchIQ.home_iq && matchIQ.away_iq) {
-                            const predictedTeam = matchIQ.home_iq > matchIQ.away_iq ? match.home_team : match.away_team;
+                            const isFootball = match.sport_key?.includes('soccer') || match.sport_key?.includes('football');
+                            const isCricket = match.sport_key?.includes('cricket');
+                            const canHaveDraw = isFootball || isCricket;
+                            
                             return (
-                              <div className="flex items-center justify-between gap-2 mt-2 text-xs sm:text-sm">
-                                {/* Home IQ Score */}
-                                <span className="text-purple-400 font-bold flex-1">{matchIQ.home_iq}</span>
+                              <div className="mt-2 space-y-1">
+                                {/* Row 1: Home IQ | Draw IQ | Away IQ */}
+                                <div className="flex items-center justify-between gap-2 text-xs sm:text-sm">
+                                  {/* HOME IQ */}
+                                  <div className="flex-1 text-left">
+                                    <span className="text-purple-400 font-bold">{matchIQ.home_iq}</span>
+                                  </div>
+                                  
+                                  {/* DRAW IQ - CENTER (for Football & Cricket) */}
+                                  {canHaveDraw && (
+                                    <div className="flex flex-col items-center min-w-[60px]">
+                                      <span className="text-[9px] text-gray-400 mb-0.5">Draw</span>
+                                      <span className="text-purple-400 font-bold">{matchIQ.draw_iq || '—'}</span>
+                                    </div>
+                                  )}
+                                  
+                                  {/* AWAY IQ */}
+                                  <div className="flex-1 text-right">
+                                    <span className="text-purple-400 font-bold">{matchIQ.away_iq}</span>
+                                  </div>
+                                </div>
                                 
-                                {/* Center: Prediction with Confidence */}
-                                <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30 flex-shrink-0">
+                                {/* Row 2: Prediction Badge */}
+                                <div className="flex items-center justify-center gap-1 px-3 py-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-lg border border-purple-500/30">
                                   <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-[#FFD700]" />
-                                  <span className="text-[#FFD700] font-bold truncate max-w-[100px] sm:max-w-[150px]" title={`${predictedTeam} (${matchIQ.confidence})`}>
-                                    {predictedTeam}
+                                  <span className="text-[#FFD700] font-bold text-xs sm:text-sm truncate" title={`${matchIQ.predicted_winner === 'home' ? match.home_team : matchIQ.predicted_winner === 'away' ? match.away_team : 'Draw'} (${matchIQ.confidence})`}>
+                                    {matchIQ.predicted_winner === 'home' ? match.home_team : matchIQ.predicted_winner === 'away' ? match.away_team : matchIQ.predicted_winner === 'draw' ? 'Draw' : 'TBD'}
                                   </span>
                                   <span className={`text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded ${
                                     matchIQ.confidence === 'High' ? 'bg-green-500/30 text-green-300' :
@@ -597,9 +618,6 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                     {matchIQ.confidence}
                                   </span>
                                 </div>
-                                
-                                {/* Away IQ Score */}
-                                <span className="text-purple-400 font-bold text-right flex-1">{matchIQ.away_iq}</span>
                               </div>
                             );
                           }
