@@ -483,7 +483,7 @@ const Stats = () => {
           href="https://funbet.me" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="block mb-8 bg-gradient-to-r from-[#FFD700]/20 via-amber-500/10 to-[#FFD700]/20 dark:from-[#FFD700]/20 dark:via-amber-500/10 dark:to-[#FFD700]/20 border-2 border-[#FFD700] rounded-xl p-6 hover:shadow-2xl hover:scale-[1.02] transition-all group"
+          className="block mb-8 bg-gradient-to-r from-[#FFD700]/20 via-amber-500/10 to-[#FFD700]/20 dark:from-[#FFD700]/20 dark:via-amber-500/10 dark:to-[#FFD700]/20 border-2 border-[#FFD700] rounded-xl p-6 hover:shadow-2xl hover:scale-[1.02] transition-all group cursor-pointer"
         >
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex-1 min-w-[280px]">
