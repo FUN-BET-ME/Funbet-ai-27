@@ -99,6 +99,7 @@ const FunBetIQ = () => {
         sport_title: match.sport_key?.replace(/_/g, ' ').toUpperCase() || 'Unknown',
         home_iq: match.home_iq,
         away_iq: match.away_iq,
+        draw_iq: match.draw_iq,
         confidence: match.confidence,
         verdict: match.verdict,
         home_components: match.home_components,
