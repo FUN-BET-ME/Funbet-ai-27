@@ -965,7 +965,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                   href="https://funbet.me" 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-1 sm:gap-2 hover:text-[#FFD700] transition-colors"
+                                  className="flex items-center gap-1 sm:gap-2 hover:text-[#FFD700] transition-colors cursor-pointer"
                                 >
                                   <span className="text-[#FFD700] text-base sm:text-sm font-semibold leading-none">⭐</span>
                                   <span className="text-[#FFD700] text-[10px] sm:text-sm font-semibold whitespace-nowrap leading-none">FunBet.me</span>
