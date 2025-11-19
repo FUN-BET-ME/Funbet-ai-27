@@ -1277,7 +1277,7 @@ const LiveOdds = () => {
                           <div className="flex-1 min-w-0">
                             {/* First Line: Team Names with VS and Live/Final Score */}
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-white font-semibold text-sm sm:text-base flex-1 break-words leading-tight">{homeTeam}</span>
+                              <span className="text-white font-semibold text-sm sm:text-base flex-1 overflow-wrap-anywhere leading-tight">{homeTeam}</span>
                               
                               {/* Live/Final Score in the middle */}
                               {match.live_score && match.live_score.home_score !== null && match.live_score.home_score !== undefined ? (
