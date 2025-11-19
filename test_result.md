@@ -545,6 +545,41 @@ test_plan:
 
 agent_communication:
   - agent: "testing"
+    message: "🧪 DRAW IQ DISPLAY TESTING COMPLETED - CRITICAL FRONTEND ISSUE IDENTIFIED
+    
+    **TESTING RESULTS SUMMARY:**
+    
+    **✅ BACKEND API WORKING CORRECTLY:**
+    - GET /api/odds/all-cached?time_filter=recent&sport=soccer returns completed football matches
+    - SC Freiburg vs FSV Mainz 05: completed=true, Draw IQ=29.8, Home IQ=46.6, Away IQ=39.6
+    - API correctly includes final scores: SC Freiburg 2-1 FSV Mainz 05
+    - All required Draw IQ data present in API response
+    
+    **❌ CRITICAL FRONTEND ISSUE FOUND:**
+    - Recent Results tab is NOT displaying completed football matches
+    - Frontend makes correct API calls: time_filter=recent&sport=soccer
+    - API returns completed matches but frontend shows 0 matches in Football filter
+    - Issue appears to be in frontend filtering/display logic for Recent Results
+    
+    **DETAILED FINDINGS:**
+    ✅ Recent Results tab navigation works correctly
+    ✅ Football filter selection works correctly  
+    ✅ API calls are made with correct parameters (time_filter=recent&sport=soccer)
+    ✅ Backend returns completed matches with Draw IQ data
+    ❌ Frontend displays 'No matches found' despite API returning data
+    ❌ Draw IQ cannot be tested because completed matches not displayed
+    
+    **ROOT CAUSE:**
+    Frontend Recent Results tab is not properly processing/displaying completed football matches returned by the API. The data is available but not being rendered in the UI.
+    
+    **IMPACT:**
+    - Users cannot see completed football matches in Recent Results
+    - Draw IQ display cannot be verified due to no completed matches shown
+    - Feature is effectively broken for football in Recent Results tab
+    
+    **STATUS:** CRITICAL FRONTEND BUG - Recent Results tab not displaying completed football matches despite correct API data"
+  
+  - agent: "testing"
     message: "🎯 CRITICAL BUG FIXES TESTING COMPLETED - BOTH BUGS FULLY RESOLVED
     
     **COMPREHENSIVE TESTING RESULTS:**
