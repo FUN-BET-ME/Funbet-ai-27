@@ -217,7 +217,21 @@ const LiveOdds = () => {
   const fetchHistoricalOdds = async () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/odds/all-cached?time_filter=recent&limit=100&include_scores=true&_t=${Date.now()}`, {
+      // Build URL with sport filter
+      let apiURL = `${BACKEND_URL}/api/odds/all-cached?time_filter=recent&limit=100&include_scores=true&_t=${Date.now()}`;
+      
+      // Add sport parameter for backend filtering
+      if (filter !== 'all') {
+        if (filter === 'football') {
+          apiURL += '&sport=soccer';
+        } else if (filter === 'cricket') {
+          apiURL += '&sport=cricket';
+        } else if (filter === 'basketball') {
+          apiURL += '&sport=basketball';
+        }
+      }
+      
+      const response = await axios.get(apiURL, {
         timeout: 30000 // 30 second timeout
       });
       const matches = response.data?.matches || [];
