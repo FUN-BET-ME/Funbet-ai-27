@@ -1394,13 +1394,24 @@ const LiveOdds = () => {
                                   });
                                 }
                                 
+                                // DEBUG: Log Draw IQ rendering
+                                console.log('🎨 RENDERING IQ SCORES:', {
+                                  match: `${match.home_team} vs ${match.away_team}`,
+                                  home_iq: matchIQ.home_iq,
+                                  away_iq: matchIQ.away_iq,
+                                  draw_iq: matchIQ.draw_iq,
+                                  canHaveDraw,
+                                  willShowDrawIQ: canHaveDraw && matchIQ.draw_iq != null
+                                });
+                                
                                 return (
                                   <div className="mt-2 space-y-1">
-                                    {/* Row 1: Home IQ | Draw IQ (center) | Away IQ - ALL SAME SIZE */}
+                                    {/* Row 1: Home IQ | Draw IQ (center below VS) | Away IQ - ALL SAME ROW */}
                                     <div className="flex items-center justify-between gap-2">
+                                      {/* HOME IQ - LEFT */}
                                       <span className="text-purple-400 font-bold text-xs sm:text-sm flex-1">{matchIQ.home_iq}</span>
                                       
-                                      {/* Draw IQ in center - ALWAYS show for football/cricket if value exists */}
+                                      {/* DRAW IQ - CENTER (below VS position) - For Football & Cricket */}
                                       {canHaveDraw && matchIQ.draw_iq != null && (
                                         <div className="flex flex-col items-center flex-shrink-0 min-w-[60px]">
                                           <span className="text-[10px] text-gray-500 mb-0.5">Draw</span>
@@ -1408,6 +1419,7 @@ const LiveOdds = () => {
                                         </div>
                                       )}
                                       
+                                      {/* AWAY IQ - RIGHT */}
                                       <span className="text-purple-400 font-bold text-xs sm:text-sm text-right flex-1">{matchIQ.away_iq}</span>
                                     </div>
                                     
