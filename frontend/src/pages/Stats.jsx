@@ -466,7 +466,7 @@ const Stats = () => {
           </span>
         )}
       </div>
-      <div className="text-white font-semibold mb-1">
+      <div className="text-white font-semibold mb-1 break-words leading-tight">
         {match.home_team} vs {match.away_team}
       </div>
       <div className="text-sm text-gray-400">
