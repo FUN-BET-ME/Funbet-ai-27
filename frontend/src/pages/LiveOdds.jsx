@@ -1289,12 +1289,12 @@ const LiveOdds = () => {
                                     s.name.includes(awayTeam) || 
                                     awayTeam.includes(s.name)
                                   )?.score || scoresArray[1]?.score || '0';
-                                  // Format completion time
-                                  const commenceTime = match.commence_time;
+                                  // Format completion time - use completed_at (actual finish time)
+                                  const completedTime = match.completed_at || match.commence_time;
                                   let timeAgo = '';
-                                  if (commenceTime) {
+                                  if (completedTime) {
                                     try {
-                                      const dt = new Date(commenceTime);
+                                      const dt = new Date(completedTime);
                                       const now = new Date();
                                       const diffHours = Math.floor((now - dt) / (1000 * 60 * 60));
                                       const diffDays = Math.floor(diffHours / 24);
