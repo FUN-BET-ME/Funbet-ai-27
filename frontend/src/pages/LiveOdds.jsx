@@ -1349,7 +1349,7 @@ const LiveOdds = () => {
                                 <span className="text-gray-400 text-xs sm:text-sm font-medium px-2 flex-shrink-0">vs</span>
                               )}
                               
-                              <span className="text-white font-semibold text-right text-sm sm:text-base flex-1 overflow-wrap-anywhere leading-tight">{awayTeam}</span>
+                              <span className="text-white font-semibold text-right text-base sm:text-lg flex-1 overflow-wrap-anywhere leading-tight">{awayTeam}</span>
                             </div>
                             
                             {/* Second Line: FunBet IQ Scores with Draw IQ below VS */}
