@@ -865,6 +865,24 @@ const Stats = () => {
                       {match.home_team} vs {match.away_team}
                     </div>
                     
+                    {/* IQ Scores: Home | Draw | Away */}
+                    {iqPredictionsMap[match.id] && (
+                      <div className="flex items-center justify-between gap-2 my-2">
+                        <div className="flex-1 text-left">
+                          <span className="text-purple-400 font-bold text-xs">{iqPredictionsMap[match.id].home_iq}</span>
+                        </div>
+                        {(match.sport_key?.includes('soccer') || match.sport_key?.includes('football') || match.sport_key?.includes('cricket')) && (
+                          <div className="flex flex-col items-center min-w-[60px]">
+                            <span className="text-[9px] text-gray-400 mb-0.5">Draw</span>
+                            <span className="text-purple-400 font-bold text-xs">{iqPredictionsMap[match.id].draw_iq || '—'}</span>
+                          </div>
+                        )}
+                        <div className="flex-1 text-right">
+                          <span className="text-purple-400 font-bold text-xs">{iqPredictionsMap[match.id].away_iq}</span>
+                        </div>
+                      </div>
+                    )}
+                    
                     {/* FunBet IQ Prediction Overlay */}
                     {iqPredictionsMap[match.id] && (
                       <div className="flex items-center justify-center gap-2 my-2 py-2 bg-gradient-to-r from-[#FFD700]/10 via-[#FFD700]/20 to-[#FFD700]/10 rounded-lg border border-[#FFD700]/30">
