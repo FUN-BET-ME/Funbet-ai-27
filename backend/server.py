@@ -1360,6 +1360,15 @@ async def get_funbet_iq_track_record(
             'prediction_correct': {'$ne': None}  # Only verified predictions
         }
         
+        # Apply sport filter
+        if sport and sport != 'all':
+            if sport == 'football':
+                query['sport'] = {'$regex': 'soccer', '$options': 'i'}
+            elif sport == 'basketball':
+                query['sport'] = {'$regex': 'basketball', '$options': 'i'}
+            elif sport == 'cricket':
+                query['sport'] = {'$regex': 'cricket', '$options': 'i'}
+        
         # Apply filter
         if filter == 'correct':
             query['prediction_correct'] = True
