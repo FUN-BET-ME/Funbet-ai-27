@@ -1354,7 +1354,7 @@ const LiveOdds = () => {
                                 );
                                 const isCricket = match.sport_key && match.sport_key.includes('cricket');
                                 const canHaveDraw = isFootball || isCricket;
-                                const hasDrawIQ = canHaveDraw && matchIQ.draw_iq != null && matchIQ.draw_iq > 0;
+                                const hasDrawIQ = canHaveDraw && matchIQ.draw_iq != null;
                                 
                                 // DEBUG: Log draw IQ issues
                                 if (canHaveDraw && !hasDrawIQ) {
