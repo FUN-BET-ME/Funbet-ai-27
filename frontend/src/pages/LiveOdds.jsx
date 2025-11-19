@@ -1400,8 +1400,8 @@ const LiveOdds = () => {
                                     <div className="flex items-center justify-between gap-2">
                                       <span className="text-purple-400 font-bold text-xs sm:text-sm flex-1">{matchIQ.home_iq}</span>
                                       
-                                      {/* Draw IQ in center - ALWAYS show for football/cricket */}
-                                      {canHaveDraw && matchIQ.draw_iq && (
+                                      {/* Draw IQ in center - ALWAYS show for football/cricket if value exists */}
+                                      {canHaveDraw && matchIQ.draw_iq != null && (
                                         <div className="flex flex-col items-center flex-shrink-0 min-w-[60px]">
                                           <span className="text-[10px] text-gray-500 mb-0.5">Draw</span>
                                           <span className="text-purple-400 font-bold text-xs sm:text-sm">{matchIQ.draw_iq}</span>
