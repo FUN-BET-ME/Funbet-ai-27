@@ -345,6 +345,24 @@ const MatchPrediction = () => {
                 <p className="text-[#FFD700] text-lg mt-1">
                   Confidence: {pred.confidence}%
                 </p>
+                
+                {/* IQ Scores Display */}
+                {pred.home_iq && pred.away_iq && (
+                  <div className="flex items-center justify-between gap-2 mt-4 pt-4 border-t border-purple-700/30">
+                    <div className="flex-1 text-left">
+                      <span className="text-purple-400 font-bold text-lg">{pred.home_iq}</span>
+                    </div>
+                    {(match.sport_key?.includes('soccer') || match.sport_key?.includes('football') || match.sport_key?.includes('cricket')) && pred.draw_iq && (
+                      <div className="flex flex-col items-center min-w-[60px]">
+                        <span className="text-[10px] text-gray-400 mb-0.5">Draw</span>
+                        <span className="text-purple-400 font-bold text-lg">{pred.draw_iq}</span>
+                      </div>
+                    )}
+                    <div className="flex-1 text-right">
+                      <span className="text-purple-400 font-bold text-lg">{pred.away_iq}</span>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="bg-purple-900/20 rounded-lg p-4">
                 <p className="text-gray-400 text-sm mb-2">Actual Result:</p>
