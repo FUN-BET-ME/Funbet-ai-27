@@ -160,8 +160,22 @@ const FunBetIQ = () => {
     setHistoryLoading(true);
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      
+      // Build params with filter
+      const params = {};
+      
+      // Add verdict filter
+      if (historyFilter === 'correct') {
+        params.verdict = 'correct';
+      } else if (historyFilter === 'incorrect') {
+        params.verdict = 'incorrect';
+      } else if (historyFilter === 'pending') {
+        params.verdict = 'pending';
+      }
+      // If 'all', don't add verdict param
+      
       const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/track-record`, {
-        params: {},  // NO LIMIT - fetch ALL history
+        params,
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache',
