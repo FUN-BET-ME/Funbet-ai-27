@@ -1435,6 +1435,7 @@ async def get_funbet_iq_track_record(
                     'confidence': pred.get('confidence'),
                     'home_iq': pred.get('home_iq'),
                     'away_iq': pred.get('away_iq'),
+                    'draw_iq': pred.get('draw_iq'),
                     'verdict': pred.get('verdict'),
                     'calculated_at': pred.get('calculated_at'),
                     'verified_at': pred.get('verified_at'),
