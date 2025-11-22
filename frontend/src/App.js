@@ -46,8 +46,9 @@ function App() {
             <Route path="/stats" element={<Stats />} />
             <Route path="/responsible-play" element={<ResponsiblePlay />} />
             <Route path="/about" element={<About />} />
-            <Route path="/admin/stats" element={<AdminStats />} />
-            <Route path="/admin/iq" element={<AdminIQ />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/stats" element={<ProtectedRoute><AdminStats /></ProtectedRoute>} />
+            <Route path="/admin/iq" element={<ProtectedRoute><AdminIQ /></ProtectedRoute>} />
           </Routes>
         </Layout>
       </BrowserRouter>
