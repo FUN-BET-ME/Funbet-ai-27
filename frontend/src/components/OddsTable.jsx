@@ -555,23 +555,39 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           // Calculate elapsed time for live matches
                           const elapsedTime = !isCompleted ? getElapsedTime(match.commence_time) : null;
                           
+                          // SMART COMPONENT: Shows live score, final score, or "VS" for upcoming
+                          
+                          // Case 1: LIVE MATCH - Show live score with minute
+                          if (hasScores && homeScore !== null && awayScore !== null && match.live_score?.is_live) {
+                            return (
+                              <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
+                                <span className="text-white font-bold text-base">{homeScore}</span>
+                                <span className="text-gray-500">-</span>
+                                <span className="text-white font-bold text-base">{awayScore}</span>
+                                {match.live_score?.match_status && (
+                                  <span className="ml-1 text-xs font-bold text-red-400">
+                                    {match.live_score.match_status}
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          }
+                          
+                          // Case 2: COMPLETED MATCH - Show final score with FINAL badge
+                          if (hasScores && homeScore !== null && awayScore !== null && isCompleted) {
+                            return (
+                              <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded border border-green-500/20">
+                                <span className="text-white font-bold text-base">{homeScore}</span>
+                                <span className="text-gray-500">-</span>
+                                <span className="text-white font-bold text-base">{awayScore}</span>
+                                <span className="ml-1 text-xs font-bold text-green-400">FINAL</span>
+                              </div>
+                            );
+                          }
+                          
+                          // Case 3: UPCOMING MATCH - Show "vs"
                           return (
-                            <>
-                              {/* EXACT SAME FORMAT AS LIVE ODDS - Live/Final Score Display */}
-                              {hasScores && homeScore !== null && awayScore !== null && (
-                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
-                                  <span className="text-white font-bold text-base">{homeScore}</span>
-                                  <span className="text-gray-500">-</span>
-                                  <span className="text-white font-bold text-base">{awayScore}</span>
-                                  {/* Show match status for LIVE matches only */}
-                                  {match.live_score?.match_status && match.live_score?.is_live && !isCompleted && (
-                                    <span className="ml-1 text-xs font-bold text-red-400">
-                                      {match.live_score.match_status}
-                                    </span>
-                                  )}
-                                </div>
-                              )}
-                            </>
+                            <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
                           );
                         }
                         
