@@ -109,6 +109,166 @@ def calculate_odds_iq(match: Dict, team_type: str = 'home') -> float:
         return 50.0
 
 
+def calculate_volume_iq(match: Dict, team_type: str = 'home') -> float:
+    """
+    Calculate Volume Analysis IQ (20% weight)
+    
+    Based on betting volume, number of bookmakers, and market liquidity
+    
+    Args:
+        match: Match data with bookmakers
+        team_type: 'home' or 'away'
+    
+    Returns:
+        Volume IQ score (0-100)
+    """
+    try:
+        bookmakers = match.get('bookmakers', [])
+        if not bookmakers:
+            return 50.0  # Neutral baseline
+        
+        # 1. Number of bookmakers (market participation)
+        num_bookmakers = len(bookmakers)
+        
+        # Score based on bookmaker count (more bookmakers = more confident market)
+        # 1-3 bookmakers: Low (40-60)
+        # 4-7 bookmakers: Medium (60-80)
+        # 8+ bookmakers: High (80-100)
+        if num_bookmakers >= 8:
+            bookmaker_score = 90.0
+        elif num_bookmakers >= 4:
+            bookmaker_score = 60.0 + (num_bookmakers - 4) * 5.0
+        else:
+            bookmaker_score = 40.0 + num_bookmakers * 6.67
+        
+        # 2. Market consensus (how much bookmakers agree)
+        team_odds = []
+        for bookie in bookmakers:
+            markets = bookie.get('markets', [])
+            if markets:
+                outcomes = markets[0].get('outcomes', [])
+                for outcome in outcomes:
+                    name = outcome.get('name', '').lower()
+                    price = outcome.get('price', 0)
+                    
+                    if team_type == 'home':
+                        if match.get('home_team', '').lower() in name or name == 'home' or name == '1':
+                            team_odds.append(price)
+                    else:
+                        if match.get('away_team', '').lower() in name or name == 'away' or name == '2':
+                            team_odds.append(price)
+        
+        if not team_odds:
+            return 50.0
+        
+        # Calculate market consensus (low variance = high confidence)
+        consensus_score = 50.0
+        if len(team_odds) > 1:
+            odds_variance = statistics.variance(team_odds)
+            # Lower variance = higher market confidence
+            # High variance (>0.5) = 40, Low variance (<0.1) = 60
+            consensus_score = 60.0 - min(odds_variance * 40, 20.0)
+        
+        # 3. Market implied probability (shows favorite vs underdog)
+        avg_odds = statistics.mean(team_odds)
+        market_prob = 1 / avg_odds if avg_odds > 0 else 0
+        prob_score = market_prob * 100
+        
+        # Combine scores: 40% bookmakers, 30% consensus, 30% probability
+        volume_iq = (0.40 * bookmaker_score + 0.30 * consensus_score + 0.30 * prob_score)
+        
+        # Clamp to 0-100
+        volume_iq = max(0, min(100, volume_iq))
+        
+        logger.debug(f"Volume IQ for {team_type}: {volume_iq:.2f} (bookmakers={num_bookmakers}, consensus={consensus_score:.1f}, prob={prob_score:.1f})")
+        
+        return volume_iq
+        
+    except Exception as e:
+        logger.error(f"Error calculating Volume IQ: {e}")
+        return 50.0
+
+
+def calculate_movement_iq(match: Dict, team_type: str = 'home') -> float:
+    """
+    Calculate Odds Movement IQ (20% weight)
+    
+    Based on how odds have changed leading up to the match
+    Note: Without historical odds data, we use bookmaker spread as proxy for movement
+    
+    Args:
+        match: Match data with bookmakers
+        team_type: 'home' or 'away'
+    
+    Returns:
+        Movement IQ score (0-100)
+    """
+    try:
+        bookmakers = match.get('bookmakers', [])
+        if not bookmakers:
+            return 50.0
+        
+        # Extract odds for the team
+        team_odds = []
+        for bookie in bookmakers:
+            markets = bookie.get('markets', [])
+            if markets:
+                outcomes = markets[0].get('outcomes', [])
+                for outcome in outcomes:
+                    name = outcome.get('name', '').lower()
+                    price = outcome.get('price', 0)
+                    
+                    if team_type == 'home':
+                        if match.get('home_team', '').lower() in name or name == 'home' or name == '1':
+                            team_odds.append(price)
+                    else:
+                        if match.get('away_team', '').lower() in name or name == 'away' or name == '2':
+                            team_odds.append(price)
+        
+        if len(team_odds) < 2:
+            return 50.0
+        
+        # Use odds spread as proxy for movement
+        # Best odds vs worst odds indicates market direction
+        best_odds = max(team_odds)
+        worst_odds = min(team_odds)
+        avg_odds = statistics.mean(team_odds)
+        
+        # Calculate spread percentage
+        odds_spread = (best_odds - worst_odds) / avg_odds if avg_odds > 0 else 0
+        
+        # Odds spread interpretation:
+        # Low spread (<5%): Stable market, strong consensus
+        # Medium spread (5-15%): Normal movement
+        # High spread (>15%): Active movement, uncertainty
+        
+        # Convert to IQ score based on team's position
+        # If team has better odds (lower price), they're favored more
+        market_prob = 1 / avg_odds if avg_odds > 0 else 0
+        base_score = market_prob * 100
+        
+        # Adjust for spread (tight spread = more confident)
+        if odds_spread < 0.05:
+            spread_bonus = 10.0  # Tight market = high confidence
+        elif odds_spread < 0.15:
+            spread_bonus = 5.0   # Normal
+        else:
+            spread_bonus = -5.0  # Wide spread = uncertainty
+        
+        movement_iq = base_score + spread_bonus
+        
+        # Clamp to 0-100
+        movement_iq = max(0, min(100, movement_iq))
+        
+        logger.debug(f"Movement IQ for {team_type}: {movement_iq:.2f} (spread={odds_spread:.3f}, avg_odds={avg_odds:.2f})")
+        
+        return movement_iq
+        
+    except Exception as e:
+        logger.error(f"Error calculating Movement IQ: {e}")
+        return 50.0
+
+
 def calculate_draw_iq(match: Dict) -> float:
     """
     Calculate Draw IQ for football matches (1X2 markets)
