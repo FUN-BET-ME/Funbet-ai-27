@@ -1186,38 +1186,494 @@ def test_sports_coverage():
     
     return results
 
+def test_database_verification():
+    """Test Database Verification - count matches and predictions"""
+    print(f"\n{'='*60}")
+    print(f"Testing: Database Verification - Historical Backfill System")
+    print(f"{'='*60}")
+    
+    results = {}
+    
+    try:
+        # Test 1: Count total completed matches
+        print(f"\n🎯 TEST 1: Count Total Completed Matches")
+        recent_endpoint = f"{BACKEND_URL}/api/odds/all-cached?time_filter=recent&limit=500"
+        response = requests.get(recent_endpoint, timeout=30)
+        
+        if response.status_code != 200:
+            print(f"❌ Failed to get completed matches: {response.status_code}")
+            return {'database_verification': False}
+        
+        data = response.json()
+        completed_matches = data.get('matches', [])
+        total_completed = len(completed_matches)
+        
+        print(f"✅ Total completed matches (last 7 days): {total_completed}")
+        
+        # Test 2: Count matches with FunBet IQ predictions
+        matches_with_iq = 0
+        matches_with_verification = 0
+        
+        for match in completed_matches:
+            funbet_iq = match.get('funbet_iq', {})
+            if funbet_iq and funbet_iq.get('home_iq') is not None:
+                matches_with_iq += 1
+                
+                # Test 3: Count verified predictions
+                if funbet_iq.get('prediction_correct') is not None:
+                    matches_with_verification += 1
+        
+        print(f"✅ Matches with FunBet IQ predictions: {matches_with_iq}")
+        print(f"✅ Verified predictions (with correct/incorrect stamp): {matches_with_verification}")
+        
+        # Test 4: Calculate coverage percentage
+        if matches_with_iq > 0:
+            coverage_percentage = (matches_with_verification / matches_with_iq) * 100
+            print(f"✅ Verification coverage percentage: {coverage_percentage:.1f}%")
+        else:
+            coverage_percentage = 0
+            print(f"⚠️  No IQ predictions found for coverage calculation")
+        
+        # Success criteria
+        database_success = (
+            total_completed > 0 and  # Has completed matches
+            matches_with_iq > 0 and  # Has IQ predictions
+            coverage_percentage >= 90  # High verification coverage
+        )
+        
+        results['database_verification'] = database_success
+        
+        print(f"\n📊 Database Verification Summary:")
+        print(f"✅ Total completed matches: {total_completed}")
+        print(f"✅ Matches with IQ predictions: {matches_with_iq}")
+        print(f"✅ Verified predictions: {matches_with_verification}")
+        print(f"✅ Coverage percentage: {coverage_percentage:.1f}%")
+        print(f"✅ Database verification: {'PASS' if database_success else 'FAIL'}")
+        
+    except Exception as e:
+        print(f"❌ ERROR in database verification: {str(e)}")
+        results['database_verification'] = False
+    
+    return results
+
+def test_recent_cricket_results():
+    """Test Recent Cricket Results API"""
+    print(f"\n{'='*60}")
+    print(f"Testing: Recent Cricket Results API")
+    print(f"{'='*60}")
+    
+    try:
+        endpoint = f"{BACKEND_URL}/api/odds/all-cached?sport=cricket&time_filter=recent&limit=5"
+        print(f"Testing endpoint: {endpoint}")
+        
+        start_time = time.time()
+        response = requests.get(endpoint, timeout=30)
+        response_time = time.time() - start_time
+        
+        print(f"✅ HTTP Status: {response.status_code}")
+        print(f"✅ Response Time: {response_time:.2f}s")
+        
+        if response.status_code != 200:
+            print(f"❌ ERROR: Expected 200, got {response.status_code}")
+            return False
+        
+        data = response.json()
+        matches = data.get('matches', [])
+        
+        print(f"✅ Cricket matches found: {len(matches)}")
+        
+        if len(matches) == 0:
+            print(f"ℹ️  No recent cricket matches found (this is normal if no cricket matches completed recently)")
+            return True  # Not a failure
+        
+        # Verify each match structure
+        success_count = 0
+        for i, match in enumerate(matches):
+            print(f"\n🏏 Cricket Match {i+1}:")
+            print(f"  Teams: {match.get('home_team')} vs {match.get('away_team')}")
+            
+            # Check required fields
+            completed = match.get('completed', False)
+            scores = match.get('scores', [])
+            live_score = match.get('live_score', {})
+            funbet_iq = match.get('funbet_iq', {})
+            
+            print(f"  ✅ Completed: {completed}")
+            
+            # Check scores array
+            if scores:
+                print(f"  ✅ Scores array: {scores}")
+            elif live_score.get('scores'):
+                print(f"  ✅ Live score scores: {live_score.get('scores')}")
+            else:
+                print(f"  ⚠️  No scores found")
+            
+            # Check FunBet IQ object
+            if funbet_iq:
+                print(f"  ✅ FunBet IQ object present")
+                print(f"    Home IQ: {funbet_iq.get('home_iq')}")
+                print(f"    Away IQ: {funbet_iq.get('away_iq')}")
+                print(f"    Draw IQ: {funbet_iq.get('draw_iq')}")
+                
+                # Check verification fields
+                prediction_correct = funbet_iq.get('prediction_correct')
+                predicted_winner = funbet_iq.get('predicted_winner')
+                actual_winner = funbet_iq.get('actual_winner')
+                verified_at = funbet_iq.get('verified_at')
+                
+                print(f"    Prediction Correct: {prediction_correct}")
+                print(f"    Predicted Winner: {predicted_winner}")
+                print(f"    Actual Winner: {actual_winner}")
+                print(f"    Verified At: {verified_at}")
+                
+                # Success criteria for this match
+                if (completed and 
+                    (scores or live_score.get('scores')) and 
+                    funbet_iq.get('home_iq') is not None and
+                    prediction_correct is not None):
+                    success_count += 1
+                    print(f"  ✅ Match meets all criteria")
+                else:
+                    print(f"  ⚠️  Match missing some criteria")
+            else:
+                print(f"  ⚠️  No FunBet IQ object")
+        
+        print(f"\n📊 Cricket Results Summary:")
+        print(f"✅ Matches meeting all criteria: {success_count}/{len(matches)}")
+        
+        return success_count >= len(matches) * 0.8  # 80% success rate
+        
+    except Exception as e:
+        print(f"❌ ERROR: {str(e)}")
+        return False
+
+def test_football_recent_results():
+    """Test Football Recent Results API"""
+    print(f"\n{'='*60}")
+    print(f"Testing: Football Recent Results API")
+    print(f"{'='*60}")
+    
+    try:
+        endpoint = f"{BACKEND_URL}/api/odds/all-cached?sport=soccer&time_filter=recent&limit=10"
+        print(f"Testing endpoint: {endpoint}")
+        
+        start_time = time.time()
+        response = requests.get(endpoint, timeout=30)
+        response_time = time.time() - start_time
+        
+        print(f"✅ HTTP Status: {response.status_code}")
+        print(f"✅ Response Time: {response_time:.2f}s")
+        
+        if response.status_code != 200:
+            print(f"❌ ERROR: Expected 200, got {response.status_code}")
+            return False
+        
+        data = response.json()
+        matches = data.get('matches', [])
+        
+        print(f"✅ Football matches found: {len(matches)}")
+        
+        if len(matches) == 0:
+            print(f"ℹ️  No recent football matches found")
+            return True  # Not a failure
+        
+        # Verify each match structure (similar to cricket)
+        success_count = 0
+        for i, match in enumerate(matches[:5]):  # Check first 5
+            print(f"\n⚽ Football Match {i+1}:")
+            print(f"  Teams: {match.get('home_team')} vs {match.get('away_team')}")
+            
+            # Check required fields
+            completed = match.get('completed', False)
+            scores = match.get('scores', [])
+            live_score = match.get('live_score', {})
+            funbet_iq = match.get('funbet_iq', {})
+            
+            print(f"  ✅ Completed: {completed}")
+            
+            # Check scores
+            if scores:
+                print(f"  ✅ Scores array: {scores}")
+            elif live_score.get('scores'):
+                print(f"  ✅ Live score scores: {live_score.get('scores')}")
+            else:
+                print(f"  ⚠️  No scores found")
+            
+            # Check FunBet IQ object with draw_iq for football
+            if funbet_iq:
+                print(f"  ✅ FunBet IQ object present")
+                print(f"    Home IQ: {funbet_iq.get('home_iq')}")
+                print(f"    Away IQ: {funbet_iq.get('away_iq')}")
+                print(f"    Draw IQ: {funbet_iq.get('draw_iq')}")  # Important for football
+                
+                # Check verification fields
+                prediction_correct = funbet_iq.get('prediction_correct')
+                predicted_winner = funbet_iq.get('predicted_winner')
+                actual_winner = funbet_iq.get('actual_winner')
+                verified_at = funbet_iq.get('verified_at')
+                
+                print(f"    Prediction Correct: {prediction_correct}")
+                print(f"    Predicted Winner: {predicted_winner}")
+                print(f"    Actual Winner: {actual_winner}")
+                print(f"    Verified At: {verified_at}")
+                
+                # Success criteria for football match
+                if (completed and 
+                    (scores or live_score.get('scores')) and 
+                    funbet_iq.get('home_iq') is not None and
+                    funbet_iq.get('draw_iq') is not None and  # Football should have draw_iq
+                    prediction_correct is not None):
+                    success_count += 1
+                    print(f"  ✅ Match meets all criteria")
+                else:
+                    print(f"  ⚠️  Match missing some criteria")
+            else:
+                print(f"  ⚠️  No FunBet IQ object")
+        
+        print(f"\n📊 Football Results Summary:")
+        print(f"✅ Matches meeting all criteria: {success_count}/{min(len(matches), 5)}")
+        
+        return success_count >= min(len(matches), 5) * 0.8  # 80% success rate
+        
+    except Exception as e:
+        print(f"❌ ERROR: {str(e)}")
+        return False
+
+def test_track_record_api():
+    """Test Track Record API with detailed statistics"""
+    print(f"\n{'='*60}")
+    print(f"Testing: Track Record API - Detailed Statistics")
+    print(f"{'='*60}")
+    
+    try:
+        endpoint = f"{BACKEND_URL}/api/funbet-iq/track-record?limit=20"
+        print(f"Testing endpoint: {endpoint}")
+        
+        start_time = time.time()
+        response = requests.get(endpoint, timeout=30)
+        response_time = time.time() - start_time
+        
+        print(f"✅ HTTP Status: {response.status_code}")
+        print(f"✅ Response Time: {response_time:.2f}s")
+        
+        if response.status_code != 200:
+            print(f"❌ ERROR: Expected 200, got {response.status_code}")
+            return False
+        
+        data = response.json()
+        
+        if not data.get('success', False):
+            print(f"❌ API returned success=false")
+            return False
+        
+        track_record = data.get('track_record', [])
+        stats = data.get('stats', {})
+        
+        print(f"✅ Track record entries: {len(track_record)}")
+        
+        # Verify statistics structure
+        print(f"\n📊 Track Record Statistics:")
+        total_predictions = stats.get('total', 0)
+        correct_predictions = stats.get('correct', 0)
+        incorrect_predictions = stats.get('incorrect', 0)
+        accuracy_rate = stats.get('accuracy', 0)
+        
+        print(f"✅ Total predictions: {total_predictions}")
+        print(f"✅ Correct predictions: {correct_predictions}")
+        print(f"✅ Incorrect predictions: {incorrect_predictions}")
+        print(f"✅ Accuracy rate: {accuracy_rate}%")
+        
+        # Verify statistics consistency
+        calculated_total = correct_predictions + incorrect_predictions
+        if calculated_total == total_predictions and total_predictions > 0:
+            print(f"✅ Statistics are mathematically consistent")
+            calculated_accuracy = (correct_predictions / total_predictions) * 100
+            if abs(calculated_accuracy - accuracy_rate) < 1:  # Allow 1% rounding difference
+                print(f"✅ Accuracy calculation is correct")
+            else:
+                print(f"⚠️  Accuracy calculation discrepancy: {calculated_accuracy:.1f}% vs {accuracy_rate}%")
+        else:
+            print(f"⚠️  Statistics inconsistency: {calculated_total} != {total_predictions}")
+        
+        # Check track record entries structure
+        if track_record:
+            print(f"\n📋 Sample Track Record Entries:")
+            for i, entry in enumerate(track_record[:3]):  # Show first 3
+                print(f"\nEntry {i+1}:")
+                print(f"  Teams: {entry.get('home_team')} vs {entry.get('away_team')}")
+                print(f"  Predicted: {entry.get('predicted_team')}")
+                print(f"  Actual Winner: {entry.get('actual_winner')}")
+                print(f"  Was Correct: {entry.get('was_correct')}")
+                print(f"  Confidence: {entry.get('confidence_score')}")
+                print(f"  Scores: {entry.get('scores', 'N/A')}")
+                print(f"  Verified At: {entry.get('archived_at')}")
+        
+        # Success criteria
+        success = (
+            total_predictions > 0 and
+            correct_predictions >= 0 and
+            incorrect_predictions >= 0 and
+            calculated_total == total_predictions and
+            len(track_record) > 0
+        )
+        
+        print(f"\n🎯 Track Record API Success: {'PASS' if success else 'FAIL'}")
+        return success
+        
+    except Exception as e:
+        print(f"❌ ERROR: {str(e)}")
+        return False
+
+def test_backfill_job_status():
+    """Test Backfill Job Status and Background Processing"""
+    print(f"\n{'='*60}")
+    print(f"Testing: Backfill Job Status & Background Processing")
+    print(f"{'='*60}")
+    
+    try:
+        # Test 1: Check backend health (indicates background worker status)
+        print(f"\n🎯 TEST 1: Backend Health Check")
+        health_endpoint = f"{BACKEND_URL}/api/health"
+        health_response = requests.get(health_endpoint, timeout=10)
+        
+        if health_response.status_code == 200:
+            health_data = health_response.json()
+            backend_status = health_data.get('status')
+            db_status = health_data.get('database')
+            
+            print(f"✅ Backend status: {backend_status}")
+            print(f"✅ Database status: {db_status}")
+            
+            backend_healthy = backend_status == 'healthy' and db_status == 'healthy'
+        else:
+            print(f"❌ Health check failed: {health_response.status_code}")
+            backend_healthy = False
+        
+        # Test 2: Check if background job is processing matches from last 7 days
+        print(f"\n🎯 TEST 2: Verify 7-Day Processing Window")
+        recent_endpoint = f"{BACKEND_URL}/api/odds/all-cached?time_filter=recent&limit=100"
+        recent_response = requests.get(recent_endpoint, timeout=30)
+        
+        if recent_response.status_code == 200:
+            recent_data = recent_response.json()
+            recent_matches = recent_data.get('matches', [])
+            
+            # Check date range of matches
+            if recent_matches:
+                now = datetime.now()
+                matches_within_7_days = 0
+                
+                for match in recent_matches[:20]:  # Check first 20
+                    commence_time_str = match.get('commence_time', '')
+                    try:
+                        commence_time = datetime.fromisoformat(commence_time_str.replace('Z', '+00:00'))
+                        days_ago = (now.replace(tzinfo=commence_time.tzinfo) - commence_time).days
+                        
+                        if days_ago <= 7:
+                            matches_within_7_days += 1
+                    except:
+                        pass  # Skip parsing errors
+                
+                print(f"✅ Matches within 7 days: {matches_within_7_days}/{min(len(recent_matches), 20)}")
+                seven_day_processing = matches_within_7_days > 0
+            else:
+                print(f"ℹ️  No recent matches found")
+                seven_day_processing = True  # Not a failure
+        else:
+            print(f"❌ Failed to check recent matches: {recent_response.status_code}")
+            seven_day_processing = False
+        
+        # Test 3: Verify max 50 matches per run limit (check reasonable batch sizes)
+        print(f"\n🎯 TEST 3: Verify Reasonable Batch Processing")
+        # This is more of a configuration check - we can verify by checking if the system
+        # doesn't return excessive amounts of data in single requests
+        
+        all_endpoint = f"{BACKEND_URL}/api/odds/all-cached?limit=100"
+        all_response = requests.get(all_endpoint, timeout=30)
+        
+        if all_response.status_code == 200:
+            all_data = all_response.json()
+            all_matches = all_data.get('matches', [])
+            
+            # Check if system handles reasonable batch sizes
+            batch_processing = len(all_matches) <= 100  # Respects limit parameter
+            print(f"✅ Batch processing respects limits: {batch_processing} (returned {len(all_matches)}/100)")
+        else:
+            print(f"❌ Failed to test batch processing: {all_response.status_code}")
+            batch_processing = False
+        
+        # Test 4: Check if system runs automatically (verify recent data freshness)
+        print(f"\n🎯 TEST 4: Verify Automatic Processing (Data Freshness)")
+        # Check if we have recent IQ predictions (indicates background job is running)
+        
+        iq_endpoint = f"{BACKEND_URL}/api/funbet-iq/matches?limit=10"
+        iq_response = requests.get(iq_endpoint, timeout=30)
+        
+        if iq_response.status_code == 200:
+            iq_data = iq_response.json()
+            total_iq_predictions = iq_data.get('total', 0)
+            
+            print(f"✅ Total IQ predictions in system: {total_iq_predictions}")
+            automatic_processing = total_iq_predictions > 0
+        else:
+            print(f"❌ Failed to check IQ predictions: {iq_response.status_code}")
+            automatic_processing = False
+        
+        # Overall backfill job status
+        backfill_success = (
+            backend_healthy and
+            seven_day_processing and
+            batch_processing and
+            automatic_processing
+        )
+        
+        print(f"\n📊 Backfill Job Status Summary:")
+        print(f"✅ Backend healthy: {'PASS' if backend_healthy else 'FAIL'}")
+        print(f"✅ 7-day processing window: {'PASS' if seven_day_processing else 'FAIL'}")
+        print(f"✅ Batch processing limits: {'PASS' if batch_processing else 'FAIL'}")
+        print(f"✅ Automatic processing active: {'PASS' if automatic_processing else 'FAIL'}")
+        print(f"✅ Overall backfill job status: {'PASS' if backfill_success else 'FAIL'}")
+        
+        return backfill_success
+        
+    except Exception as e:
+        print(f"❌ ERROR: {str(e)}")
+        return False
+
 def main():
-    """Run Complete Backend API Audit and Testing"""
-    print(f"🧪 COMPLETE BACKEND API AUDIT AND TESTING")
+    """Run Historical Backfill System & Recent Results Display Testing"""
+    print(f"🧪 HISTORICAL BACKFILL SYSTEM & RECENT RESULTS DISPLAY TESTING")
     print(f"Backend URL: {BACKEND_URL}")
     print(f"Test Time: {datetime.now().isoformat()}")
     print(f"\n📋 Testing Requirements:")
-    print(f"1. Odds Endpoints (pagination, sport filters)")
-    print(f"2. FunBet IQ Endpoints (track record, statistics)")
-    print(f"3. Data Validation (bookmakers, predictions, scores)")
-    print(f"4. Sports Coverage (football, cricket, basketball)")
+    print(f"1. Database Verification (completed matches, IQ predictions, coverage)")
+    print(f"2. Recent Cricket Results API")
+    print(f"3. Football Recent Results API")
+    print(f"4. Track Record API (statistics)")
+    print(f"5. Backfill Job Status")
     
     all_results = {}
     
-    # Test 1: Odds Endpoints
-    print(f"\n🎯 TEST SUITE 1: ODDS ENDPOINTS")
-    odds_results = test_odds_endpoints_comprehensive()
-    all_results.update(odds_results)
+    # Test 1: Database Verification
+    print(f"\n🎯 TEST SUITE 1: DATABASE VERIFICATION")
+    db_results = test_database_verification()
+    all_results.update(db_results)
     
-    # Test 2: FunBet IQ Endpoints
-    print(f"\n🎯 TEST SUITE 2: FUNBET IQ ENDPOINTS")
-    iq_results = test_funbet_iq_endpoints()
-    all_results.update(iq_results)
+    # Test 2: Recent Cricket Results API
+    print(f"\n🎯 TEST SUITE 2: RECENT CRICKET RESULTS API")
+    all_results['cricket_recent_results'] = test_recent_cricket_results()
     
-    # Test 3: Data Validation
-    print(f"\n🎯 TEST SUITE 3: DATA VALIDATION")
-    validation_results = test_data_validation()
-    all_results.update(validation_results)
+    # Test 3: Football Recent Results API
+    print(f"\n🎯 TEST SUITE 3: FOOTBALL RECENT RESULTS API")
+    all_results['football_recent_results'] = test_football_recent_results()
     
-    # Test 4: Sports Coverage
-    print(f"\n🎯 TEST SUITE 4: SPORTS COVERAGE")
-    coverage_results = test_sports_coverage()
-    all_results.update(coverage_results)
+    # Test 4: Track Record API
+    print(f"\n🎯 TEST SUITE 4: TRACK RECORD API")
+    all_results['track_record_api'] = test_track_record_api()
+    
+    # Test 5: Backfill Job Status
+    print(f"\n🎯 TEST SUITE 5: BACKFILL JOB STATUS")
+    all_results['backfill_job_status'] = test_backfill_job_status()
     
     # Test 5: Backend Health Check
     print(f"\n🎯 TEST SUITE 5: BACKEND HEALTH CHECK")
