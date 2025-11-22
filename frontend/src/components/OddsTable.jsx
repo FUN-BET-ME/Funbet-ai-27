@@ -557,23 +557,19 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           
                           return (
                             <>
-                              {/* Only show scores - LIVE/FINAL badges are handled by CountdownTimer */}
+                              {/* EXACT SAME FORMAT AS LIVE ODDS - Live/Final Score Display */}
                               {hasScores && homeScore !== null && awayScore !== null && (
-                                <span className="text-white text-xs font-bold bg-blue-600/20 px-2 py-1 rounded border border-blue-500/30">
-                                  {homeScore} - {awayScore}
-                                </span>
-                              )}
-                              {/* Show match status for live matches */}
-                              {match.live_score?.match_status && match.live_score?.is_live && !isCompleted && (
-                                <span className="text-red-400 text-xs font-bold bg-red-400/10 px-2 py-1 rounded border border-red-400/30">
-                                  {match.live_score.match_status}
-                                </span>
-                              )}
-                              {/* Fallback to matchScore status */}
-                              {!match.live_score?.match_status && matchScore?.match_status && !isCompleted && !elapsedTime && (
-                                <span className="text-yellow-400 text-xs font-medium bg-yellow-400/10 px-2 py-1 rounded border border-yellow-400/30">
-                                  {matchScore.match_status}
-                                </span>
+                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
+                                  <span className="text-white font-bold text-base">{homeScore}</span>
+                                  <span className="text-gray-500">-</span>
+                                  <span className="text-white font-bold text-base">{awayScore}</span>
+                                  {/* Show match status for LIVE matches only */}
+                                  {match.live_score?.match_status && match.live_score?.is_live && !isCompleted && (
+                                    <span className="ml-1 text-xs font-bold text-red-400">
+                                      {match.live_score.match_status}
+                                    </span>
+                                  )}
+                                </div>
                               )}
                             </>
                           );
