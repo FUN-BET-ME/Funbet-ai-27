@@ -164,6 +164,11 @@ const FunBetIQ = () => {
       // Build params with filter
       const params = {};
       
+      // Add sport filter (IMPORTANT!)
+      if (filter && filter !== 'all') {
+        params.sport = filter;
+      }
+      
       // Add verdict filter
       if (historyFilter === 'correct') {
         params.verdict = 'correct';
