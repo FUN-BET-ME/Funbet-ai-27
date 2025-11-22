@@ -489,7 +489,99 @@ async def calculate_momentum_iq(team_name: str, sport_key: str, db) -> float:
         return 50.0
 
 
-# ==================== AI PROBABILITY BOOST (10%) ====================
+# ==================== HEAD TO HEAD IQ (10%) ====================
+
+async def calculate_h2h_iq(home_team: str, away_team: str, sport_key: str, db) -> tuple:
+    """
+    Calculate Head-to-Head IQ (10% weight)
+    
+    Based on historical results between these specific teams
+    
+    Args:
+        home_team: Home team name
+        away_team: Away team name
+        sport_key: Sport identifier
+        db: Database instance
+    
+    Returns:
+        Tuple of (home_h2h_iq, away_h2h_iq) scores (0-100)
+    """
+    try:
+        # Try to find historical H2H data
+        h2h_collection = db['head_to_head_stats']
+        
+        # Look for H2H record (either direction)
+        h2h_record = await h2h_collection.find_one({
+            '$or': [
+                {'team1': {'$regex': f'^{home_team}$', '$options': 'i'}, 
+                 'team2': {'$regex': f'^{away_team}$', '$options': 'i'}},
+                {'team1': {'$regex': f'^{away_team}$', '$options': 'i'}, 
+                 'team2': {'$regex': f'^{home_team}$', '$options': 'i'}}
+            ],
+            'sport_key': sport_key
+        })
+        
+        if not h2h_record:
+            # No H2H data - return neutral scores
+            logger.debug(f"No H2H data for {home_team} vs {away_team}")
+            return (50.0, 50.0)
+        
+        # Extract H2H statistics
+        total_matches = h2h_record.get('total_matches', 0)
+        
+        if total_matches == 0:
+            return (50.0, 50.0)
+        
+        # Check if teams are in correct order
+        is_reversed = h2h_record.get('team1', '').lower() == away_team.lower()
+        
+        if is_reversed:
+            team1_wins = h2h_record.get('team2_wins', 0)  # This is home team
+            team2_wins = h2h_record.get('team1_wins', 0)  # This is away team
+        else:
+            team1_wins = h2h_record.get('team1_wins', 0)  # This is home team
+            team2_wins = h2h_record.get('team2_wins', 0)  # This is away team
+        
+        draws = h2h_record.get('draws', 0)
+        
+        # Calculate win percentages
+        home_win_pct = team1_wins / total_matches
+        away_win_pct = team2_wins / total_matches
+        draw_pct = draws / total_matches
+        
+        # Convert to IQ scores (0-100)
+        # Account for draws by splitting them
+        home_h2h_iq = (home_win_pct + draw_pct * 0.5) * 100
+        away_h2h_iq = (away_win_pct + draw_pct * 0.5) * 100
+        
+        # Boost for recent form in H2H (last 5 matches)
+        recent_h2h = h2h_record.get('recent_results', [])[-5:]  # Last 5 H2H matches
+        if recent_h2h:
+            recent_home_wins = sum(1 for r in recent_h2h if r.get('winner') == 'team1' and not is_reversed or r.get('winner') == 'team2' and is_reversed)
+            recent_away_wins = sum(1 for r in recent_h2h if r.get('winner') == 'team2' and not is_reversed or r.get('winner') == 'team1' and is_reversed)
+            
+            # Recent form bonus (up to +10 points)
+            if len(recent_h2h) >= 3:
+                recent_home_pct = recent_home_wins / len(recent_h2h)
+                recent_away_pct = recent_away_wins / len(recent_h2h)
+                
+                home_h2h_iq = 0.7 * home_h2h_iq + 0.3 * (recent_home_pct * 100)
+                away_h2h_iq = 0.7 * away_h2h_iq + 0.3 * (recent_away_pct * 100)
+        
+        # Clamp to 0-100
+        home_h2h_iq = max(0, min(100, home_h2h_iq))
+        away_h2h_iq = max(0, min(100, away_h2h_iq))
+        
+        logger.debug(f"H2H IQ: {home_team} {home_h2h_iq:.1f} vs {away_team} {away_h2h_iq:.1f} ({total_matches} matches, {team1_wins}-{draws}-{team2_wins})")
+        
+        return (home_h2h_iq, away_h2h_iq)
+        
+    except Exception as e:
+        logger.error(f"Error calculating H2H IQ: {e}")
+        return (50.0, 50.0)
+
+
+# ==================== AI PROBABILITY BOOST (DEPRECATED - KEPT FOR COMPATIBILITY) ====================
 
 def calculate_ai_boost(market_iq: float, stats_iq: float, momentum_iq: float) -> float:
     """
