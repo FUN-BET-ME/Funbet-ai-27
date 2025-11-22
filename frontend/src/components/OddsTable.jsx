@@ -498,6 +498,17 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             homeScore = match.live_score.home_score;
                             awayScore = match.live_score.away_score;
                             hasScores = true;
+                            
+                            // Debug for Premier League matches
+                            if (match.sport_key === 'soccer_epl') {
+                              console.log('[EPL Live Score]', {
+                                match: `${match.home_team} vs ${match.away_team}`,
+                                homeScore,
+                                awayScore,
+                                hasScores,
+                                status: match.live_score.match_status
+                              });
+                            }
                           }
                           
                           // PRIORITY 2: Try to get scores from match.scores (for historical/completed matches)
