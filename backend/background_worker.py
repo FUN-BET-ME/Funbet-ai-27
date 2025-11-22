@@ -844,6 +844,222 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in final scores job: {e}")
     
+    async def backfill_historical_iq_job(self):
+        """
+        Backfill FunBet IQ for completed matches without predictions
+        Uses historical odds API to fetch pre-match betting data
+        Runs twice daily to catch recently completed matches
+        """
+        try:
+            logger.info("📜 Starting historical IQ backfill for completed matches...")
+            
+            from funbet_iq_engine import calculate_funbet_iq
+            
+            # Get completed matches without IQ from last 7 days
+            seven_days_ago = datetime.now(timezone.utc) - timedelta(days=7)
+            
+            # Find matches that:
+            # 1. Are completed
+            # 2. Don't have IQ prediction yet
+            # 3. Completed in last 7 days (to avoid backfilling very old matches)
+            pipeline = [
+                {
+                    '$match': {
+                        'completed': True,
+                        'commence_time': {'$gte': seven_days_ago.isoformat()}
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'funbet_iq_predictions',
+                        'localField': 'id',
+                        'foreignField': 'match_id',
+                        'as': 'iq_prediction'
+                    }
+                },
+                {
+                    '$match': {
+                        'iq_prediction': {'$eq': []}
+                    }
+                },
+                {
+                    '$limit': 50  # Process max 50 matches per run to control API usage
+                }
+            ]
+            
+            matches = await self.db.odds_cache.aggregate(pipeline).to_list(length=50)
+            
+            logger.info(f"📊 Found {len(matches)} completed matches without IQ predictions")
+            
+            if len(matches) == 0:
+                logger.info("✅ No matches need backfilling")
+                return
+            
+            backfilled = 0
+            errors = 0
+            
+            for match in matches:
+                try:
+                    home = match.get('home_team')
+                    away = match.get('away_team')
+                    match_id = match.get('id')
+                    sport_key = match.get('sport_key')
+                    commence_time = match.get('commence_time')
+                    
+                    logger.info(f"🔄 Backfilling: {home} vs {away}")
+                    
+                    # Parse commence time and get historical date (1 hour before match)
+                    match_time = datetime.fromisoformat(commence_time.replace('Z', '+00:00'))
+                    historical_date = (match_time - timedelta(hours=1)).isoformat().replace('+00:00', 'Z')
+                    
+                    # Fetch historical odds
+                    url = f'https://api.the-odds-api.com/v4/historical/sports/{sport_key}/odds'
+                    
+                    async with httpx.AsyncClient(timeout=30.0) as http_client:
+                        response = await http_client.get(
+                            url,
+                            params={
+                                'apiKey': os.environ.get('ODDS_API_KEY'),
+                                'regions': 'uk,eu,us,au',
+                                'markets': 'h2h',
+                                'date': historical_date
+                            }
+                        )
+                        
+                        if response.status_code == 200:
+                            data = response.json()
+                            hist_matches = data.get('data', [])
+                            
+                            # Find matching match
+                            found = False
+                            for hist_match in hist_matches:
+                                hist_home = hist_match.get('home_team', '').lower()
+                                hist_away = hist_match.get('away_team', '').lower()
+                                
+                                # Flexible matching (handles name variations)
+                                if ((home.lower() in hist_home or hist_home in home.lower()) and 
+                                    (away.lower() in hist_away or hist_away in away.lower())):
+                                    
+                                    bookmakers = hist_match.get('bookmakers', [])
+                                    
+                                    if len(bookmakers) == 0:
+                                        logger.warning(f"  ⚠️  No bookmakers in historical data")
+                                        continue
+                                    
+                                    logger.info(f"  ✅ Found historical odds ({len(bookmakers)} bookmakers)")
+                                    
+                                    # Calculate FunBet IQ using historical odds
+                                    temp_match = match.copy()
+                                    temp_match['bookmakers'] = bookmakers
+                                    
+                                    iq_result = await calculate_funbet_iq(temp_match, self.db)
+                                    
+                                    if iq_result:
+                                        # Save to funbet_iq_predictions
+                                        await self.db.funbet_iq_predictions.update_one(
+                                            {'match_id': match_id},
+                                            {'$set': iq_result},
+                                            upsert=True
+                                        )
+                                        
+                                        # Update odds_cache with historical bookmakers
+                                        await self.db.odds_cache.update_one(
+                                            {'id': match_id},
+                                            {'$set': {
+                                                'bookmakers': bookmakers,
+                                                'historical_odds_fetched': True,
+                                                'historical_odds_date': historical_date
+                                            }}
+                                        )
+                                        
+                                        logger.info(f"  ✅ IQ: Home {iq_result.get('home_iq')}, Away {iq_result.get('away_iq')}")
+                                        
+                                        # Auto-verify if scores available
+                                        if match.get('scores') and len(match.get('scores', [])) >= 2:
+                                            await self.verify_single_prediction(match, iq_result)
+                                        
+                                        backfilled += 1
+                                    found = True
+                                    break
+                            
+                            if not found:
+                                logger.warning(f"  ⚠️  Match not found in historical data")
+                                errors += 1
+                        else:
+                            logger.warning(f"  ⚠️  API error: {response.status_code}")
+                            errors += 1
+                            
+                except Exception as e:
+                    logger.error(f"  ❌ Error backfilling {home} vs {away}: {e}")
+                    errors += 1
+                    continue
+            
+            logger.info(f"✅ Historical backfill complete: {backfilled} matches backfilled, {errors} errors")
+            
+        except Exception as e:
+            logger.error(f"❌ Error in historical backfill job: {e}")
+    
+    async def verify_single_prediction(self, match, iq_result):
+        """Verify a single prediction against actual result"""
+        try:
+            scores = match.get('scores', [])
+            if len(scores) < 2:
+                return
+            
+            # Parse scores
+            home_score_str = scores[0].get('score', '0')
+            away_score_str = scores[1].get('score', '0')
+            
+            # Extract numeric scores (handles formats like "161/10" or "2")
+            if '/' in home_score_str:
+                home_score = int(home_score_str.split('/')[0])
+            else:
+                home_score = int(home_score_str) if home_score_str.isdigit() else 0
+                
+            if '/' in away_score_str:
+                away_score = int(away_score_str.split('/')[0])
+            else:
+                away_score = int(away_score_str) if away_score_str.isdigit() else 0
+            
+            # Determine actual winner
+            if home_score > away_score:
+                actual_winner = 'home'
+            elif away_score > home_score:
+                actual_winner = 'away'
+            else:
+                actual_winner = 'draw'
+            
+            # Determine predicted winner
+            home_iq = iq_result.get('home_iq', 0)
+            away_iq = iq_result.get('away_iq', 0)
+            draw_iq = iq_result.get('draw_iq', 0)
+            
+            if draw_iq and draw_iq > home_iq and draw_iq > away_iq:
+                predicted_winner = 'draw'
+            elif home_iq > away_iq:
+                predicted_winner = 'home'
+            else:
+                predicted_winner = 'away'
+            
+            prediction_correct = (predicted_winner == actual_winner)
+            
+            # Update with verification
+            await self.db.funbet_iq_predictions.update_one(
+                {'match_id': match['id']},
+                {'$set': {
+                    'prediction_correct': prediction_correct,
+                    'predicted_winner': predicted_winner,
+                    'actual_winner': actual_winner,
+                    'verified_at': datetime.now(timezone.utc).isoformat()
+                }}
+            )
+            
+            result_emoji = '✅' if prediction_correct else '❌'
+            logger.info(f"  {result_emoji} Verified: Predicted {predicted_winner}, Actual {actual_winner}")
+            
+        except Exception as e:
+            logger.warning(f"  ⚠️  Verification error: {e}")
+    
     async def cleanup_stuck_matches(self):
         """
         Cleanup matches stuck as 'live' for too long
