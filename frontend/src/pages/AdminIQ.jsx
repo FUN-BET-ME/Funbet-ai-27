@@ -171,7 +171,21 @@ const AdminIQ = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">FunBet IQ Admin - Detailed Calculations</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-4xl font-bold">FunBet IQ Admin - Detailed Calculations</h1>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-600">
+              Logged in as: <span className="font-semibold">{localStorage.getItem('adminUsername')}</span>
+            </span>
+            <Button 
+              onClick={handleLogout}
+              variant="outline"
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              Logout
+            </Button>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Match List */}
