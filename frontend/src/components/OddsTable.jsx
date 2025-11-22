@@ -472,6 +472,16 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                       </span>
                       <CountdownTimer commenceTime={match.commence_time} completed={match.live_score?.completed} />
                       {new Date(match.commence_time) < new Date() && (() => {
+                        // Debug: Log when entering this block for live EPL matches
+                        if (match.sport_key === 'soccer_epl' && match.live_score?.is_live) {
+                          console.log('[OddsTable EPL Live] Entering score display block:', {
+                            match: `${match.home_team} vs ${match.away_team}`,
+                            hasLiveScore: !!match.live_score,
+                            homeScore: match.live_score?.home_score,
+                            awayScore: match.live_score?.away_score
+                          });
+                        }
+                        
                         // For recent results, scores are in match.scores
                         // For live/upcoming, scores are in separate scores array
                         const matchScore = match.scores ? match : findScoreForMatch(match, scores);
