@@ -452,7 +452,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
               <div className="bg-[#2E004F]/50 px-6 py-4 border-b border-[#2E004F]/30">
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                   <div className="flex-1">
-                    {/* First line: AI Icon (PROMINENT), Sport title, LIVE indicator */}
+                    {/* First line: AI Icon (PROMINENT), Sport title, LIVE/FINISHED flag */}
                     <div className="flex flex-wrap items-center gap-2 mb-2">
                       {/* FunBet IQ - PROMINENT HEADER POSITION */}
                       <button
@@ -470,7 +470,17 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                       <span className="text-xs font-semibold text-[#FFD700] bg-[#FFD700]/10 px-2 py-1 rounded">
                         {match.sport_title}
                       </span>
-                      <CountdownTimer commenceTime={match.commence_time} completed={match.live_score?.completed} liveScore={match.live_score} />
+                      {/* Simple LIVE or FINISHED flag from API only */}
+                      {match.live_score?.is_live && (
+                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-red-500/20 text-red-500 border border-red-500/30">
+                          🔴 LIVE
+                        </span>
+                      )}
+                      {match.live_score?.completed && (
+                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-green-500/20 text-green-400 border border-green-500/30">
+                          ✅ FINAL
+                        </span>
+                      )}
                     </div>
                     
                     {/* Team names with logos */}
