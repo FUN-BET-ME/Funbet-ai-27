@@ -134,7 +134,12 @@ async def fetch_api_football_live_scores() -> List[Dict]:
                     live_scores.append(score_entry)
                     
                 except Exception as e:
-                    logger.warning(f"Error parsing fixture: {e}")
+                    # Log first few errors with full details for debugging
+                    if len(live_scores) < 3:
+                        import traceback
+                        logger.error(f"Error parsing fixture (detailed): {e}\nFixture data: {fixture}\n{traceback.format_exc()}")
+                    else:
+                        logger.warning(f"Error parsing fixture: {e}")
                     continue
             
             logger.info(f"✅ API-Football: Processed {len(live_scores)} live scores")
