@@ -322,6 +322,7 @@ tail -n 50 /var/log/supervisor/background_worker.out.log
 ## 📋 QUICK START CHECKLIST FOR NEXT AGENT
 
 - [ ] Read `/app/CRITICAL_DATABASE_INFO.md`
+- [ ] **REMEMBER: NEVER DELETE ANY DATA** 🛑
 - [ ] Verify database name is "funbet" (not "sportsiq")
 - [ ] Check `sudo supervisorctl status`
 - [ ] Review this handoff document
