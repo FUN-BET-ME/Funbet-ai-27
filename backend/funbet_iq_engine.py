@@ -327,9 +327,11 @@ def calculate_draw_iq(match: Dict) -> float:
 
 # ==================== STATS IQ COMPONENT (35%) ====================
 
-async def calculate_stats_iq(team_name: str, sport_key: str, db) -> float:
+async def calculate_team_stats_iq(team_name: str, sport_key: str, db) -> float:
     """
-    Calculate Stats IQ based on historical performance
+    Calculate Team Stats IQ (20% weight)
+    
+    Based on win/loss record, goals/runs, recent performance
     
     Uses ESPN + CricketAPI data:
     - Win rate (last 10 games)
@@ -338,7 +340,7 @@ async def calculate_stats_iq(team_name: str, sport_key: str, db) -> float:
     - Recent form trend
     
     Returns:
-        Stats IQ score (0-100)
+        Team Stats IQ score (0-100)
     """
     try:
         # Fetch team historical stats from database
