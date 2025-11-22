@@ -11,6 +11,48 @@
 
 ---
 
+## 🛑 CRITICAL WARNING: NO DATA DELETION
+
+**NEVER DELETE ANY DATA FROM THE DATABASE - EVER!**
+
+This is a **PERMANENT RULE** - NO EXCEPTIONS:
+
+### ❌ ABSOLUTELY FORBIDDEN:
+```python
+# DO NOT DO ANY OF THESE:
+db.odds_cache.delete_many({})  # ❌ NO
+db.funbet_iq_predictions.drop()  # ❌ NO
+db.collection.delete_one({...})  # ❌ NO
+db.collection.remove({...})  # ❌ NO
+client.drop_database('funbet')  # ❌ NO
+```
+
+### ✅ ALLOWED OPERATIONS:
+```python
+# ONLY THESE ARE OK:
+db.collection.insert_one({...})  # ✅ YES - Add new data
+db.collection.update_one({...}, {'$set': {...}})  # ✅ YES - Update existing
+db.collection.find({...})  # ✅ YES - Read data
+```
+
+### Why This Rule Exists:
+1. **Historical Data is Irreplaceable**: Track record integrity depends on it
+2. **User Trust**: Deleting verified predictions destroys credibility
+3. **Prediction Proof**: We need complete history to prove accuracy
+4. **System Analysis**: Historical data needed for improvements
+5. **Legal/Compliance**: May be required for auditing
+
+### If Data Cleanup Needed:
+1. **STOP** - Don't delete anything
+2. **ASK USER FIRST** - Get explicit permission
+3. **DOCUMENT REASON** - Why cleanup is needed
+4. **BACKUP FIRST** - If user approves, backup before any action
+5. **USER CONFIRMS** - Get final confirmation
+
+**When in doubt: DON'T DELETE - ASK USER!**
+
+---
+
 ## Configuration
 
 ### Environment Variables
