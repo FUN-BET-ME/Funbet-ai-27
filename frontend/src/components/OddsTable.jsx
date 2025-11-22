@@ -493,8 +493,15 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           let awayScore = null;
                           let hasScores = false;
                           
-                          // Try to get scores from match.scores first (for historical/completed matches)
-                          if (match.scores && Array.isArray(match.scores)) {
+                          // PRIORITY 1: Check live_score for live matches (API-Football live data)
+                          if (match.live_score && match.live_score.home_score !== null && match.live_score.home_score !== undefined) {
+                            homeScore = match.live_score.home_score;
+                            awayScore = match.live_score.away_score;
+                            hasScores = true;
+                          }
+                          
+                          // PRIORITY 2: Try to get scores from match.scores (for historical/completed matches)
+                          if (!hasScores && match.scores && Array.isArray(match.scores)) {
                             match.scores.forEach(scoreData => {
                               if (scoreData.name === match.home_team) {
                                 homeScore = scoreData.score;
