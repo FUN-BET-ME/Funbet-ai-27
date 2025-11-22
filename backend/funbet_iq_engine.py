@@ -1,15 +1,16 @@
 """
-FunBet IQ V3 - Enhanced with API-Football Predictions
+FunBet IQ V4 - AI-Powered Multi-Factor Analysis
 
 Architecture:
-- Market IQ (40%): Odds analysis, edge calculation, movement tracking
-- Stats IQ (30%): Historical results from API-Sports
-- Momentum IQ (10%): Form, streaks with custom point system
-- AI Probability Boost (10%): Combined probability analysis
-- API Predictions (10%): API-Football expert predictions
+- Odds Analysis (20%): Market odds, implied probabilities, bookmaker consensus
+- Volume Analysis (20%): Betting volume, number of bookmakers, market liquidity
+- Odds Movement (20%): How odds have changed leading up to match
+- Team Stats (20%): Win/loss record, goals, recent performance
+- Momentum (10%): Past 10 games scoring system (home win +3, draw +2, away win +5, unbeaten +2/game, draw +1)
+- Head to Head (10%): Historical results between these specific teams
 
 Final Formula:
-FunBet IQ = 0.40 * Market_IQ + 0.30 * Stats_IQ + 0.10 * Momentum_IQ + 0.10 * AI_Boost + 0.10 * API_Predictions
+FunBet IQ = 0.20 * Odds_IQ + 0.20 * Volume_IQ + 0.20 * Movement_IQ + 0.20 * Team_Stats_IQ + 0.10 * Momentum_IQ + 0.10 * H2H_IQ
 Scaled to 0-100
 """
 
