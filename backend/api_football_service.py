@@ -101,7 +101,12 @@ async def fetch_api_football_live_scores() -> List[Dict]:
                         sport_key = 'soccer_uefa_europa_league'
                     else:
                         # Default to a generic soccer key
-                        sport_key = f"soccer_{league.get('country', {}).get('name', 'unknown').lower().replace(' ', '_')}"
+                        # league['country'] is already a string, not a dict
+                        country = league.get('country', 'unknown')
+                        if isinstance(country, str):
+                            sport_key = f"soccer_{country.lower().replace(' ', '_').replace('-', '_')}"
+                        else:
+                            sport_key = 'soccer_unknown'
                     
                     score_entry = {
                         'id': str(fixture_data.get('id', '')),
