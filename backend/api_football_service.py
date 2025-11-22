@@ -65,10 +65,26 @@ async def fetch_api_football_live_scores() -> List[Dict]:
                     league = fixture.get('league', {})
                     status = fixture_data.get('status', {})
                     
+                    # Validate teams and goals are dicts
+                    if not isinstance(teams, dict):
+                        logger.warning(f"Invalid teams type: {type(teams)}")
+                        continue
+                    if not isinstance(goals, dict):
+                        logger.warning(f"Invalid goals type: {type(goals)}")
+                        goals = {}
+                    
                     home_team = teams.get('home', {}).get('name', '')
                     away_team = teams.get('away', {}).get('name', '')
-                    home_score = goals.get('home', 0)
-                    away_score = goals.get('away', 0)
+                    
+                    # Safely extract scores - handle both None and missing values
+                    home_score = goals.get('home')
+                    away_score = goals.get('away')
+                    
+                    # Convert to int, defaulting to 0 if None or invalid
+                    if home_score is None:
+                        home_score = 0
+                    if away_score is None:
+                        away_score = 0
                     
                     # Get match status
                     status_short = status.get('short', 'LIVE')
