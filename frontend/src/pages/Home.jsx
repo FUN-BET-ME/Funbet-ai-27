@@ -65,6 +65,9 @@ const Home = () => {
               Compare Odds. Analyze Stats.{' '}
               <span className="text-[#FFD700] dark:text-[#FFD700] bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent dark:bg-none dark:text-[#FFD700]">Win Smarter.</span>
             </h1>
+            <p className="text-xl sm:text-2xl text-[#FFD700] font-bold mb-4 max-w-2xl mx-auto">
+              Best odds comparison and AI predictions engine!
+            </p>
             <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto">
               Real-time odds, scores & AI insights for the next 30 days. Informational only.
             </p>
