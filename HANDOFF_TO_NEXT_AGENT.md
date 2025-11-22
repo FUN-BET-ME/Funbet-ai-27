@@ -14,6 +14,25 @@
 - **Current Data**: 893 matches, 734 predictions, 286 verified (73.4% accuracy)
 - **Always use**: `from config import settings; db = client[settings.db_name]`
 
+## 🛑 CRITICAL: NO DATA DELETION ALLOWED
+
+**NEVER DELETE ANY DATA FROM DATABASE - EVER!**
+
+- ❌ **DO NOT** drop collections
+- ❌ **DO NOT** delete documents (matches, predictions, logos, stats)
+- ❌ **DO NOT** truncate/clear any collection
+- ❌ **DO NOT** use `db.collection.delete_many({})`
+- ❌ **DO NOT** use `db.collection.drop()`
+- ✅ **ONLY ADD** new data (insert/update existing records ONLY)
+
+**Why**: Historical data is critical for:
+- Track record accuracy verification
+- Prediction integrity proof
+- User trust and transparency
+- System performance analysis
+
+**If you think data needs cleaning, ASK USER FIRST!**
+
 ---
 
 ## ✅ ALL ISSUES FIXED IN THIS SESSION
