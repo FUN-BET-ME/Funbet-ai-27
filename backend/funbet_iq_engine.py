@@ -443,53 +443,42 @@ async def calculate_momentum_iq(team_name: str, sport_key: str, db) -> float:
             return 50.0
         
         momentum_points = 0
-        current_win_streak = 0
-        current_unbeaten_streak = 0
-        max_win_streak = 0
-        max_unbeaten_streak = 0
+        unbeaten_streak = 0
         
         # Process recent results (last 10 games)
         for game in recent_results[-10:]:
             result = game.get('result')  # 'W', 'D', 'L'
             venue = game.get('venue')  # 'home', 'away'
             
-            # Award points for wins
             if result == 'W':
+                # Award points based on venue
                 if venue == 'home':
-                    momentum_points += 0.5
+                    momentum_points += 3  # Home win: +3 points
                 else:  # away
-                    momentum_points += 0.75
+                    momentum_points += 5  # Away win: +5 points
                 
-                current_win_streak += 1
-                current_unbeaten_streak += 1
-                max_win_streak = max(max_win_streak, current_win_streak)
-                max_unbeaten_streak = max(max_unbeaten_streak, current_unbeaten_streak)
+                # Unbeaten streak bonus
+                unbeaten_streak += 1
+                momentum_points += 2  # +2 additional points for each unbeaten game
                 
             elif result == 'D':
-                current_win_streak = 0
-                current_unbeaten_streak += 1
-                max_unbeaten_streak = max(max_unbeaten_streak, current_unbeaten_streak)
+                momentum_points += 2  # Draw: +2 points
+                
+                # Unbeaten streak bonus
+                unbeaten_streak += 1
+                momentum_points += 2  # +2 additional points for each unbeaten game
+                momentum_points += 1  # +1 additional point for draw in unbeaten streak
                 
             else:  # Loss
-                current_win_streak = 0
-                current_unbeaten_streak = 0
-        
-        # Award bonus points for streaks
-        if max_win_streak >= 5:
-            momentum_points += 70  # 5+ wins
-        elif max_win_streak >= 5:
-            momentum_points += 40  # Exactly 5 wins
-        elif max_win_streak >= 3:
-            momentum_points += 10  # 3 wins
-        
-        if max_unbeaten_streak >= 5:
-            momentum_points += 50  # 5+ unbeaten
-        elif max_unbeaten_streak >= 3 and max_win_streak < 3:
-            momentum_points += 5  # 3 unbeaten (only if not already counted as wins)
+                # Reset unbeaten streak
+                unbeaten_streak = 0
         
         # Normalize to 0-100 scale
-        # Max theoretical points: ~15 (10 away wins) + 70 (streak) + 50 (unbeaten) = 135
-        momentum_iq = min((momentum_points / 135) * 100, 100)
+        # Max theoretical points for 10 games:
+        # 10 away wins = 10 * (5 + 2) = 70 points
+        # Or 10 draws = 10 * (2 + 2 + 1) = 50 points
+        # Use 70 as max for normalization
+        momentum_iq = min((momentum_points / 70) * 100, 100)
         
         logger.debug(f"Momentum IQ for {team_name}: {momentum_iq:.2f} (points={momentum_points:.2f}, win_streak={max_win_streak}, unbeaten={max_unbeaten_streak})")
         
