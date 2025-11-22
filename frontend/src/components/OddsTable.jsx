@@ -543,12 +543,19 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           return (
                             <>
                               {/* Only show scores - LIVE/FINAL badges are handled by CountdownTimer */}
-                              {hasScores && homeScore && awayScore && (
+                              {hasScores && homeScore !== null && awayScore !== null && (
                                 <span className="text-white text-xs font-bold bg-blue-600/20 px-2 py-1 rounded border border-blue-500/30">
                                   {homeScore} - {awayScore}
                                 </span>
                               )}
-                              {matchScore?.match_status && !isCompleted && !elapsedTime && (
+                              {/* Show match status for live matches */}
+                              {match.live_score?.match_status && match.live_score?.is_live && !isCompleted && (
+                                <span className="text-red-400 text-xs font-bold bg-red-400/10 px-2 py-1 rounded border border-red-400/30">
+                                  {match.live_score.match_status}
+                                </span>
+                              )}
+                              {/* Fallback to matchScore status */}
+                              {!match.live_score?.match_status && matchScore?.match_status && !isCompleted && !elapsedTime && (
                                 <span className="text-yellow-400 text-xs font-medium bg-yellow-400/10 px-2 py-1 rounded border border-yellow-400/30">
                                   {matchScore.match_status}
                                 </span>
