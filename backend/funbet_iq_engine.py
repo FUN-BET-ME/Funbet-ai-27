@@ -94,15 +94,15 @@ def calculate_odds_iq(match: Dict, team_type: str = 'home') -> float:
             certainty_score = max(0, 1 - (odds_variance / 0.5))
             certainty_bonus = certainty_score * 5  # Up to +5 for very low variance
         
-        # Calculate final Market IQ
-        market_iq = base_market_iq + odds_value_bonus + certainty_bonus
+        # Calculate final Odds IQ
+        odds_iq = base_market_iq + odds_value_bonus + certainty_bonus
         
         # Clamp to 0-100
-        market_iq = max(0, min(100, market_iq))
+        odds_iq = max(0, min(100, odds_iq))
         
-        logger.debug(f"Market IQ for {team_type}: {market_iq:.2f} (prob={market_implied_prob:.3f}, base={base_market_iq:.1f}, value_bonus={odds_value_bonus:.1f}, certainty_bonus={certainty_bonus:.1f}, avg_odds={avg_odds:.2f})")
+        logger.debug(f"Odds IQ for {team_type}: {odds_iq:.2f} (prob={market_implied_prob:.3f}, base={base_market_iq:.1f}, value_bonus={odds_value_bonus:.1f}, certainty_bonus={certainty_bonus:.1f}, avg_odds={avg_odds:.2f})")
         
-        return market_iq
+        return odds_iq
         
     except Exception as e:
         logger.error(f"Error calculating Market IQ: {e}")
