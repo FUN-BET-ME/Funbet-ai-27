@@ -452,7 +452,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
               <div className="bg-[#2E004F]/50 px-6 py-4 border-b border-[#2E004F]/30">
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                   <div className="flex-1">
-                    {/* First line: AI Icon (PROMINENT), Sport title, LIVE indicator, Score, Countdown */}
+                    {/* First line: AI Icon (PROMINENT), Sport title, LIVE indicator */}
                     <div className="flex flex-wrap items-center gap-2 mb-2">
                       {/* FunBet IQ - PROMINENT HEADER POSITION */}
                       <button
@@ -471,131 +471,6 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                         {match.sport_title}
                       </span>
                       <CountdownTimer commenceTime={match.commence_time} completed={match.live_score?.completed} liveScore={match.live_score} />
-                      {new Date(match.commence_time) < new Date() && (() => {
-                        // Debug: Log when entering this block for live EPL matches
-                        if (match.sport_key === 'soccer_epl' && match.live_score?.is_live) {
-                          console.log('[OddsTable EPL Live] Entering score display block:', {
-                            match: `${match.home_team} vs ${match.away_team}`,
-                            hasLiveScore: !!match.live_score,
-                            homeScore: match.live_score?.home_score,
-                            awayScore: match.live_score?.away_score
-                          });
-                        }
-                        
-                        // For recent results, scores are in match.scores
-                        // For live/upcoming, scores are in separate scores array
-                        const matchScore = match.scores ? match : findScoreForMatch(match, scores);
-                        const isCompleted = match.completed || false;
-                        
-                        // Debug logging for Recent Results
-                        if (timeFilter === 'recent-results' && match.home_team?.includes('Bragantino')) {
-                          console.log('[DEBUG Bragantino]', {
-                            completed: isCompleted,
-                            hasScores: !!matchScore?.scores,
-                            scores: matchScore?.scores,
-                            matchScores: match.scores
-                          });
-                        }
-                        
-                        // ALWAYS show FINAL badge for completed matches, even without scores
-                        if (isCompleted || matchScore?.scores) {
-                          let homeScore = null;
-                          let awayScore = null;
-                          let hasScores = false;
-                          
-                          // PRIORITY 1: Check live_score for live matches (API-Football live data)
-                          if (match.live_score) {
-                            // If live_score exists, use it (even if scores are 0)
-                            homeScore = match.live_score.home_score;
-                            awayScore = match.live_score.away_score;
-                            
-                            // Always set hasScores if live_score field exists
-                            if (homeScore !== null && homeScore !== undefined && awayScore !== null && awayScore !== undefined) {
-                              hasScores = true;
-                            }
-                          }
-                          
-                          // PRIORITY 2: Try to get scores from match.scores (for historical/completed matches)
-                          if (!hasScores && match.scores && Array.isArray(match.scores)) {
-                            match.scores.forEach(scoreData => {
-                              if (scoreData.name === match.home_team) {
-                                homeScore = scoreData.score;
-                                hasScores = true;
-                              } else if (scoreData.name === match.away_team) {
-                                awayScore = scoreData.score;
-                                hasScores = true;
-                              }
-                            });
-                            
-                            // Debug for Bragantino
-                            if (match.home_team?.includes('Bragantino')) {
-                              console.log('[DEBUG Scores]', {
-                                match: `${match.home_team} vs ${match.away_team}`,
-                                scores: match.scores,
-                                homeScore,
-                                awayScore,
-                                hasScores
-                              });
-                            }
-                          }
-                          
-                          // Fallback to matchScore.scores (for live matches from ESPN)
-                          if (!hasScores && matchScore?.scores) {
-                            matchScore.scores.forEach(scoreData => {
-                              if (scoreData.name === match.home_team) {
-                                homeScore = scoreData.score;
-                                hasScores = true;
-                              } else if (scoreData.name === match.away_team) {
-                                awayScore = scoreData.score;
-                                hasScores = true;
-                              }
-                            });
-                          }
-                          
-                          // USE API DATA DIRECTLY - Football API, Basketball API, Cricket API
-                          // NO COMPLEX LOGIC - Just read is_live, scores, and status from API
-                          
-                          // Case 1: LIVE MATCH - Use is_live flag from respective API
-                          // Works for Football (API-Football), Basketball (API-Basketball), Cricket (Cricket API)
-                          if (match.is_live === true || match.live_score?.is_live === true) {
-                            // Get scores directly from API (all 3 APIs provide these fields)
-                            const liveHomeScore = match.home_score || match.live_score?.home_score || homeScore || '0';
-                            const liveAwayScore = match.away_score || match.live_score?.away_score || awayScore || '0';
-                            const liveStatus = match.match_status || match.live_score?.match_status || 'LIVE';
-                            
-                            return (
-                              <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
-                                <span className="text-white font-bold text-base">{liveHomeScore}</span>
-                                <span className="text-gray-500">-</span>
-                                <span className="text-white font-bold text-base">{liveAwayScore}</span>
-                                <span className="ml-1 text-xs font-bold text-red-400">
-                                  {liveStatus}
-                                </span>
-                              </div>
-                            );
-                          }
-                          
-                          // Case 2: COMPLETED MATCH - Show final score with FINAL badge
-                          if (hasScores && homeScore !== null && awayScore !== null && isCompleted) {
-                            return (
-                              <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded border border-green-500/20">
-                                <span className="text-white font-bold text-base">{homeScore}</span>
-                                <span className="text-gray-500">-</span>
-                                <span className="text-white font-bold text-base">{awayScore}</span>
-                                <span className="ml-1 text-xs font-bold text-green-400">FINAL</span>
-                              </div>
-                            );
-                          }
-                          
-                          // Case 3: UPCOMING MATCH - Show "vs"
-                          return (
-                            <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
-                          );
-                        }
-                        
-                        // Don't show anything if no score data available
-                        return null;
-                      })()}
                     </div>
                     
                     {/* Team names with logos */}
