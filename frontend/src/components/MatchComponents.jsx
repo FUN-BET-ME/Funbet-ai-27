@@ -102,7 +102,7 @@ export const OddsMovement = ({ direction, change }) => {
 /**
  * Match Countdown Timer Component
  */
-export const CountdownTimer = ({ commenceTime, completed = false }) => {
+export const CountdownTimer = ({ commenceTime, completed = false, liveScore = null }) => {
   const [timeLeft, setTimeLeft] = React.useState('');
 
   React.useEffect(() => {
@@ -114,7 +114,12 @@ export const CountdownTimer = ({ commenceTime, completed = false }) => {
       // Show appropriate badge based on match state
       if (diff <= 0) {
         if (!completed) {
-          setTimeLeft('Live Now');
+          // If we have live score with match status, show that instead of "Live Now"
+          if (liveScore && liveScore.match_status && liveScore.is_live) {
+            setTimeLeft(liveScore.match_status);
+          } else {
+            setTimeLeft('Live Now');
+          }
         } else {
           setTimeLeft('FINAL'); // Show FINAL for completed matches
         }
