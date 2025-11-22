@@ -808,13 +808,17 @@ async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
         
         for match in matches:
             try:
-                # BACKFILL MODE: Skip if already has prediction
+                # Skip if already has prediction
                 existing_prediction = await db.funbet_iq_predictions.find_one(
                     {'match_id': match.get('id')}
                 )
                 
                 if existing_prediction:
                     continue
+                
+                # Check if this is a LIVE match (IQ for informational purposes only)
+                is_live_match = match.get('live_score', {}).get('is_live', False)
+                calculated_live = is_live_match  # Flag to indicate this was calculated during live match
                 
                 # Calculate FunBet IQ for this match (first time only)
                 iq_result = await calculate_funbet_iq(match, db)
