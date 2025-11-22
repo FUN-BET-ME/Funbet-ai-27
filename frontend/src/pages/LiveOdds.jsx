@@ -1190,17 +1190,24 @@ const LiveOdds = () => {
                               <span className="text-white font-semibold text-base sm:text-lg flex-1 overflow-wrap-anywhere leading-tight">{homeTeam}</span>
                               
                               {/* Live/Final Score in the middle */}
-                              {match.live_score && match.live_score.home_score !== null && match.live_score.home_score !== undefined ? (
+                              {/* LIVE games ALWAYS show score (even 0-0), not VS */}
+                              {match.live_score?.is_live ? (
                                 <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20 flex-shrink-0">
-                                  <span className="text-white font-bold text-base">{match.live_score.home_score || '0'}</span>
+                                  <span className="text-white font-bold text-base">{match.live_score.home_score ?? '0'}</span>
                                   <span className="text-gray-500">-</span>
-                                  <span className="text-white font-bold text-base">{match.live_score.away_score || '0'}</span>
-                                  {/* Only show match status for LIVE matches, not completed */}
-                                  {match.live_score.match_status && match.live_score.is_live && !match.live_score.completed && (
+                                  <span className="text-white font-bold text-base">{match.live_score.away_score ?? '0'}</span>
+                                  {/* Show match status for LIVE matches */}
+                                  {match.live_score.match_status && (
                                     <span className="ml-1 text-xs font-bold text-red-400">
                                       {match.live_score.match_status}
                                     </span>
                                   )}
+                                </div>
+                              ) : match.live_score && match.live_score.home_score !== null && match.live_score.home_score !== undefined ? (
+                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20 flex-shrink-0">
+                                  <span className="text-white font-bold text-base">{match.live_score.home_score || '0'}</span>
+                                  <span className="text-gray-500">-</span>
+                                  <span className="text-white font-bold text-base">{match.live_score.away_score || '0'}</span>
                                 </div>
                               ) : (match.live_score?.scores && Array.isArray(match.live_score.scores) && match.live_score.scores.length === 2) || (match.scores && Array.isArray(match.scores) && match.scores.length === 2) ? (
                                 /* Show final score from match.live_score.scores or match.scores for completed matches */
