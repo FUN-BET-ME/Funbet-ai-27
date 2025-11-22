@@ -1042,11 +1042,17 @@ const LiveOdds = () => {
                 const homeBest = getBestOdds(nonFunbetBookmakers, 0, match.home_team, match.away_team);
                 const awayBest = getBestOdds(nonFunbetBookmakers, 1, match.home_team, match.away_team);
                 
-                // Check if this sport allows draws (all except baseball)
-                const sportAllowsDraws = !league?.toLowerCase().includes('baseball') && 
-                                        !league?.toLowerCase().includes('mlb');
+                // Check if this sport allows draws (ONLY football/soccer and cricket - NOT basketball or baseball!)
+                const sportKey = match.sport_key?.toLowerCase() || '';
+                const leagueLower = league?.toLowerCase() || '';
+                const isBasketball = sportKey.includes('basketball') || leagueLower.includes('basketball') || leagueLower.includes('nba');
+                const isBaseball = leagueLower.includes('baseball') || leagueLower.includes('mlb');
+                const sportAllowsDraws = !isBasketball && !isBaseball && (
+                  sportKey.includes('soccer') || sportKey.includes('cricket') ||
+                  leagueLower.includes('football') || leagueLower.includes('cricket')
+                );
                 
-                // FunBet.ME should show 3 outcomes for all sports except baseball
+                // FunBet.ME should show 3 outcomes ONLY for sports that allow draws
                 const showThreeOutcomes = sportAllowsDraws;
                 
                 // Try to get draw odds from non-FunBet bookmakers
