@@ -91,7 +91,8 @@ class CricketAPIService:
                             is_live = match_started and not match_ended and not is_at_stumps
                             is_completed = match_ended or 'won' in status.lower() or 'finished' in status.lower()
                             
-                            # For Test matches - keep active for 5 days
+                            # For Test matches - track day but don't override live status
+                            # Live = playing right now, Ongoing = started but between days (Stumps)
                             if match_type.lower() == 'test':
                                 match_date = match.get('date')
                                 if match_date:
@@ -99,9 +100,9 @@ class CricketAPIService:
                                         start_date = datetime.fromisoformat(match_date.replace('Z', '+00:00'))
                                         days_elapsed = (datetime.now(timezone.utc) - start_date).days
                                         
-                                        # Keep test matches active for 5 days or until completed
-                                        if days_elapsed < 5 and not is_completed:
-                                            is_live = True
+                                        # Keep test matches marked as ongoing even at Stumps
+                                        if days_elapsed < 5 and not is_completed and is_at_stumps:
+                                            # Not live right now, but ongoing (show as recent/upcoming)
                                             match_status = f"Day {days_elapsed + 1} - {status}"
                                     except:
                                         pass
