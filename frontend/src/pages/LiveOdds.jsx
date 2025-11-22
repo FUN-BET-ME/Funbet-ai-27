@@ -1450,9 +1450,9 @@ const LiveOdds = () => {
                                   <span>{homeTeam}</span>
                                 </div>
                                 {oddsSortBy[matchId] === 'home' ? (
-                                  <ChevronDown className="w-4 h-4 text-[#FFD700]" />
+                                  <ChevronDown className="w-5 h-5 text-purple-600" />
                                 ) : (
-                                  <ChevronUp className="w-4 h-4 opacity-30" />
+                                  <ChevronUp className="w-5 h-5 opacity-30" />
                                 )}
                               </button>
                             </th>
