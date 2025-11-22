@@ -1368,6 +1368,15 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # 13. Build historical data (team stats, H2H) every 12 hours
+        self.scheduler.add_job(
+            self.build_historical_data_job,
+            trigger=IntervalTrigger(hours=12),
+            id='build_historical_data',
+            name='Build historical data (team stats, H2H) every 12 hours',
+            replace_existing=True
+        )
+        
         # Run initial jobs immediately
         asyncio.create_task(self.update_odds_job())
         asyncio.create_task(self.calculate_funbet_iq_job())
