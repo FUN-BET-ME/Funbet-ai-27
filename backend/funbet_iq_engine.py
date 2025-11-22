@@ -415,16 +415,14 @@ async def calculate_team_stats_iq(team_name: str, sport_key: str, db) -> float:
 
 async def calculate_momentum_iq(team_name: str, sport_key: str, db) -> float:
     """
-    Calculate Momentum IQ based on custom streak points system
+    Calculate Momentum IQ (10% weight)
     
-    Rules (Football & Cricket):
-    - Home win: 0.5 points
-    - Away win: 0.75 points
-    - 3 games win in a row: +10 points
-    - 3 games unbeaten: +5 points
-    - 5 games win: +40 points
-    - 5+ games winning: +70 points
-    - 5+ games unbeaten: +50 points
+    Based on past 10 games with custom point system:
+    - Home win: +3 points
+    - Draw: +2 points
+    - Away win: +5 points
+    - Each game unbeaten: +2 additional points
+    - Each draw in unbeaten streak: +1 additional point
     
     Returns:
         Momentum IQ score (0-100)
