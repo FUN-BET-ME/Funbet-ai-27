@@ -1155,7 +1155,7 @@ const LiveOdds = () => {
                           <span className="text-[#FFD700] text-sm font-medium bg-[#2E004F]/50 px-3 py-1 rounded">
                             {league}
                           </span>
-                          <CountdownTimer commenceTime={match.commence_time} completed={match.live_score?.completed} />
+                          <CountdownTimer commenceTime={match.commence_time} completed={match.live_score?.completed} liveScore={match.live_score} />
                           {new Date(match.commence_time) < new Date() && (() => {
                             const now = new Date();
                             const commenceTime = new Date(match.commence_time);
