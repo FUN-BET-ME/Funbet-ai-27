@@ -545,10 +545,10 @@ async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
         total_matches = len(matches)
         
         if total_matches == 0:
-            logger.warning("⚠️ No upcoming matches found in database")
+            logger.warning("⚠️ No PRE-MATCH upcoming matches found in database")
             return {'total_matches': 0, 'calculated': 0, 'errors': 0}
         
-        logger.info(f"📊 Found {total_matches} upcoming matches to calculate IQ for...")
+        logger.info(f"📊 Found {total_matches} PRE-MATCH upcoming matches to calculate IQ for...")
         
         calculated_count = 0
         error_count = 0
