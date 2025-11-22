@@ -1404,6 +1404,7 @@ class OddsWorker:
         asyncio.create_task(self.fetch_team_stats_job())  # Fetch stats immediately
         asyncio.create_task(self.update_live_scores_fast())  # Start fast live updates immediately
         asyncio.create_task(self.enrich_matches_with_logos())  # Enrich all matches with logos immediately
+        asyncio.create_task(self.build_historical_data_job())  # Build historical data immediately
         
         self.scheduler.start()
         logger.info("✅ Background worker started - 10 jobs scheduled")
