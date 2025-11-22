@@ -775,15 +775,14 @@ async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
         now = datetime.now(timezone.utc)
         now_str = now.isoformat().replace('+00:00', 'Z')
         
-        # CRITICAL: Only calculate for matches that haven't started yet
-        # Check: commence_time in future AND not live AND not completed
+        # TEMPORARY BACKFILL MODE: Calculate for last 30 days
+        # After backfill complete, change back to: commence_time > now
+        thirty_days_ago = now - timedelta(days=30)
+        thirty_days_ago_str = thirty_days_ago.isoformat().replace('+00:00', 'Z')
+        
         matches_cursor = db.odds_cache.find({
-            'commence_time': {'$gt': now_str},  # Future matches
-            '$or': [
-                {'live_score.is_live': {'$ne': True}},  # Not currently live
-                {'live_score.is_live': {'$exists': False}}  # Or no live_score field
-            ],
-            'completed': {'$ne': True}  # Not completed
+            'commence_time': {'$gte': thirty_days_ago_str},  # Last 30 days (BACKFILL MODE)
+            'live_score.is_live': {'$ne': True}  # Not currently live
         }).limit(limit)
         
         matches = await matches_cursor.to_list(length=limit)
