@@ -1126,6 +1126,29 @@ const FunBetIQ = () => {
                         </div>
                       </div>
 
+                      {/* IQ Scores - Home | Draw | Away */}
+                      <div className="flex items-center justify-between gap-2 mb-4 bg-purple-900/20 rounded-lg p-4 border border-purple-500/30">
+                        {/* HOME IQ */}
+                        <div className="flex-1 text-center">
+                          <p className="text-xs text-gray-400 mb-1">Home IQ</p>
+                          <span className="text-purple-400 font-bold text-xl">{pred.home_iq || '—'}</span>
+                        </div>
+                        
+                        {/* DRAW IQ - For Football & Cricket */}
+                        {(pred.sport_key?.includes('soccer') || pred.sport_key?.includes('football') || pred.sport_key?.includes('cricket')) && (
+                          <div className="flex-1 text-center">
+                            <p className="text-xs text-gray-400 mb-1">Draw IQ</p>
+                            <span className="text-purple-400 font-bold text-xl">{pred.draw_iq || '—'}</span>
+                          </div>
+                        )}
+                        
+                        {/* AWAY IQ */}
+                        <div className="flex-1 text-center">
+                          <p className="text-xs text-gray-400 mb-1">Away IQ</p>
+                          <span className="text-purple-400 font-bold text-xl">{pred.away_iq || '—'}</span>
+                        </div>
+                      </div>
+
                       {/* Prediction Details */}
                       <div className="bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10 rounded-lg p-4 border border-[#FFD700]/30 mb-4">
                         <div className="flex items-center justify-between">
