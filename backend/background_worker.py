@@ -589,6 +589,51 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"Error enriching matches with logos: {e}")
     
+    def _calculate_team_similarity(self, team1: str, team2: str) -> float:
+        """
+        Calculate similarity between two team names
+        Returns a score between 0 and 1 (1 = perfect match)
+        """
+        if not team1 or not team2:
+            return 0.0
+        
+        # Normalize: lowercase, remove common prefixes/suffixes
+        def normalize(name):
+            name = name.lower()
+            # Remove common prefixes
+            for prefix in ['fc ', 'afc ', 'cf ', 'us ', 'as ', 'sc ', 'ac ']:
+                if name.startswith(prefix):
+                    name = name[len(prefix):]
+            # Remove common suffixes
+            for suffix in [' fc', ' afc', ' cf', ' united', ' city', ' town']:
+                if name.endswith(suffix):
+                    name = name[:-len(suffix)]
+            return name.strip()
+        
+        norm1 = normalize(team1)
+        norm2 = normalize(team2)
+        
+        # Exact match after normalization
+        if norm1 == norm2:
+            return 1.0
+        
+        # Check if one is contained in the other
+        if norm1 in norm2 or norm2 in norm1:
+            return 0.9
+        
+        # Check word overlap
+        words1 = set(norm1.split())
+        words2 = set(norm2.split())
+        
+        if not words1 or not words2:
+            return 0.0
+        
+        # Calculate Jaccard similarity
+        intersection = len(words1 & words2)
+        union = len(words1 | words2)
+        
+        return intersection / union if union > 0 else 0.0
+    
     async def update_live_scores_fast(self):
         """
         Fast live score updates - EVERY 10 SECONDS
