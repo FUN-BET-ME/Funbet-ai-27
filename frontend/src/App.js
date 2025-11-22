@@ -15,6 +15,7 @@ import Stats from "./pages/Stats";
 import ResponsiblePlay from "./pages/ResponsiblePlay";
 import About from "./pages/About";
 import AdminStats from "./pages/AdminStats";
+import AdminIQ from "./pages/AdminIQ";
 import MatchPrediction from "./pages/MatchPrediction";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
