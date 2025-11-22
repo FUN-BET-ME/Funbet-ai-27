@@ -552,11 +552,13 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             });
                           }
                           
-                          // USE API-FOOTBALL DATA DIRECTLY - NO COMPLEX LOGIC
+                          // USE API DATA DIRECTLY - Football API, Basketball API, Cricket API
+                          // NO COMPLEX LOGIC - Just read is_live, scores, and status from API
                           
-                          // Case 1: LIVE MATCH - Use is_live flag from API-Football
+                          // Case 1: LIVE MATCH - Use is_live flag from respective API
+                          // Works for Football (API-Football), Basketball (API-Basketball), Cricket (Cricket API)
                           if (match.is_live === true || match.live_score?.is_live === true) {
-                            // Get scores from API-Football
+                            // Get scores directly from API (all 3 APIs provide these fields)
                             const liveHomeScore = match.home_score || match.live_score?.home_score || homeScore || '0';
                             const liveAwayScore = match.away_score || match.live_score?.away_score || awayScore || '0';
                             const liveStatus = match.match_status || match.live_score?.match_status || 'LIVE';
