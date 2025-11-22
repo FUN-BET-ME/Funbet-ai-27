@@ -995,24 +995,30 @@ class OddsWorker:
         Backfill FunBet IQ for completed matches without predictions
         Uses historical odds API to fetch pre-match betting data
         Runs twice daily to catch recently completed matches
+        Priority: Football > Cricket > Basketball
         """
         try:
             logger.info("📜 Starting historical IQ backfill for completed matches...")
             
             from funbet_iq_engine import calculate_funbet_iq
             
-            # Get completed matches without IQ from last 7 days
-            seven_days_ago = datetime.now(timezone.utc) - timedelta(days=7)
+            # Get completed matches without IQ from last 30 days (extended from 7)
+            thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
             
-            # Find matches that:
-            # 1. Are completed
-            # 2. Don't have IQ prediction yet
-            # 3. Completed in last 7 days (to avoid backfilling very old matches)
-            pipeline = [
+            # Backfill by priority:
+            # 1. Football (50 matches)
+            # 2. Cricket (30 matches)
+            # 3. Basketball (20 matches)
+            
+            all_matches = []
+            
+            # Priority 1: Football
+            football_pipeline = [
                 {
                     '$match': {
                         'completed': True,
-                        'commence_time': {'$gte': seven_days_ago.isoformat()}
+                        'commence_time': {'$gte': thirty_days_ago.isoformat()},
+                        'sport_key': {'$regex': 'soccer', '$options': 'i'}
                     }
                 },
                 {
@@ -1029,13 +1035,78 @@ class OddsWorker:
                     }
                 },
                 {
-                    '$limit': 50  # Process max 50 matches per run to control API usage
+                    '$limit': 50
                 }
             ]
             
-            matches = await self.db.odds_cache.aggregate(pipeline).to_list(length=50)
+            football_matches = await self.db.odds_cache.aggregate(football_pipeline).to_list(length=50)
+            all_matches.extend(football_matches)
+            logger.info(f"⚽ Football: Found {len(football_matches)} matches to backfill")
             
-            logger.info(f"📊 Found {len(matches)} completed matches without IQ predictions")
+            # Priority 2: Cricket
+            cricket_pipeline = [
+                {
+                    '$match': {
+                        'completed': True,
+                        'commence_time': {'$gte': thirty_days_ago.isoformat()},
+                        'sport_key': {'$regex': 'cricket', '$options': 'i'}
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'funbet_iq_predictions',
+                        'localField': 'id',
+                        'foreignField': 'match_id',
+                        'as': 'iq_prediction'
+                    }
+                },
+                {
+                    '$match': {
+                        'iq_prediction': {'$eq': []}
+                    }
+                },
+                {
+                    '$limit': 30
+                }
+            ]
+            
+            cricket_matches = await self.db.odds_cache.aggregate(cricket_pipeline).to_list(length=30)
+            all_matches.extend(cricket_matches)
+            logger.info(f"🏏 Cricket: Found {len(cricket_matches)} matches to backfill")
+            
+            # Priority 3: Basketball (lower priority)
+            basketball_pipeline = [
+                {
+                    '$match': {
+                        'completed': True,
+                        'commence_time': {'$gte': thirty_days_ago.isoformat()},
+                        'sport_key': {'$regex': 'basketball', '$options': 'i'}
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'funbet_iq_predictions',
+                        'localField': 'id',
+                        'foreignField': 'match_id',
+                        'as': 'iq_prediction'
+                    }
+                },
+                {
+                    '$match': {
+                        'iq_prediction': {'$eq': []}
+                    }
+                },
+                {
+                    '$limit': 20
+                }
+            ]
+            
+            basketball_matches = await self.db.odds_cache.aggregate(basketball_pipeline).to_list(length=20)
+            all_matches.extend(basketball_matches)
+            logger.info(f"🏀 Basketball: Found {len(basketball_matches)} matches to backfill")
+            
+            matches = all_matches
+            logger.info(f"📊 Total: {len(matches)} completed matches to backfill (Priority: Football > Cricket > Basketball)")
             
             if len(matches) == 0:
                 logger.info("✅ No matches need backfilling")
