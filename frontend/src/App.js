@@ -45,6 +45,7 @@ function App() {
             <Route path="/responsible-play" element={<ResponsiblePlay />} />
             <Route path="/about" element={<About />} />
             <Route path="/admin/stats" element={<AdminStats />} />
+            <Route path="/admin/iq" element={<AdminIQ />} />
           </Routes>
         </Layout>
       </BrowserRouter>
