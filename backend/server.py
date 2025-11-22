@@ -503,6 +503,45 @@ async def get_all_cached_odds(
             .limit(limit) \
             .to_list(length=limit)
         
+        # CRITICAL: Filter out stale bookmaker odds for LIVE matches
+        # If match is live and bookmaker odds haven't updated in 15+ minutes, remove them
+        if matches:
+            for match in matches:
+                is_live = match.get('live_score', {}).get('is_live', False)
+                
+                if is_live and 'bookmakers' in match:
+                    commence_time_str = match.get('commence_time', '')
+                    
+                    # Parse match start time
+                    try:
+                        commence_dt = datetime.fromisoformat(commence_time_str.replace('Z', '+00:00'))
+                        minutes_since_start = (now - commence_dt).total_seconds() / 60
+                        
+                        # Only filter if match started 15+ minutes ago
+                        if minutes_since_start >= 15:
+                            active_bookmakers = []
+                            
+                            for bm in match['bookmakers']:
+                                last_update_str = bm.get('last_update', '')
+                                
+                                try:
+                                    last_update_dt = datetime.fromisoformat(last_update_str.replace('Z', '+00:00'))
+                                    minutes_since_update = (now - last_update_dt).total_seconds() / 60
+                                    
+                                    # Keep bookmaker if odds updated within last 15 minutes
+                                    if minutes_since_update < 15:
+                                        active_bookmakers.append(bm)
+                                    else:
+                                        # Log stale bookmaker (for monitoring)
+                                        logger.debug(f"Filtered stale odds: {bm.get('title')} ({minutes_since_update:.0f} min old)")
+                                except:
+                                    # If can't parse last_update, keep it (benefit of doubt)
+                                    active_bookmakers.append(bm)
+                            
+                            match['bookmakers'] = active_bookmakers
+                    except:
+                        pass  # If can't parse commence_time, skip filtering
+        
         # Merge IQ predictions for all matches (always include)
         if matches:
             iq_count = 0
