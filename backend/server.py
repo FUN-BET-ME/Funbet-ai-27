@@ -85,6 +85,99 @@ async def health_check():
     }
 
 # ==========================================
+# ADMIN AUTHENTICATION
+# ==========================================
+
+from pydantic import BaseModel
+from fastapi import Header
+
+class AdminLoginRequest(BaseModel):
+    username: str
+    password: str
+
+@api_router.post("/admin/login")
+async def admin_login(request: AdminLoginRequest):
+    """Admin login endpoint"""
+    try:
+        # Verify credentials
+        if not verify_credentials(request.username, request.password):
+            raise HTTPException(status_code=401, detail="Invalid username or password")
+        
+        # Create session
+        token = create_session(request.username)
+        
+        # Cleanup expired sessions
+        cleanup_expired_sessions()
+        
+        logger.info(f"Admin login successful: {request.username}")
+        
+        return {
+            "success": True,
+            "token": token,
+            "username": request.username,
+            "expires_in": 86400  # 24 hours in seconds
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Admin login error: {e}")
+        raise HTTPException(status_code=500, detail="Login failed")
+
+@api_router.post("/admin/logout")
+async def admin_logout(authorization: str = Header(None)):
+    """Admin logout endpoint"""
+    try:
+        if not authorization or not authorization.startswith('Bearer '):
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        token = authorization.replace('Bearer ', '')
+        invalidate_session(token)
+        
+        return {"success": True, "message": "Logged out successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Admin logout error: {e}")
+        raise HTTPException(status_code=500, detail="Logout failed")
+
+@api_router.get("/admin/verify")
+async def admin_verify(authorization: str = Header(None)):
+    """Verify admin session"""
+    try:
+        if not authorization or not authorization.startswith('Bearer '):
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        token = authorization.replace('Bearer ', '')
+        session = verify_session(token)
+        
+        if not session:
+            raise HTTPException(status_code=401, detail="Session expired or invalid")
+        
+        return {
+            "success": True,
+            "username": session['username'],
+            "expires_at": session['expires_at'].isoformat()
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Admin verify error: {e}")
+        raise HTTPException(status_code=500, detail="Verification failed")
+
+def require_admin_auth(authorization: str = Header(None)):
+    """Dependency to require admin authentication"""
+    if not authorization or not authorization.startswith('Bearer '):
+        raise HTTPException(status_code=401, detail="Admin authentication required")
+    
+    token = authorization.replace('Bearer ', '')
+    session = verify_session(token)
+    
+    if not session:
+        raise HTTPException(status_code=401, detail="Session expired or invalid")
+    
+    return session
+
+# ==========================================
 # LIVE MATCHES
 # ==========================================
 
