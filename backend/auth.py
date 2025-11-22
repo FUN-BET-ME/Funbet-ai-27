@@ -16,7 +16,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Security configuration
-SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your-secret-key-change-this-in-production")
+SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
+if not SECRET_KEY:
+    raise ValueError("JWT_SECRET_KEY environment variable is required for security. Generate one with: python -c 'import secrets; print(secrets.token_urlsafe(32))'")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_DAYS = 7
 
