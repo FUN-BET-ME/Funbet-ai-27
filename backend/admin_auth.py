@@ -8,13 +8,15 @@ import secrets
 from datetime import datetime, timezone, timedelta
 from typing import Optional
 
-# Store admin credentials (in production, use environment variables)
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
-ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH', None)
+# Store admin credentials (MUST be set in environment variables)
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
+ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH')
 
-# If no hash provided, use default password 'admin123' (change this!)
+# Validate required credentials
+if not ADMIN_USERNAME:
+    raise ValueError("ADMIN_USERNAME environment variable is required. Set it in .env file.")
 if not ADMIN_PASSWORD_HASH:
-    ADMIN_PASSWORD_HASH = hashlib.sha256('admin123'.encode()).hexdigest()
+    raise ValueError("ADMIN_PASSWORD_HASH environment variable is required. Generate with: python -c \"import hashlib; print(hashlib.sha256('YOUR_PASSWORD'.encode()).hexdigest())\"" )
 
 # Store active sessions (in production, use Redis or database)
 active_sessions = {}
