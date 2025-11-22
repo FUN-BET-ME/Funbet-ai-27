@@ -824,6 +824,11 @@ async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
                 iq_result = await calculate_funbet_iq(match, db)
                 
                 if iq_result:
+                    # Add flag if calculated during live match
+                    if calculated_live:
+                        iq_result['calculated_live'] = True
+                        iq_result['note'] = 'IQ calculated during live match (informational only, not a prediction)'
+                    
                     # Store ONLY if prediction doesn't exist (insert only, never update)
                     await db.funbet_iq_predictions.insert_one(iq_result)
                     calculated_count += 1
