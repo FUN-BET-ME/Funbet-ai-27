@@ -504,20 +504,14 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           let hasScores = false;
                           
                           // PRIORITY 1: Check live_score for live matches (API-Football live data)
-                          if (match.live_score && match.live_score.home_score !== null && match.live_score.home_score !== undefined) {
+                          if (match.live_score) {
+                            // If live_score exists, use it (even if scores are 0)
                             homeScore = match.live_score.home_score;
                             awayScore = match.live_score.away_score;
-                            hasScores = true;
                             
-                            // Debug for Premier League matches
-                            if (match.sport_key === 'soccer_epl') {
-                              console.log('[EPL Live Score]', {
-                                match: `${match.home_team} vs ${match.away_team}`,
-                                homeScore,
-                                awayScore,
-                                hasScores,
-                                status: match.live_score.match_status
-                              });
+                            // Always set hasScores if live_score field exists
+                            if (homeScore !== null && homeScore !== undefined && awayScore !== null && awayScore !== undefined) {
+                              hasScores = true;
                             }
                           }
                           
