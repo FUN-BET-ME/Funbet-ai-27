@@ -99,6 +99,35 @@
 
 
 #====================================================================================================
+# ⚠️ CRITICAL DATABASE CONFIGURATION - READ THIS FIRST ⚠️
+#====================================================================================================
+
+# **DATABASE NAME: `funbet`** (NOT "sportsiq")
+# 
+# Location: /app/backend/.env
+# MONGO_URL="mongodb://localhost:27017"
+# DB_NAME="funbet"  ← THIS IS THE CORRECT DATABASE NAME
+#
+# ❌ WRONG: client.sportsiq (empty database, not used)
+# ✅ CORRECT: client.funbet (contains all data)
+#
+# Current Data (as of Nov 22, 2025):
+#   - 893 matches in odds_cache
+#   - 734 predictions in funbet_iq_predictions  
+#   - 286 verified predictions (73.4% accuracy)
+#
+# For scripts/tests, ALWAYS use:
+#   from config import settings
+#   db = client[settings.db_name]  # Uses "funbet" from .env
+#
+# See /app/CRITICAL_DATABASE_INFO.md for full details
+#
+#====================================================================================================
+
+
+
+
+#====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
