@@ -1209,11 +1209,21 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # 12. Backfill historical IQ for completed matches twice daily
+        self.scheduler.add_job(
+            self.backfill_historical_iq_job,
+            trigger=CronTrigger(hour='6,18', minute=0, timezone='UTC'),
+            id='backfill_historical_iq',
+            name='Backfill FunBet IQ using historical odds (6 AM & 6 PM UTC)',
+            replace_existing=True
+        )
+        
         # Run initial jobs immediately
         asyncio.create_task(self.update_odds_job())
         asyncio.create_task(self.calculate_funbet_iq_job())
         asyncio.create_task(self.fetch_live_scores_job())
         asyncio.create_task(self.verify_predictions_job())  # Verify predictions immediately
+        asyncio.create_task(self.backfill_historical_iq_job())  # Run backfill immediately on startup
         asyncio.create_task(self.fetch_team_logos_job())  # Fetch logos immediately
         asyncio.create_task(self.fetch_team_stats_job())  # Fetch stats immediately
         asyncio.create_task(self.update_live_scores_fast())  # Start fast live updates immediately
