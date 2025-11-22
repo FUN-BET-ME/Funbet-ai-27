@@ -169,15 +169,14 @@ const FunBetIQ = () => {
         params.sport = filter;
       }
       
-      // Add verdict filter
+      // Add result filter (correct parameter name is 'filter', not 'verdict')
       if (historyFilter === 'correct') {
-        params.verdict = 'correct';
+        params.filter = 'correct';
       } else if (historyFilter === 'incorrect') {
-        params.verdict = 'incorrect';
-      } else if (historyFilter === 'pending') {
-        params.verdict = 'pending';
+        params.filter = 'incorrect';
       }
-      // If 'all', don't add verdict param
+      // Note: 'pending' is not supported by backend, treated as 'all'
+      // If 'all' or 'pending', don't add filter param
       
       const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/track-record`, {
         params,
