@@ -441,13 +441,7 @@ async def get_all_cached_odds(
         if include_scores and matches:
             # Simply count how many matches have live scores (no merge needed)
             matched_count = sum(1 for m in matches if m.get('live_score'))
-            logger.info(f"📊 {matched_count} matches have live_score data from background worker")
-                        'completed': matched_score.get('completed', False),
-                        'last_update': matched_score.get('last_update')
-                    }
-                    matched_count += 1
-            
-            logger.info(f"✅ all-cached: Merged {matched_count} live scores")
+            logger.info(f"📊 {matched_count}/{len(matches)} matches have live_score from DB")
         else:
             logger.info(f"✅ all-cached: Returned {len(matches)} matches (scores disabled)")
         
