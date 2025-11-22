@@ -480,7 +480,7 @@ async def calculate_momentum_iq(team_name: str, sport_key: str, db) -> float:
         # Use 70 as max for normalization
         momentum_iq = min((momentum_points / 70) * 100, 100)
         
-        logger.debug(f"Momentum IQ for {team_name}: {momentum_iq:.2f} (points={momentum_points:.2f}, win_streak={max_win_streak}, unbeaten={max_unbeaten_streak})")
+        logger.debug(f"Momentum IQ for {team_name}: {momentum_iq:.2f} (points={momentum_points:.2f}, unbeaten_streak={unbeaten_streak})")
         
         return momentum_iq
         
