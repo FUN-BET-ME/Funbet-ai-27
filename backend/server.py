@@ -1583,18 +1583,36 @@ async def trigger_funbet_iq_calculation(sport: Optional[str] = None):
         calculated_count = 0
         errors = []
         
+        # CRITICAL: Only process PRE-MATCH games
+        from datetime import datetime, timezone
+        now = datetime.now(timezone.utc)
+        
         for match in matches:
             try:
-                # Calculate IQ
+                # Check if match has already started
+                commence_time = match.get('commence_time', '')
+                if commence_time:
+                    match_time = datetime.fromisoformat(commence_time.replace('Z', '+00:00'))
+                    if match_time <= now:
+                        # Skip matches that have already started
+                        continue
+                
+                # Check if prediction already exists (never update existing predictions)
+                existing_prediction = await iq_scores_collection.find_one(
+                    {'match_id': match.get('id')}
+                )
+                
+                if existing_prediction:
+                    # Prediction exists - skip to preserve original pre-match prediction
+                    calculated_count += 1
+                    continue
+                
+                # Calculate IQ (PRE-MATCH ONLY, first time only)
                 iq_data = await calculate_funbet_iq(match, db)
                 
                 if iq_data:
-                    # Save/update in database
-                    await iq_scores_collection.update_one(
-                        {'match_id': match.get('id')},
-                        {'$set': iq_data},
-                        upsert=True
-                    )
+                    # Save ONLY if prediction doesn't exist (insert only, never update)
+                    await iq_scores_collection.insert_one(iq_data)
                     calculated_count += 1
                     
             except Exception as e:
