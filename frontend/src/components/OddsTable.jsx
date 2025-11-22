@@ -470,7 +470,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                       <span className="text-xs font-semibold text-[#FFD700] bg-[#FFD700]/10 px-2 py-1 rounded">
                         {match.sport_title}
                       </span>
-                      <CountdownTimer commenceTime={match.commence_time} completed={match.live_score?.completed} />
+                      <CountdownTimer commenceTime={match.commence_time} completed={match.live_score?.completed} liveScore={match.live_score} />
                       {new Date(match.commence_time) < new Date() && (() => {
                         // Debug: Log when entering this block for live EPL matches
                         if (match.sport_key === 'soccer_epl' && match.live_score?.is_live) {
