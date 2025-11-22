@@ -65,7 +65,7 @@ If anything breaks:
 1. Check supervisor logs: `sudo tail -100 /var/log/supervisor/background_worker.err.log`
 2. Restart services: `sudo supervisorctl restart all`
 3. Verify database: Connect to MongoDB and check `funbet.odds_cache` collection
-4. Check API: `curl https://predict-score.preview.emergentagent.com/health`
+4. Check API: `curl https://predict-central.preview.emergentagent.com/health`
 
 ## 📊 EXPECTED METRICS
 
