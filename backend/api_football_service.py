@@ -7,6 +7,12 @@ import logging
 import os
 from datetime import datetime, timezone
 from typing import List, Dict
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
 
 logger = logging.getLogger(__name__)
 
