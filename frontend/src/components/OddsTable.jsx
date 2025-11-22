@@ -557,14 +557,29 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           
                           // SMART COMPONENT: Shows live score, final score, or "VS" for upcoming
                           
+                          // Determine if match is LIVE:
+                          // 1. Has scores (even if 0-0)
+                          // 2. Not completed
+                          // 3. Either explicitly marked as live OR has elapsed time (match started)
+                          const isLiveMatch = hasScores && 
+                                            homeScore !== null && 
+                                            awayScore !== null && 
+                                            !isCompleted && 
+                                            (match.live_score?.is_live || elapsedTime !== null);
+                          
                           // Case 1: LIVE MATCH - Show live score with minute
-                          if (hasScores && homeScore !== null && awayScore !== null && match.live_score?.is_live) {
+                          if (isLiveMatch) {
                             return (
                               <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20">
                                 <span className="text-white font-bold text-base">{homeScore}</span>
                                 <span className="text-gray-500">-</span>
                                 <span className="text-white font-bold text-base">{awayScore}</span>
-                                {match.live_score?.match_status && (
+                                {elapsedTime && (
+                                  <span className="ml-1 text-xs font-bold text-red-400">
+                                    {elapsedTime}
+                                  </span>
+                                )}
+                                {!elapsedTime && match.live_score?.match_status && (
                                   <span className="ml-1 text-xs font-bold text-red-400">
                                     {match.live_score.match_status}
                                   </span>
