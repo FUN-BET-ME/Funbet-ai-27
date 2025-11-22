@@ -800,15 +800,12 @@ async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
         
         for match in matches:
             try:
-                # CRITICAL: Check if prediction already exists
-                # Once a prediction is made, it should NEVER be recalculated or updated
+                # BACKFILL MODE: Skip if already has prediction
                 existing_prediction = await db.funbet_iq_predictions.find_one(
                     {'match_id': match.get('id')}
                 )
                 
                 if existing_prediction:
-                    # Prediction already exists - skip to preserve original pre-match prediction
-                    calculated_count += 1  # Count as "processed"
                     continue
                 
                 # Calculate FunBet IQ for this match (first time only)
