@@ -435,19 +435,13 @@ async def get_all_cached_odds(
             
             logger.info(f"✅ all-cached: {len(matches)} matches, {iq_count} with IQ predictions")
         
-        # Merge live scores if requested
+        # Live scores are already in the database from background worker!
+        # NO NEED to merge from service - just use what's in the database
+        # The background worker updates live_score field every 10 seconds
         if include_scores and matches:
-            scores_data = await live_scores_service.get_all_live_scores()
-            all_scores = scores_data['live_scores'] + scores_data['completed_scores']
-            
-            matched_count = 0
-            for match in matches:
-                matched_score = await live_scores_service.match_score_to_match(match, all_scores)
-                if matched_score:
-                    match['live_score'] = {
-                        'scores': matched_score.get('scores'),
-                        'match_status': matched_score.get('match_status'),
-                        'is_live': matched_score.get('is_live', False),
+            # Simply count how many matches have live scores (no merge needed)
+            matched_count = sum(1 for m in matches if m.get('live_score'))
+            logger.info(f"📊 {matched_count} matches have live_score data from background worker")
                         'completed': matched_score.get('completed', False),
                         'last_update': matched_score.get('last_update')
                     }
