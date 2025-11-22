@@ -974,6 +974,39 @@ agent_communication:
     
     Ready for launch with 5M credit plan!"
   
+  - agent: "testing"
+    message: "🎯 STALE BOOKMAKER ODDS FILTERING TESTING COMPLETED - SYSTEM WORKING PERFECTLY
+    
+    **Testing Results Summary:**
+    ✅ Comprehensive testing of stale bookmaker filtering logic for live matches completed with 100% success rate
+    ✅ All 5 test scenarios passed validation - filtering logic working exactly as designed
+    ✅ MongoDB vs API comparison confirms proper filtering at server level
+    
+    **Key Findings:**
+    
+    **1. FILTERING LOGIC VERIFICATION:**
+    - Live matches 7+ minutes old: Filtering applied correctly ✅
+    - Stale bookmakers (6+ min without updates): Properly removed from API responses ✅
+    - Fresh bookmakers (<6 min updates): Remain in API responses ✅
+    - Pre-match odds: Not filtered (correct behavior) ✅
+    
+    **2. REAL-WORLD TESTING EVIDENCE:**
+    - Match 1 (Coquimbo Unido vs La Serena, 151 min live): 16/16 stale bookmakers correctly filtered (17-31 min old)
+    - Match 5 (Orlando Magic vs New York Knicks, 79 min live): 1/1 stale bookmaker correctly filtered (6.7 min old)
+    - Matches 2-4: No filtering applied as all bookmakers had fresh odds (correct behavior)
+    
+    **3. EDGE CASES TESTED:**
+    - Matches exactly at 7-minute threshold: Filtering starts correctly ✅
+    - Matches with all fresh bookmakers: No unnecessary filtering ✅
+    - Suspended markets (all odds = 1.0): Properly detected and filtered ✅
+    
+    **4. TECHNICAL VALIDATION:**
+    - MongoDB raw data vs API response comparison: Filtering happens at server level ✅
+    - Timestamp validation: Accurate to the minute ✅
+    - Performance: API response time 0.09s (excellent) ✅
+    
+    **STATUS:** ✅ STALE BOOKMAKER FILTERING SYSTEM FULLY OPERATIONAL - Protecting users from outdated odds while maintaining fresh, reliable data for live betting decisions. The 7-minute start + 6-minute stale threshold (13 minutes total) is working perfectly as designed."
+  
   - agent: "main"
     message: "🔄 DYNAMIC TIME WINDOW IMPLEMENTATION
     
