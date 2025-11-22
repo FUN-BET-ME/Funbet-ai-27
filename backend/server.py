@@ -517,8 +517,8 @@ async def get_all_cached_odds(
                         commence_dt = datetime.fromisoformat(commence_time_str.replace('Z', '+00:00'))
                         minutes_since_start = (now - commence_dt).total_seconds() / 60
                         
-                        # Only filter if match started 15+ minutes ago
-                        if minutes_since_start >= 15:
+                        # Only filter if match started 10+ minutes ago (stricter for live accuracy)
+                        if minutes_since_start >= 10:
                             active_bookmakers = []
                             
                             for bm in match['bookmakers']:
@@ -528,15 +528,29 @@ async def get_all_cached_odds(
                                     last_update_dt = datetime.fromisoformat(last_update_str.replace('Z', '+00:00'))
                                     minutes_since_update = (now - last_update_dt).total_seconds() / 60
                                     
-                                    # Keep bookmaker if odds updated within last 15 minutes
-                                    if minutes_since_update < 15:
-                                        active_bookmakers.append(bm)
+                                    # STRICTER: Keep bookmaker ONLY if odds updated within last 10 minutes
+                                    if minutes_since_update < 10:
+                                        # Additional check: Filter out suspended markets (all odds = 1.0)
+                                        markets = bm.get('markets', [])
+                                        is_valid = True
+                                        
+                                        for market in markets:
+                                            if market.get('key') == 'h2h':
+                                                outcomes = market.get('outcomes', [])
+                                                # If all outcomes are 1.0, market is suspended
+                                                if all(o.get('price') == 1.0 for o in outcomes if o.get('price')):
+                                                    is_valid = False
+                                                    logger.debug(f"Filtered suspended market: {bm.get('title')}")
+                                                    break
+                                        
+                                        if is_valid:
+                                            active_bookmakers.append(bm)
                                     else:
                                         # Log stale bookmaker (for monitoring)
                                         logger.debug(f"Filtered stale odds: {bm.get('title')} ({minutes_since_update:.0f} min old)")
                                 except:
-                                    # If can't parse last_update, keep it (benefit of doubt)
-                                    active_bookmakers.append(bm)
+                                    # If can't parse last_update, EXCLUDE it (don't take risk with stale data)
+                                    pass
                             
                             match['bookmakers'] = active_bookmakers
                     except:
