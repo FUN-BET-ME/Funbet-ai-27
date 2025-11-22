@@ -81,9 +81,13 @@ class CricketAPIService:
                                 # Add overs info to status
                                 match_status = f"{status} - {home_overs} overs"
                             
-                            # Check if match is live or completed
-                            is_live = 'live' in status.lower() or 'progress' in status.lower()
-                            is_completed = 'complete' in status.lower() or 'finished' in status.lower()
+                            # Check if match is live or completed using API flags
+                            match_started = match.get('matchStarted', False)
+                            match_ended = match.get('matchEnded', False)
+                            
+                            # Match is live if it has started but not ended
+                            is_live = match_started and not match_ended
+                            is_completed = match_ended or 'won' in status.lower() or 'finished' in status.lower()
                             
                             # For Test matches - keep active for 5 days
                             if match_type.lower() == 'test':
