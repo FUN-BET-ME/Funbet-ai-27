@@ -1101,12 +1101,16 @@ class OddsWorker:
                                     iq_result = await calculate_funbet_iq(temp_match, self.db)
                                     
                                     if iq_result:
-                                        # Save to funbet_iq_predictions
-                                        await self.db.funbet_iq_predictions.update_one(
-                                            {'match_id': match_id},
-                                            {'$set': iq_result},
-                                            upsert=True
+                                        # Save to funbet_iq_predictions (insert only, never update)
+                                        # Check if prediction already exists
+                                        existing = await self.db.funbet_iq_predictions.find_one(
+                                            {'match_id': match_id}
                                         )
+                                        
+                                        if not existing:
+                                            # Insert new prediction (backfill from historical pre-match odds)
+                                            await self.db.funbet_iq_predictions.insert_one(iq_result)
+                                        # If exists, skip to preserve original prediction
                                         
                                         # Update odds_cache with historical bookmakers
                                         await self.db.odds_cache.update_one(
