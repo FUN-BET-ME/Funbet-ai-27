@@ -1156,12 +1156,22 @@ const LiveOdds = () => {
                     {/* Match Header */}
                     <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
                       <div className="flex-1">
-                        {/* First line: Sport title, LIVE indicator */}
+                        {/* First line: Sport title, LIVE/FINISHED flag */}
                         <div className="flex flex-wrap items-center gap-2 mb-2">
                           <span className="text-[#FFD700] text-sm font-medium bg-[#2E004F]/50 px-3 py-1 rounded">
                             {league}
                           </span>
-                          <CountdownTimer commenceTime={match.commence_time} completed={match.live_score?.completed} liveScore={match.live_score} />
+                          {/* Simple LIVE or FINISHED flag from API only */}
+                          {match.live_score?.is_live && (
+                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-red-500/20 text-red-500 border border-red-500/30">
+                              🔴 LIVE
+                            </span>
+                          )}
+                          {match.live_score?.completed && (
+                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-green-500/20 text-green-400 border border-green-500/30">
+                              ✅ FINAL
+                            </span>
+                          )}
                         </div>
                         
                         {/* Team names with logos */}
