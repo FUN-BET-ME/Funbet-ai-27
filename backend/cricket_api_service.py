@@ -85,8 +85,10 @@ class CricketAPIService:
                             match_started = match.get('matchStarted', False)
                             match_ended = match.get('matchEnded', False)
                             
-                            # Match is live if it has started but not ended
-                            is_live = match_started and not match_ended
+                            # Match is live if it has started but not ended, and not at Stumps
+                            # "Stumps" means day's play has ended (Test cricket)
+                            is_at_stumps = 'stumps' in status.lower()
+                            is_live = match_started and not match_ended and not is_at_stumps
                             is_completed = match_ended or 'won' in status.lower() or 'finished' in status.lower()
                             
                             # For Test matches - keep active for 5 days
