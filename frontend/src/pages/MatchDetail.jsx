@@ -221,7 +221,7 @@ const MatchDetail = () => {
             {/* VS & Timer */}
             <div className="text-center">
               <div className="text-4xl font-bold text-[#FFD700] mb-2">VS</div>
-              <CountdownTimer commenceTime={match.commence_time} />
+              <CountdownTimer commenceTime={match.commence_time} completed={match.completed} liveScore={match.live_score} />
             </div>
 
             {/* Away Team */}
