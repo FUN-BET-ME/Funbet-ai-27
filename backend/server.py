@@ -1265,13 +1265,27 @@ async def get_funbet_iq_match(match_id: str):
             if not match:
                 raise HTTPException(status_code=404, detail="Match not found")
             
-            # Calculate IQ
+            # CRITICAL: Only calculate for PRE-MATCH games (not started yet)
+            from datetime import datetime, timezone
+            commence_time = match.get('commence_time', '')
+            if commence_time:
+                match_time = datetime.fromisoformat(commence_time.replace('Z', '+00:00'))
+                now = datetime.now(timezone.utc)
+                
+                if match_time <= now:
+                    # Match has already started or finished - cannot calculate prediction
+                    raise HTTPException(
+                        status_code=400, 
+                        detail="Cannot calculate prediction for match that has already started. Predictions are PRE-MATCH only."
+                    )
+            
+            # Calculate IQ (PRE-MATCH ONLY)
             iq_data = await calculate_funbet_iq(match, db)
             
             if iq_data:
                 # Save to database
                 await iq_scores_collection.insert_one(iq_data)
-                logger.info(f"✅ Calculated and saved IQ for match {match_id}")
+                logger.info(f"✅ Calculated and saved PRE-MATCH IQ for match {match_id}")
         
         # Convert ObjectId to string
         if '_id' in iq_data:
