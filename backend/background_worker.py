@@ -25,61 +25,64 @@ logger = logging.getLogger(__name__)
 
 # Football leagues to fetch - Comprehensive worldwide coverage
 FOOTBALL_LEAGUES = [
-    # UEFA Competitions
+    # European Competitions (PRIORITY 1)
     'soccer_uefa_champs_league',              # UEFA Champions League
     'soccer_uefa_europa_league',              # UEFA Europa League
     'soccer_uefa_europa_conference_league',   # UEFA Conference League
     
-    # FIFA & World Cup Qualifiers
+    # International Tournaments
     'soccer_fifa_world_cup',                  # FIFA World Cup
     'soccer_fifa_world_cup_qualifiers_europe', # FIFA World Cup 2026 Qualifiers - Europe (ACTIVE)
     'soccer_uefa_euro_qualification',         # UEFA Euro Qualification
     'soccer_uefa_nations_league',             # UEFA Nations League
     'soccer_conmebol_copa_america',           # Copa América
     
-    # England - 4 divisions
-    'soccer_epl',                             # Premier League
-    'soccer_efl_champ',                       # Championship
+    # Top 5 European Leagues (PRIORITY 1)
+    'soccer_epl',                             # Premier League (England)
+    'soccer_spain_la_liga',                   # La Liga (Spain)
+    'soccer_germany_bundesliga',              # Bundesliga (Germany)
+    'soccer_italy_serie_a',                   # Serie A (Italy)
+    'soccer_france_ligue_one',                # Ligue 1 (France)
+    
+    # Second Tier - Top 5 (PRIORITY 2)
+    'soccer_efl_champ',                       # Championship (England)
+    'soccer_spain_segunda_division',          # Segunda División (Spain)
+    'soccer_germany_bundesliga2',             # 2. Bundesliga (Germany)
+    'soccer_italy_serie_b',                   # Serie B (Italy)
+    'soccer_france_ligue_two',                # Ligue 2 (France)
+    
+    # England Lower Leagues
     'soccer_england_league1',                 # League One
     'soccer_england_league2',                 # League Two
     
-    # Spain - 2 divisions
-    'soccer_spain_la_liga',                   # La Liga
-    'soccer_spain_segunda_division',          # Segunda División
+    # Other Top European Leagues (PRIORITY 2)
+    'soccer_portugal_primeira_liga',          # Primeira Liga (Portugal)
+    'soccer_netherlands_eredivisie',          # Eredivisie (Netherlands)
+    'soccer_belgium_first_div',               # Belgium First Division (NEW)
+    'soccer_spl',                             # Scottish Premiership (NEW)
+    'soccer_turkey_super_league',             # Süper Lig (Turkey)
+    'soccer_austria_bundesliga',              # Austrian Bundesliga (NEW)
+    'soccer_switzerland_superleague',         # Swiss Super League (NEW)
+    'soccer_denmark_superliga',               # Danish Superliga (NEW)
+    'soccer_greece_super_league',             # Greek Super League (NEW)
+    'soccer_sweden_allsvenskan',              # Swedish Allsvenskan (NEW - if available)
+    'soccer_norway_eliteserien',              # Norwegian Eliteserien (NEW)
     
-    # Germany - 2 divisions
-    'soccer_germany_bundesliga',              # Bundesliga
-    'soccer_germany_bundesliga2',             # 2. Bundesliga
-    
-    # Italy - 2 divisions
-    'soccer_italy_serie_a',                   # Serie A
-    'soccer_italy_serie_b',                   # Serie B
-    
-    # France - 2 divisions
-    'soccer_france_ligue_one',                # Ligue 1
-    'soccer_france_ligue_two',                # Ligue 2
-    
-    # Portugal
-    'soccer_portugal_primeira_liga',          # Primeira Liga
-    
-    # Netherlands
-    'soccer_netherlands_eredivisie',          # Eredivisie
-    
-    # South America
-    'soccer_brazil_campeonato',               # Brasileirão
-    'soccer_argentina_primera_division',      # Primera División
-    'soccer_conmebol_libertadores',           # Copa Libertadores
+    # South America (PRIORITY 2)
+    'soccer_brazil_campeonato',               # Brasileirão (Brazil Serie A)
+    'soccer_brazil_serie_b',                  # Brazil Serie B (NEW)
+    'soccer_argentina_primera_division',      # Primera División (Argentina)
+    'soccer_chile_campeonato',                # Primera División Chile (NEW)
     'soccer_conmebol_copa_sudamericana',      # Copa Sudamericana
-    'soccer_mexico_ligamx',                   # Liga MX
     
-    # Turkey - 2 divisions
-    'soccer_turkey_super_league',             # Süper Lig
-    'soccer_turkey_1_lig',                    # TFF 1. Lig
+    # North America
+    'soccer_usa_mls',                         # MLS (USA/Canada)
+    'soccer_mexico_ligamx',                   # Liga MX (Mexico)
     
-    # Other Major Leagues
-    'soccer_usa_mls',                         # MLS
-    'soccer_australia_aleague',               # A-League
-    'soccer_japan_j_league',                  # J-League
+    # Asia & Oceania (PRIORITY 3)
+    'soccer_australia_aleague',               # A-League (Australia)
+    'soccer_japan_j_league',                  # J-League (Japan)
+    'soccer_korea_kleague1',                  # K League 1 (South Korea) (NEW)
 ]
 
 # Cricket competitions - Complete international coverage
