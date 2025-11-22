@@ -1210,6 +1210,23 @@ class OddsWorker:
         except Exception as e:
             logger.warning(f"  ⚠️  Verification error: {e}")
     
+    async def build_historical_data_job(self):
+        """
+        Build historical data for teams (stats, H2H)
+        Runs every 12 hours to populate missing data
+        """
+        try:
+            logger.info("📊 Starting historical data build job...")
+            
+            from historical_data_builder import build_historical_data_job
+            
+            await build_historical_data_job(self.db)
+            
+            logger.info("✅ Historical data build job complete")
+                
+        except Exception as e:
+            logger.error(f"❌ Error in historical data build job: {e}")
+    
     async def cleanup_stuck_matches(self):
         """
         Cleanup matches stuck as 'live' for too long
