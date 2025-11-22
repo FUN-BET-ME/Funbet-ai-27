@@ -1156,118 +1156,12 @@ const LiveOdds = () => {
                     {/* Match Header */}
                     <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
                       <div className="flex-1">
-                        {/* First line: Sport title, LIVE indicator, Score */}
+                        {/* First line: Sport title, LIVE indicator */}
                         <div className="flex flex-wrap items-center gap-2 mb-2">
                           <span className="text-[#FFD700] text-sm font-medium bg-[#2E004F]/50 px-3 py-1 rounded">
                             {league}
                           </span>
                           <CountdownTimer commenceTime={match.commence_time} completed={match.live_score?.completed} liveScore={match.live_score} />
-                          {new Date(match.commence_time) < new Date() && (() => {
-                            const now = new Date();
-                            const commenceTime = new Date(match.commence_time);
-                            const matchScore = findScoreForMatch(match, scores);
-                            const hoursSinceStart = (now - commenceTime) / (1000 * 60 * 60);
-                            
-                            // Calculate elapsed time in minutes
-                            const elapsedMs = now - commenceTime;
-                            const elapsedMinutes = Math.floor(elapsedMs / (1000 * 60));
-                            
-                            // Determine if match is completed based on API status ONLY
-                            const isCompleted = match.completed === true || match.live_score?.completed === true;
-                            
-                            // Show status for matches within last 48 hours (for recent results view)
-                            if (hoursSinceStart < 48) {
-                              let homeScore = null;
-                              let awayScore = null;
-                              let matchStatus = '';
-                              let hasRealScores = false;
-                              
-                              // First, check if match has live_score object (from ESPN/in-play API)
-                              if (match.live_score) {
-                                homeScore = match.live_score.home_score;
-                                awayScore = match.live_score.away_score;
-                                matchStatus = match.live_score.match_status || '';
-                                hasRealScores = true;
-                              }
-                              // Then try to get scores from match object itself (from historical data)
-                              else if (match.scores && Array.isArray(match.scores) && match.scores.length > 0) {
-                                match.scores.forEach(scoreData => {
-                                  if (scoreData.name === match.home_team) {
-                                    homeScore = scoreData.score;
-                                    hasRealScores = true;
-                                  } else if (scoreData.name === match.away_team) {
-                                    awayScore = scoreData.score;
-                                    hasRealScores = true;
-                                  }
-                                });
-                              }
-                              // If no scores on match, try matchScore from findScoreForMatch
-                              else if (matchScore?.scores && matchScore.scores.length > 0) {
-                                matchScore.scores.forEach(scoreData => {
-                                  if (scoreData.name === match.home_team) {
-                                    homeScore = scoreData.score;
-                                    hasRealScores = true;
-                                  } else if (scoreData.name === match.away_team) {
-                                    awayScore = scoreData.score;
-                                    hasRealScores = true;
-                                  }
-                                });
-                                matchStatus = matchScore.match_status || '';
-                              }
-                              
-                              // Show elapsed time ONLY for matches that API says are live (not completed)
-                              const isLive = match.live_score?.is_live === true;
-                              
-                              if (!isCompleted && isLive && hoursSinceStart > 0) {
-                                // Format elapsed time based on sport and typical match phases
-                                if (match.sport_key && match.sport_key.includes('cricket')) {
-                                  // Cricket time formatting
-                                  if (elapsedMinutes < 60) {
-                                    matchStatus = `${elapsedMinutes} min`;
-                                  } else {
-                                    const hours = Math.floor(elapsedMinutes / 60);
-                                    const mins = elapsedMinutes % 60;
-                                    matchStatus = `${hours}h ${mins}m`;
-                                  }
-                                } else {
-                                  // Football time formatting
-                                  if (elapsedMinutes <= 45) {
-                                    matchStatus = `${elapsedMinutes}'`; // First half (0-45 min)
-                                  } else if (elapsedMinutes <= 60) {
-                                    matchStatus = 'HT'; // Half time break (45-60 min)
-                                  } else if (elapsedMinutes <= 90) {
-                                    matchStatus = `${elapsedMinutes - 15}'`; // Second half (46-90 min, accounting for 15 min HT)
-                                  } else if (elapsedMinutes <= 105) {
-                                    matchStatus = `90+${elapsedMinutes - 90}'`; // Injury time (90+ min)
-                                  } else if (elapsedMinutes <= 120) {
-                                    matchStatus = `${elapsedMinutes - 30}'`; // Extra time (91-120 min total)
-                                  } else {
-                                    matchStatus = `120+'`; // Penalties or late extra time
-                                  }
-                                }
-                              }
-                              
-                              return (
-                                <>
-                                  {/* Only show scores if we have real score data */}
-                                  {hasRealScores && homeScore !== null && awayScore !== null ? (
-                                    <span className="text-white text-sm font-bold bg-blue-600/20 px-3 py-1 rounded border border-blue-500/30">
-                                      {homeScore} - {awayScore}
-                                    </span>
-                                  ) : null}
-                                  {/* Only show match status for LIVE matches, not completed ones */}
-                                  {matchStatus && !isCompleted && (
-                                    <span className="text-yellow-400 text-xs font-medium bg-yellow-400/10 px-2 py-1 rounded border border-yellow-400/30">
-                                      {matchStatus}
-                                    </span>
-                                  )}
-                                </>
-                              );
-                            }
-                            
-                            // Don't show anything for matches older than 35 hours
-                            return null;
-                          })()}
                         </div>
                         
                         {/* Team names with logos */}
