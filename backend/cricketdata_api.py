@@ -15,7 +15,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 CRICKET_API_KEY = os.environ.get('CRICKET_API_KEY', '737b2e8a-8de8-47d0-b6fd-5593f7da8e84')
-CRICKET_BASE_URL = "https://api.cricketdata.org"
+CRICKET_BASE_URL = "https://api.cricapi.com/v1"
 
 
 async def fetch_current_matches() -> List[Dict]:
