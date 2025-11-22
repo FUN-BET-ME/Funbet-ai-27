@@ -111,6 +111,12 @@
 # ❌ WRONG: client.sportsiq (empty database, not used)
 # ✅ CORRECT: client.funbet (contains all data)
 #
+# 🛑 CRITICAL: NEVER DELETE ANY DATA FROM DATABASE - EVER!
+#   - NO delete_many(), NO drop(), NO remove()
+#   - Historical data is irreplaceable
+#   - Track record integrity depends on it
+#   - IF CLEANUP NEEDED: ASK USER FIRST!
+#
 # Current Data (as of Nov 22, 2025):
 #   - 893 matches in odds_cache
 #   - 734 predictions in funbet_iq_predictions  
