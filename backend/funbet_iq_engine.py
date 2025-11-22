@@ -519,6 +519,9 @@ async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
     Calculate FunBet IQ for all matches in the database
     This is called by the background worker every 10 minutes
     
+    CRITICAL: Only calculates for PRE-MATCH games (commence_time in the future)
+    This ensures predictions are NEVER calculated or updated after a match starts
+    
     Args:
         db: MongoDB database instance
         limit: Maximum number of matches to process
@@ -527,15 +530,15 @@ async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
         Dict with statistics: total_matches, calculated, errors
     """
     try:
-        logger.info(f"🧠 Starting batch IQ calculation for up to {limit} matches...")
+        logger.info(f"🧠 Starting batch IQ calculation for up to {limit} PRE-MATCH games...")
         
-        # Get all matches from last 6 hours to future (includes live, recent, and upcoming)
+        # CRITICAL: Only get FUTURE matches (not started yet)
+        # This ensures predictions are PRE-MATCH ONLY
         now = datetime.now(timezone.utc)
-        six_hours_ago = now - timedelta(hours=6)
-        six_hours_ago_str = six_hours_ago.isoformat().replace('+00:00', 'Z')
+        now_str = now.isoformat().replace('+00:00', 'Z')
         
         matches_cursor = db.odds_cache.find(
-            {'commence_time': {'$gte': six_hours_ago_str}}  # Last 6 hours + future
+            {'commence_time': {'$gt': now_str}}  # FUTURE matches ONLY (not started)
         ).limit(limit)
         
         matches = await matches_cursor.to_list(length=limit)
