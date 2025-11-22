@@ -402,7 +402,7 @@ async def calculate_team_stats_iq(team_name: str, sport_key: str, db) -> float:
         # Clamp to 0-100
         stats_iq = max(0, min(100, stats_iq))
         
-        logger.debug(f"Stats IQ for {team_name}: {stats_iq:.2f} (wr={win_rate_score:.1f}, gd={goal_diff_score:.1f}, ha={home_away_score:.1f}, form={form_score:.1f})")
+        logger.debug(f"Team Stats IQ for {team_name}: {stats_iq:.2f} (wr={win_rate_score:.1f}, gd={goal_diff_score:.1f}, ha={home_away_score:.1f}, form={form_score:.1f})")
         
         return stats_iq
         
