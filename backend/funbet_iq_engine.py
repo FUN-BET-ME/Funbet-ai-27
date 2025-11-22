@@ -785,7 +785,7 @@ async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
             'live_score.is_live': {'$ne': True}  # Not currently live
         }).limit(limit)
         
-        matches = await matches_cursor.to_list(length=limit)
+        matches = list(matches_cursor)
         total_matches = len(matches)
         
         if total_matches == 0:
