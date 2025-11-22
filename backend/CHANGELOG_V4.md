@@ -219,7 +219,57 @@ python populate_historical_data.py
 
 ---
 
+## 🔐 Admin Authentication (NEW)
+
+### Password Protection for Admin Pages
+
+**Problem**: Admin pages were publicly accessible
+
+**Solution**: Implemented token-based authentication system
+
+**Protected Pages**:
+- `/admin/iq` - FunBet IQ detailed calculations
+- `/admin/stats` - Admin statistics dashboard
+
+**Features**:
+- ✅ Username/password login
+- ✅ 24-hour session tokens
+- ✅ Password hashing (SHA-256)
+- ✅ Automatic session expiry
+- ✅ Protected route component
+- ✅ Logout functionality
+
+**Default Credentials** (⚠️ Change in production!):
+```
+Username: admin
+Password: admin123
+```
+
+**Files**:
+- `/app/backend/admin_auth.py` - Auth logic
+- `/app/backend/server.py` (Lines 91-165) - Auth endpoints
+- `/app/frontend/src/pages/AdminLogin.jsx` - Login page
+- `/app/frontend/src/components/ProtectedRoute.jsx` - Route protection
+- `/app/ADMIN_AUTHENTICATION.md` - Full documentation
+
+**Endpoints**:
+- `POST /api/admin/login` - Login endpoint
+- `GET /api/admin/verify` - Verify session
+- `POST /api/admin/logout` - Logout endpoint
+
+---
+
 ## 📁 Files Modified/Created
+
+### Admin Authentication
+- 📄 `/app/backend/admin_auth.py` - Authentication system
+- ✏️ `/app/backend/server.py` (Lines 91-165) - Auth endpoints
+- 📄 `/app/frontend/src/pages/AdminLogin.jsx` - Login page
+- 📄 `/app/frontend/src/components/ProtectedRoute.jsx` - Route wrapper
+- ✏️ `/app/frontend/src/pages/AdminIQ.jsx` - Added logout
+- ✏️ `/app/frontend/src/pages/AdminStats.jsx` - Updated auth
+- ✏️ `/app/frontend/src/App.js` - Protected routes
+- 📄 `/app/ADMIN_AUTHENTICATION.md` - Documentation
 
 ### Core Algorithm
 - ✏️ `/app/backend/funbet_iq_engine.py` - Complete V4 rewrite
