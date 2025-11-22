@@ -1,66 +1,137 @@
-<analysis>
+<analysis>**original_problem_statement**: The initial request was to fix an issue where cricket data was not current. Throughout the session, the user expanded the scope to include several critical fixes and features:
+- Display final scores, FunBet IQ predictions, and correctness stamps (✅/❌) on completed cricket matches.
+- Fix live football scores not showing up on any page.
+- Conduct a full audit of the system to ensure all parts are working.
+- Unify the match display component across all pages for a consistent look and feel.
+- The unified component must intelligently handle all match states: show VS for upcoming, live score and time for live matches, and final score with prediction verification for completed matches.
+- Fix the FunBet IQ history page, which was not showing any completed matches.
+- A critical requirement from the user is to ensure **FunBet IQ predictions are calculated pre-match ONLY** and are never changed or updated after a match has started.
 
-✅ Complete Setup Notes Created
+**User's preferred language**: English
 
-**File Created:** 
+**what currently exists?**
+A full-stack sports analytics application (React, FastAPI, MongoDB) that displays betting odds from 'The Odds API' and enriches them with live scores from 'cricapi.com' and 'API-Football'. A background worker manages data fetching, live score updates, and the calculation/verification of a proprietary FunBet IQ prediction score. The frontend shows upcoming, live, and completed matches with their associated odds and predictions.
 
-**Contents Include:**
+**Last working item**:
+-   **Last item agent was working**: Investigating the user's critical concern that FunBet IQ predictions might be recalculated after a match starts. The user explicitly stated predictions must be pre-match only and immutable once the game begins to ensure fairness and prevent cheating.
+-   **Status**: IN PROGRESS
+-   **Agent Testing Done**: N
+-   **Which testing method agent to use?**: backend testing agent
+-   **User Testing Done**: N
 
-📋 **System Architecture**
+**All Pending/In progress Issue list**:
+-   **Issue 1**: Verify FunBet IQ predictions are exclusively pre-match. (Priority: P0)
 
-- Tech stack, service ports, URLs
+**Issues Detail**:
+-   **Issue 1**:
+    -   **Description**: User is concerned that predictions are being recalculated after a match starts, which would invalidate their legitimacy. The system must be audited to prove that prediction calculations only happen for matches that have not yet started.
+    -   **Attempted fixes**: Investigation has just begun. No fixes attempted yet.
+    -   **Next debug checklist**:
+        1.  Inspect the FunBet IQ calculation job in .
+        2.  Analyze the MongoDB query that selects matches for IQ calculation. It must explicitly filter out any match where  is in the past or that is already live.
+        3.  Confirm there is no logic path that updates an existing prediction in  or  after a match is live.
+    -   **Why fix this issue and what will be achieved with the fix?**: This is critical for the application's integrity and user trust. Fixing this ensures all predictions are fair and legitimate.
+    -   **Status**: IN PROGRESS
+    -   **Is recurring issue?**: N
+    -   **Should Test frontend/backend/both after fix?**: backend
+    -   **Blocked on other issue**: None
 
-📊 **Database Structure**
+**In progress Task List**:
+-   None.
 
-- Complete schema for  and 
+**Upcoming and Future Tasks**
+-   **Upcoming Tasks**:
+    -   **(P1) Frontend Component Refactor**: The agent copied match display logic between  and . This should be refactored into a single, reusable  component to prevent future inconsistencies and improve maintainability.
+    -   **(P2) Improve Match Linking Robustness**: The fuzzy matching logic in  for linking live scores to odds data still fails for some teams (e.g., QPR vs Hull City). This needs to be improved to increase live score coverage.
+-   **Future Tasks**:
+    -   **Expanded Cricket Coverage**: Decide on a strategy for displaying cricket matches that have live scores but no betting odds from The Odds API.
 
-- Field explanations and data types
+**Completed work in this session**
+-   **Live Score Integration (Football & Cricket)**: Fixed numerous bugs in  and  to correctly parse and process live score data.
+-   **Backend API Fixes**:
+    -   Fixed the  endpoint in  to stop overwriting correct live scores from the database.
+    -   Fixed the  endpoint by correcting a  vs  query error, which now correctly displays all completed predictions.
+-   **Automated Historical Data Backfill**: Created a new background job in  that runs twice daily to find completed matches missing IQ scores, fetch their historical odds, and back-calculate the predictions.
+-   **Stale Odds Filtering**: Implemented logic in  to detect and remove stale bookmaker odds from live matches, ensuring odds reflect the current state of the game.
+-   **Frontend Display Unification**:
+    -   The match display component in  was updated to match the style and logic of .
+    -   This unified component now correctly handles all match states: VS for upcoming, live score/time for live games, and final score with a ✅/❌ verification badge for completed games.
+    -   Duplicate Live Now indicators on match pages were removed.
 
-🔧 **Critical Configurations**
+**Earlier issues found/mentioned but not fixed**
+-   **Issue 1**: Intermittent live score linking failures.
+    -   **Debug checklist**:
+        1.  Log team names from both The Odds API and the score provider (e.g., API-Football) for matches that fail to link.
+        2.  Analyze why the fuzzy matching score is too low.
+        3.  Consider adding a secondary check based on the match's .
+        4.  For persistent mismatches, a team name alias/mapping table in the database may be required.
+    -   **Why to solve this issue and what will be achieved with this?**: To maximize live score coverage across all matches.
+    -   **Should Test frontend/backend/both after fix**: backend
+    -   **Is recurring issue?**: Y
 
-- Environment variables (DO NOT MODIFY list)
+**Known issue recurrence from previous fork**
+-   None.
 
-- All service settings
+**Code Architecture**
 
-🤖 **Background Worker**
 
-- All 6 jobs explained
+**Key Technical Concepts**
+-   **Frontend**: React, , shadcn/ui
+-   **Backend**: FastAPI, Pydantic, MongoDB
+-   **Background Jobs**:  for running recurring tasks.
+-   **Data Matching**:  library for fuzzy string matching between different API data sources.
 
-- Run schedules
+**key DB schema**
+-   : Stores match data, odds from various bookmakers, and is enriched with  and  objects.
+-   : Stores historical prediction records, including the prediction, the actual outcome, and whether the prediction was correct.
 
-- Supervisor config
+**changes in tech stack**
+-   None.
 
-🌐 **API Endpoints**
+**All files**
+-   **Created**:
+    -   : Documents the automated historical data backfill process.
+-   **Updated**:
+    -   : Added historical backfill job, improved score linking, and added stale odds filtering.
+    -   : Fixed major bugs in the primary odds and track record API endpoints.
+    -   , : Fixed multiple bugs to ensure reliable live score fetching.
+    -   : Reworked to unify the UI with other pages.
+    -   , , : Updated to create a consistent and smart match display component.
 
--  with all parameters
+**Areas that need refactoring**:
+-   The match display logic is duplicated in  and . This should be extracted into a single, shared  component to improve maintainability.
 
--  with filters
+**key api endpoints**
+-   : The main endpoint for fetching all match data, supporting filters for sport and time.
+-   : The endpoint for the history page, providing all verified predictions.
 
-- Query logic explained
+**Critical Info for New Agent**
+-   **Prediction Integrity is #1 Priority**: The user's latest and most critical concern is that predictions MUST be pre-match only. Your immediate task is to audit the system and prove that predictions are never calculated or altered after a match starts.
+-   **Frontend Display is Fragile**: The user has repeatedly found inconsistencies in the frontend display. Always verify your backend changes by confirming the frontend renders the data correctly on ALL relevant pages (, filtered views, and ).
+-   **Score Linking is a Weak Point**: The fuzzy matching for linking live scores to odds data is brittle and a known cause of missing live scores. This is a recurring issue.
 
-🐛 **Known Issues & Fixes**
+**documents created in this job**
+-   
 
-- 6 major bugs fixed with code locations
+**Last 5 User Messages and any pending user messages**
+1.  **User**: Pointed out that the same match component should be on all pages and should be smart (handle upcoming, live, and finished states). (Status: **RESOLVED**)
+2.  **User**: Specified that finished matches need to show the final score and the correct/incorrect IQ prediction stamp. (Status: **RESOLVED**)
+3.  **User**: Asked why completed football games were not showing on the FunBet IQ history page. (Status: **RESOLVED**)
+4.  **User**: Raised concern that prediction outcomes seemed made up and that the correct component (from a screenshot) should be used. (Status: **RESOLVED**, agent verified the data was legitimate).
+5.  **User**: Raised the critical issue that predictions should not be changed after a match starts, as they are pre-match predictions. (Status: **PENDING**, this is the current top-priority task).
 
-- completed_at timestamps
+**Project Health Check:**
+-   **Broken**: The integrity of the prediction timing is currently under investigation and is a critical point of user trust.
+-   **Mocked**: None.
 
-- Draw IQ logic
+**Testing status**
+-   **Testing agent used after significant changes**: YES
+-   **Troubleshoot agent used after agent stuck in loop**: NO
+-   **Test files created**: None
+-   **Known regressions**: None.
 
-- Sport field backfill
+**Credentials to test flow:**
+-   N/A (No login required)
 
-📝 **Maintenance Commands**
-
-- Service restart commands
-
-- Database queries
-
-- Manual job triggers
-
-🚨 **Troubleshooting Guide**
-
-- Common issues with solutions
-
-- How to check each component
-
-Curenly the cricket data is not currcy check cricket apai and chec recently completed matches and live and upcoming as PRiority 1
-</analysis>
+**What agent forgot to execute**
+-   The previous agent had just been assigned the critical task of verifying that FunBet IQ predictions are strictly pre-match and had not yet started the implementation. This must be the immediate next step.</analysis>
