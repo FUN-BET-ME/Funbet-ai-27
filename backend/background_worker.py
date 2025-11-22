@@ -738,25 +738,93 @@ class OddsWorker:
                                         })
                     
                     if linked_match:
-                        # Update with live score data including logos
+                        # Filter out stale bookmakers with pre-match odds during live play
+                        filtered_bookmakers = []
+                        home_score = score.get('home_score', 0)
+                        away_score = score.get('away_score', 0)
+                        
+                        # Convert scores to int for comparison
+                        try:
+                            home_score_int = int(home_score) if home_score else 0
+                            away_score_int = int(away_score) if away_score else 0
+                        except:
+                            home_score_int = 0
+                            away_score_int = 0
+                        
+                        # Check if there's a significant score (team winning by 2+ goals)
+                        score_diff = abs(home_score_int - away_score_int)
+                        has_significant_lead = score_diff >= 2
+                        
+                        if has_significant_lead and linked_match.get('bookmakers'):
+                            # Get the median odds for the winning team
+                            winning_team_odds = []
+                            
+                            for bookmaker in linked_match.get('bookmakers', []):
+                                markets = bookmaker.get('markets', [])
+                                if markets and markets[0].get('outcomes'):
+                                    outcomes = markets[0]['outcomes']
+                                    for outcome in outcomes:
+                                        # Check odds for the team that's winning
+                                        if (home_score_int > away_score_int and outcome.get('name') == linked_match.get('home_team')) or \
+                                           (away_score_int > home_score_int and outcome.get('name') == linked_match.get('away_team')):
+                                            winning_team_odds.append(outcome.get('price', 0))
+                            
+                            # Calculate median odds for winning team
+                            if len(winning_team_odds) >= 3:
+                                winning_team_odds.sort()
+                                median_odds = winning_team_odds[len(winning_team_odds) // 2]
+                                
+                                # Filter bookmakers: if median is low (e.g., 1.05), remove bookmakers with high odds (e.g., > 3.0)
+                                if median_odds < 1.5:  # Winning team is heavily favored
+                                    for bookmaker in linked_match.get('bookmakers', []):
+                                        markets = bookmaker.get('markets', [])
+                                        if markets and markets[0].get('outcomes'):
+                                            outcomes = markets[0]['outcomes']
+                                            has_stale_odds = False
+                                            
+                                            for outcome in outcomes:
+                                                if (home_score_int > away_score_int and outcome.get('name') == linked_match.get('home_team')) or \
+                                                   (away_score_int > home_score_int and outcome.get('name') == linked_match.get('away_team')):
+                                                    # If this bookmaker has odds > 2.0 when median is < 1.5, it's stale
+                                                    if outcome.get('price', 0) > 2.0:
+                                                        has_stale_odds = True
+                                                        break
+                                            
+                                            if not has_stale_odds:
+                                                filtered_bookmakers.append(bookmaker)
+                                else:
+                                    filtered_bookmakers = linked_match.get('bookmakers', [])
+                            else:
+                                filtered_bookmakers = linked_match.get('bookmakers', [])
+                        else:
+                            filtered_bookmakers = linked_match.get('bookmakers', [])
+                        
+                        # Update with live score data and filtered bookmakers
+                        update_data = {
+                            'live_score': {
+                                'home_score': score.get('home_score'),
+                                'away_score': score.get('away_score'),
+                                'match_status': score.get('match_status'),
+                                'is_live': score.get('is_live'),
+                                'completed': score.get('completed'),
+                                'last_update': score.get('last_update'),
+                                'home_team_logo': score.get('home_team_logo'),
+                                'away_team_logo': score.get('away_team_logo'),
+                                'league_logo': score.get('league_logo'),
+                                'api_source': score.get('api_source', 'unknown')
+                            },
+                            'updated_at': datetime.now(timezone.utc).isoformat(),
+                            'linked_at': datetime.now(timezone.utc).isoformat()
+                        }
+                        
+                        # Only update bookmakers if we filtered some out
+                        if len(filtered_bookmakers) < len(linked_match.get('bookmakers', [])):
+                            update_data['bookmakers'] = filtered_bookmakers
+                            logger.info(f"🔄 Filtered {len(linked_match.get('bookmakers', [])) - len(filtered_bookmakers)} stale bookmakers from {linked_match.get('home_team')} vs {linked_match.get('away_team')}")
+                        
                         await self.db.odds_cache.update_one(
                             {'id': linked_match['id']},
-                            {'$set': {
-                                'live_score': {
-                                    'home_score': score.get('home_score'),
-                                    'away_score': score.get('away_score'),
-                                    'match_status': score.get('match_status'),
-                                    'is_live': score.get('is_live'),
-                                    'completed': score.get('completed'),
-                                    'last_update': score.get('last_update'),
-                                    'home_team_logo': score.get('home_team_logo'),
-                                    'away_team_logo': score.get('away_team_logo'),
-                                    'league_logo': score.get('league_logo'),
-                                    'api_source': score.get('api_source', 'unknown')
-                                },
-                                'updated_at': datetime.now(timezone.utc).isoformat(),
-                                'linked_at': datetime.now(timezone.utc).isoformat()
-                            }}
+                            {'$set': update_data}
                         )
                         updated_count += 1
                         linked_count += 1
