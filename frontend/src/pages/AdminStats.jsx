@@ -1,35 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import OddsTable from '../components/OddsTable';
+import { Button } from '../components/ui/button';
+
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AdminStats = () => {
-  const [authenticated, setAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Admin password (in production, this should be in backend/env)
-  const ADMIN_PASSWORD = 'funbet2025';
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setAuthenticated(true);
-      setError('');
-      // Store in sessionStorage for this session only
-      sessionStorage.setItem('admin_authenticated', 'true');
-    } else {
-      setError('Invalid password');
-      setPassword('');
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      if (token) {
+        await axios.post(`${API_URL}/api/admin/logout`, {}, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUsername');
+      navigate('/admin/login');
     }
   };
-
-  // Check if already authenticated in session
-  React.useEffect(() => {
-    if (sessionStorage.getItem('admin_authenticated') === 'true') {
-      setAuthenticated(true);
-    }
-  }, []);
 
   const handleLogout = () => {
     setAuthenticated(false);
