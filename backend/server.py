@@ -23,6 +23,10 @@ from auth import (
     get_password_hash, verify_password, create_access_token,
     get_current_user, require_auth
 )
+from admin_auth import (
+    verify_credentials, create_session, verify_session, 
+    invalidate_session, cleanup_expired_sessions
+)
 from ai_predictions import generate_ai_predictions
 from espn_scores_service import fetch_all_espn_scores, match_score_to_odds
 from funbet_iq_engine import calculate_funbet_iq
