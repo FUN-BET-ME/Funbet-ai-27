@@ -1675,44 +1675,44 @@ def main():
     print(f"\n🎯 TEST SUITE 5: BACKFILL JOB STATUS")
     all_results['backfill_job_status'] = test_backfill_job_status()
     
-    # Test 5: Backend Health Check
-    print(f"\n🎯 TEST SUITE 5: BACKEND HEALTH CHECK")
+    # Test 6: Backend Health Check
+    print(f"\n🎯 TEST SUITE 6: BACKEND HEALTH CHECK")
     all_results['backend_health'] = test_backend_logs_health()
     
     # Summary
     print(f"\n{'='*60}")
-    print(f"🏁 COMPLETE BACKEND API AUDIT SUMMARY")
+    print(f"🏁 HISTORICAL BACKFILL SYSTEM TESTING SUMMARY")
     print(f"{'='*60}")
     
     total_tests = len(all_results)
     passed_tests = sum(1 for result in all_results.values() if result)
     
-    # Group results by category
-    odds_tests = [k for k in all_results.keys() if k.startswith('odds_')]
-    iq_tests = [k for k in all_results.keys() if k.startswith('funbet_iq_')]
-    validation_tests = [k for k in all_results.keys() if k in ['data_validation']]
-    coverage_tests = [k for k in all_results.keys() if k in ['sports_coverage']]
+    # Group results by category for backfill testing
+    db_tests = [k for k in all_results.keys() if k in ['database_verification']]
+    api_tests = [k for k in all_results.keys() if k in ['cricket_recent_results', 'football_recent_results']]
+    track_tests = [k for k in all_results.keys() if k in ['track_record_api']]
+    backfill_tests = [k for k in all_results.keys() if k in ['backfill_job_status']]
     health_tests = [k for k in all_results.keys() if k in ['backend_health']]
     
     print(f"\n📊 DETAILED RESULTS BY CATEGORY:")
     
-    print(f"\n🎯 ODDS ENDPOINTS:")
-    for test in odds_tests:
+    print(f"\n🗄️  DATABASE VERIFICATION:")
+    for test in db_tests:
         status = "✅ PASS" if all_results[test] else "❌ FAIL"
         print(f"  {test.replace('_', ' ').title()}: {status}")
     
-    print(f"\n🧠 FUNBET IQ ENDPOINTS:")
-    for test in iq_tests:
+    print(f"\n🏏 RECENT RESULTS APIs:")
+    for test in api_tests:
         status = "✅ PASS" if all_results[test] else "❌ FAIL"
         print(f"  {test.replace('_', ' ').title()}: {status}")
     
-    print(f"\n🔍 DATA VALIDATION:")
-    for test in validation_tests:
+    print(f"\n📊 TRACK RECORD API:")
+    for test in track_tests:
         status = "✅ PASS" if all_results[test] else "❌ FAIL"
         print(f"  {test.replace('_', ' ').title()}: {status}")
     
-    print(f"\n📈 SPORTS COVERAGE:")
-    for test in coverage_tests:
+    print(f"\n⚙️  BACKFILL JOB STATUS:")
+    for test in backfill_tests:
         status = "✅ PASS" if all_results[test] else "❌ FAIL"
         print(f"  {test.replace('_', ' ').title()}: {status}")
     
@@ -1724,30 +1724,27 @@ def main():
     print(f"\nOverall: {passed_tests}/{total_tests} tests passed")
     print(f"Success Rate: {(passed_tests/total_tests*100):.1f}%")
     
-    # Success Criteria Assessment
-    print(f"\n🎯 SUCCESS CRITERIA ASSESSMENT:")
-    print(f"✅ All odds endpoints return 200 OK: {'PASS' if all(all_results.get(t, False) for t in odds_tests) else 'FAIL'}")
-    print(f"✅ Pagination works (total count, has_more, next_skip): {'PASS' if all_results.get('odds_all_cached_pagination', False) else 'FAIL'}")
-    print(f"✅ Sport filters return only matches of that sport: {'PASS' if all(all_results.get(t, False) for t in ['odds_football_filter', 'odds_cricket_filter', 'odds_basketball_filter']) else 'FAIL'}")
-    print(f"✅ Matches have valid structure with odds: {'PASS' if all_results.get('data_validation', False) else 'FAIL'}")
-    print(f"✅ FunBet IQ track record endpoint works: {'PASS' if all_results.get('funbet_iq_track_record', False) else 'FAIL'}")
-    print(f"✅ Live matches have real-time scores: {'PASS' if all_results.get('data_validation', False) else 'FAIL'}")
-    print(f"✅ Completed matches have final scores: {'PASS' if all_results.get('data_validation', False) else 'FAIL'}")
-    print(f"✅ Sports coverage is adequate: {'PASS' if all_results.get('sports_coverage', False) else 'FAIL'}")
+    # Success Criteria Assessment for Historical Backfill System
+    print(f"\n🎯 HISTORICAL BACKFILL SYSTEM SUCCESS CRITERIA:")
+    print(f"✅ All completed matches (from last 7 days) have IQ predictions: {'PASS' if all_results.get('database_verification', False) else 'FAIL'}")
+    print(f"✅ All predictions are verified with actual results: {'PASS' if all_results.get('database_verification', False) else 'FAIL'}")
+    print(f"✅ Frontend can display complete data (scores + IQ + verification): {'PASS' if all_results.get('cricket_recent_results', False) and all_results.get('football_recent_results', False) else 'FAIL'}")
+    print(f"✅ Track record shows accurate statistics: {'PASS' if all_results.get('track_record_api', False) else 'FAIL'}")
+    print(f"✅ System runs automatically twice daily: {'PASS' if all_results.get('backfill_job_status', False) else 'FAIL'}")
     print(f"✅ Backend health is good: {'PASS' if all_results.get('backend_health', False) else 'FAIL'}")
     
-    # Critical tests for this audit
-    critical_tests = odds_tests + iq_tests + ['data_validation', 'sports_coverage', 'backend_health']
+    # Critical tests for backfill system
+    critical_tests = ['database_verification', 'cricket_recent_results', 'football_recent_results', 'track_record_api', 'backfill_job_status', 'backend_health']
     critical_passed = sum(1 for test in critical_tests if all_results.get(test, False))
     
     print(f"\nCritical Tests: {critical_passed}/{len(critical_tests)} passed")
     
     if critical_passed >= len(critical_tests) * 0.8:  # 80% pass rate
-        print(f"\n🎉 SUCCESS! Backend API Audit completed successfully!")
-        print(f"📝 All major endpoints are working correctly with proper data structure.")
+        print(f"\n🎉 SUCCESS! Historical Backfill System & Recent Results Display testing completed successfully!")
+        print(f"📝 All major components are working correctly with proper data verification.")
         return True
     else:
-        print(f"\n⚠️  Some critical tests failed - backend may have issues")
+        print(f"\n⚠️  Some critical tests failed - backfill system may have issues")
         return False
 
 if __name__ == "__main__":
