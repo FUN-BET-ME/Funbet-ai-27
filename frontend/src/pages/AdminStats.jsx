@@ -26,45 +26,6 @@ const AdminStats = () => {
     }
   };
 
-  const handleLogout = () => {
-    setAuthenticated(false);
-    sessionStorage.removeItem('admin_authenticated');
-    navigate('/');
-  };
-
-  if (!authenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#2E004F] via-[#1a0029] to-black">
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8 w-full max-w-md">
-          <h2 className="text-3xl font-bold text-white mb-2">Admin Access</h2>
-          <p className="text-gray-400 mb-6">Enter password to view detailed statistics</p>
-          
-          <form onSubmit={handleLogin}>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Admin Password"
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#FFD700] mb-4"
-              autoFocus
-            />
-            
-            {error && (
-              <p className="text-red-500 text-sm mb-4">{error}</p>
-            )}
-            
-            <button
-              type="submit"
-              className="w-full bg-[#FFD700] text-[#2E004F] font-bold py-3 rounded-lg hover:bg-[#FFD700]/90 transition-all"
-            >
-              Login
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
