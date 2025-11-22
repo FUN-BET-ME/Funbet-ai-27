@@ -24,19 +24,18 @@ logger = logging.getLogger(__name__)
 
 # ==================== MARKET IQ COMPONENT (40%) ====================
 
-def calculate_market_iq(match: Dict, team_type: str = 'home') -> float:
+def calculate_odds_iq(match: Dict, team_type: str = 'home') -> float:
     """
-    Calculate Market IQ based on odds analysis
+    Calculate Odds Analysis IQ (20% weight)
     
-    Formula:
-    Market IQ = 50 + 20 * Market_Edge + 10 * Movement_Score + 10 * Volume_Score
+    Based on market odds and implied probabilities from bookmakers
     
     Args:
         match: Match data with bookmakers
         team_type: 'home' or 'away'
     
     Returns:
-        Market IQ score (0-100)
+        Odds IQ score (0-100)
     """
     try:
         bookmakers = match.get('bookmakers', [])
