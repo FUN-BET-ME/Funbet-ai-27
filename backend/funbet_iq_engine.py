@@ -614,10 +614,10 @@ def calculate_ai_boost(market_iq: float, stats_iq: float, momentum_iq: float) ->
 
 async def calculate_funbet_iq(match: Dict, db) -> Dict:
     """
-    Calculate complete FunBet IQ for a match
+    Calculate complete FunBet IQ for a match using AI-powered multi-factor analysis
     
-    Formula:
-    FunBet IQ = 0.40 * Market_IQ + 0.30 * Stats_IQ + 0.10 * Momentum_IQ + 0.10 * AI_Boost + 0.10 * API_Predictions
+    Formula (NEW V4):
+    FunBet IQ = 0.20 * Odds_IQ + 0.20 * Volume_IQ + 0.20 * Movement_IQ + 0.20 * Team_Stats_IQ + 0.10 * Momentum_IQ + 0.10 * H2H_IQ
     
     Returns:
         Dict with home_iq, away_iq, and component breakdowns
@@ -628,47 +628,40 @@ async def calculate_funbet_iq(match: Dict, db) -> Dict:
         sport_key = match.get('sport_key', '')
         
         # Calculate all components for HOME team
-        home_market_iq = calculate_market_iq(match, 'home')
-        home_stats_iq = await calculate_stats_iq(home_team, sport_key, db)
+        home_odds_iq = calculate_odds_iq(match, 'home')
+        home_volume_iq = calculate_volume_iq(match, 'home')
+        home_movement_iq = calculate_movement_iq(match, 'home')
+        home_stats_iq = await calculate_team_stats_iq(home_team, sport_key, db)
         home_momentum_iq = await calculate_momentum_iq(home_team, sport_key, db)
-        home_ai_boost = calculate_ai_boost(home_market_iq, home_stats_iq, home_momentum_iq)
         
-        # Get API-Football predictions if available
-        home_api_prediction = 50.0  # Default neutral
-        away_api_prediction = 50.0
+        # Calculate Head-to-Head (returns both home and away scores)
+        home_h2h_iq, away_h2h_iq = await calculate_h2h_iq(home_team, away_team, sport_key, db)
         
-        if match.get('api_prediction'):
-            api_pred = match['api_prediction']
-            # Convert API prediction to IQ score (0-100)
-            if api_pred.get('winner', {}).get('name') == home_team:
-                home_api_prediction = 50 + (api_pred.get('percent', {}).get(home_team, 50) / 2)
-                away_api_prediction = 50 - (api_pred.get('percent', {}).get(home_team, 50) / 2)
-            elif api_pred.get('winner', {}).get('name') == away_team:
-                away_api_prediction = 50 + (api_pred.get('percent', {}).get(away_team, 50) / 2)
-                home_api_prediction = 50 - (api_pred.get('percent', {}).get(away_team, 50) / 2)
-        
-        # Calculate FunBet IQ for home (NEW WEIGHTS: 40-30-10-10-10)
+        # Calculate FunBet IQ for home (NEW WEIGHTS: 20-20-20-20-10-10)
         home_iq = (
-            0.40 * home_market_iq +
-            0.30 * home_stats_iq +
+            0.20 * home_odds_iq +
+            0.20 * home_volume_iq +
+            0.20 * home_movement_iq +
+            0.20 * home_stats_iq +
             0.10 * home_momentum_iq +
-            0.10 * home_ai_boost +
-            0.10 * home_api_prediction
+            0.10 * home_h2h_iq
         )
         
         # Calculate all components for AWAY team
-        away_market_iq = calculate_market_iq(match, 'away')
-        away_stats_iq = await calculate_stats_iq(away_team, sport_key, db)
+        away_odds_iq = calculate_odds_iq(match, 'away')
+        away_volume_iq = calculate_volume_iq(match, 'away')
+        away_movement_iq = calculate_movement_iq(match, 'away')
+        away_stats_iq = await calculate_team_stats_iq(away_team, sport_key, db)
         away_momentum_iq = await calculate_momentum_iq(away_team, sport_key, db)
-        away_ai_boost = calculate_ai_boost(away_market_iq, away_stats_iq, away_momentum_iq)
         
-        # Calculate FunBet IQ for away (NEW WEIGHTS: 40-30-10-10-10)
+        # Calculate FunBet IQ for away (NEW WEIGHTS: 20-20-20-20-10-10)
         away_iq = (
-            0.40 * away_market_iq +
-            0.30 * away_stats_iq +
+            0.20 * away_odds_iq +
+            0.20 * away_volume_iq +
+            0.20 * away_movement_iq +
+            0.20 * away_stats_iq +
             0.10 * away_momentum_iq +
-            0.10 * away_ai_boost +
-            0.10 * away_api_prediction
+            0.10 * away_h2h_iq
         )
         
         # Calculate Draw IQ for football and ALL cricket formats (can tie/draw)
