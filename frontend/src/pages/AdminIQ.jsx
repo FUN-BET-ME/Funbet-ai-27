@@ -14,10 +14,28 @@ const AdminIQ = () => {
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [loading, setLoading] = useState(true);
   const [iqDetails, setIqDetails] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMatches();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      if (token) {
+        await axios.post(`${API_URL}/api/admin/logout`, {}, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUsername');
+      navigate('/admin/login');
+    }
+  };
 
   const fetchMatches = async () => {
     try {
