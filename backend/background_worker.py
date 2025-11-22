@@ -647,17 +647,50 @@ class OddsWorker:
                                 'away_team': {'$regex': f'^{re.escape(away_team)}$', '$options': 'i'}
                             })
                             
-                            # If still no match, try contains match
+                            # If still no match, try flexible fuzzy matching
                             if not linked_match:
-                                # Split team names and try matching on key words
-                                home_words = home_team.split()
-                                away_words = away_team.split()
-                                if home_words and away_words:
-                                    linked_match = await self.db.odds_cache.find_one({
-                                        'home_team': {'$regex': home_words[0], '$options': 'i'},
-                                        'away_team': {'$regex': away_words[0], '$options': 'i'},
-                                        'commence_time': {'$gte': (datetime.now(timezone.utc) - timedelta(hours=6)).isoformat()}
-                                    })
+                                # Get the sport_key from the score to narrow down search
+                                sport_key = score.get('sport_key', '')
+                                
+                                # Strategy 1: Match by sport_key and time window
+                                if sport_key:
+                                    # Get all matches from the same league around the same time
+                                    time_window_start = (datetime.now(timezone.utc) - timedelta(hours=6)).isoformat()
+                                    time_window_end = (datetime.now(timezone.utc) + timedelta(hours=3)).isoformat()
+                                    
+                                    candidates = await self.db.odds_cache.find({
+                                        'sport_key': sport_key,
+                                        'commence_time': {'$gte': time_window_start, '$lte': time_window_end}
+                                    }).to_list(length=50)
+                                    
+                                    # Find best match using fuzzy string matching
+                                    best_match = None
+                                    best_score = 0
+                                    
+                                    for candidate in candidates:
+                                        # Calculate similarity score
+                                        home_similarity = self._calculate_team_similarity(home_team, candidate.get('home_team', ''))
+                                        away_similarity = self._calculate_team_similarity(away_team, candidate.get('away_team', ''))
+                                        
+                                        # Both teams must have at least 60% similarity
+                                        if home_similarity >= 0.6 and away_similarity >= 0.6:
+                                            total_score = home_similarity + away_similarity
+                                            if total_score > best_score:
+                                                best_score = total_score
+                                                best_match = candidate
+                                    
+                                    linked_match = best_match
+                                
+                                # Strategy 2: Fallback to word matching if sport_key method fails
+                                if not linked_match:
+                                    home_words = home_team.split()
+                                    away_words = away_team.split()
+                                    if home_words and away_words:
+                                        linked_match = await self.db.odds_cache.find_one({
+                                            'home_team': {'$regex': home_words[-1], '$options': 'i'},  # Last word (usually team name)
+                                            'away_team': {'$regex': away_words[-1], '$options': 'i'},
+                                            'commence_time': {'$gte': (datetime.now(timezone.utc) - timedelta(hours=6)).isoformat()}
+                                        })
                     
                     if linked_match:
                         # Update with live score data including logos
