@@ -517,8 +517,9 @@ async def get_all_cached_odds(
                         commence_dt = datetime.fromisoformat(commence_time_str.replace('Z', '+00:00'))
                         minutes_since_start = (now - commence_dt).total_seconds() / 60
                         
-                        # Only filter if match started 10+ minutes ago (stricter for live accuracy)
-                        if minutes_since_start >= 10:
+                        # SMART FILTERING: Remove stale bookmakers for LIVE matches
+                        # Start filtering after 7 minutes, remove if no update for 6 minutes (3 checks @ 2 min intervals)
+                        if minutes_since_start >= 7:
                             active_bookmakers = []
                             
                             for bm in match['bookmakers']:
@@ -528,8 +529,9 @@ async def get_all_cached_odds(
                                     last_update_dt = datetime.fromisoformat(last_update_str.replace('Z', '+00:00'))
                                     minutes_since_update = (now - last_update_dt).total_seconds() / 60
                                     
-                                    # STRICTER: Keep bookmaker ONLY if odds updated within last 10 minutes
-                                    if minutes_since_update < 10:
+                                    # Keep bookmaker if odds updated within last 6 minutes (3 checks)
+                                    # This means odds changed at least once in last 3 fetch cycles
+                                    if minutes_since_update < 6:
                                         # Additional check: Filter out suspended markets (all odds = 1.0)
                                         markets = bm.get('markets', [])
                                         is_valid = True
@@ -546,8 +548,8 @@ async def get_all_cached_odds(
                                         if is_valid:
                                             active_bookmakers.append(bm)
                                     else:
-                                        # Log stale bookmaker (for monitoring)
-                                        logger.debug(f"Filtered stale odds: {bm.get('title')} ({minutes_since_update:.0f} min old)")
+                                        # Bookmaker odds stale (no update for 6+ minutes = 3+ checks)
+                                        logger.debug(f"Filtered stale live odds: {bm.get('title')} ({minutes_since_update:.0f} min old)")
                                 except:
                                     # If can't parse last_update, EXCLUDE it (don't take risk with stale data)
                                     pass
