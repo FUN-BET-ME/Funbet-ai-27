@@ -722,16 +722,20 @@ async def calculate_funbet_iq(match: Dict, db) -> Dict:
             'confidence': confidence,
             'verdict': verdict,
             'home_components': {
-                'market_iq': round(home_market_iq, 1),
+                'odds_iq': round(home_odds_iq, 1),
+                'volume_iq': round(home_volume_iq, 1),
+                'movement_iq': round(home_movement_iq, 1),
                 'stats_iq': round(home_stats_iq, 1),
                 'momentum_iq': round(home_momentum_iq, 1),
-                'ai_boost': round(home_ai_boost, 1)
+                'h2h_iq': round(home_h2h_iq, 1)
             },
             'away_components': {
-                'market_iq': round(away_market_iq, 1),
+                'odds_iq': round(away_odds_iq, 1),
+                'volume_iq': round(away_volume_iq, 1),
+                'movement_iq': round(away_movement_iq, 1),
                 'stats_iq': round(away_stats_iq, 1),
                 'momentum_iq': round(away_momentum_iq, 1),
-                'ai_boost': round(away_ai_boost, 1)
+                'h2h_iq': round(away_h2h_iq, 1)
             },
             'home_trend': home_trend,
             'away_trend': away_trend,
