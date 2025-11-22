@@ -178,6 +178,11 @@ const FunBetIQ = () => {
       // Note: 'pending' is not supported by backend, treated as 'all'
       // If 'all' or 'pending', don't add filter param
       
+      // Add sort order
+      if (historySortBy) {
+        params.sort_by = historySortBy;
+      }
+      
       const response = await axios.get(`${BACKEND_URL}/api/funbet-iq/track-record`, {
         params,
         headers: {
