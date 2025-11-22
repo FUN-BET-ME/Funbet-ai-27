@@ -659,6 +659,19 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                     {matchIQ.confidence}
                                   </span>
                                 </div>
+                                
+                                {/* Row 3: Verification Result (for completed matches) */}
+                                {match.completed && matchIQ.prediction_correct !== null && matchIQ.prediction_correct !== undefined && (
+                                  <div className={`flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg border ${
+                                    matchIQ.prediction_correct 
+                                      ? 'bg-green-600/20 border-green-500/30' 
+                                      : 'bg-red-600/20 border-red-500/30'
+                                  }`}>
+                                    <span className={`text-sm font-bold ${matchIQ.prediction_correct ? 'text-green-300' : 'text-red-300'}`}>
+                                      {matchIQ.prediction_correct ? '✅ Prediction Correct' : '❌ Prediction Incorrect'}
+                                    </span>
+                                  </div>
+                                )}
                               </div>
                             );
                           }
