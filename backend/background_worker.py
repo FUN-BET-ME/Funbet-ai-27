@@ -279,6 +279,22 @@ class OddsWorker:
                 match['updated_at'] = now
                 match['fetched_at'] = now
                 
+                # CRITICAL: Deduplicate bookmakers by title
+                # The Odds API sometimes returns same bookmaker multiple times
+                if 'bookmakers' in match:
+                    bookmakers_by_title = {}
+                    for bm in match['bookmakers']:
+                        title = bm.get('title')
+                        # Keep the one with most recent last_update
+                        if title not in bookmakers_by_title:
+                            bookmakers_by_title[title] = bm
+                        else:
+                            existing_update = bookmakers_by_title[title].get('last_update', '')
+                            new_update = bm.get('last_update', '')
+                            if new_update > existing_update:
+                                bookmakers_by_title[title] = bm
+                    match['bookmakers'] = list(bookmakers_by_title.values())
+                
                 # Upsert based on match ID
                 await self.db.odds_cache.update_one(
                     {'id': match['id']},
