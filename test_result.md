@@ -105,7 +105,7 @@
 user_problem_statement: "TWO CRITICAL BUGS: (1) COMPLETED matches showing in UPCOMING tab (e.g., Albania vs England FINAL 0-2 appears in Upcoming). (2) DRAW IQ missing for football matches (only Home/Away IQ shown, no Draw IQ in middle)."
 
 backend:
-  - task: "Final Score & Prediction Verification Data in API"
+  - task: "Historical Backfill System & Recent Results Display"
     implemented: true
     working: true
     file: "/app/backend/server.py, /app/backend/funbet_iq_engine.py, /app/backend/prediction_verification_service.py"
@@ -122,6 +122,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETED - ALL SUCCESS CRITERIA MET (6/6): (1) GET /api/odds/all-cached?time_filter=recent&limit=10 returns 10 completed matches from last 48 hours, all with completed=true. (2) All matches have scores array with final scores (e.g., Santos 1-0 Palmeiras). (3) All matches have funbet_iq object with complete structure. (4) SANTOS VS PALMEIRAS VERIFIED: Match ID 576abf4fe795f6f613030939451e673a found with exact expected data - Final Score: Santos 1-0 Palmeiras, prediction_correct=False, predicted_winner='away' (Palmeiras), actual_winner='home' (Santos), verified_at='2025-11-17T17:23:11.950000'. (5) VERIFICATION COVERAGE: 100% - 37/37 matches with IQ predictions have verification data (prediction_correct not null). (6) FunBet IQ data structure complete: home_iq, away_iq, draw_iq (football), confidence, verdict, prediction_correct, predicted_winner, actual_winner, verified_at all present. Backend health: healthy. API response time: 5.15s. CRITICAL USER ISSUE RESOLVED - completed matches now display final scores and prediction verification correctly."
+      - working: true
+        agent: "testing"
+        comment: "🎉 HISTORICAL BACKFILL SYSTEM COMPREHENSIVE TESTING COMPLETED - ALL SUCCESS CRITERIA MET (6/6): **DATABASE VERIFICATION**: 60 completed matches from last 7 days, 60 with IQ predictions, 60 verified (100% coverage). **RECENT CRICKET RESULTS API**: GET /api/odds/all-cached?sport=cricket&time_filter=recent&limit=5 returns 1 match (New Zealand vs West Indies) with completed=true, scores array [161/10, 162/6], funbet_iq object with home_iq=60.4, away_iq=37.1, draw_iq=30.0, prediction_correct=False, predicted_winner='home', actual_winner='away', verified_at timestamp. **FOOTBALL RECENT RESULTS**: GET /api/odds/all-cached?sport=soccer&time_filter=recent&limit=10 returns 10 matches, all with complete structure including scores, IQ predictions, and verification data. Sample: Sydney FC 3-0 Melbourne Victory, prediction_correct=True. **TRACK RECORD API**: GET /api/funbet-iq/track-record?limit=20 returns excellent statistics - 217 total predictions, 162 correct, 55 incorrect, 74.7% accuracy rate. **BACKFILL JOB STATUS**: Backend healthy, 7-day processing window working, batch processing limits respected, 478 total IQ predictions in system indicating automatic processing active. **SUCCESS RATE**: 100% (6/6 tests passed). All expected results achieved: ✅ All completed matches have IQ predictions ✅ All predictions verified with actual results ✅ Frontend can display complete data ✅ Track record shows accurate statistics ✅ System runs automatically ✅ Backend health excellent."
 
   - task: "Bookmaker merge logic with deduplication"
     implemented: true
