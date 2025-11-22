@@ -494,10 +494,49 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        {/* First Line: Team Names with VS - Natural wrap only when needed */}
-                        <div className="flex items-center gap-2">
+                        {/* First Line: Team Names with Score or VS */}
+                        <div className="flex items-center justify-between gap-2">
                           <span className="text-white font-semibold text-base sm:text-lg flex-1 overflow-wrap-anywhere leading-tight">{match.home_team}</span>
-                          <span className="text-gray-400 text-sm font-medium px-2 flex-shrink-0">vs</span>
+                          
+                          {/* LIVE games ALWAYS show score (even 0-0), not VS */}
+                          {match.live_score?.is_live ? (
+                            <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded border border-purple-500/20 flex-shrink-0">
+                              <span className="text-white font-bold text-base">{match.live_score.home_score ?? '0'}</span>
+                              <span className="text-gray-500">-</span>
+                              <span className="text-white font-bold text-base">{match.live_score.away_score ?? '0'}</span>
+                              {match.live_score.match_status && (
+                                <span className="ml-1 text-xs font-bold text-red-400">
+                                  {match.live_score.match_status}
+                                </span>
+                              )}
+                            </div>
+                          ) : match.live_score?.completed && ((match.live_score?.scores && Array.isArray(match.live_score.scores)) || (match.scores && Array.isArray(match.scores))) ? (
+                            (() => {
+                              const scoresArray = match.live_score?.scores || match.scores;
+                              const homeScore = scoresArray.find(s => 
+                                s.name === match.home_team || 
+                                s.name.includes(match.home_team) || 
+                                match.home_team.includes(s.name)
+                              )?.score || scoresArray[0]?.score || '0';
+                              const awayScore = scoresArray.find(s => 
+                                s.name === match.away_team || 
+                                s.name.includes(match.away_team) || 
+                                match.away_team.includes(s.name)
+                              )?.score || scoresArray[1]?.score || '0';
+                              
+                              return (
+                                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded border border-green-500/20 flex-shrink-0">
+                                  <span className="text-white font-bold text-base">{homeScore}</span>
+                                  <span className="text-gray-500">-</span>
+                                  <span className="text-white font-bold text-base">{awayScore}</span>
+                                  <span className="ml-1 text-xs font-bold text-green-400">FINAL</span>
+                                </div>
+                              );
+                            })()
+                          ) : (
+                            <span className="text-gray-400 text-sm font-medium px-2 flex-shrink-0">vs</span>
+                          )}
+                          
                           <span className="text-white font-semibold text-base sm:text-lg flex-1 text-right overflow-wrap-anywhere leading-tight">{match.away_team}</span>
                         </div>
                         
