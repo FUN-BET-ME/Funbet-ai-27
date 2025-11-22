@@ -39,12 +39,18 @@ const AdminStats = () => {
               Detailed view with all FunBet.ME row configurations
             </p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all"
-          >
-            Logout
-          </button>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-400">
+              Logged in as: <span className="font-semibold text-white">{localStorage.getItem('adminUsername')}</span>
+            </span>
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              Logout
+            </Button>
+          </div>
         </div>
 
         {/* Info Cards */}
