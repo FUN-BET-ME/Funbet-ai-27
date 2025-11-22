@@ -282,6 +282,9 @@ tail -n 50 /var/log/supervisor/background_worker.out.log
 ❌ Add countdown timers (removed for simplicity)
 ❌ Skip testing before finishing
 ❌ Use `client.sportsiq` (empty database)
+❌ **DELETE ANY DATA FROM DATABASE** (NEVER EVER!)
+❌ Drop collections or truncate data
+❌ Use delete_many({}) or drop() commands
 
 ---
 
