@@ -46,6 +46,12 @@ const About = () => {
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
             About <span className="text-[#FFD700]">FunBet.AI</span>
           </h1>
+          <p className="text-[#FFD700] text-xl font-semibold mb-2">
+            Best odds comparison and AI predictions engine!
+          </p>
+          <p className="text-gray-400 text-base">
+            Your trusted source for sports intelligence and betting insights
+          </p>
         </div>
 
         {/* Mission */}
