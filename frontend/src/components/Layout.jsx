@@ -238,6 +238,9 @@ const Layout = ({ children }) => {
                   <span className="text-[#FFD700]">.AI</span>
                 </span>
               </Link>
+              <p className="text-[#FFD700] font-semibold text-base mb-2">
+                Best odds comparison and AI predictions engine!
+              </p>
               <p className="text-gray-400 text-sm">
                 Real-time odds, scores & AI insights. Informational only.
               </p>
