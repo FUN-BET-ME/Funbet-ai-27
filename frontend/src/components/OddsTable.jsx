@@ -897,11 +897,14 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           // CRITICAL: Filter out FunBet from other bookmakers to prevent duplicate display
                           const otherBookmakers = displayedBookmakers.filter(b => b && b.key && b.key !== 'funbet');
                           
-                          // Determine if sport allows draws (only football/soccer and cricket)
+                          // Determine if sport allows draws (only football/soccer and cricket - NOT basketball!)
                           const sportKey = match.sport_key?.toLowerCase() || '';
                           const matchSportTitle = match.sport_title?.toLowerCase() || '';
-                          const sportAllowsDraws = (sportKey.includes('soccer') || sportKey.includes('cricket')) ||
-                                                  (matchSportTitle.includes('football') || matchSportTitle.includes('cricket'));
+                          const isBasketball = sportKey.includes('basketball') || matchSportTitle.includes('basketball');
+                          const sportAllowsDraws = !isBasketball && (
+                            (sportKey.includes('soccer') || sportKey.includes('cricket')) ||
+                            (matchSportTitle.includes('football') || matchSportTitle.includes('cricket'))
+                          );
                           
                           // Calculate best odds from ALL unique bookmakers by matching team names
                           const bestOdds = {};
