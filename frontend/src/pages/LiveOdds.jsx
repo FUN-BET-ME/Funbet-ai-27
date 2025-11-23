@@ -367,6 +367,12 @@ const LiveOdds = () => {
       } else {
         console.log('⚠️  Fetching ALL sports');
       }
+      
+      // CRITICAL: Add league filter to backend (Premier League, La Liga, etc)
+      if (leagueFilter && leagueFilter !== 'all') {
+        apiURL += `&league=${leagueFilter}`;
+        console.log('✅ Fetching with league filter:', leagueFilter);
+      }
 
       // Add cache-busting timestamp
       apiURL += `&_t=${Date.now()}`;
