@@ -318,9 +318,9 @@ const LiveOdds = () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       
-      // Fetch from database - increased limit for 30-day window with 32 leagues
+      // Optimized pagination - load matches in chunks for better performance
       const currentSkip = loadMore ? allOdds.length : 0;
-      const limit = 500; // Increased for 30 days × 32 leagues
+      const limit = 50; // Load 50 matches at a time for optimal performance
 
       // Map frontend filter to backend sport_key pattern - FOOTBALL, CRICKET & BASKETBALL
       const sportKeyMap = {
