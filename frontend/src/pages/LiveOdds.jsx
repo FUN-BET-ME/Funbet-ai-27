@@ -923,20 +923,13 @@ const LiveOdds = () => {
                       return isLive && !isCompleted;
                     }
                     
-                    // If showing "Upcoming", ONLY show future matches (not started yet)
+                    // If showing "Live & Upcoming", show BOTH live AND upcoming matches (exclude completed)
                     if (timeFilter === 'live-upcoming') {
-                      const commenceTime = new Date(match.commence_time);
-                      const now = new Date();
-                      
                       // Match is completed if API says it's completed
                       const isCompleted = match.completed === true || match.live_score?.completed === true;
                       
-                      // Match is live if: has started AND has live_score data OR is_live flag
-                      const hasStarted = commenceTime <= now;
-                      const hasLiveScoreData = match.live_score && (match.live_score.is_live === true || match.live_score.home_score !== null);
-                      
-                      // STRICT: Only show if NOT started yet AND not completed AND no live score data
-                      return !hasStarted && !isCompleted && !hasLiveScoreData;
+                      // Show if NOT completed (includes both live and upcoming matches)
+                      return !isCompleted;
                     }
                     
                     // If showing "Recent Results", the data is already filtered by backend
