@@ -758,6 +758,15 @@ class OddsWorker:
                                         })
                     
                     if linked_match:
+                        # CRITICAL: Verify match has actually STARTED (not a future match)
+                        commence_time_str = linked_match.get('commence_time', '')
+                        if commence_time_str:
+                            commence_time = datetime.fromisoformat(commence_time_str.replace('Z', '+00:00'))
+                            if commence_time > datetime.now(timezone.utc):
+                                # Match hasn't started yet - skip this live score update
+                                logger.warning(f"⚠️ Skipping live score for FUTURE match: {linked_match.get('home_team')} vs {linked_match.get('away_team')} (starts {commence_time_str})")
+                                continue
+                        
                         # Filter out stale bookmakers with pre-match odds during live play
                         filtered_bookmakers = []
                         home_score = score.get('home_score', 0)
