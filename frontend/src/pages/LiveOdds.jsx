@@ -1484,16 +1484,35 @@ const LiveOdds = () => {
                                   </a>
                                 </td>
                                 <td className="py-2 px-0.5 sm:py-4 sm:px-4 text-center w-[25%]">
-                                  <a 
-                                    href="https://funbet.me" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="inline-block cursor-pointer"
-                                  >
-                                    <span className="bg-[#FFD700] text-[#2E004F] px-1.5 py-0.5 sm:px-5 sm:py-2 rounded font-black text-xs sm:text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
-                                      {funbetHomeOdds}
-                                    </span>
-                                  </a>
+                                  <div className="flex items-center justify-center gap-1">
+                                    <a 
+                                      href="https://funbet.me" 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="inline-block cursor-pointer"
+                                    >
+                                      <span className="bg-[#FFD700] text-[#2E004F] px-1.5 py-0.5 sm:px-5 sm:py-2 rounded font-black text-xs sm:text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
+                                        {funbetHomeOdds}
+                                      </span>
+                                    </a>
+                                    <button
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        setOddsSortBy(prev => ({
+                                          ...prev,
+                                          [matchId]: prev[matchId] === 'home' ? null : 'home'
+                                        }));
+                                      }}
+                                      className="hover:opacity-80 transition-opacity"
+                                      title="Sort by Home odds (highest to lowest)"
+                                    >
+                                      {oddsSortBy[matchId] === 'home' ? (
+                                        <ChevronDown className="w-5 h-5 text-purple-600" />
+                                      ) : (
+                                        <ChevronUp className="w-5 h-5 text-gray-400 opacity-50" />
+                                      )}
+                                    </button>
+                                  </div>
                                 </td>
                                 {showThreeOutcomes && (
                                   <td className="py-2 px-0.5 sm:py-4 sm:px-4 text-center w-[25%]">
