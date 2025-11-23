@@ -669,23 +669,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             // First column: Home team
                             headers.push(
                               <th key="home" className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-[9px] sm:text-sm font-semibold text-gray-400 w-[24%] sm:w-auto">
-                                <button
-                                  onClick={() => {
-                                    setOddsSortBy(prev => ({
-                                      ...prev,
-                                      [match.id]: prev[match.id] === 'home' ? null : 'home'
-                                    }));
-                                  }}
-                                  className="flex items-center justify-center gap-1 mx-auto hover:text-[#FFD700] transition-colors"
-                                  title="Sort by Home odds (highest to lowest)"
-                                >
-                                  <span>{match.home_team}</span>
-                                  {oddsSortBy[match.id] === 'home' ? (
-                                    <ChevronDown className="w-5 h-5 text-purple-600" />
-                                  ) : (
-                                    <ChevronUp className="w-5 h-5 opacity-30" />
-                                  )}
-                                </button>
+                                {match.home_team}
                               </th>
                             );
                             
