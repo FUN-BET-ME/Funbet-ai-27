@@ -644,7 +644,34 @@ async def get_recent_historical_odds():
                 }
                 recent_results.append(match)
         
-        logger.info(f"✅ Recent results: {len(recent_results)} completed matches in last 48h")
+        # CRITICAL: Merge IQ predictions for all completed matches
+        if recent_results:
+            iq_count = 0
+            for match in recent_results:
+                # Fetch IQ prediction for this match
+                iq_pred = await db_instance.db.funbet_iq_predictions.find_one(
+                    {'match_id': match['id']},
+                    {'_id': 0}
+                )
+                if iq_pred:
+                    # Add IQ data directly to match object
+                    match['funbet_iq'] = {
+                        'home_iq': iq_pred.get('home_iq'),
+                        'away_iq': iq_pred.get('away_iq'),
+                        'draw_iq': iq_pred.get('draw_iq'),
+                        'confidence': iq_pred.get('confidence'),
+                        'verdict': iq_pred.get('verdict'),
+                        'home_components': iq_pred.get('home_components'),
+                        'away_components': iq_pred.get('away_components'),
+                        'prediction_correct': iq_pred.get('prediction_correct'),
+                        'predicted_winner': iq_pred.get('predicted_winner'),
+                        'actual_winner': iq_pred.get('actual_winner'),
+                        'verified_at': iq_pred.get('verified_at')
+                    }
+                    iq_count += 1
+            
+            logger.info(f"✅ Recent results: {len(recent_results)} completed matches, {iq_count} with IQ")
+        
         return recent_results
         
     except Exception as e:
