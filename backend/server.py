@@ -490,6 +490,10 @@ async def get_all_cached_odds(
             else:
                 query['sport_key'] = {'$regex': f'^{sport}_', '$options': 'i'}
         
+        # Filter by league if provided (more specific than sport)
+        if league:
+            query['sport_key'] = league
+        
         # Get all matches with smart sorting
         # For recent results: sort by completed_at (newest first)
         # For others: live matches first, then by start time
