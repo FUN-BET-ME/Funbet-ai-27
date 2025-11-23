@@ -1440,33 +1440,15 @@ const LiveOdds = () => {
                             </th>
                             {showThreeOutcomes && (
                               <th className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-gray-400 font-medium text-[10px] sm:text-sm w-[25%]">
-                                <button
-                                  onClick={() => {
-                                    setOddsSortBy(prev => ({
-                                      ...prev,
-                                      [matchId]: prev[matchId] === 'draw' ? null : 'draw'
-                                    }));
-                                  }}
-                                  className="flex items-center justify-center gap-1 mx-auto hover:text-[#FFD700] transition-colors"
-                                  title="Sort by Draw odds (highest to lowest)"
-                                >
-                                  <span>
-                                    {league?.toLowerCase().includes('soccer') || 
-                                     league?.toLowerCase().includes('football') || 
-                                     league?.toLowerCase().includes('serie') ||
-                                     league?.toLowerCase().includes('la liga') ||
-                                     league?.toLowerCase().includes('bundesliga') ||
-                                     league?.toLowerCase().includes('ligue') ||
-                                     league?.toLowerCase().includes('epl') ||
-                                     league?.toLowerCase().includes('premier') ||
-                                     league?.toLowerCase().includes('championship') && !league?.toLowerCase().includes('world') ? 'Draw' : 'Tie/Draw'}
-                                  </span>
-                                  {oddsSortBy[matchId] === 'draw' ? (
-                                    <ChevronDown className="w-5 h-5 text-purple-600" />
-                                  ) : (
-                                    <ChevronUp className="w-5 h-5 opacity-30" />
-                                  )}
-                                </button>
+                                {league?.toLowerCase().includes('soccer') || 
+                                 league?.toLowerCase().includes('football') || 
+                                 league?.toLowerCase().includes('serie') ||
+                                 league?.toLowerCase().includes('la liga') ||
+                                 league?.toLowerCase().includes('bundesliga') ||
+                                 league?.toLowerCase().includes('ligue') ||
+                                 league?.toLowerCase().includes('epl') ||
+                                 league?.toLowerCase().includes('premier') ||
+                                 league?.toLowerCase().includes('championship') && !league?.toLowerCase().includes('world') ? 'Draw' : 'Tie/Draw'}
                               </th>
                             )}
                             <th className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-gray-400 font-medium text-[10px] sm:text-sm w-[25%]">
