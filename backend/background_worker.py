@@ -751,10 +751,15 @@ class OddsWorker:
                                     home_words = home_team.split()
                                     away_words = away_team.split()
                                     if home_words and away_words:
+                                        # CRITICAL FIX: Only match games that have STARTED
+                                        now_iso = datetime.now(timezone.utc).isoformat()
                                         linked_match = await self.db.odds_cache.find_one({
                                             'home_team': {'$regex': home_words[-1], '$options': 'i'},  # Last word (usually team name)
                                             'away_team': {'$regex': away_words[-1], '$options': 'i'},
-                                            'commence_time': {'$gte': (datetime.now(timezone.utc) - timedelta(hours=6)).isoformat()}
+                                            'commence_time': {
+                                                '$gte': (datetime.now(timezone.utc) - timedelta(hours=6)).isoformat(),
+                                                '$lte': now_iso  # Must have started already!
+                                            }
                                         })
                     
                     if linked_match:
