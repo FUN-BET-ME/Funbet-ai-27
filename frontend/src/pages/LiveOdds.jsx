@@ -588,7 +588,8 @@ const LiveOdds = () => {
     if (allOdds.length > 0) {
       try {
         localStorage.setItem('liveOdds_cached', JSON.stringify(allOdds));
-        console.log('💾 Saved', allOdds.length, 'matches to localStorage');
+        localStorage.setItem('liveOdds_version', CACHE_VERSION);
+        console.log('💾 Saved', allOdds.length, 'matches to localStorage (v' + CACHE_VERSION + ')');
       } catch (e) {
         console.error('Failed to save to localStorage:', e);
       }
