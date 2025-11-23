@@ -437,6 +437,7 @@ async def get_all_cached_odds(
     limit: int = Query(100, ge=1, le=500),
     skip: int = Query(0, ge=0),
     sport: str = Query(None),
+    league: str = Query(None),  # specific league like 'soccer_epl', 'cricket_ipl', etc
     include_scores: bool = Query(True),
     time_filter: str = Query(None, description="Filter by time: 'upcoming', 'live', or 'all'")
 ):
