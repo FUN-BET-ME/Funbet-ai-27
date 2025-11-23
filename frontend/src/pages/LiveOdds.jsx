@@ -45,13 +45,24 @@ const LiveOdds = () => {
       : 'live-upcoming';
   });
   const [refreshKey, setRefreshKey] = useState(0);
-  // CRITICAL FIX: Initialize from localStorage to prevent data loss on refresh
+  // CRITICAL FIX: Initialize from localStorage with version check
+  const CACHE_VERSION = '2.0'; // Increment this to clear old caches
   const [allOdds, setAllOdds] = useState(() => {
     try {
+      const cacheVersion = localStorage.getItem('liveOdds_version');
       const cached = localStorage.getItem('liveOdds_cached');
+      
+      // Clear cache if version mismatch (ensures IQ predictions are loaded)
+      if (cacheVersion !== CACHE_VERSION) {
+        console.log('🔄 Cache version mismatch, clearing old data');
+        localStorage.removeItem('liveOdds_cached');
+        localStorage.setItem('liveOdds_version', CACHE_VERSION);
+        return [];
+      }
+      
       if (cached) {
         const parsed = JSON.parse(cached);
-        console.log('📦 Restored', parsed.length, 'matches from localStorage');
+        console.log('📦 Restored', parsed.length, 'matches from localStorage (v' + CACHE_VERSION + ')');
         return parsed;
       }
     } catch (e) {
