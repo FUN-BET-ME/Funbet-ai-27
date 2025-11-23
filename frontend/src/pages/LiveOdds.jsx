@@ -1452,25 +1452,7 @@ const LiveOdds = () => {
                               </th>
                             )}
                             <th className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-gray-400 font-medium text-[10px] sm:text-sm w-[25%]">
-                              <button
-                                onClick={() => {
-                                  setOddsSortBy(prev => ({
-                                    ...prev,
-                                    [matchId]: prev[matchId] === 'away' ? null : 'away'
-                                  }));
-                                }}
-                                className="flex items-center justify-center gap-1 mx-auto hover:text-[#FFD700] transition-colors"
-                                title="Sort by Away odds (highest to lowest)"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <span>{awayTeam}</span>
-                                </div>
-                                {oddsSortBy[matchId] === 'away' ? (
-                                  <ChevronDown className="w-5 h-5 text-purple-600" />
-                                ) : (
-                                  <ChevronUp className="w-5 h-5 opacity-30" />
-                                )}
-                              </button>
+                              {awayTeam}
                             </th>
                           </tr>
                         </thead>
