@@ -718,9 +718,10 @@ class OddsWorker:
                                 
                                 # Strategy 1: Match by sport_key and time window
                                 if sport_key:
-                                    # Get all matches from the same league around the same time
+                                    # CRITICAL FIX: Only match games that have STARTED (past commence_time)
+                                    # Don't match future games! 
                                     time_window_start = (datetime.now(timezone.utc) - timedelta(hours=6)).isoformat()
-                                    time_window_end = (datetime.now(timezone.utc) + timedelta(hours=3)).isoformat()
+                                    time_window_end = datetime.now(timezone.utc).isoformat()  # NOW, not +3 hours
                                     
                                     candidates = await self.db.odds_cache.find({
                                         'sport_key': sport_key,
