@@ -1722,12 +1722,14 @@ const LiveOdds = () => {
           <div className="mt-8 text-center">
             <button
               onClick={() => fetchAllOdds(true, filter, false)}
-              className="px-8 py-3 bg-[#FFD700] text-[#2E004F] rounded-lg font-bold text-lg hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg"
+              disabled={loadingMore}
+              className={`px-8 py-3 bg-[#FFD700] text-[#2E004F] rounded-lg font-bold text-lg hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg flex items-center gap-2 mx-auto ${loadingMore ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              Load More Matches
+              {loadingMore && <RefreshCw className="w-5 h-5 animate-spin" />}
+              {loadingMore ? 'Loading...' : 'Load More Matches'}
             </button>
             <p className="text-gray-400 text-sm mt-2">
-              Showing {filteredOddsByLeague.length} matches
+              Showing {filteredOddsByLeague.length} of {allOdds.length} loaded matches
             </p>
           </div>
         )}
