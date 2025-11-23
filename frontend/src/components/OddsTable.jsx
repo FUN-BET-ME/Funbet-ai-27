@@ -677,23 +677,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             if (shouldShow3Outcomes) {
                               headers.push(
                                 <th key="draw" className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-[9px] sm:text-sm font-semibold text-gray-400 w-[24%] sm:w-auto">
-                                  <button
-                                    onClick={() => {
-                                      setOddsSortBy(prev => ({
-                                        ...prev,
-                                        [match.id]: prev[match.id] === 'draw' ? null : 'draw'
-                                      }));
-                                    }}
-                                    className="flex items-center justify-center gap-1 mx-auto hover:text-[#FFD700] transition-colors"
-                                    title="Sort by Draw odds (highest to lowest)"
-                                  >
-                                    <span>{isFootball ? 'Draw' : 'Tie/Draw'}</span>
-                                    {oddsSortBy[match.id] === 'draw' ? (
-                                      <ChevronDown className="w-5 h-5 text-purple-600" />
-                                    ) : (
-                                      <ChevronUp className="w-5 h-5 opacity-30" />
-                                    )}
-                                  </button>
+                                  {isFootball ? 'Draw' : 'Tie/Draw'}
                                 </th>
                               );
                             }
