@@ -685,23 +685,7 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                             // Last column: Away team
                             headers.push(
                               <th key="away" className="text-center py-1.5 px-0.5 sm:py-3 sm:px-4 text-[9px] sm:text-sm font-semibold text-gray-400 w-[24%] sm:w-auto">
-                                <button
-                                  onClick={() => {
-                                    setOddsSortBy(prev => ({
-                                      ...prev,
-                                      [match.id]: prev[match.id] === 'away' ? null : 'away'
-                                    }));
-                                  }}
-                                  className="flex items-center justify-center gap-1 mx-auto hover:text-[#FFD700] transition-colors"
-                                  title="Sort by Away odds (highest to lowest)"
-                                >
-                                  <span>{match.away_team}</span>
-                                  {oddsSortBy[match.id] === 'away' ? (
-                                    <ChevronDown className="w-5 h-5 text-purple-600" />
-                                  ) : (
-                                    <ChevronUp className="w-5 h-5 opacity-30" />
-                                  )}
-                                </button>
+                                {match.away_team}
                               </th>
                             );
                             
