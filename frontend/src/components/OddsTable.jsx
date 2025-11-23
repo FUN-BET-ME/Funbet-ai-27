@@ -954,20 +954,45 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                   <span className="text-[#FFD700] text-[10px] sm:text-sm font-semibold whitespace-nowrap leading-none">FunBet.me</span>
                                 </a>
                               </td>
-                              {outcomeNames.map((name) => (
-                                <td key={name} className="py-2 px-0.5 sm:py-3 sm:px-4 text-center w-[25%]">
-                                  <a 
-                                    href="https://funbet.me" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="inline-block cursor-pointer"
-                                  >
-                                    <span className="inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-black text-xs sm:text-base bg-[#FFD700] text-[#2E004F] hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-sm">
-                                      {funbetSuperBoostOdds[name] || '-'}
-                                    </span>
-                                  </a>
-                                </td>
-                              ))}
+                              {outcomeNames.map((name) => {
+                                // Map outcome names to sort keys
+                                const sortKeyMap = { 'Home': 'home', 'Draw': 'draw', 'Away': 'away' };
+                                const sortKey = sortKeyMap[name] || name.toLowerCase();
+                                
+                                return (
+                                  <td key={name} className="py-2 px-0.5 sm:py-3 sm:px-4 text-center w-[25%]">
+                                    <div className="flex items-center justify-center gap-1">
+                                      <a 
+                                        href="https://funbet.me" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="inline-block cursor-pointer"
+                                      >
+                                        <span className="inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-black text-xs sm:text-base bg-[#FFD700] text-[#2E004F] hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-sm">
+                                          {funbetSuperBoostOdds[name] || '-'}
+                                        </span>
+                                      </a>
+                                      <button
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          setOddsSortBy(prev => ({
+                                            ...prev,
+                                            [match.id]: prev[match.id] === sortKey ? null : sortKey
+                                          }));
+                                        }}
+                                        className="hover:opacity-80 transition-opacity"
+                                        title={`Sort by ${name} odds (highest to lowest)`}
+                                      >
+                                        {oddsSortBy[match.id] === sortKey ? (
+                                          <ChevronDown className="w-5 h-5 text-purple-600" />
+                                        ) : (
+                                          <ChevronUp className="w-5 h-5 text-gray-400 opacity-50" />
+                                        )}
+                                      </button>
+                                    </div>
+                                  </td>
+                                );
+                              })}
                             </tr>
                           );
 
