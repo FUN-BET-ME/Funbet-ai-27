@@ -907,27 +907,15 @@ const LiveOdds = () => {
             ) : (
               <div key={`matches-${leagueFilter}-${filteredOddsByLeague.length}`}>
                 {(() => {
-                  console.log('🎯 RENDER FILTER - Starting with', filteredOddsByLeague.length, 'matches from filteredOddsByLeague');
-                  console.log('🎯 timeFilter:', timeFilter);
-                  
                   let filteredMatches = filteredOddsByLeague.filter(match => {
-                    console.log(`  Checking: ${match.home_team} vs ${match.away_team} - bookmakers: ${match.bookmakers?.length}, is_live: ${match.live_score?.is_live}`);
-                    
                     // Filter out matches with no bookmakers
                     if (!match.bookmakers || match.bookmakers.length === 0) {
-                      console.log(`    ❌ Filtered out (no bookmakers)`);
                       return false;
                     }
                     
                     // If showing "LIVE Now", only show matches that API says are live
                     if (timeFilter === 'inplay') {
-                      const isLive = match.live_score?.is_live === true;
-                      if (!isLive) {
-                        console.log(`    ❌ Filtered out (not live)`);
-                      } else {
-                        console.log(`    ✅ PASSED - showing this match`);
-                      }
-                      return isLive;
+                      return match.live_score?.is_live === true;
                     }
                     
                     // If showing "Live & Upcoming", show BOTH live AND upcoming matches (exclude completed)
