@@ -941,7 +941,7 @@ const LiveOdds = () => {
                 });
 
                 // Get top 4 bookmakers to display by default
-                const isExpanded = expandedMatches[matchId];
+                const isExpanded = state.expandedMatches[matchId];
                 const displayedBookmakers = isExpanded ? sortedBookmakers : sortedBookmakers.slice(0, 4);
                 
                 // Get best odds from displayed bookmakers EXCLUDING FunBet for highlighting
