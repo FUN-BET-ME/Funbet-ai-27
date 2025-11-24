@@ -532,12 +532,14 @@ const LiveOdds = () => {
         
         // Backend already filters by sport via API parameter, no need to filter again
         setAllOdds(data);
+        setHasMore(false); // CRITICAL: Recent results are all loaded at once, no pagination
         console.log('✅ Set allOdds with', data.length, 'recent results');
         setLoading(false);
       }).catch(error => {
         console.error('❌ Error fetching historical odds:', error);
         setLoading(false);
         setAllOdds([]); // Clear data on error
+        setHasMore(false);
       });
     } else {
       // Fetch upcoming matches (default)
