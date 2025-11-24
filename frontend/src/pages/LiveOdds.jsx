@@ -962,12 +962,6 @@ const LiveOdds = () => {
                         console.log(`    ✅ PASSED - showing this match`);
                       }
                       return isLive;
-                      // Trust the API: show matches marked as live
-                      const isLive = match.live_score?.is_live === true;
-                      const isCompleted = match.completed === true || match.live_score?.completed === true;
-                      
-                      // Show if live AND not completed
-                      return isLive && !isCompleted;
                     }
                     
                     // If showing "Live & Upcoming", show BOTH live AND upcoming matches (exclude completed)
