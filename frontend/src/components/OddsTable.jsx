@@ -896,15 +896,10 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                           const funbetSuperBoostRow = (
                             <tr key="funbet-super-boost" className="border-b-2 border-[#FFD700] bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10">
                               <td className="py-2 px-1 sm:py-3 sm:px-4 text-sm font-semibold text-white">
-                                <a 
-                                  href="https://funbet.me" 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-1 sm:gap-2 hover:text-[#FFD700] transition-colors cursor-pointer"
-                                >
+                                <div className="flex items-center gap-1 sm:gap-2">
                                   <span className="text-[#FFD700] text-base sm:text-sm font-semibold leading-none">⭐</span>
                                   <span className="text-[#FFD700] text-[10px] sm:text-sm font-semibold whitespace-nowrap leading-none">FunBet.me</span>
-                                </a>
+                                </div>
                               </td>
                               {outcomeNames.map((name) => {
                                 // Map outcome names to sort keys
