@@ -73,28 +73,32 @@ class CricketAPIService:
                                     home_innings = []
                                     away_innings = []
                                     
-                                    # Try to detect team assignment from innings labels
+                                    # Determine batting order from first innings
+                                    first_innings_name = score[0].get('inning', '').lower() if score else ''
+                                    
+                                    # Check if home team batted first
+                                    home_batted_first = any(word in first_innings_name for word in home_team.lower().split())
+                                    
+                                    # Assign innings to teams
                                     for idx, innings in enumerate(score):
-                                        inning_name = innings.get('inning', '').lower()
                                         runs = innings.get('r', 0)
                                         wickets = innings.get('w', 0)
                                         
-                                        # Check which team is batting in this innings
-                                        home_match = any(word in inning_name for word in home_team.lower().split())
-                                        away_match = any(word in inning_name for word in away_team.lower().split())
-                                        
-                                        if home_match and not away_match:
-                                            home_innings.append(f"{runs}/{wickets}")
-                                        elif away_match and not home_match:
-                                            away_innings.append(f"{runs}/{wickets}")
-                                        else:
-                                            # Fallback: Test cricket alternates (1st: Team A, 2nd: Team B, 3rd: Team A, 4th: Team B)
-                                            # Innings 0, 2, 4... = home team
-                                            # Innings 1, 3... = away team
+                                        # Test cricket alternates: 1st innings, 2nd innings, 1st team again, 2nd team again
+                                        if home_batted_first:
+                                            # Home team batted first
+                                            # Innings 0, 2 = home, Innings 1, 3 = away
                                             if idx % 2 == 0:
                                                 home_innings.append(f"{runs}/{wickets}")
                                             else:
                                                 away_innings.append(f"{runs}/{wickets}")
+                                        else:
+                                            # Away team batted first
+                                            # Innings 0, 2 = away, Innings 1, 3 = home
+                                            if idx % 2 == 0:
+                                                away_innings.append(f"{runs}/{wickets}")
+                                            else:
+                                                home_innings.append(f"{runs}/{wickets}")
                                     
                                     # Format: Show all innings with "&" separator
                                     home_score = " & ".join(home_innings) if home_innings else "0/0"
