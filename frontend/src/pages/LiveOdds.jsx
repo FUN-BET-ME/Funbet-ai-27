@@ -1505,18 +1505,18 @@ const LiveOdds = () => {
         })()}
 
         {/* Load More Button - Don't show for Live Now or Recent Results (they load all at once) */}
-        {hasMore && !loading && timeFilter !== 'inplay' && timeFilter !== 'recent-results' && (
+        {state.hasMore && !state.loading && timeFilter !== 'inplay' && timeFilter !== 'recent-results' && (
           <div className="mt-8 text-center">
             <button
-              onClick={() => fetchAllOdds(true, filter, false)}
-              disabled={loadingMore}
-              className={`px-8 py-3 bg-[#FFD700] text-[#2E004F] rounded-lg font-bold text-lg hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg flex items-center gap-2 mx-auto ${loadingMore ? 'opacity-70 cursor-not-allowed' : ''}`}
+              onClick={() => fetchMatches({ loadMore: true })}
+              disabled={state.loadingMore}
+              className={`px-8 py-3 bg-[#FFD700] text-[#2E004F] rounded-lg font-bold text-lg hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg flex items-center gap-2 mx-auto ${state.loadingMore ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              {loadingMore && <RefreshCw className="w-5 h-5 animate-spin" />}
-              {loadingMore ? 'Loading...' : 'Load More Matches'}
+              {state.loadingMore && <RefreshCw className="w-5 h-5 animate-spin" />}
+              {state.loadingMore ? 'Loading...' : 'Load More Matches'}
             </button>
             <p className="text-gray-400 text-sm mt-2">
-              Showing {filteredOddsByLeague.length} of {allOdds.length} loaded matches
+              Showing {filteredOddsByLeague.length} matches
             </p>
           </div>
         )}
