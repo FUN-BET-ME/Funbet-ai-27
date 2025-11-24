@@ -236,20 +236,35 @@ class PredictionVerificationService:
                     away_score = live_score.get('away_score')
             
             # Convert scores to integers for comparison
+            # Handle cricket scores like "171/8" (runs/wickets)
             if home_score is not None and away_score is not None:
                 try:
-                    home_score = int(home_score)
-                    away_score = int(away_score)
-                    
-                    if home_score > away_score:
-                        return 'home'
-                    elif away_score > home_score:
-                        return 'away'
-                    else:
-                        return 'draw'
+                    # Try simple integer conversion first (football, basketball)
+                    home_score_int = int(home_score)
+                    away_score_int = int(away_score)
                 except (ValueError, TypeError):
-                    logger.warning(f"Could not convert scores to int: {home_score}, {away_score}")
-                    return None
+                    # Handle cricket format "171/8" - extract runs only
+                    try:
+                        if isinstance(home_score, str) and '/' in str(home_score):
+                            home_score_int = int(str(home_score).split('/')[0])
+                        else:
+                            home_score_int = int(home_score)
+                        
+                        if isinstance(away_score, str) and '/' in str(away_score):
+                            away_score_int = int(str(away_score).split('/')[0])
+                        else:
+                            away_score_int = int(away_score)
+                    except (ValueError, TypeError, IndexError):
+                        logger.warning(f"Could not convert scores to int: {home_score}, {away_score}")
+                        return None
+                
+                # Compare scores
+                if home_score_int > away_score_int:
+                    return 'home'
+                elif away_score_int > home_score_int:
+                    return 'away'
+                else:
+                    return 'draw'
             
             return None
             
