@@ -755,48 +755,18 @@ const LiveOdds = () => {
             ) : (
               <div key={`matches-${leagueFilter}-${filteredOddsByLeague.length}`}>
                 {(() => {
+                  // Backend already filtered - minimal client-side filtering
                   let filteredMatches = filteredOddsByLeague.filter(match => {
-                    // Filter out matches with no bookmakers
-                    if (!match.bookmakers || match.bookmakers.length === 0) {
-                      return false;
-                    }
-                    
-                    // If showing "LIVE Now", only show matches that API says are live
-                    if (timeFilter === 'inplay') {
-                      return match.live_score?.is_live === true;
-                    }
-                    
-                    // If showing "Live & Upcoming", show BOTH live AND upcoming matches (exclude completed)
-                    if (timeFilter === 'live-upcoming') {
-                      // Match is completed if API says it's completed
-                      const isCompleted = match.completed === true || match.live_score?.completed === true;
-                      
-                      // Show if NOT completed (includes both live and upcoming matches)
-                      return !isCompleted;
-                    }
-                    
-                    // If showing "Recent Results", the data is already filtered by backend
-                    // Backend returns only completed matches from last 48 hours with time_filter=recent
-                    if (timeFilter === 'recent-results') {
-                      // Just show all matches - backend already filtered them
-                      return true;
-                    }
-                    
-                    return true;
+                    return match.bookmakers && match.bookmakers.length > 0;
                   });
                   
                   // Show skeleton loaders while loading
-                  if (loading) {
+                  if (state.loading) {
                     return <MatchCardSkeletonList count={5} />;
                   }
                   
-                  // CRITICAL FIX: If filtering resulted in 0 matches but we have data, show fallback
+                  // Empty state
                   if (filteredMatches.length === 0) {
-                    // If we have data in allOdds, this is just a filter mismatch
-                    if (allOdds.length > 0) {
-                      console.log('⚠️ Filter resulted in 0 matches but we have', allOdds.length, 'total matches');
-                      // Don't show empty state, the useMemo will auto-reset league filter
-                    }
                     
                     // Get league name for custom message
                     const getLeagueName = () => {
