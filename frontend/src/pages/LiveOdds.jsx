@@ -905,10 +905,20 @@ const LiveOdds = () => {
                 <p className="text-gray-400">Loading odds...</p>
               </div>
             ) : allOdds.length === 0 ? (
-              <div className="text-center py-12 bg-red-500/10 border border-red-500/30 rounded-xl p-8">
-                <p className="text-red-400 text-lg font-semibold mb-2">⚠️ No Odds Loaded</p>
+              <div className="text-center py-12 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-xl p-8 border border-purple-500/20">
+                <div className="text-6xl mb-4">
+                  {timeFilter === 'inplay' ? '🔴' : 
+                   timeFilter === 'recent-results' ? '✅' : '📅'}
+                </div>
+                <p className="text-white text-xl font-semibold mb-3">
+                  {timeFilter === 'inplay' ? 'No Live Matches at the Moment' :
+                   timeFilter === 'recent-results' ? 'No Recent Results' :
+                   'No Matches Available'}
+                </p>
                 <p className="text-gray-400 text-sm mb-4">
-                  Data failed to load. Backend has 300+ matches but frontend isn't receiving them.
+                  {timeFilter === 'inplay' 
+                    ? 'There are currently no matches being played. Check back soon or view upcoming matches.'
+                    : 'Try adjusting your filters or refreshing the page.'}
                 </p>
                 <button
                   onClick={() => {
@@ -917,11 +927,8 @@ const LiveOdds = () => {
                   }}
                   className="px-6 py-2 bg-[#FFD700] text-[#2E004F] rounded-lg font-semibold hover:bg-[#FFD700]/90"
                 >
-                  Retry Loading
+                  Refresh Odds
                 </button>
-                <p className="text-gray-500 text-xs mt-3">
-                  Check browser console (F12) for error details
-                </p>
               </div>
             ) : (
               <div key={`matches-${leagueFilter}-${filteredOddsByLeague.length}`}>
