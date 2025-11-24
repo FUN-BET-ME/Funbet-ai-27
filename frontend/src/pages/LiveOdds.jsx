@@ -570,18 +570,7 @@ const LiveOdds = () => {
     }
   }, [refreshKey]);
 
-  // CRITICAL FIX: Save to localStorage whenever data changes (data persistence)
-  useEffect(() => {
-    if (allOdds.length > 0) {
-      try {
-        localStorage.setItem('liveOdds_cached', JSON.stringify(allOdds));
-        localStorage.setItem('liveOdds_version', CACHE_VERSION);
-        console.log('💾 Saved', allOdds.length, 'matches to localStorage (v' + CACHE_VERSION + ')');
-      } catch (e) {
-        console.error('Failed to save to localStorage:', e);
-      }
-    }
-  }, [allOdds]);
+  // No localStorage caching - always fetch fresh data for reliability
 
   // IQ scores are now fetched directly in fetchAllOdds after successful odds load
   // No useEffect needed - avoids React state batching/closure issues
