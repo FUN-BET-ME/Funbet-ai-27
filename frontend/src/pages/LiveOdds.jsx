@@ -508,12 +508,14 @@ const LiveOdds = () => {
         
         // Don't filter here - let filteredOddsByLeague useMemo handle it
         setAllOdds(data);
+        setHasMore(false); // CRITICAL: Live matches are all loaded at once, no pagination
         console.log('✅ Updated allOdds state with', data.length, 'in-play matches');
         setLoading(false);
       }).catch(error => {
         console.error('❌ Error fetching in-play odds:', error);
         setLoading(false);
         setAllOdds([]); // Clear data on error
+        setHasMore(false);
       });
     } else if (timeFilter === 'recent-results') {
       // Fetch recent completed matches (last 48 hours)
