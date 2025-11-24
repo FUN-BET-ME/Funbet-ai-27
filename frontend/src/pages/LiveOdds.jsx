@@ -897,7 +897,7 @@ const LiveOdds = () => {
                 const uniqueBookmakers = Object.values(bookmakersByTitle);
                 
                 const matchId = match.id || `${homeTeam}_${awayTeam}_${match.commence_time}`;
-                const currentSort = oddsSortBy[matchId];
+                const currentSort = state.oddsSortBy[matchId];
 
                 // SORTING LOGIC: User can sort by Home, Draw, or Away odds
                 const sortedBookmakers = [...uniqueBookmakers].sort((a, b) => {
