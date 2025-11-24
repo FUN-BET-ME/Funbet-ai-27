@@ -1,165 +1,160 @@
-<analysis>**original_problem_statement**: The initial request from the previous fork was to fix duplicate matches appearing on the frontend. During this session, the user reported several additional high-priority bugs:
-1.  A Draw column was incorrectly appearing for basketball matches.
-2.  The odds bookmaker table headers were missing team names for sorting (this turned out to be a misunderstanding).
-3.  Duplicate UI elements (score, time) were appearing within a single match card.
-4.  Mobile formatting was broken after fixing the duplicate elements.
-5.  The countdown timer was removed, but the user wanted a simple LIVE or FINAL badge instead.
-6.  Live matches were showing VS instead of a score (e.g., 0-0).
-7.  FunBet IQ scores were missing from the FunBet IQ History page.
-8.  A critical flaw in prediction integrity was discovered: FunBet IQ was being calculated for matches that had already started.
-9.  The historical track record (last 30 days) was empty, requiring a backfill of IQ scores.
-10. Stale odds from certain bookmakers (like Bovada) were corrupting the live odds display and FunBet.me's 5% markup calculation.
+<analysis>**original_problem_statement**: The initial request from the previous fork was to fix duplicate matches appearing on the frontend. During this session, the user reported a cascade of critical bugs related to data integrity, UI display, and frontend performance, including:
+1.  **UI/UX**: Sorting arrows for odds were requested to be bigger and purple, then moved to a different location. The user also requested the removal of all  links in favor of simple branding text.
+2.  **Data Disappearing**: A series of severe bugs caused various matches (Live Cricket, Completed Football, Upcoming EPL) to not load or disappear from the UI. This was due to a combination of overly strict frontend filtering, incorrect backend API logic, corrupt live score data in the database, and flawed client-side caching.
+3.  **Data Inaccuracy**:
+    *   Future matches were incorrectly marked as LIVE with stale score data due to a bug in the background worker's matching logic.
+    *   Live games (especially long-running test cricket) had their odds bookmakers incorrectly filtered out due to stale odds logic.
+    *   FunBet IQ predictions were initially missing, then would appear and disappear on refresh for live games.
+    *   The Correct/Incorrect prediction status was missing for most completed games, especially cricket, due to a bug in the score parsing logic.
+4.  **Frontend Fragility**: The user expressed extreme frustration with the overall user experience, describing it as fragile and temperamental because data would load, disappear, or be incorrect on different views and refreshes. This was traced back to a complex  caching system and multi-layered filtering logic.
 
 **User's preferred language**: English
 
 **what currently exists?**
-A full-stack sports analytics application (React/FastAPI/MongoDB) that displays and analyzes sports odds. The app features a FunBet IQ v4 prediction engine.
+A full-stack sports analytics application (React/FastAPI/MongoDB). The session focused heavily on stabilizing the application and fixing numerous data integrity and presentation bugs.
 
-Key fixes and features from this session include:
-- The UI now correctly handles basketball matches (no Draw column).
-- Match cards have been cleaned up to remove duplicate score/time displays and now use a simple LIVE/FINAL badge system.
-- Live matches correctly display a score (e.g., 0-0) instead of VS.
-- The FunBet IQ History page now correctly displays the pre-match IQ scores for each completed prediction.
-- **CRITICAL**: The prediction integrity logic in  was fixed to ensure pre-match predictions are **strictly pre-match only**, by adding checks to skip matches that are already live or completed. 306 invalid historical predictions were deleted with user permission.
-- A temporary backfill mode was implemented and used to populate historical data, which is now complete. The system is back in normal live mode.
-- A sophisticated filtering mechanism has been added to the backend () to remove bookmakers with stale odds from live match displays, protecting the accuracy of the best-odds highlighting and the FunBet.me markup.
+- **Backend**:
+    - The  API endpoints (, ) have been fixed to correctly join FunBet IQ data, ensuring IQ scores are always available.
+    - The  endpoint was fixed to query for  matches directly, instead of using a flawed time window, so all live games (including multi-day cricket) are returned.
+    - The background worker () has been fixed to prevent it from incorrectly assigning live scores to future matches.
+    - The prediction verification service () was fixed to correctly parse and handle cricket scores (e.g., 171/8), and to avoid verifying 5-day test cricket matches until they are officially completed.
+- **Frontend**:
+    - The  page has undergone significant changes. Most critically, the ** caching system has been completely removed** to address the core cause of data fragility and inconsistency.
+    - A series of critical filtering bugs have been resolved, ensuring the correct matches appear in the LIVE Now, Upcoming, and Recent Results tabs.
+    - The Load More button logic has been fixed to be disabled on tabs where it's not applicable (like LIVE Now).
+    - UI requests for sorting arrows and FunBet.me branding have been implemented.
 
 **Last working item**:
--   **Last item agent was working**: Implementing an advanced stale odds filtering logic for live games, as specified by the user. The new logic, added to , is: after a match has been live for 7 minutes, start monitoring bookmaker odds. If a bookmaker's odds do not change for 3 consecutive checks (which occur every 2 minutes, totaling a 6-minute window), they are filtered out from the API response for that specific live match.
--   **Status**: IN PROGRESS
--   **Agent Testing Done**: N
--   **Which testing method agent to use?**: backend testing agent (to verify the new filtering logic by simulating stale odds and checking the  endpoint response).
+-   **Last item agent was working**: Addressing the user's primary complaint about the application's fragility and poor user experience. The agent identified the  caching system as the main culprit and completely removed it from .
+-   **Status**: USER VERIFICATION PENDING
+-   **Agent Testing Done**: Y
+-   **Which testing method agent to use?**: Manual testing by user. The user needs to refresh the page and navigate between filters to confirm that the data loading experience is now stable and predictable, without needing hard refreshes.
 -   **User Testing Done**: N
 
 **All Pending/In progress Issue list**:
--   **Issue 1**: The new stale odds filtering logic needs to be tested and verified. (Priority: P0)
+-   **Issue 1**: The frontend data loading experience is still under review by the user. (Priority: P0)
 
 **Issues Detail**:
 -   **Issue 1**:
-    -   **Description**: The agent implemented a new, complex rule to filter out stale bookmakers from live odds. This logic resides in . It needs to be confirmed that the backend was restarted and that the logic works as intended.
-    -   **Attempted fixes**: The agent wrote the code in  based on the user's instructions.
+    -   **Description**: The user was extremely frustrated with matches disappearing, data being incorrect, and the need for constant hard refreshes. The agent removed the  caching system as a fix. The user has not yet confirmed if this has resolved the fragile feeling of the application.
+    -   **Attempted fixes**: The agent removed all code related to  and  in .
     -   **Next debug checklist**:
-        1.  Restart the backend service to apply the latest changes in  (backend: stopped
-backend: started).
-        2.  Identify a live match from the  endpoint.
-        3.  Manually inspect the  timestamps for bookmakers of that live match in the  collection in MongoDB.
-        4.  Verify that bookmakers whose odds haven't been updated for more than ~6-7 minutes are being excluded from the  array for that match in the API response.
-    -   **Why fix this issue and what will be achieved with the fix?**: This ensures the live odds comparison is always based on fresh data, making the best odds feature and the FunBet.me markup accurate.
-    -   **Status**: IN PROGRESS
-    -   **Is recurring issue?**: N
-    -   **Should Test frontend/backend/both after fix?**: Backend
+        1.  Wait for user feedback on whether the data loading experience feels more robust.
+        2.  If issues persist, investigate the multi-layered filtering logic (, , ) in  as the next potential source of fragility.
+        3.  Consider re-implementing the planned  refactor for cleaner state management.
+    -   **Why fix this issue and what will be achieved with the fix?**: This is the most critical issue. Fixing it will provide a stable, reliable user experience, which is the user's top priority.
+    -   **Status**: USER VERIFICATION PENDING
+    -   **Is recurring issue?**: Y
+    -   **Should Test frontend/backend/both after fix?**: Frontend
     -   **Blocked on other issue**: None
 
 **In progress Task List**:
--   None.
+-   **Task 1**: Refactor  for robustness. (Priority: P0)
+    -   **Where to resume**: The  cache has been removed. The next logical step is to refactor the 13+  hooks into a single  for more predictable state transitions, as originally planned.
+    -   **What will be achieved with this?**: A more maintainable and less error-prone state management system for the complex  component, further reducing the risk of data disappearing or filters behaving unpredictably.
+    -   **Status**: IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?**: Frontend
+    -   **Blocked on something**: None
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks**:
     -   **(P1) Frontend Component Refactor**: The match display logic is duplicated in  and . This code should be refactored into a single, reusable  component to improve maintainability.
 -   **Future Tasks**:
-    -   **Improve Live Score Linking Robustness**: The deployment logs in the previous session showed many Could not link warnings. The fuzzy matching logic in  that links odds data to live score data is still failing for some teams.
-    -   **Expanded Cricket Odds Coverage**: Integrate a dedicated cricket odds provider to increase data volume, as The Odds API has limited cricket availability.
+    -   **Improve Live Score Linking Robustness**: The fuzzy matching logic in  that links odds data to live score data is still failing for some teams.
+    -   **Expanded Cricket Odds Coverage**: Integrate a dedicated cricket odds provider to increase data volume.
 
 **Completed work in this session**
--   **UI Bug Fixes**:
-    -   Removed the Draw column for all basketball matches across the app (, ).
-    -   Removed duplicate score/time display from match cards.
-    -   Replaced complex countdown timer with a simple / badge.
-    -   Fixed live matches to show a score (e.g., 0-0) instead of VS.
--   **FunBet IQ Fixes**:
-    -   **CRITICAL (Prediction Integrity)**: Fixed the engine to prevent IQ calculation for matches already live or completed. Invalid historical data was purged.
-    -   **IQ History Page**: Restored the missing display of Home/Draw/Away IQ scores on the  history page.
+-   **Critical Stability Fixes**:
+    -   **Removed  Caching**: Ripped out the entire client-side caching system in  to eliminate the primary source of data inconsistency and fragility.
+    -   **Fixed Data Disappearance Bugs**:
+        -   Resolved issue where no matches would load due to overly strict frontend filters.
+        -   Fixed  and  API endpoints to include IQ data, preventing IQ scores from disappearing on refresh.
+        -   Fixed  API to correctly fetch all live matches (including multi-day cricket) by querying for  instead of a flawed time window.
+        -   Fixed an issue where the LIVE Now tab only showed 3 of 5 live matches by ensuring the sport filter was reset to All.
+        -   Fixed the Load More button, which was incorrectly appearing and fetching the wrong data on the LIVE Now tab.
 -   **Data Integrity Fixes**:
-    -   **Bookmaker Deduplication**: Fixed a bug where duplicate bookmaker entries (e.g., Betfair) were being stored for a single match.
-    -   **Stale Odds Filtering**: Implemented a robust system to filter out bookmakers with stale odds from live match API responses.
--   **Process & Documentation**:
-    -   Successfully executed a backfill of IQ scores for the last 30 days of matches.
-    -   Created multiple documentation files (, ) to prevent recurring issues, like database name confusion, for future agents.
+    -   **Fixed Corrupt Live Scores**: Stopped the background worker from assigning incorrect live scores to future matches by adding strict time validation. Killed duplicate worker processes.
+    -   **Fixed Prediction Verification**: Updated the verification service to handle cricket scores (e.g., 171/8) and to correctly skip verifying 5-day test matches until they are truly finished.
+-   **Backend & API Enhancements**:
+    -   Verified and tested the stale odds filtering logic in .
+    -   Added a  query parameter to the  endpoint to enable efficient server-side filtering.
+-   **UI & UX Improvements**:
+    -   Updated odds sorting arrows to be bigger and purple, and moved them to the FunBet.me odds row based on user feedback.
+    -   Removed all clickable  links across the site and added a Powered by FunBet.ME footer.
 
 **Earlier issues found/mentioned but not fixed**
--   **Issue 1**: Intermittent live score linking failures due to fuzzy matching.
+-   **Issue 1**: Intermittent live score linking failures due to fuzzy matching in .
     -   **Debug checklist**: Log team names from The Odds API and the score provider for failed links to analyze discrepancies and improve  logic.
     -   **Why to solve this issue and what will be achieved with this?**: To maximize live score coverage across all sports.
     -   **Should Test frontend/backend/both after fix**: Backend
     -   **Is recurring issue?**: Y
 
 **Known issue recurrence from previous fork**
--   **Issue recurrence in previous fork**: Confusion over the correct MongoDB database name ( vs. ). The agent's test scripts were using the wrong name.
--   **Recurrence count**: 2+
--   **Status**: RESOLVED (Agent created multiple documentation files and notes to explicitly state the correct database name is **funbet** as defined in ).
+-   None. The previous database name confusion has been resolved.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
--   **Frontend**: React, , shadcn/ui
--   **Backend**: FastAPI, Pydantic, MongoDB ( for async), 
--   **Data Matching**:  library for fuzzy string matching.
+-   **Frontend**: React, , , , , shadcn/ui
+-   **Backend**: FastAPI, Pydantic, MongoDB (), 
+-   **Data Matching**:  library
 
 **key DB schema**
--   : Stores match data from The Odds API.
--   : Stores historical FunBet IQ records. Now includes a  flag to differentiate pre-match predictions from those calculated during a live game.
--   , : Collections for historical data.
+-   : Stores match data. Was being corrupted with incorrect  data for future matches.
+-   : Stores historical IQ records. Was missing  values due to verification failures.
 
 **changes in tech stack**
 -   None.
 
 **All files**
 -   **Updated**:
-    -   : Major changes to fix basketball Draw column, remove duplicate score displays, replace timer with a simple badge, and fix live scores showing VS.
-    -   : Mirrored the UI fixes from .
-    -   : Added the missing IQ score display to the history tab.
-    -   : **CRITICAL CHANGE**. Added logic to prevent IQ calculation for live/completed matches. Temporarily removed this check for backfill, then re-added it. Added  flag.
-    -   : Added logic to de-duplicate bookmakers before saving to the database.
-    -   : **CRITICAL CHANGE**. Added logic to filter out bookmakers with stale odds from the  response for live matches.
+    -   : Major overhaul. Removed localStorage caching. Fixed numerous data fetching, filtering, and pagination bugs. Updated UI for sorting arrows and branding.
+    -   : UI changes mirrored from  for sorting arrows and branding.
+    -   : Added IQ data joins to  and  endpoints. Fixed  filtering logic. Added server-side  filtering to .
+    -   : Critical fix to add time validation to prevent assigning live scores to future matches.
+    -   : Critical fix to handle cricket score formats and avoid premature verification of test cricket.
 -   **Created**:
-    -   : Note for future agents about the correct DB name.
-    -   : Explicit policy to never delete data without user consent.
-    -   : A summary document.
-    -   Various other  files for documentation and temporary verification scripts.
+    -   
+    -   
+    -   
+    -   
+    -   
+    -   
 
 **Areas that need refactoring**:
--   The match display logic is duplicated across  and . It should be extracted into a single  component.
+-   The match display logic is still duplicated across  and . It should be extracted into a single  component.
+-    is a prime candidate for a  refactor to simplify its complex state management.
 
 **key api endpoints**
--   : The main endpoint for fetching all match data. It now includes logic to filter out stale bookmakers for live games.
--   : Endpoint for the FunBet IQ history page.
+-   : The main endpoint for fetching matches. Now supports a  query parameter for server-side filtering.
+-   : Fetches only live matches. Fixed to correctly join IQ data and to identify live matches by the  flag, not .
+-   : Fetches completed matches. Fixed to correctly join IQ data.
 
 **Critical Info for New Agent**
--   **User Communication**: The user is highly technical, direct, and expects fast, accurate results. Validate your understanding frequently with screenshots.
--   **Database Name is **: The application uses the  database, as specified in . All your scripts and checks must use this database name. Do not use .
--   **Prediction Integrity is Paramount**: For a prediction to be included in the official verified track record, its FunBet IQ **must** be calculated **before** the match starts. The  now enforces this. IQ can be calculated for live games, but it's flagged with  and should not be part of the official accuracy stats.
--   **Stale Live Odds Filtering**: The logic in  to remove stale bookmakers from live games is new and critical. The next agent must verify it's working correctly.
--   **Data Preservation**: **DO NOT DELETE DATA** from any collection without explicit user permission. The user confirmed the deletion of 306 invalid predictions, but this is an exception.
+-   **User's #1 Priority is Stability**: The user is extremely frustrated with the fragile nature of the frontend. Data disappearing or being incorrect has been a constant theme. The removal of  was a major step, but you must prioritize making the data loading and filtering experience rock-solid. Be cautious and test every change thoroughly.
+-   **Avoid Premature Perfect Declarations**: The previous agent repeatedly declared issues fixed or perfect only for the user to find another problem. Be humble, verify thoroughly, and manage user expectations carefully. Acknowledge when things are broken.
+-   **Multi-Layer Filtering is Complex**: The combination of client-side and server-side filters (, sport , , plus rendering filters) is the main source of bugs. When debugging data disappearance, trace the data through each layer of filtering, from the database query to the final React render.
 
 **documents created in this job**
--   
--   
--   
--   
--   
--   
+-   Multiple  files documenting specific bug fixes and implementation details.
 
 **Last 5 User Messages and any pending user messages**
-1.  **User**: Pointed out that FunBet.me's 5% markup calculation was incorrect for live games due to stale odds. **Status: IN PROGRESS**.
-2.  **User**: Confirmed that the correct odds for a 90-minute 2-1 game should be ~1.01 for the winning team. **Status: ADDRESSED**.
-3.  **User**: Proposed a new, more dynamic logic for filtering stale live odds (start checking at 7 mins, remove after 3 failed checks over 6 mins). **Status: IMPLEMENTED, PENDING TESTING**.
-4.  **User**: Noted that the stats shown in a screenshot (301 verified) didn't match the agent's report and asked for an accurate count of matches by sport for the past/next 30 days. **Status: ADDRESSED**.
-5.  **User**: Asked why football coverage wasn't 100%. **Status: ADDRESSED** (Explained the 2 missing matches were live and correctly skipped by the backfill).
+1.  **User**: I am still not happy with the front end data/matches loading issues and temperamental and disappearing..not a great user experiece...what did w e implement that this looks so fragile... - **Status: IN PROGRESS**. This prompted the removal of .
+2.  **User**: Selected Option 1 to remove the  caching system. - **Status: COMPLETED**.
+3.  **User**: Reported Live cannot be 300+ on a Monday, leading to a fix of a misleading error message. - **Status: COMPLETED**.
+4.  **User**: Reported 5 live matches exist in the backend but are not showing on the frontend, leading to the fix of the  API endpoint. - **Status: COMPLETED**.
+5.  **User**: Reported that clicking Load More on the LIVE Now tab was incorrectly adding more matches, leading to a fix in the frontend button logic. - **Status: COMPLETED**.
 
 **Project Health Check:**
--   **Broken**: None.
+-   **Broken**: User's perception of the frontend data loading is that it's fragile. The core logic has been improved, but it needs verification.
 -   **Mocked**: None.
 
 **Testing status**
--   **Testing agent used after significant changes**: NO (Agent performed rapid bug fixes using screenshots and manual verification).
--   **Troubleshoot agent used after agent stuck in loop**: NO
--   **Test files created**: Numerous temporary Python scripts for verification (e.g., , ).
--   **Known regressions**: None.
+-   **Testing agent used after significant changes**: NO
+-   **Troubleshoot agent used after agent stuck in loop**: YES, used multiple times to diagnose critical data issues.
+-   **Test files created**: None.
+-   **Known regressions**: Several were introduced and fixed during the session, primarily related to data filtering.
 
 **Credentials to test flow:**
--   **Admin Login**:  /  (configurable via / in ).
-
-**What agent forgot to execute**
--   The planned refactor of  and  into a reusable  component has not been started.
--   The recurring issue of improving the fuzzy matching for team name linking was not addressed in this session.</analysis>
+-   **Admin Login**:  /  (configurable via / in ).</analysis>
