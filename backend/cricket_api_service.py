@@ -68,24 +68,51 @@ class CricketAPIService:
                             match_status = status
                             
                             if len(score) >= 2:
-                                # Team 1 score
-                                team1_score = score[0]
-                                home_runs = team1_score.get('r', 0)
-                                home_wickets = team1_score.get('w', 0)
-                                home_overs = team1_score.get('o', 0)
-                                
-                                # Team 2 score
-                                team2_score = score[1]
-                                away_runs = team2_score.get('r', 0)
-                                away_wickets = team2_score.get('w', 0)
-                                away_overs = team2_score.get('o', 0)
-                                
-                                # Format score display
-                                home_score = f"{home_runs}/{home_wickets}"
-                                away_score = f"{away_runs}/{away_wickets}"
-                                
-                                # Add overs info to status
-                                match_status = f"{status} - {home_overs} overs"
+                                # For Test matches: Parse all innings and show cumulative
+                                if match_type.lower() == 'test':
+                                    home_innings = []
+                                    away_innings = []
+                                    
+                                    for innings in score:
+                                        inning_name = innings.get('inning', '').lower()
+                                        runs = innings.get('r', 0)
+                                        wickets = innings.get('w', 0)
+                                        overs = innings.get('o', 0)
+                                        
+                                        # Determine which team this innings belongs to
+                                        if home_team.lower() in inning_name or away_team.lower() in inning_name:
+                                            if home_team.lower() in inning_name:
+                                                home_innings.append(f"{runs}/{wickets}")
+                                            else:
+                                                away_innings.append(f"{runs}/{wickets}")
+                                        else:
+                                            # Fallback: alternate between teams
+                                            innings_num = len(home_innings) + len(away_innings)
+                                            if innings_num % 2 == 0:
+                                                home_innings.append(f"{runs}/{wickets}")
+                                            else:
+                                                away_innings.append(f"{runs}/{wickets}")
+                                    
+                                    # Format: Show all innings with "&" separator
+                                    home_score = " & ".join(home_innings) if home_innings else "0/0"
+                                    away_score = " & ".join(away_innings) if away_innings else "0/0"
+                                    
+                                    match_status = status
+                                else:
+                                    # For ODI/T20: Just show first two scores
+                                    team1_score = score[0]
+                                    home_runs = team1_score.get('r', 0)
+                                    home_wickets = team1_score.get('w', 0)
+                                    home_overs = team1_score.get('o', 0)
+                                    
+                                    team2_score = score[1]
+                                    away_runs = team2_score.get('r', 0)
+                                    away_wickets = team2_score.get('w', 0)
+                                    away_overs = team2_score.get('o', 0)
+                                    
+                                    home_score = f"{home_runs}/{home_wickets}"
+                                    away_score = f"{away_runs}/{away_wickets}"
+                                    match_status = f"{status} - {home_overs} overs"
                             
                             # Check if match is live or completed using API flags
                             match_started = match.get('matchStarted', False)
