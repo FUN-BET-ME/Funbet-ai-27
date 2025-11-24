@@ -713,9 +713,9 @@ const LiveOdds = () => {
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
               Refresh Odds
             </Button>
-            {lastUpdated && filter === 'all' && (
+            {state.lastUpdated && filter === 'all' && (
               <span className="text-sm text-gray-400">
-                Last updated: {lastUpdated.toLocaleTimeString()}
+                Last updated: {state.lastUpdated.toLocaleTimeString()}
               </span>
             )}
           </div>
