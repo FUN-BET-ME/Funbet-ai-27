@@ -789,14 +789,18 @@ const LiveOdds = () => {
           {/* Time Period Filter */}
           <div className="flex flex-wrap gap-2 mb-4">
             <button
-              onClick={() => setTimeFilter('inplay')}
+              onClick={() => {
+                setTimeFilter('inplay');
+                setFilter('all'); // Show ALL sports when viewing live matches
+                setLeagueFilter('all'); // Clear league filter too
+              }}
               className={`px-6 py-2 rounded-lg font-semibold transition-all ${
                 timeFilter === 'inplay'
                   ? 'bg-[#FFD700] text-[#2E004F]'
                   : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-[#2E004F]/30'
               }`}
             >
-              🔴 LIVE Now
+              🔴 LIVE Now (All Sports)
             </button>
             <button
               onClick={() => setTimeFilter('live-upcoming')}
