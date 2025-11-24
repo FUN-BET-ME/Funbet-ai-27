@@ -707,10 +707,10 @@ const LiveOdds = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <Button
               onClick={handleRefresh}
-              disabled={loading}
+              disabled={state.loading}
               className="bg-[#FFD700] text-[#2E004F] hover:bg-[#FFD700]/90"
             >
-              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 mr-2 ${state.loading ? 'animate-spin' : ''}`} />
               Refresh Odds
             </Button>
             {state.lastUpdated && filter === 'all' && (
