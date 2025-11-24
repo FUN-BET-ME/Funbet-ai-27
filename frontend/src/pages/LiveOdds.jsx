@@ -1507,15 +1507,10 @@ const LiveOdds = () => {
                             return (
                               <tr className="border-b-2 border-[#FFD700] bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10">
                                 <td className="py-2 px-1 sm:py-4 sm:px-4">
-                                  <a 
-                                    href="https://funbet.me" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-1 sm:gap-2 hover:opacity-80 transition-opacity cursor-pointer"
-                                  >
+                                  <div className="flex items-center gap-1 sm:gap-2">
                                     <span className="text-[#FFD700] text-base sm:text-2xl leading-none">⭐</span>
                                     <span className="text-[#FFD700] font-bold text-[10px] sm:text-lg whitespace-nowrap leading-none">FunBet.me</span>
-                                  </a>
+                                  </div>
                                 </td>
                                 <td className="py-2 px-0.5 sm:py-4 sm:px-4 text-center w-[25%]">
                                   <div className="flex items-center justify-center gap-1">
