@@ -442,7 +442,7 @@ const LiveOdds = () => {
 
   // Scroll to specific match if hash is present in URL
   useEffect(() => {
-    if (window.location.hash && allOdds.length > 0) {
+    if (window.location.hash && state.matches.length > 0) {
       const matchId = window.location.hash.replace('#match-', '');
       setTimeout(() => {
         const element = document.getElementById(`match-${matchId}`);
@@ -456,7 +456,7 @@ const LiveOdds = () => {
         }
       }, 500);
     }
-  }, [allOdds]);
+  }, [state.matches]);
 
   // Sport keys configuration - FOOTBALL, CRICKET & BASKETBALL
   const sportKeysMap = {
