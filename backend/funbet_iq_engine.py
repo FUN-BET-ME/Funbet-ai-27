@@ -793,7 +793,7 @@ async def calculate_funbet_iq_for_matches(db, limit: int = 500) -> Dict:
             ]
         }).limit(limit)
         
-        matches = list(matches_cursor)
+        matches = await matches_cursor.to_list(length=limit)
         total_matches = len(matches)
         
         if total_matches == 0:
