@@ -1320,15 +1320,18 @@ const LiveOdds = () => {
                                       <button
                                         onClick={(e) => {
                                           e.preventDefault();
-                                          setOddsSortBy(prev => ({
-                                            ...prev,
-                                            [matchId]: prev[matchId] === 'draw' ? null : 'draw'
-                                          }));
+                                          dispatch({
+                                            type: actionTypes.SET_ODDS_SORT,
+                                            payload: {
+                                              matchId,
+                                              sortBy: state.oddsSortBy[matchId] === 'draw' ? null : 'draw'
+                                            }
+                                          });
                                         }}
                                         className="hover:opacity-80 transition-opacity"
                                         title="Sort by Draw odds (highest to lowest)"
                                       >
-                                        {oddsSortBy[matchId] === 'draw' ? (
+                                        {state.oddsSortBy[matchId] === 'draw' ? (
                                           <ChevronDown className="w-5 h-5 text-purple-600" />
                                         ) : (
                                           <ChevronUp className="w-5 h-5 text-gray-400 opacity-50" />
