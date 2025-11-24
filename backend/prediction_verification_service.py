@@ -134,6 +134,17 @@ class PredictionVerificationService:
                 match_data.get('live_score', {}).get('completed') == True
             )
             
+            # CRITICAL: For test cricket (5-day matches), ensure it's truly completed
+            # Test matches can be live for multiple days but not finished
+            sport_key = match_data.get('sport_key', '')
+            if 'test_match' in sport_key.lower():
+                # For test cricket, must be explicitly marked as completed
+                # AND not currently live
+                is_live = match_data.get('live_score', {}).get('is_live') == True
+                if is_live or not is_completed:
+                    logger.info(f"⏳ Test cricket match {home_team} vs {away_team} still ongoing (Day 3/4/5) - NOT verifying yet")
+                    return 'pending'
+            
             if not is_completed:
                 # Match not completed yet - wait for API to mark it
                 logger.debug(f"Match {match_id} not marked as completed yet")
