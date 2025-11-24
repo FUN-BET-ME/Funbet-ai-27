@@ -1359,7 +1359,7 @@ const LiveOdds = () => {
                                       className="hover:opacity-80 transition-opacity"
                                       title="Sort by Away odds (highest to lowest)"
                                     >
-                                      {oddsSortBy[matchId] === 'away' ? (
+                                      {state.oddsSortBy[matchId] === 'away' ? (
                                         <ChevronDown className="w-5 h-5 text-purple-600" />
                                       ) : (
                                         <ChevronUp className="w-5 h-5 text-gray-400 opacity-50" />
