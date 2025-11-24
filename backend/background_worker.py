@@ -1340,12 +1340,14 @@ class OddsWorker:
         try:
             logger.info("🧹 Cleaning up stuck matches...")
             
-            four_hours_ago = datetime.now(timezone.utc) - timedelta(hours=4)
+            # More aggressive: Mark as completed if started >3 hours ago
+            # Most football/basketball matches finish within 2-2.5 hours
+            three_hours_ago = datetime.now(timezone.utc) - timedelta(hours=3)
             
-            # Find matches with is_live=true that started >4 hours ago
+            # Find matches with is_live=true that started >3 hours ago
             stuck_matches = await self.db.odds_cache.find({
                 'live_score.is_live': True,
-                'commence_time': {'$lt': four_hours_ago.isoformat()}
+                'commence_time': {'$lt': three_hours_ago.isoformat()}
             }).to_list(length=100)
             
             cleaned = 0
@@ -1362,7 +1364,7 @@ class OddsWorker:
                 cleaned += 1
             
             if cleaned > 0:
-                logger.info(f"✅ Cleaned {cleaned} stuck matches")
+                logger.info(f"✅ Cleaned {cleaned} stuck matches (started >3 hours ago)")
                 
         except Exception as e:
             logger.error(f"Error in cleanup: {e}")
