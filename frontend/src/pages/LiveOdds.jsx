@@ -45,31 +45,8 @@ const LiveOdds = () => {
       : 'live-upcoming';
   });
   const [refreshKey, setRefreshKey] = useState(0);
-  // CRITICAL FIX: Initialize from localStorage with version check
-  const CACHE_VERSION = '4.0'; // Increment this to clear old caches
-  const [allOdds, setAllOdds] = useState(() => {
-    try {
-      const cacheVersion = localStorage.getItem('liveOdds_version');
-      const cached = localStorage.getItem('liveOdds_cached');
-      
-      // Clear cache if version mismatch (ensures IQ predictions are loaded)
-      if (cacheVersion !== CACHE_VERSION) {
-        console.log('🔄 Cache version mismatch, clearing old data');
-        localStorage.removeItem('liveOdds_cached');
-        localStorage.setItem('liveOdds_version', CACHE_VERSION);
-        return [];
-      }
-      
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        console.log('📦 Restored', parsed.length, 'matches from localStorage (v' + CACHE_VERSION + ')');
-        return parsed;
-      }
-    } catch (e) {
-      console.error('Failed to restore from localStorage:', e);
-    }
-    return [];
-  });
+  // ALWAYS start with empty - no caching for reliability
+  const [allOdds, setAllOdds] = useState([]);
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
