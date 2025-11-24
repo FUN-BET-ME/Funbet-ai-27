@@ -1742,8 +1742,8 @@ const LiveOdds = () => {
           );
         })()}
 
-        {/* Load More Button */}
-        {hasMore && !loading && (
+        {/* Load More Button - Don't show for Live Now or Recent Results (they load all at once) */}
+        {hasMore && !loading && timeFilter !== 'inplay' && timeFilter !== 'recent-results' && (
           <div className="mt-8 text-center">
             <button
               onClick={() => fetchAllOdds(true, filter, false)}
