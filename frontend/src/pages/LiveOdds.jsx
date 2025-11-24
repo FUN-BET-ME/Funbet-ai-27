@@ -166,47 +166,18 @@ const LiveOdds = () => {
     setLeagueFilter('all'); // Reset league when URL changes
   }, [location.search]);
   
-  // Use useMemo to filter matches by SPORT first, then by league
+  // ============================================
+  // SIMPLIFIED FILTERING - Backend does the heavy lifting
+  // ============================================
   const filteredOddsByLeague = useMemo(() => {
-    console.log('🔍 FILTER MEMO - filter:', filter, 'leagueFilter:', leagueFilter, '| Total matches in allOdds:', allOdds.length);
-    console.log('🔍 FILTER MEMO - First match in allOdds:', allOdds[0]?.home_team, 'vs', allOdds[0]?.away_team);
-    
-    let filtered = allOdds;
-    
-    // FIRST: Filter by sport (football vs cricket vs basketball) if not "all"
-    if (filter !== 'all') {
-      let sportPrefix;
-      if (filter === 'football') {
-        sportPrefix = 'soccer_';
-      } else if (filter === 'cricket') {
-        sportPrefix = 'cricket_';
-      } else if (filter === 'basketball') {
-        sportPrefix = 'basketball_';
-      }
-      
-      if (sportPrefix) {
-        filtered = filtered.filter(match => match.sport_key?.startsWith(sportPrefix));
-        console.log('  → After sport filter (', filter, '):', filtered.length, 'matches');
-      }
+    // Backend already filtered by sport and league
+    // Only apply client-side league filter if needed
+    if (leagueFilter === 'all') {
+      return state.matches;
     }
     
-    // SECOND: Filter by specific league if selected
-    if (leagueFilter !== 'all') {
-      const leagueFiltered = filtered.filter(match => match.sport_key === leagueFilter);
-      filtered = leagueFiltered;
-      console.log('  → After league filter (', leagueFilter, '):', filtered.length, 'matches');
-    }
-    
-    if (filtered.length > 0) {
-      console.log('  → ✅ FINAL RESULT:', filtered.length, 'matches');
-      console.log('  → Sample match:', filtered[0].sport_key, filtered[0].home_team);
-    } else {
-      console.log('  → ❌ NO MATCHES AFTER FILTERING!');
-    }
-    
-    console.log('🔍 RETURNING from useMemo:', filtered.length, 'matches');
-    return filtered;
-  }, [allOdds, filter, leagueFilter]);
+    return state.matches.filter(match => match.sport_key === leagueFilter);
+  }, [state.matches, leagueFilter]);
 
   const sports = ['all', 'football', 'cricket', 'basketball'];
   
