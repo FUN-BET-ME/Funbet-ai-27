@@ -1506,7 +1506,7 @@ const LiveOdds = () => {
                 refreshTrigger={refreshKey}
                 timeFilter={timeFilter}
                 preloadedOdds={filteredOddsByLeague}
-                loading={loading}
+                loading={state.loading}
                 selectedLeague={leagueFilter !== 'all' ? (filter === 'football' ? footballLeagues[leagueFilter] : filter === 'cricket' ? cricketLeagues[leagueFilter] : basketballLeagues[leagueFilter]) : null}
               />
             </div>
