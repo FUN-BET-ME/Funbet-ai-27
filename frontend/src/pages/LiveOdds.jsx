@@ -46,7 +46,7 @@ const LiveOdds = () => {
   });
   const [refreshKey, setRefreshKey] = useState(0);
   // CRITICAL FIX: Initialize from localStorage with version check
-  const CACHE_VERSION = '3.0'; // Increment this to clear old caches
+  const CACHE_VERSION = '4.0'; // Increment this to clear old caches
   const [allOdds, setAllOdds] = useState(() => {
     try {
       const cacheVersion = localStorage.getItem('liveOdds_version');
