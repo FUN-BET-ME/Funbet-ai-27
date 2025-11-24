@@ -1749,8 +1749,18 @@ const LiveOdds = () => {
           </div>
         )}
 
+        {/* Branding Footer */}
+        <div className="mt-12 text-center py-6">
+          <p className="text-[#FFD700] font-semibold text-lg mb-2">
+            Powered by FunBet.ME
+          </p>
+          <p className="text-gray-400 text-sm">
+            Reach us: <span className="text-[#FFD700]">funbet.me</span>
+          </p>
+        </div>
+
         {/* Disclaimer */}
-        <div className="mt-12 p-6 rounded-lg bg-[#2E004F]/10 border border-[#2E004F]/30">
+        <div className="mt-6 p-6 rounded-lg bg-[#2E004F]/10 border border-[#2E004F]/30">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-[#FFD700] flex-shrink-0 mt-0.5" />
             <div>
