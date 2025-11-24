@@ -122,54 +122,49 @@ function matchesReducer(state, action) {
 const LiveOdds = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toggleFollowTeam, isFollowing, isMatchFollowed} = useFavorites();
   
-  // Get filter from URL and initialize state with it
+  // ============================================
+  // CENTRALIZED STATE WITH useReducer
+  // ============================================
+  const [state, dispatch] = useReducer(matchesReducer, initialState);
+  
+  // ============================================
+  // FILTERS STATE (Simple, non-interdependent)
+  // ============================================
   const getFilterFromURL = () => {
     const params = new URLSearchParams(location.search);
     return params.get('filter') || 'all';
   };
   
-  const [filter, setFilter] = useState(() => getFilterFromURL());
-  
-  // Sync filter state when URL changes (e.g., clicking nav links)
-  useEffect(() => {
-    const urlFilter = getFilterFromURL();
-    setFilter(urlFilter);
-    // CRITICAL FIX: Reset league filter when sport filter changes to prevent no matches
-    setLeagueFilter('all');
-    
-    // CRITICAL FIX: Restore timeFilter from URL parameter
+  const getTimeFilterFromURL = () => {
     const params = new URLSearchParams(location.search);
-    const timeParam = params.get('time');
-    if (timeParam && ['live-upcoming', 'inplay', 'recent-results'].includes(timeParam)) {
-      setTimeFilter(timeParam);
-    }
-  }, [location.search]);
-  const [timeFilter, setTimeFilter] = useState(() => {
-    // Initialize timeFilter from URL if present
-    const params = new URLSearchParams(window.location.search);
     const timeParam = params.get('time');
     return (timeParam && ['live-upcoming', 'inplay', 'recent-results'].includes(timeParam)) 
       ? timeParam 
       : 'live-upcoming';
-  });
+  };
+  
+  const [filter, setFilter] = useState(() => getFilterFromURL());
+  const [timeFilter, setTimeFilter] = useState(() => getTimeFilterFromURL());
+  const [leagueFilter, setLeagueFilter] = useState('all');
   const [refreshKey, setRefreshKey] = useState(0);
-  // ALWAYS start with empty - no caching for reliability
-  const [allOdds, setAllOdds] = useState([]);
-  const [scores, setScores] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(null);
-  const [expandedMatches, setExpandedMatches] = useState({});
-  const [showAllMatches, setShowAllMatches] = useState(false);
-  const [teamLogos, setTeamLogos] = useState({}); // Cache for team logos
-  const [oddsSortBy, setOddsSortBy] = useState({}); // Track sort preference per match: {matchId: 'home'|'draw'|'away'|null}
-  const [expandedBookmakers, setExpandedBookmakers] = useState({}); // Track which match cards have expanded bookmakers
-  // Removed aiPredictions state - IQ scores now come bundled with odds data
-  const [hasMore, setHasMore] = useState(false); // Pagination state
-  const [loadingMore, setLoadingMore] = useState(false); // Loading more state
-  const [leagueFilter, setLeagueFilter] = useState('all'); // League sub-filter
-  // IQ scores now come bundled with odds data
-  const { toggleFollowTeam, isFollowing, isMatchFollowed} = useFavorites();
+  
+  // ============================================
+  // REQUEST CANCELLATION
+  // ============================================
+  const abortControllerRef = useRef(null);
+  const debounceTimerRef = useRef(null);
+  
+  // Sync filters from URL
+  useEffect(() => {
+    const urlFilter = getFilterFromURL();
+    const urlTimeFilter = getTimeFilterFromURL();
+    
+    setFilter(urlFilter);
+    setTimeFilter(urlTimeFilter);
+    setLeagueFilter('all'); // Reset league when URL changes
+  }, [location.search]);
   
   // Use useMemo to filter matches by SPORT first, then by league
   const filteredOddsByLeague = useMemo(() => {
