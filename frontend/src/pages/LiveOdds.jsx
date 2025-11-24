@@ -1539,16 +1539,9 @@ const LiveOdds = () => {
                                 {showThreeOutcomes && (
                                   <td className="py-2 px-0.5 sm:py-4 sm:px-4 text-center w-[25%]">
                                     <div className="flex items-center justify-center gap-1">
-                                      <a 
-                                        href="https://funbet.me" 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="inline-block cursor-pointer"
-                                      >
-                                        <span className="bg-[#FFD700] text-[#2E004F] px-1.5 py-0.5 sm:px-5 sm:py-2 rounded font-black text-xs sm:text-2xl hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
-                                          {funbetDrawOdds || '-'}
-                                        </span>
-                                      </a>
+                                      <span className="bg-[#FFD700] text-[#2E004F] px-1.5 py-0.5 sm:px-5 sm:py-2 rounded font-black text-xs sm:text-2xl shadow-lg whitespace-nowrap">
+                                        {funbetDrawOdds || '-'}
+                                      </span>
                                       <button
                                         onClick={(e) => {
                                           e.preventDefault();
