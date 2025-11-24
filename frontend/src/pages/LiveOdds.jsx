@@ -944,7 +944,10 @@ const LiveOdds = () => {
                   // CRITICAL FIX: Filter out live matches when showing upcoming
                   let filteredMatches = filteredOddsByLeague.filter(match => {
                     // Must have bookmakers
-                    if (!match.bookmakers || match.bookmakers.length === 0) return false;
+                    if (!match.bookmakers || match.bookmakers.length === 0) {
+                      console.log(`❌ Filtered out (no bookmakers): ${match.home_team} vs ${match.away_team}`);
+                      return false;
+                    }
                     
                     // If showing "LIVE Now", only show matches that API says are live
                     if (timeFilter === 'inplay') {
