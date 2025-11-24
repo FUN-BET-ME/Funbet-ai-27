@@ -984,7 +984,7 @@ const LiveOdds = () => {
                         <div className="flex items-center gap-2 sm:gap-3 mt-3">
                           <div className="flex-shrink-0">
                             <TeamLogo 
-                              logoUrl={match.home_team_logo || match.live_score?.home_team_logo || teamLogos[homeTeam]} 
+                              logoUrl={match.home_team_logo || match.live_score?.home_team_logo || getTeamLogo(homeTeam)} 
                               teamName={homeTeam}
                               sport={match.sport_key}
                               size="md"
