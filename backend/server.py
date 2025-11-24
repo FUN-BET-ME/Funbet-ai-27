@@ -789,31 +789,32 @@ async def get_inplay_odds():
             
             logger.info(f"✅ inplay: {len(matches)} matches, {iq_count} with IQ predictions")
         
-        # Filter to show live matches:
-        # 1. Has ESPN live score data and is not completed, OR
-        # 2. Started within last 2.5 hours but no ESPN data yet (show as potentially live)
+        # STRICT FILTERING: Only show matches that are ACTUALLY LIVE NOW
         live_matches = []
         for m in matches:
-            if m.get('live_score'):
-                # Has ESPN data - check if not completed
-                if not m.get('live_score', {}).get('completed'):
-                    live_matches.append(m)
-            else:
-                # No ESPN data yet - check if match started within last 2.5 hours (likely live)
-                commence_time = datetime.fromisoformat(m.get('commence_time', '').replace('Z', '+00:00'))
-                hours_since_start = (now - commence_time).total_seconds() / 3600
-                if 0 < hours_since_start < 2.5:  # Football matches last ~2 hours
-                    # Add default live status with 0-0 score (will update when ESPN has data)
-                    m['live_score'] = {
-                        'home_score': '0',
-                        'away_score': '0',
-                        'match_status': 'Live',
-                        'is_live': True,
-                        'completed': False
-                    }
-                    live_matches.append(m)
+            live_score = m.get('live_score', {})
+            
+            # Skip if explicitly marked as completed
+            if live_score.get('completed') or m.get('completed'):
+                continue
+            
+            # Skip if match status indicates completion
+            match_status = live_score.get('match_status', '').upper()
+            if match_status in ['FT', 'FINAL', 'FINISHED', 'AET', 'PEN']:
+                continue
+            
+            # Check if match is recent enough to be live
+            commence_time = datetime.fromisoformat(m.get('commence_time', '').replace('Z', '+00:00'))
+            hours_since_start = (now - commence_time).total_seconds() / 3600
+            
+            # Skip matches that started >4 hours ago (no normal match lasts >4 hours)
+            if hours_since_start > 4:
+                continue
+            
+            # Match passed all filters - it's live
+            live_matches.append(m)
         
-        logger.info(f"✅ In-play matches: {len(live_matches)} live out of {len(matches)} recent")
+        logger.info(f"✅ In-play matches: {len(live_matches)} live (filtered from {len(matches)} candidates)")
         return live_matches
         
     except Exception as e:
