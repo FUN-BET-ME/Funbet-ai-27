@@ -941,13 +941,13 @@ const LiveOdds = () => {
                       return isLive && !isCompleted;
                     }
                     
-                    // If showing "Upcoming (30 Days)", show ONLY upcoming matches (not live, not completed)
+                    // If showing "Live & Upcoming", show BOTH live AND upcoming matches (exclude completed)
                     if (timeFilter === 'live-upcoming') {
-                      const isLive = match.live_score?.is_live === true;
+                      // Match is completed if API says it's completed
                       const isCompleted = match.completed === true || match.live_score?.completed === true;
                       
-                      // Show if NOT live AND NOT completed (upcoming only)
-                      return !isLive && !isCompleted;
+                      // Show if NOT completed (includes both live and upcoming matches)
+                      return !isCompleted;
                     }
                     
                     // If showing "Recent Results", the data is already filtered by backend
