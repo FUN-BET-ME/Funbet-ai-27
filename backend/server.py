@@ -475,11 +475,17 @@ async def get_all_cached_odds(
                 {'completed_at': {'$exists': False}, 'commence_time': {'$gte': forty_eight_hours_ago_str, '$lte': now_str}}  # Old matches without completed_at
             ]
         else:
-            # Default behavior (no time_filter or 'all'): exclude OLD matches (>6 hours ago)
-            # Show matches from 6 hours ago to future (covers live + upcoming)
-            six_hours_ago = now - timedelta(hours=6)
-            six_hours_ago_str = six_hours_ago.isoformat().replace('+00:00', 'Z')
-            query['commence_time'] = {'$gte': six_hours_ago_str}
+            # Default behavior (no time_filter or 'all'): exclude OLD matches
+            # For Test cricket: 7 days window (5-day matches + buffer)
+            # For other sports: 6 hours window
+            if sport == 'cricket':
+                seven_days_ago = now - timedelta(days=7)
+                seven_days_ago_str = seven_days_ago.isoformat().replace('+00:00', 'Z')
+                query['commence_time'] = {'$gte': seven_days_ago_str}
+            else:
+                six_hours_ago = now - timedelta(hours=6)
+                six_hours_ago_str = six_hours_ago.isoformat().replace('+00:00', 'Z')
+                query['commence_time'] = {'$gte': six_hours_ago_str}
         
         # Filter by sport if provided
         if sport:
