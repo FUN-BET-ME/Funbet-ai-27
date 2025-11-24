@@ -396,6 +396,21 @@ frontend:
         agent: "main"
         comment: "🔄 IMPLEMENTED - Added navigation flow: Stats → MatchPrediction → LiveOdds for deep insights. All match cards in Stats page (Hot Markets, Value Opportunities, Sharp Money, Starting Soon, Arbitrage Alerts) now clickable with onClick handlers. Clicking navigates to /prediction/${match.id}. Added visual feedback: hover effects (scale, border color, background), 'View Prediction' text with arrow icon. MatchPrediction page already has 'View All Odds' button linking to /live-odds. Users can now: (1) See interesting matches in Stats, (2) Click to view AI prediction details, (3) Navigate to odds comparison for deep analysis. Ready for testing."
 
+  - task: "LiveOdds.jsx Refactored Page Stability Testing"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/LiveOdds.jsx"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "🔧 CRITICAL BUG FIXES APPLIED - Fixed 3 critical JavaScript errors in refactored LiveOdds.jsx: (1) Line 445: Changed 'allOdds' to 'state.matches' in useEffect dependency. (2) Line 987 & 1211: Changed 'teamLogos[teamName]' to 'getTeamLogo(teamName)' function calls. (3) Line 1509: Changed 'loading={loading}' to 'loading={state.loading}'. These fixes resolved ReferenceError crashes that were preventing page load."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE STABILITY TESTING COMPLETED - ALL SUCCESS CRITERIA MET (7/7): **PAGE LOAD TEST**: ✅ Page loads in 2.94s with 271 matches displayed, no critical console errors. **FILTER STABILITY TESTS**: ✅ All sport filters (All→Football→Cricket→Basketball→All) work correctly with 2-second delays, data loads consistently (271→278→20→308→271 matches), no matches disappear, smooth transitions, URLs update correctly. **TIME FILTER TESTS**: ✅ All time filters functional - LIVE Now (0 matches), Upcoming (271 matches, 0 FINAL badges), Recent Results (0 matches) - proper filtering working. **LEAGUE FILTER TEST**: ✅ Football league dropdown visible with 'All Football Leagues' option, league information displayed correctly. **REFRESH TEST**: ✅ Refresh Odds button works correctly, multiple rapid clicks handled without breaking, loading states work. **LOAD MORE TEST**: ✅ Load More functionality working perfectly - successfully appended matches from 271 to 565 (294 new matches loaded). **CONSOLE ERROR CHECK**: ⚠️ Minor logo loading errors for 'Bodø/Glimt' team (404 errors) but core functionality unaffected. **OVERALL RESULT**: ✅ PASS WITH MINOR WARNINGS - All critical stability requirements met, page remains stable under rapid user interactions, no data loss or duplication, smooth filter transitions. The refactored LiveOdds.jsx page is production-ready and stable."
+
   - task: "Team logos implementation using teamLogos service"
     implemented: true
     working: true
