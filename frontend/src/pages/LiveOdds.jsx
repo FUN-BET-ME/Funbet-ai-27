@@ -1348,10 +1348,13 @@ const LiveOdds = () => {
                                     <button
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        setOddsSortBy(prev => ({
-                                          ...prev,
-                                          [matchId]: prev[matchId] === 'away' ? null : 'away'
-                                        }));
+                                        dispatch({
+                                          type: actionTypes.SET_ODDS_SORT,
+                                          payload: {
+                                            matchId,
+                                            sortBy: state.oddsSortBy[matchId] === 'away' ? null : 'away'
+                                          }
+                                        });
                                       }}
                                       className="hover:opacity-80 transition-opacity"
                                       title="Sort by Away odds (highest to lowest)"
