@@ -1292,15 +1292,18 @@ const LiveOdds = () => {
                                     <button
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        setOddsSortBy(prev => ({
-                                          ...prev,
-                                          [matchId]: prev[matchId] === 'home' ? null : 'home'
-                                        }));
+                                        dispatch({
+                                          type: actionTypes.SET_ODDS_SORT,
+                                          payload: {
+                                            matchId,
+                                            sortBy: state.oddsSortBy[matchId] === 'home' ? null : 'home'
+                                          }
+                                        });
                                       }}
                                       className="hover:opacity-80 transition-opacity"
                                       title="Sort by Home odds (highest to lowest)"
                                     >
-                                      {oddsSortBy[matchId] === 'home' ? (
+                                      {state.oddsSortBy[matchId] === 'home' ? (
                                         <ChevronDown className="w-5 h-5 text-purple-600" />
                                       ) : (
                                         <ChevronUp className="w-5 h-5 text-gray-400 opacity-50" />
