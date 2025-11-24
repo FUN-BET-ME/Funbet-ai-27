@@ -1418,12 +1418,12 @@ class OddsWorker:
             replace_existing=True
         )
         
-        # Job 10: Cleanup old stuck matches every hour
+        # Job 10: Cleanup old stuck matches every 15 minutes (catch finished matches quickly)
         self.scheduler.add_job(
             self.cleanup_stuck_matches,
-            trigger=IntervalTrigger(hours=1),
+            trigger=IntervalTrigger(minutes=15),
             id='cleanup_stuck_matches',
-            name='Cleanup old stuck matches every hour',
+            name='Cleanup stuck matches every 15 minutes',
             replace_existing=True
         )
         
