@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useReducer, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TrendingUp, RefreshCw, AlertCircle, ChevronDown, ChevronUp, Brain, Zap } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -9,6 +9,115 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { getTeamLogo, getCricketFlag } from '../services/teamLogos';
 import oddsTracker from '../services/oddsTracker';
 import axios from 'axios';
+
+// ============================================
+// REDUCER FOR CENTRALIZED STATE MANAGEMENT
+// ============================================
+const initialState = {
+  matches: [],
+  loading: false,
+  loadingMore: false,
+  hasMore: false,
+  lastUpdated: null,
+  error: null,
+  expandedMatches: {},
+  oddsSortBy: {},
+  expandedBookmakers: {},
+  teamLogos: {}
+};
+
+const actionTypes = {
+  FETCH_START: 'FETCH_START',
+  FETCH_SUCCESS: 'FETCH_SUCCESS',
+  FETCH_ERROR: 'FETCH_ERROR',
+  LOAD_MORE_START: 'LOAD_MORE_START',
+  LOAD_MORE_SUCCESS: 'LOAD_MORE_SUCCESS',
+  TOGGLE_MATCH: 'TOGGLE_MATCH',
+  SET_ODDS_SORT: 'SET_ODDS_SORT',
+  TOGGLE_BOOKMAKERS: 'TOGGLE_BOOKMAKERS',
+  CLEAR_MATCHES: 'CLEAR_MATCHES'
+};
+
+function matchesReducer(state, action) {
+  switch (action.type) {
+    case actionTypes.FETCH_START:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      };
+    
+    case actionTypes.FETCH_SUCCESS:
+      return {
+        ...state,
+        matches: action.payload.matches,
+        hasMore: action.payload.hasMore,
+        lastUpdated: new Date(),
+        loading: false,
+        loadingMore: false,
+        error: null
+      };
+    
+    case actionTypes.FETCH_ERROR:
+      return {
+        ...state,
+        loading: false,
+        loadingMore: false,
+        error: action.payload
+      };
+    
+    case actionTypes.LOAD_MORE_START:
+      return {
+        ...state,
+        loadingMore: true
+      };
+    
+    case actionTypes.LOAD_MORE_SUCCESS:
+      return {
+        ...state,
+        matches: [...state.matches, ...action.payload.matches],
+        hasMore: action.payload.hasMore,
+        loadingMore: false
+      };
+    
+    case actionTypes.TOGGLE_MATCH:
+      return {
+        ...state,
+        expandedMatches: {
+          ...state.expandedMatches,
+          [action.payload]: !state.expandedMatches[action.payload]
+        }
+      };
+    
+    case actionTypes.SET_ODDS_SORT:
+      return {
+        ...state,
+        oddsSortBy: {
+          ...state.oddsSortBy,
+          [action.payload.matchId]: action.payload.sortBy
+        }
+      };
+    
+    case actionTypes.TOGGLE_BOOKMAKERS:
+      return {
+        ...state,
+        expandedBookmakers: {
+          ...state.expandedBookmakers,
+          [action.payload]: !state.expandedBookmakers[action.payload]
+        }
+      };
+    
+    case actionTypes.CLEAR_MATCHES:
+      return {
+        ...state,
+        matches: [],
+        hasMore: false
+      };
+    
+    default:
+      return state;
+  }
+}
 
 const LiveOdds = () => {
   const location = useLocation();
