@@ -266,274 +266,123 @@ const LiveOdds = () => {
     basketball: '🏀'
   };
 
-  const handleRefresh = () => {
-    setRefreshKey(prev => prev + 1);
-  };
-
-  const toggleMatchExpansion = (matchId) => {
-    setExpandedMatches(prev => ({
-      ...prev,
-      [matchId]: !prev[matchId]
-    }));
-  };
-
-  // Fetch live scores from ESPN
-  const fetchScores = async () => {
-    try {
-      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/espn/scores`);
-      console.log('✅ ESPN Scores fetched:', response.data?.count || 0, 'matches');
-      return response.data?.scores || [];
-    } catch (error) {
-      console.error('Error fetching ESPN scores:', error);
-      return [];
+  // ============================================
+  // UNIFIED FETCH FUNCTION - Single source of truth
+  // ============================================
+  const fetchMatches = useCallback(async (options = {}) => {
+    const {
+      loadMore = false,
+      sportFilter = filter,
+      timeFilterParam = timeFilter,
+      leagueFilterParam = leagueFilter,
+      silent = false
+    } = options;
+    
+    // Cancel any pending request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
-  };
-
-  // Fetch historical odds for Recent Results (completed matches with IQ scores)
-  const fetchHistoricalOdds = async () => {
-    try {
-      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      // Build URL with sport filter
-      let apiURL = `${BACKEND_URL}/api/odds/all-cached?time_filter=recent&limit=100&include_scores=true&_t=${Date.now()}`;
-      
-      // Add sport parameter for backend filtering
-      if (filter !== 'all') {
-        if (filter === 'football') {
-          apiURL += '&sport=soccer';
-        } else if (filter === 'cricket') {
-          apiURL += '&sport=cricket';
-        } else if (filter === 'basketball') {
-          apiURL += '&sport=basketball';
-        }
-      }
-      
-      const response = await axios.get(apiURL, {
-        timeout: 30000 // 30 second timeout
-      });
-      const matches = response.data?.matches || [];
-      
-      // DEBUG: Check Santos match for verification data
-      const santosMatch = matches.find(m => m.home_team === 'Santos' || m.away_team === 'Santos');
-      if (santosMatch) {
-        console.log('🔍 SANTOS API DATA:', {
-          teams: `${santosMatch.home_team} vs ${santosMatch.away_team}`,
-          completed: santosMatch.completed,
-          hasFunbetIQ: !!santosMatch.funbet_iq,
-          prediction_correct: santosMatch.funbet_iq?.prediction_correct,
-          predicted_winner: santosMatch.funbet_iq?.predicted_winner
-        });
-      }
-      
-      return matches;
-    } catch (error) {
-      console.error('Error fetching historical odds:', error);
-      return [];
-    }
-  };
-
-  // Fetch in-play odds for Live In-Play filter
-  const fetchInPlayOdds = async () => {
-    try {
-      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.get(`${BACKEND_URL}/api/odds/inplay`, {
-        params: { regions: 'uk,eu,us,au', markets: 'h2h' },
-        timeout: 30000 // 30 second timeout
-      });
-      return response.data || [];
-    } catch (error) {
-      console.error('Error fetching in-play odds:', error);
-      return [];
-    }
-  };
-
-  // Helper to find matching score for a match
-  const findScoreForMatch = (match, scoresData) => {
-    if (!scoresData || scoresData.length === 0) return null;
     
-    // Find all matching scores for this match
-    const allMatches = scoresData.filter(score => {
-      const homeMatch = score.home_team?.toLowerCase() === match.home_team?.toLowerCase();
-      const awayMatch = score.away_team?.toLowerCase() === match.away_team?.toLowerCase();
-      return homeMatch && awayMatch;
-    });
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController();
     
-    if (allMatches.length === 0) return null;
-    
-    // Prefer matches with actual score data
-    const matchWithScores = allMatches.find(m => m.scores && m.scores.length > 0);
-    if (matchWithScores) return matchWithScores;
-    
-    // Fall back to first match
-    return allMatches[0];
-  };
-
-  // Fetch all odds - FETCH FROM DATABASE WITH SPORT FILTER
-  const fetchAllOdds = async (loadMore = false, currentFilter = filter, showLoading = true) => {
-    console.log('🚀 fetchAllOdds called with:', { loadMore, currentFilter, showLoading, allOddsLength: allOdds.length });
-    
+    // Dispatch loading state
     if (loadMore) {
-      setLoadingMore(true);
-    } else if (showLoading) {
-      setLoading(true);
+      dispatch({ type: actionTypes.LOAD_MORE_START });
+    } else if (!silent) {
+      dispatch({ type: actionTypes.FETCH_START });
     }
     
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      const currentSkip = loadMore ? state.matches.length : 0;
+      const limit = 50;
       
-      // Optimized pagination - load matches in chunks for better performance
-      const currentSkip = loadMore ? allOdds.length : 0;
-      const limit = 50; // Load 50 matches at a time for optimal performance
-
-      // Map frontend filter to backend sport_key pattern - FOOTBALL, CRICKET & BASKETBALL
+      // Map sport filter to backend format
       const sportKeyMap = {
         'football': 'soccer',
         'cricket': 'cricket',
         'basketball': 'basketball'
       };
       
-      const sportFilter = currentFilter !== 'all' ? sportKeyMap[currentFilter] : null;
+      const mappedSport = sportFilter !== 'all' ? sportKeyMap[sportFilter] : null;
       
-      console.log('🎯 CRITICAL DEBUG - About to fetch:', { 
-        currentFilter, 
-        sportFilter, 
-        willSendToBackend: sportFilter ? `sport=${sportFilter}` : 'NO SPORT FILTER',
-        limit, 
-        currentSkip 
-      });
-
-      // Build URL with query params manually
-      let apiURL = `${BACKEND_URL}/api/odds/all-cached?limit=${limit}&skip=${currentSkip}`;
+      // Build API URL based on time filter
+      let apiURL;
       
-      // Add time_filter for Recent Results (completed matches from last 48 hours)
-      if (timeFilter === 'recent-results') {
-        apiURL += '&time_filter=recent';
-      }
-      // NO TIME FILTER for 'live-upcoming' - we want BOTH live and upcoming matches!
-      // The time_filter parameter defaults to 'all' (both live and upcoming)
-      
-      // Add sport filter if specified
-      if (sportFilter) {
-        apiURL += `&sport=${sportFilter}`;
-        console.log('✅ Fetching with sport filter:', sportFilter);
+      if (timeFilterParam === 'inplay') {
+        // Live matches endpoint
+        apiURL = `${BACKEND_URL}/api/odds/inplay?regions=uk,eu,us,au&markets=h2h`;
+      } else if (timeFilterParam === 'recent-results') {
+        // Recent completed matches
+        apiURL = `${BACKEND_URL}/api/odds/all-cached?time_filter=recent&limit=100&include_scores=true`;
       } else {
-        console.log('⚠️  Fetching ALL sports');
+        // Upcoming matches
+        apiURL = `${BACKEND_URL}/api/odds/all-cached?limit=${limit}&skip=${currentSkip}`;
       }
       
-      // CRITICAL: Add league filter to backend (Premier League, La Liga, etc)
-      if (leagueFilter && leagueFilter !== 'all') {
-        apiURL += `&league=${leagueFilter}`;
-        console.log('✅ Fetching with league filter:', leagueFilter);
+      // Add sport filter
+      if (mappedSport) {
+        const separator = apiURL.includes('?') ? '&' : '?';
+        apiURL += `${separator}sport=${mappedSport}`;
       }
-
-      // Add cache-busting timestamp
+      
+      // Add league filter (backend does the filtering)
+      if (leagueFilterParam && leagueFilterParam !== 'all') {
+        apiURL += `&league=${leagueFilterParam}`;
+      }
+      
+      // Cache busting
       apiURL += `&_t=${Date.now()}`;
-
-      console.log('📡 API URL:', apiURL);
-      const response = await axios.get(apiURL, { 
-        timeout: 30000, // 30 second timeout
-        headers: {
-          'Cache-Control': 'no-cache'
-        }
+      
+      console.log('🚀 Unified fetch:', { timeFilterParam, sportFilter, leagueFilterParam, apiURL });
+      
+      const response = await axios.get(apiURL, {
+        timeout: 30000,
+        signal: abortControllerRef.current.signal,
+        headers: { 'Cache-Control': 'no-cache' }
       });
       
-      console.log('📥 API Response received:', {
-        matchesCount: response.data?.matches?.length || 0,
-        firstMatchSportKey: response.data?.matches?.[0]?.sport_key || 'NONE',
-        firstMatchTeams: response.data?.matches?.[0] ? `${response.data.matches[0].home_team} vs ${response.data.matches[0].away_team}` : 'NO MATCHES'
-      });
+      const matches = response.data?.matches || response.data || [];
+      const hasMore = timeFilterParam === 'live-upcoming' && matches.length >= limit;
       
-      console.log('🔎 First 3 matches sport_keys:', response.data?.matches?.slice(0,3).map(m => m.sport_key) || []);
+      console.log('✅ Fetch complete:', matches.length, 'matches');
       
-      const responseData = response.data || {};
-      const newMatches = responseData.matches || [];
-      
-      console.log('💾 Data merge decision:', {
-        loadMore,
-        currentOddsLength: allOdds.length,
-        newMatchesLength: newMatches.length,
-        loading,
-        willMerge: allOdds.length > 0 && !loading,
-        willReplace: !(allOdds.length > 0 && !loading) && !loadMore
-      });
-      
-      // Smart upsert: merge new data with existing without clearing UI
       if (loadMore) {
-        // Loading more: append to existing
-        setAllOdds(prev => [...prev, ...newMatches]);
-        console.log('➕ Appended matches, new total:', allOdds.length + newMatches.length);
-      } else if (allOdds.length > 0 && !loading) {
-        // Background refresh: intelligently merge without disruption
-        console.log('🔄 Smart merge mode: Preserving', allOdds.length, 'existing matches, updating with', newMatches.length, 'new');
-        
-        // CRITICAL FIX: Filter out completed matches for Upcoming tab
-        let filteredMatches = newMatches;
-        if (timeFilter !== 'recent-results' && timeFilter !== 'inplay') {
-          // Upcoming tab: exclude completed matches
-          filteredMatches = newMatches.filter(match => !match.completed && !match.live_score?.completed);
-          console.log(`🔎 Filtered out completed matches in merge: ${newMatches.length} → ${filteredMatches.length}`);
-        }
-        
-        setAllOdds(prev => {
-          const merged = [...prev];
-          const existingIds = new Set(prev.map(m => m.id));
-          
-          // Update existing matches and add new ones
-          filteredMatches.forEach(newMatch => {
-            const existingIndex = merged.findIndex(m => m.id === newMatch.id);
-            if (existingIndex >= 0) {
-              // Update existing match (odds may have changed)
-              merged[existingIndex] = newMatch;
-            } else if (!existingIds.has(newMatch.id)) {
-              // Add new match
-              merged.push(newMatch);
-            }
-          });
-          
-          // CRITICAL FIX: Remove any completed matches from merged array for Upcoming tab
-          const finalMerged = timeFilter !== 'recent-results' && timeFilter !== 'inplay'
-            ? merged.filter(m => !m.completed && !m.live_score?.completed)
-            : merged;
-          
-          console.log('✅ Smart merge complete: Updated/added matches, total:', finalMerged.length);
-          return finalMerged;
+        dispatch({
+          type: actionTypes.LOAD_MORE_SUCCESS,
+          payload: { matches, hasMore }
         });
       } else {
-        // Initial load or explicit refresh: replace all
-        console.log('🔄 Full replace mode: Setting', newMatches.length, 'matches (was:', allOdds.length, ')');
-        
-        // CRITICAL FIX: Filter out completed matches for Upcoming tab
-        let filteredMatches = newMatches;
-        if (timeFilter !== 'recent-results' && timeFilter !== 'inplay') {
-          // Upcoming tab: exclude completed matches
-          filteredMatches = newMatches.filter(match => !match.completed && !match.live_score?.completed);
-          console.log(`🔎 Filtered out completed matches: ${newMatches.length} → ${filteredMatches.length}`);
-        }
-        
-        // CRITICAL FIX: Only replace if we have new data OR it's initial load
-        if (filteredMatches.length > 0 || allOdds.length === 0) {
-          setAllOdds(filteredMatches);
-          console.log('✅ Replace complete');
-        } else {
-          console.log('⚠️ API returned no matches, keeping existing', allOdds.length, 'matches');
-        }
+        dispatch({
+          type: actionTypes.FETCH_SUCCESS,
+          payload: { matches, hasMore }
+        });
       }
       
-      // Check if there are more matches (if we got full limit, there might be more)
-      setHasMore(newMatches.length >= limit);
-      setLastUpdated(new Date());
-      
-      console.log(`✅ SUCCESS: Loaded ${newMatches.length} matches for filter="${currentFilter}"`);
-      
-      // IQ scores are now bundled with odds data - no separate fetch needed!
     } catch (error) {
-      console.error('❌ ERROR fetching odds:', error);
-      // Silently keep existing data - no annoying banners
-    } finally {
-      console.log('🏁 FINALLY BLOCK: Setting loading=false');
-      setLoading(false);
-      setLoadingMore(false);
+      if (error.name === 'CanceledError') {
+        console.log('⏹️ Request cancelled');
+        return;
+      }
+      
+      console.error('❌ Fetch error:', error);
+      dispatch({
+        type: actionTypes.FETCH_ERROR,
+        payload: error.message
+      });
     }
+  }, [filter, timeFilter, leagueFilter, state.matches.length]);
+  
+  // ============================================
+  // SIMPLE HELPER FUNCTIONS
+  // ============================================
+  const handleRefresh = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
+  const toggleMatchExpansion = (matchId) => {
+    dispatch({ type: actionTypes.TOGGLE_MATCH, payload: matchId });
   };
   
   // Removed logo fetching for speed - using sport icons instead
