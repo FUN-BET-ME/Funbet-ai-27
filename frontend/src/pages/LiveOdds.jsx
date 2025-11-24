@@ -385,133 +385,60 @@ const LiveOdds = () => {
     dispatch({ type: actionTypes.TOGGLE_MATCH, payload: matchId });
   };
   
-  // Removed logo fetching for speed - using sport icons instead
-  // Removed fetchAIPredictions - IQ scores now come bundled with odds data
-
-  // Load data on mount and when filters change
-  // Load data when filter changes
+  // ============================================
+  // SIMPLIFIED useEffects - No race conditions
+  // ============================================
+  
+  // Main effect: Fetch when filters change (with debouncing)
   useEffect(() => {
-    console.log('🔥 FILTER or TIME FILTER CHANGED useEffect triggered, filter=', filter, 'timeFilter=', timeFilter);
-    
-    // Only show loading if we don't have data
-    const shouldShowLoading = allOdds.length === 0;
-    
-    // Fetch data based on time filter
-    if (timeFilter === 'inplay') {
-      // Fetch in-play matches
-      console.log('Fetching in-play matches...');
-      if (shouldShowLoading) setLoading(true);
-      fetchInPlayOdds().then(data => {
-        console.log('🔴 In-play data received:', data.length, 'matches');
-        console.log('🔴 First match:', data[0]?.home_team, 'vs', data[0]?.away_team);
-        console.log('🔴 First match has live_score?', !!data[0]?.live_score);
-        console.log('🔴 First match home_score:', data[0]?.live_score?.home_score);
-        
-        // Don't filter here - let filteredOddsByLeague useMemo handle it
-        setAllOdds(data);
-        setHasMore(false); // CRITICAL: Live matches are all loaded at once, no pagination
-        console.log('✅ Updated allOdds state with', data.length, 'in-play matches');
-        setLoading(false);
-      }).catch(error => {
-        console.error('❌ Error fetching in-play odds:', error);
-        setLoading(false);
-        setAllOdds([]); // Clear data on error
-        setHasMore(false);
-      });
-    } else if (timeFilter === 'recent-results') {
-      // Fetch recent completed matches (last 48 hours)
-      console.log('🔄 Fetching recent results (completed matches from last 48 hours)...');
-      console.log('🔄 Current filter:', filter);
-      if (shouldShowLoading) setLoading(true);
-      fetchHistoricalOdds().then(data => {
-        console.log('📊 Historical data received:', data.length, 'matches');
-        if (data.length > 0) {
-          console.log('📊 First match:', data[0].home_team, 'vs', data[0].away_team);
-          console.log('📊 First match has funbet_iq:', !!data[0].funbet_iq);
-          console.log('📊 First match draw_iq:', data[0].funbet_iq?.draw_iq);
-        }
-        
-        // Backend already filters by sport via API parameter, no need to filter again
-        setAllOdds(data);
-        setHasMore(false); // CRITICAL: Recent results are all loaded at once, no pagination
-        console.log('✅ Set allOdds with', data.length, 'recent results');
-        setLoading(false);
-      }).catch(error => {
-        console.error('❌ Error fetching historical odds:', error);
-        setLoading(false);
-        setAllOdds([]); // Clear data on error
-        setHasMore(false);
-      });
-    } else {
-      // Fetch upcoming matches (default)
-      console.log('Fetching upcoming matches...', 'shouldShowLoading:', shouldShowLoading);
-      fetchAllOdds(false, filter, shouldShowLoading);
+    // Clear any pending debounce
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
     }
-  }, [filter, timeFilter]);
-
-  // Load data when manually refreshed
-  useEffect(() => {
-    if (refreshKey > 0) { // Skip initial render
-      const isBackgroundRefresh = refreshKey > 1; // First refresh is manual, rest are auto
-      
-      if (timeFilter === 'inplay') {
-        // Refresh in-play matches - let filteredOddsByLeague handle sport filtering
-        fetchInPlayOdds().then(data => {
-          setAllOdds(data);
-          if (!isBackgroundRefresh) setLoading(false);
-        }).catch(error => {
-          console.error('❌ Error refreshing in-play odds:', error);
-          if (!isBackgroundRefresh) setLoading(false);
-          setAllOdds([]); // Clear data on error
-        });
-      } else if (timeFilter === 'recent-results') {
-        // Refresh recent results
-        fetchHistoricalOdds().then(data => {
-          let filteredData = data;
-          if (filter === 'football') {
-            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('soccer'));
-          } else if (filter === 'cricket') {
-            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('cricket'));
-          } else if (filter === 'basketball') {
-            filteredData = data.filter(match => match.sport_key && match.sport_key.startsWith('basketball'));
-          }
-          
-          // Only show COMPLETED matches (check both root and live_score)
-          filteredData = filteredData.filter(match => 
-            match.completed === true || match.live_score?.completed === true
-          );
-          
-          setAllOdds(filteredData);
-          if (!isBackgroundRefresh) setLoading(false);
-        }).catch(error => {
-          console.error('❌ Error refreshing historical odds:', error);
-          if (!isBackgroundRefresh) setLoading(false);
-        });
-      } else {
-        // Refresh upcoming matches - silent refresh for background updates
-        fetchAllOdds(false, filter, !isBackgroundRefresh);
+    
+    // Debounce filter changes to prevent rapid successive fetches
+    debounceTimerRef.current = setTimeout(() => {
+      console.log('🔄 Filters changed, fetching data...');
+      dispatch({ type: actionTypes.CLEAR_MATCHES });
+      fetchMatches({ loadMore: false, silent: false });
+    }, 300);
+    
+    // Cleanup
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
       }
+    };
+  }, [filter, timeFilter, leagueFilter]);
+  
+  // Refresh effect: Handle manual refreshes
+  useEffect(() => {
+    if (refreshKey > 0) {
+      console.log('🔄 Manual refresh triggered');
+      fetchMatches({ loadMore: false, silent: refreshKey > 1 });
     }
   }, [refreshKey]);
-
-  // No localStorage caching - always fetch fresh data for reliability
-
-  // IQ scores are now fetched directly in fetchAllOdds after successful odds load
-  // No useEffect needed - avoids React state batching/closure issues
-
-  // Auto-refresh for live scores and odds
+  
+  // Auto-refresh for "all" sports filter
   useEffect(() => {
     if (filter === 'all') {
-      const refreshInterval = 300000; // 5 minutes
-      
       const intervalId = setInterval(() => {
-        console.log(`Auto-refreshing ${timeFilter} odds and scores...`);
+        console.log('⏰ Auto-refresh...');
         setRefreshKey(prev => prev + 1);
-      }, refreshInterval);
-
+      }, 300000); // 5 minutes
+      
       return () => clearInterval(intervalId);
     }
-  }, [filter, timeFilter]);
+  }, [filter]);
+  
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   // Scroll to specific match if hash is present in URL
   useEffect(() => {
