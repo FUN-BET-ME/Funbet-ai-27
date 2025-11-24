@@ -909,16 +909,9 @@ const OddsTable = ({ sportKeys, sportTitle, usePriorityEndpoint = false, refresh
                                 return (
                                   <td key={name} className="py-2 px-0.5 sm:py-3 sm:px-4 text-center w-[25%]">
                                     <div className="flex items-center justify-center gap-1">
-                                      <a 
-                                        href="https://funbet.me" 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="inline-block cursor-pointer"
-                                      >
-                                        <span className="inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-black text-xs sm:text-base bg-[#FFD700] text-[#2E004F] hover:bg-[#FFD700]/90 transition-all hover:scale-105 shadow-sm">
-                                          {funbetSuperBoostOdds[name] || '-'}
-                                        </span>
-                                      </a>
+                                      <span className="inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-black text-xs sm:text-base bg-[#FFD700] text-[#2E004F] shadow-sm">
+                                        {funbetSuperBoostOdds[name] || '-'}
+                                      </span>
                                       <button
                                         onClick={(e) => {
                                           e.preventDefault();
