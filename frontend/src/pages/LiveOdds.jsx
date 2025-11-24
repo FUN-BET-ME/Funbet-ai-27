@@ -746,10 +746,7 @@ const LiveOdds = () => {
                     : 'Try adjusting your filters or refreshing the page.'}
                 </p>
                 <button
-                  onClick={() => {
-                    console.log('🔄 Manual refresh triggered');
-                    fetchAllOdds(false, filter, true);
-                  }}
+                  onClick={handleRefresh}
                   className="px-6 py-2 bg-[#FFD700] text-[#2E004F] rounded-lg font-semibold hover:bg-[#FFD700]/90"
                 >
                   Refresh Odds
