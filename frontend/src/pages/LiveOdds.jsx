@@ -724,12 +724,12 @@ const LiveOdds = () => {
         {/* All Sports Combined View */}
         {filter === 'all' && (
           <div className="space-y-4">
-            {loading ? (
+            {state.loading ? (
               <div className="text-center py-12">
                 <RefreshCw className="w-8 h-8 text-[#FFD700] animate-spin mx-auto mb-4" />
                 <p className="text-gray-400">Loading odds...</p>
               </div>
-            ) : allOdds.length === 0 ? (
+            ) : state.matches.length === 0 ? (
               <div className="text-center py-12 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-xl p-8 border border-purple-500/20">
                 <div className="text-6xl mb-4">
                   {timeFilter === 'inplay' ? '🔴' : 
