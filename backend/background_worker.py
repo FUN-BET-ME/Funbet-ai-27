@@ -1332,6 +1332,80 @@ class OddsWorker:
         except Exception as e:
             logger.error(f"❌ Error in historical data build job: {e}")
     
+    async def backfill_completion_status_from_api(self):
+        """Actively fetch completion status from APIs and update database"""
+        try:
+            logger.info("🔄 Backfilling completion status from APIs...")
+            
+            from api_football_service import fetch_api_football_live_scores, fetch_api_basketball_live_scores
+            
+            # Fetch live scores from APIs (includes recently completed)
+            football_scores = await fetch_api_football_live_scores()
+            basketball_scores = await fetch_api_basketball_live_scores()
+            
+            all_scores = football_scores + basketball_scores
+            
+            logger.info(f"📥 Fetched {len(all_scores)} matches from APIs")
+            
+            updated = 0
+            completed_count = 0
+            
+            # Process each score from API
+            for score in all_scores:
+                home = score.get('home_team', '').lower()
+                away = score.get('away_team', '').lower()
+                is_completed = score.get('completed', False)
+                
+                # Find matching match in database
+                db_match = await self.db.odds_cache.find_one({
+                    '$or': [
+                        {
+                            'home_team': {'$regex': home, '$options': 'i'},
+                            'away_team': {'$regex': away, '$options': 'i'}
+                        },
+                        {
+                            'home_team': {'$regex': away, '$options': 'i'},
+                            'away_team': {'$regex': home, '$options': 'i'}
+                        }
+                    ],
+                    'commence_time': {
+                        '$gte': (datetime.now(timezone.utc) - timedelta(hours=6)).isoformat(),
+                        '$lt': (datetime.now(timezone.utc) + timedelta(hours=2)).isoformat()
+                    }
+                })
+                
+                if db_match:
+                    # Update match with live score data
+                    update_data = {
+                        'live_score': {
+                            'home_score': score.get('home_score', '0'),
+                            'away_score': score.get('away_score', '0'),
+                            'match_status': score.get('match_status', ''),
+                            'is_live': score.get('is_live', False),
+                            'completed': is_completed,
+                            'last_update': datetime.now(timezone.utc).isoformat()
+                        }
+                    }
+                    
+                    # If completed, also set root completed flag
+                    if is_completed:
+                        update_data['completed'] = True
+                        update_data['completed_at'] = datetime.now(timezone.utc).isoformat()
+                        completed_count += 1
+                    
+                    result = await self.db.odds_cache.update_one(
+                        {'id': db_match['id']},
+                        {'$set': update_data}
+                    )
+                    
+                    if result.modified_count > 0:
+                        updated += 1
+            
+            logger.info(f"✅ Backfill complete: {updated} matches updated, {completed_count} marked as completed")
+                
+        except Exception as e:
+            logger.error(f"Error in backfill: {e}")
+    
     async def cleanup_stuck_matches(self):
         """Clean up matches stuck with is_live=True flag"""
         try:
@@ -1343,7 +1417,6 @@ class OddsWorker:
             cleaned = 0
             
             # ONLY clean matches stuck with is_live=True (started >3 hours ago)
-            # Do NOT use time-based assumptions for matches without live_score
             stuck_live_matches = await self.db.odds_cache.find({
                 'live_score.is_live': True,
                 'commence_time': {'$lt': three_hours_ago.isoformat()}
