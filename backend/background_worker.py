@@ -1339,7 +1339,6 @@ class OddsWorker:
             
             now = datetime.now(timezone.utc)
             three_hours_ago = now - timedelta(hours=3)
-            six_hours_ago = now - timedelta(hours=6)
             seven_days_ago = now - timedelta(days=7)
             
             cleaned = 0
