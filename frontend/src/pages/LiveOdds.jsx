@@ -1069,7 +1069,41 @@ const LiveOdds = () => {
                                   );
                                 })()
                               ) : (
-                                <span className="text-gray-400 text-xs sm:text-sm font-medium px-2 flex-shrink-0">vs</span>
+                                <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                                  <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
+                                  {/* Show date and time for upcoming matches */}
+                                  {(() => {
+                                    try {
+                                      const matchDate = new Date(match.commence_time);
+                                      const now = new Date();
+                                      const hoursUntil = (matchDate - now) / (1000 * 60 * 60);
+                                      
+                                      // Only show for upcoming matches (future)
+                                      if (hoursUntil > 0) {
+                                        const dateStr = matchDate.toLocaleDateString('en-US', { 
+                                          month: 'short', 
+                                          day: 'numeric',
+                                          year: matchDate.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+                                        });
+                                        const timeStr = matchDate.toLocaleTimeString('en-US', { 
+                                          hour: 'numeric', 
+                                          minute: '2-digit',
+                                          hour12: true 
+                                        });
+                                        
+                                        return (
+                                          <div className="flex flex-col items-center gap-0.5 px-2 py-1 bg-[#2E004F]/30 rounded border border-purple-500/20">
+                                            <span className="text-[#FFD700] text-xs font-semibold">{dateStr}</span>
+                                            <span className="text-gray-400 text-xs">{timeStr}</span>
+                                          </div>
+                                        );
+                                      }
+                                    } catch (e) {
+                                      return null;
+                                    }
+                                    return null;
+                                  })()}
+                                </div>
                               )}
                               
                               <span className="text-white font-semibold text-right text-base sm:text-lg flex-1 overflow-wrap-anywhere leading-tight">{awayTeam}</span>
