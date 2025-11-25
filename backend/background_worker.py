@@ -1333,17 +1333,17 @@ class OddsWorker:
             logger.error(f"❌ Error in historical data build job: {e}")
     
     async def cleanup_stuck_matches(self):
-        """Clean up old matches - both stuck live matches and old untracked matches"""
+        """Clean up matches stuck with is_live=True flag"""
         try:
-            logger.info("🧹 Cleaning up stuck and old matches...")
+            logger.info("🧹 Cleaning up stuck live matches...")
             
             now = datetime.now(timezone.utc)
             three_hours_ago = now - timedelta(hours=3)
-            seven_days_ago = now - timedelta(days=7)
             
             cleaned = 0
             
-            # 1. Clean matches stuck with is_live=True (started >3 hours ago)
+            # ONLY clean matches stuck with is_live=True (started >3 hours ago)
+            # Do NOT use time-based assumptions for matches without live_score
             stuck_live_matches = await self.db.odds_cache.find({
                 'live_score.is_live': True,
                 'commence_time': {'$lt': three_hours_ago.isoformat()}
@@ -1363,37 +1363,7 @@ class OddsWorker:
                 cleaned += 1
             
             if cleaned > 0:
-                logger.info(f"✅ Cleaned {cleaned} stuck live matches (started >3 hours ago)")
-            
-            # 2. Clean OLD matches without live_score (never tracked by APIs)
-            # These are matches that started >3 hours ago but have no live score data
-            # Mark them as completed since most matches finish within 2-2.5 hours
-            old_untracked_matches = await self.db.odds_cache.find({
-                'commence_time': {'$lt': three_hours_ago.isoformat()},
-                'completed': {'$ne': True},
-                '$or': [
-                    {'live_score': {'$exists': False}},
-                    {'live_score.completed': {'$ne': True}}
-                ],
-                # Exclude Test cricket (5-day matches)
-                'sport_key': {'$not': {'$regex': 'cricket_test'}}
-            }).to_list(length=200)
-            
-            old_cleaned = 0
-            for match in old_untracked_matches:
-                await self.db.odds_cache.update_one(
-                    {'id': match['id']},
-                    {'$set': {
-                        'completed': True,
-                        'completed_at': now.isoformat(),
-                        'cleaned_up_at': now.isoformat(),
-                        'cleanup_reason': 'No live score data and started >6 hours ago'
-                    }}
-                )
-                old_cleaned += 1
-            
-            if old_cleaned > 0:
-                logger.info(f"✅ Cleaned {old_cleaned} old untracked matches (started >3 hours ago, no scores)")
+                logger.info(f"✅ Cleaned {cleaned} stuck live matches (is_live=True but started >3 hours ago)")
                 
         except Exception as e:
             logger.error(f"Error in cleanup: {e}")
