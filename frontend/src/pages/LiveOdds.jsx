@@ -757,7 +757,25 @@ const LiveOdds = () => {
                 {(() => {
                   // Backend already filtered - minimal client-side filtering
                   let filteredMatches = filteredOddsByLeague.filter(match => {
-                    return match.bookmakers && match.bookmakers.length > 0;
+                    // Must have bookmakers
+                    if (!match.bookmakers || match.bookmakers.length === 0) {
+                      return false;
+                    }
+                    
+                    // CRITICAL: Filter by time section
+                    const isLive = match.live_score?.is_live === true;
+                    const isCompleted = match.completed === true || match.live_score?.completed === true;
+                    
+                    if (timeFilter === 'inplay') {
+                      // LIVE Now: Only show live matches
+                      return isLive && !isCompleted;
+                    } else if (timeFilter === 'recent-results') {
+                      // Recent Results: Only show completed matches
+                      return isCompleted;
+                    } else {
+                      // Upcoming (30 Days): Only show matches that are NOT completed and NOT live
+                      return !isCompleted && !isLive;
+                    }
                   });
                   
                   // Show skeleton loaders while loading
