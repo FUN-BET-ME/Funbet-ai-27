@@ -1395,19 +1395,6 @@ class OddsWorker:
             
             if old_cleaned > 0:
                 logger.info(f"✅ Cleaned {old_cleaned} old untracked matches (started >6 hours ago, no scores)")
-            
-            # 3. Delete very old completed matches (>7 days old) to keep DB clean
-            very_old = await self.db.odds_cache.count_documents({
-                'completed': True,
-                'commence_time': {'$lt': seven_days_ago.isoformat()}
-            })
-            
-            if very_old > 0:
-                result = await self.db.odds_cache.delete_many({
-                    'completed': True,
-                    'commence_time': {'$lt': seven_days_ago.isoformat()}
-                })
-                logger.info(f"🗑️ Deleted {result.deleted_count} very old matches (>7 days)")
                 
         except Exception as e:
             logger.error(f"Error in cleanup: {e}")
