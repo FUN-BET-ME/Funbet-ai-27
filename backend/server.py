@@ -795,35 +795,10 @@ async def get_inplay_odds():
             
             logger.info(f"✅ inplay: {len(matches)} matches, {iq_count} with IQ predictions")
         
-        # STRICT FILTERING: Only show matches that are ACTUALLY LIVE NOW
-        live_matches = []
-        for m in matches:
-            live_score = m.get('live_score', {})
-            
-            # Skip if explicitly marked as completed
-            if live_score.get('completed') or m.get('completed'):
-                continue
-            
-            # Skip if match status indicates completion
-            match_status = live_score.get('match_status', '').upper()
-            # FT = Full Time, AET = After Extra Time, PEN = Penalties
-            # Keep 90' and 90+X' as they're still live (injury time)
-            if match_status in ['FT', 'FINAL', 'FINISHED', 'AET', 'PEN']:
-                continue
-            
-            # Check if match is recent enough to be live
-            commence_time = datetime.fromisoformat(m.get('commence_time', '').replace('Z', '+00:00'))
-            hours_since_start = (now - commence_time).total_seconds() / 3600
-            
-            # Skip matches that started >4 hours ago (no normal match lasts >4 hours)
-            if hours_since_start > 4:
-                continue
-            
-            # Match passed all filters - it's live
-            live_matches.append(m)
-        
-        logger.info(f"✅ In-play matches: {len(live_matches)} live (filtered from {len(matches)} candidates)")
-        return live_matches
+        # USE API STATUS ONLY - NO TIME-BASED ASSUMPTIONS!
+        # API already tells us is_live: True/False, just trust it
+        logger.info(f"✅ In-play matches: {len(matches)} live matches from database")
+        return matches
         
     except Exception as e:
         logger.error(f"Error fetching in-play odds: {e}")
