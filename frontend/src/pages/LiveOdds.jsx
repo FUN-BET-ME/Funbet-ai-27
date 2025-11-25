@@ -1097,13 +1097,13 @@ const LiveOdds = () => {
                                       const hoursUntil = (matchDate - now) / (1000 * 60 * 60);
                                       
                                       if (hoursUntil > 0) {
-                                        // Future match: Show date and time
-                                        const dateStr = matchDate.toLocaleDateString('en-US', { 
+                                        // Future match: Show date and time in USER'S LOCAL TIMEZONE
+                                        const dateStr = matchDate.toLocaleDateString(undefined, { 
                                           month: 'short', 
                                           day: 'numeric',
                                           year: matchDate.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
                                         });
-                                        const timeStr = matchDate.toLocaleTimeString('en-US', { 
+                                        const timeStr = matchDate.toLocaleTimeString(undefined, { 
                                           hour: 'numeric', 
                                           minute: '2-digit',
                                           hour12: true 
