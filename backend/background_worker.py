@@ -1474,6 +1474,15 @@ class OddsWorker:
             replace_existing=True
         )
         
+        # Job 3b: Backfill completion status from APIs every 3 minutes
+        self.scheduler.add_job(
+            self.backfill_completion_status_from_api,
+            trigger=IntervalTrigger(minutes=3),
+            id='backfill_completion',
+            name='Backfill completion status from APIs every 3 minutes',
+            replace_existing=True
+        )
+        
         # Job 4: Calculate FunBet IQ every 10 minutes
         self.scheduler.add_job(
             self.calculate_funbet_iq_job,
