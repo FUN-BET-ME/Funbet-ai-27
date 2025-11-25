@@ -1366,10 +1366,10 @@ class OddsWorker:
                 logger.info(f"✅ Cleaned {cleaned} stuck live matches (started >3 hours ago)")
             
             # 2. Clean OLD matches without live_score (never tracked by APIs)
-            # These are matches that started >6 hours ago but have no live score data
-            # Mark them as completed since they're clearly finished
+            # These are matches that started >3 hours ago but have no live score data
+            # Mark them as completed since most matches finish within 2-2.5 hours
             old_untracked_matches = await self.db.odds_cache.find({
-                'commence_time': {'$lt': six_hours_ago.isoformat()},
+                'commence_time': {'$lt': three_hours_ago.isoformat()},
                 'completed': {'$ne': True},
                 '$or': [
                     {'live_score': {'$exists': False}},
