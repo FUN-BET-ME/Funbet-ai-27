@@ -807,13 +807,8 @@ async def get_inplay_odds():
             # Skip if match status indicates completion
             match_status = live_score.get('match_status', '').upper()
             # FT = Full Time, AET = After Extra Time, PEN = Penalties
-            # 90' = 90 minutes (match finished but not yet marked FT)
-            # 90+X' = 90 minutes + injury time (still finishing)
+            # Keep 90' and 90+X' as they're still live (injury time)
             if match_status in ['FT', 'FINAL', 'FINISHED', 'AET', 'PEN']:
-                continue
-            
-            # Check for 90' without + (match at full time, about to end)
-            if match_status == "90'":
                 continue
             
             # Check if match is recent enough to be live
