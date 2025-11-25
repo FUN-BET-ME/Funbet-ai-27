@@ -1356,16 +1356,21 @@ class OddsWorker:
                 away = score.get('away_team', '').lower()
                 is_completed = score.get('completed', False)
                 
-                # Find matching match in database
+                # Extract key words from team names for flexible matching
+                # Remove common suffixes like FC, CF, etc.
+                home_key = home.split()[0] if home else ''
+                away_key = away.split()[0] if away else ''
+                
+                # Find matching match in database using flexible team name matching
                 db_match = await self.db.odds_cache.find_one({
                     '$or': [
                         {
-                            'home_team': {'$regex': home, '$options': 'i'},
-                            'away_team': {'$regex': away, '$options': 'i'}
+                            'home_team': {'$regex': home_key, '$options': 'i'},
+                            'away_team': {'$regex': away_key, '$options': 'i'}
                         },
                         {
-                            'home_team': {'$regex': away, '$options': 'i'},
-                            'away_team': {'$regex': home, '$options': 'i'}
+                            'home_team': {'$regex': away_key, '$options': 'i'},
+                            'away_team': {'$regex': home_key, '$options': 'i'}
                         }
                     ],
                     'commence_time': {
