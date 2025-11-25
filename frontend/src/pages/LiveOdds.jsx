@@ -1089,15 +1089,15 @@ const LiveOdds = () => {
                               ) : (
                                 <div className="flex flex-col items-center gap-1 flex-shrink-0">
                                   <span className="text-gray-400 text-xs sm:text-sm font-medium px-2">vs</span>
-                                  {/* Show date and time for upcoming matches */}
+                                  {/* Show date and time for upcoming matches, or status for started matches */}
                                   {(() => {
                                     try {
                                       const matchDate = new Date(match.commence_time);
                                       const now = new Date();
                                       const hoursUntil = (matchDate - now) / (1000 * 60 * 60);
                                       
-                                      // Only show for upcoming matches (future)
                                       if (hoursUntil > 0) {
+                                        // Future match: Show date and time
                                         const dateStr = matchDate.toLocaleDateString('en-US', { 
                                           month: 'short', 
                                           day: 'numeric',
@@ -1113,6 +1113,16 @@ const LiveOdds = () => {
                                           <div className="flex flex-col items-center gap-0.5 px-2 py-1 bg-[#2E004F]/30 rounded border border-purple-500/20">
                                             <span className="text-[#FFD700] text-xs font-semibold">{dateStr}</span>
                                             <span className="text-gray-400 text-xs">{timeStr}</span>
+                                          </div>
+                                        );
+                                      } else if (hoursUntil > -3) {
+                                        // Started within last 3 hours but no live score data: Show "Started" status
+                                        const hoursAgo = Math.abs(hoursUntil);
+                                        const startedText = hoursAgo < 1 ? 'Just started' : `Started ${Math.floor(hoursAgo)}h ago`;
+                                        
+                                        return (
+                                          <div className="px-2 py-1 bg-orange-500/20 rounded border border-orange-500/30">
+                                            <span className="text-orange-400 text-xs font-semibold">⏱️ {startedText}</span>
                                           </div>
                                         );
                                       }
