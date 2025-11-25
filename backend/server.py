@@ -695,20 +695,11 @@ async def get_inplay_odds():
     try:
         from live_scores_service import live_scores_service
         
-        # Get current time
-        now = datetime.now(timezone.utc)
-        
-        # CRITICAL FIX: Query for matches that are ACTUALLY LIVE
-        # Match is live if:
-        # 1. live_score.is_live is True, AND
-        # 2. NOT completed, AND  
-        # 3. Started within last 4 hours (football/basketball matches don't last >4 hours)
-        four_hours_ago = now - timedelta(hours=4)
-        
+        # USE API STATUS ONLY - Query matches where API says is_live=True
+        # No time-based filtering - trust the API!
         query = {
             'live_score.is_live': True,
-            'live_score.completed': {'$ne': True},  # NOT completed
-            'commence_time': {'$gte': four_hours_ago.isoformat()}  # Started within 4 hours
+            'live_score.completed': {'$ne': True}
         }
         
         # Fetch matches from database
