@@ -1393,7 +1393,7 @@ class OddsWorker:
                 old_cleaned += 1
             
             if old_cleaned > 0:
-                logger.info(f"✅ Cleaned {old_cleaned} old untracked matches (started >6 hours ago, no scores)")
+                logger.info(f"✅ Cleaned {old_cleaned} old untracked matches (started >3 hours ago, no scores)")
                 
         except Exception as e:
             logger.error(f"Error in cleanup: {e}")
